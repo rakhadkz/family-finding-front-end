@@ -1,12 +1,15 @@
 import React from "react";
 import { LoginForm } from "../components/Login";
-import LoginLayout from "./../containers/LoginLayout";
+import LoginContainer from "../containers/LoginContainer";
+import { useAuth } from "../context/auth/authContext";
 
 function LoginPage() {
+  const { login } = useAuth();
+
   return (
-    <LoginLayout>
-      <LoginForm />
-    </LoginLayout>
+    <LoginContainer>
+      <LoginForm onSubmit={login} />
+    </LoginContainer>
   );
 }
 

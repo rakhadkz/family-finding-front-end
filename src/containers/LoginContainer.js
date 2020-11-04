@@ -11,7 +11,7 @@ import Cover from "./../assets/Cover.svg";
 import frame from "./../assets/Frame.svg";
 import logo from "./../assets/logo.png";
 
-function LoginLayout({ children }) {
+function LoginContainer({ children }) {
   return (
     <Container className="container">
       <StyledCard>
@@ -33,4 +33,4 @@ function LoginLayout({ children }) {
   );
 }
 
-export default LoginLayout;
+export default LoginContainer;

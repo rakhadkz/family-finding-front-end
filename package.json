@@ -16,6 +16,7 @@
     "react-hook-form": "^6.10.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
+    "react-toastify": "^6.0.9",
     "styled-components": "^5.2.1",
     "styled-tools": "^1.7.2",
     "web-vitals": "^0.2.4"

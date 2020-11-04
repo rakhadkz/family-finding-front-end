@@ -1,11 +1,11 @@
 import React from "react";
 import { NewPasswordForm } from "../components/Login";
-import LoginLayout from "../containers/LoginLayout";
+import LoginContainer from "../containers/LoginContainer";
 
 export const NewPassword = () => {
   return (
-    <LoginLayout>
+    <LoginContainer>
       <NewPasswordForm />
-    </LoginLayout>
+    </LoginContainer>
   );
 };

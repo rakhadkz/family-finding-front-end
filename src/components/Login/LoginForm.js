@@ -2,20 +2,28 @@ import Button, { ButtonGroup } from "@atlaskit/button";
 import { FormSection } from "@atlaskit/form";
 import EmailIcon from "@atlaskit/icon/glyph/email";
 import LockIcon from "@atlaskit/icon/glyph/lock";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { FORGOT_PASSWORD } from "../../helpers";
 import { Form, Spacing } from "../ui/atoms";
 import { TextInput } from "../ui/molecules";
 
-export const LoginForm = () => {
+export const LoginForm = ({ onSubmit }) => {
   const history = useHistory();
   const { register, handleSubmit, control, errors } = useForm();
-  const onSubmit = (data) => console.log(data);
+
+  const [pending, setPending] = useState(false);
+
+  const onSubmitHandle = (data) => {
+    setPending(true);
+    onSubmit(data)
+      .then(() => history.push(`/`))
+      .finally(() => setPending(false));
+  };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <Form onSubmit={handleSubmit(onSubmitHandle)} noValidate>
       <FormSection>
         <TextInput
           name={"email"}
@@ -37,7 +45,12 @@ export const LoginForm = () => {
       </FormSection>
       <Spacing m={{ t: "20px" }}>
         <ButtonGroup>
-          <Button type="submit" appearance="primary" style={{ fontSize: 14 }}>
+          <Button
+            isDisabled={pending}
+            type="submit"
+            appearance="primary"
+            style={{ fontSize: 14 }}
+          >
             Sign in
           </Button>
           <Button
