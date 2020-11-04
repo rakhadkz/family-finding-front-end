@@ -1,13 +1,13 @@
-import React from 'react'
-import LoginLayout from './../containers/LoginLayout'
-import LoginContent from '../components/Login/LoginContent'
+import React from "react";
+import { LoginForm } from "../components/Login";
+import LoginLayout from "./../containers/LoginLayout";
 
 function LoginPage() {
-    return (
-        <LoginLayout>
-            <LoginContent />
-        </LoginLayout>
-    )
+  return (
+    <LoginLayout>
+      <LoginForm />
+    </LoginLayout>
+  );
 }
 
 export default LoginPage;
