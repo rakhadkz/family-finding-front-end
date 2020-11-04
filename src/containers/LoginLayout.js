@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  ContainerDiv,
+  Container,
   StyledBackground,
   StyledCard,
   StyledCover,
@@ -13,7 +13,7 @@ import logo from "./../assets/logo.png";
 
 function LoginLayout({ children }) {
   return (
-    <ContainerDiv className="container">
+    <Container className="container">
       <StyledCard>
         <div className="row">
           <StyledCover>
@@ -29,7 +29,7 @@ function LoginLayout({ children }) {
           <StyledField className="col">{children}</StyledField>
         </div>
       </StyledCard>
-    </ContainerDiv>
+    </Container>
   );
 }
 

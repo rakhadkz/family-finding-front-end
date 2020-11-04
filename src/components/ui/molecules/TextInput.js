@@ -10,6 +10,7 @@ export const TextInput = (props) => {
     register,
     error,
     control,
+    type,
     placeholder = null,
     elemBeforeInput = null,
     width = 240,
@@ -26,11 +27,15 @@ export const TextInput = (props) => {
         name={name}
         placeholder={placeholder}
         id={name}
-        type={name}
+        type={type || name}
         width={width}
         isCompact
       />
-      {error && <StyledTextError>{formErrors[error?.type]}</StyledTextError>}
+      {error && (
+        <StyledTextError>
+          {error.message || formErrors[error?.type]}
+        </StyledTextError>
+      )}
     </>
   );
 };
@@ -42,6 +47,7 @@ TextInput.propTypes = {
   control: PropTypes.any.isRequired,
   elemBeforeInput: PropTypes.node,
   placeholder: PropTypes.string,
+  type: PropTypes.string,
   width: PropTypes.number,
   label: PropTypes.node,
 };

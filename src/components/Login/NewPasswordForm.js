@@ -1,107 +1,48 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
-import { ErrorMessage, FormHeader, FormSection } from "@atlaskit/form";
+import { FormHeader, FormSection } from "@atlaskit/form";
 import LockIcon from "@atlaskit/icon/glyph/lock";
-import Textfield from "@atlaskit/textfield";
-import React, { useState } from "react";
-import { Form, Label } from "../ui/atoms";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Form, Spacing } from "../ui/atoms";
+import { TextInput } from "../ui/molecules";
 
 export const NewPasswordForm = () => {
-  const [pass1, setPass1] = useState("");
-  const [pass2, setPass2] = useState("");
-  const [pass1Required, setPass1Required] = useState(false);
-  const [pass2Required, setPass2Required] = useState(false);
-
-  const handlePasswordInput = (e, flag) => {
-    if (flag === 1) {
-      setPass1Required(false);
-      setPass1(e.target.value);
-    } else {
-      setPass2Required(false);
-      setPass2(e.target.value);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    if (pass1 === "") {
-      setPass1Required(true);
-      e.preventDefault();
-    }
-    if (pass2 === "") {
-      setPass2Required(true);
-      e.preventDefault();
-    }
-  };
+  const { register, handleSubmit, control, errors, watch } = useForm();
+  const onSubmit = (data) => console.log(data);
 
   return (
-    <Form onSubmit={handleSubmit} noValidate>
-      <FormHeader title="New password" />
-
+    <Form onSubmit={handleSubmit(onSubmit)} noValidate>
       <FormSection>
-        <Label htmlFor="password">New password </Label>
-        <Textfield
-          isInvalid={pass1Required}
-          isRequired
+        <FormHeader title="New password" />
+        <TextInput
+          name={"password"}
+          register={register({ required: true })}
+          control={control}
+          error={errors.password}
+          label="New password"
           elemBeforeInput={<LockIcon primaryColor="#42526E" />}
-          name="password"
-          id="password"
-          width={240}
-          isCompact
-          label="Password"
-          type="password"
-          value={pass1}
-          onChange={(val) => handlePasswordInput(val, 1)}
         />
-        {pass1Required && (
-          <ErrorMessage>
-            <text
-              style={{
-                fontStyle: "normal",
-                fontWeight: "normal",
-                fontSize: "12px",
-                lineHeight: "16px",
-              }}
-            >
-              This field is required.
-            </text>
-          </ErrorMessage>
-        )}
-        <Label htmlFor="password">Repeat password </Label>
-        <Textfield
-          isInvalid={pass2Required}
-          isRequired
+        <TextInput
+          name={"password_repeat"}
+          register={register({
+            required: true,
+            validate: (value) =>
+              value === watch("password") || "Passwords don't match.",
+          })}
+          control={control}
+          type="password"
+          error={errors["password_repeat"]}
+          label="Repeat password"
           elemBeforeInput={<LockIcon primaryColor="#42526E" />}
-          name="password"
-          id="password"
-          width={240}
-          isCompact
-          label="Password"
-          type="password"
-          value={pass2}
-          onChange={(val) => handlePasswordInput(val, 2)}
         />
-        {pass2Required && (
-          <ErrorMessage>
-            <text
-              style={{
-                fontStyle: "normal",
-                fontWeight: "normal",
-                fontSize: "12px",
-                lineHeight: "16px",
-              }}
-            >
-              This field is required.
-            </text>
-          </ErrorMessage>
-        )}
       </FormSection>
-
-      <div style={{ marginTop: "20px" }}>
+      <Spacing m={{ t: "20px" }}>
         <ButtonGroup>
           <Button style={{ fontSize: 14 }} type="submit" appearance="primary">
             Send
           </Button>
         </ButtonGroup>
-      </div>
+      </Spacing>
     </Form>
   );
 };
