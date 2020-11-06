@@ -14,12 +14,14 @@ import {
   LOGIN,
   NEW_PASSWORD,
   ORGANIZATIONS,
+  USERS,
 } from "./helpers/routes";
 import {
   AddOrganizationPage,
   NewPassword,
   ResetPassword,
   SuperAdminDashboardPage,
+  UsersPage,
 } from "./pages";
 import LoginPage from "./pages/Login";
 
@@ -31,6 +33,7 @@ function App() {
       {isSignedIn ? (
         <Router>
           <Switch>
+            <Route path={`/${USERS}`} component={UsersPage} />
             <Route
               path={`/${ORGANIZATIONS}`}
               component={SuperAdminDashboardPage}
