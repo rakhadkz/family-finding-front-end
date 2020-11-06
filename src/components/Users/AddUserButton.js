@@ -5,10 +5,10 @@ import styled from "styled-components";
 export const AddUserButton = ({ onClick }) => {
   return (
     <ButtonWrapper>
-      <Button apperance="primary" onClick={onClick}>
+      <Button appearance="primary" onClick={onClick}>
         <ButtonContentWrapper>
           <PersonIcon />
-          Add Organization
+          Add User
         </ButtonContentWrapper>
       </Button>
     </ButtonWrapper>
@@ -25,5 +25,5 @@ const ButtonContentWrapper = styled.div`
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
-  width: 150px;
+  width: 117px;
 `;

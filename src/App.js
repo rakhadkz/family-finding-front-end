@@ -22,6 +22,7 @@ import {
   ResetPassword,
   SuperAdminDashboardPage,
   UsersPage,
+  AddUserPage,
 } from "./pages";
 import LoginPage from "./pages/Login";
 
@@ -34,6 +35,7 @@ function App() {
         <Router>
           <Switch>
             <Route path={`/${USERS}`} component={UsersPage} />
+            <Route path={`/${USERS}/${ADD}`} component={AddUserPage} />
             <Route
               path={`/${ORGANIZATIONS}`}
               component={SuperAdminDashboardPage}

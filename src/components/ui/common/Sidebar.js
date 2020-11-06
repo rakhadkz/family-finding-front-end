@@ -14,7 +14,7 @@ const SIDEBAR_ITEMS = [
     icon: () => <OfficeBuilding />,
   },
   {
-    to: "/",
+    to: "/users",
     title: "Users",
     icon: () => <People />,
   },

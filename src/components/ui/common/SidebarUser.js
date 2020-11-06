@@ -2,8 +2,10 @@ import Avatar from "@atlaskit/avatar";
 import Badge from "@atlaskit/badge";
 import React from "react";
 import styled from "styled-components";
+import { useAuth } from "../../../context/auth/authContext";
 
 export const SidebarUser = () => {
+  const { user } = useAuth();
   return (
     <SidebarUserContainer>
       <Avatar
@@ -14,7 +16,7 @@ export const SidebarUser = () => {
       <UserBadgeContainer>
         <Badge appearance="primary">{25}</Badge>
       </UserBadgeContainer>
-      <UserNameText>Jane Rotanson</UserNameText>
+      <UserNameText>{"Steve Jobs"}</UserNameText>
     </SidebarUserContainer>
   );
 };
