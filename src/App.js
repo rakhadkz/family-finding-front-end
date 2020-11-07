@@ -34,13 +34,15 @@ function App() {
       {isSignedIn ? (
         <Router>
           <Switch>
-            <Route path={`/${USERS}`} component={UsersPage} />
-            <Route path={`/${USERS}/${ADD}`} component={AddUserPage} />
+            <Route exact path={`/${USERS}`} component={UsersPage} />
+            <Route exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
             <Route
+              exact
               path={`/${ORGANIZATIONS}`}
               component={SuperAdminDashboardPage}
             />
             <Route
+              exact
               path={`/${ORGANIZATIONS}/${ADD}`}
               component={AddOrganizationPage}
             />

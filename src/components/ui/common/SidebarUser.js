@@ -16,7 +16,7 @@ export const SidebarUser = () => {
       <UserBadgeContainer>
         <Badge appearance="primary">{25}</Badge>
       </UserBadgeContainer>
-      <UserNameText>{"Steve Jobs"}</UserNameText>
+      <UserNameText>{"Shyngys Rakhad"}</UserNameText>
     </SidebarUserContainer>
   );
 };
