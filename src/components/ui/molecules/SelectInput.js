@@ -1,7 +1,7 @@
 import Select from "@atlaskit/select";
 import PropTypes from "prop-types";
 import React from "react";
-import styled from "styled-components";
+import { Controller } from "react-hook-form";
 import { formErrors } from "../../../helpers/formErrors";
 import { Box, Label, StyledTextError } from "../atoms";
 
@@ -21,10 +21,12 @@ export const SelectInput = (props) => {
   return (
     <Box w={`${width}px`}>
       {label && <Label htmlFor={name}>{label}</Label>}
-      <StyledSelect
-        controls={control}
+      <Controller
+        control={control}
         ref={register}
+        rules={register}
         name={name}
+        as={Select}
         width={width}
         placeholder={placeholder}
         id={name}
@@ -49,8 +51,6 @@ export const SelectInput = (props) => {
     </Box>
   );
 };
-
-const StyledSelect = styled(Select)``;
 
 SelectInput.propTypes = {
   name: PropTypes.string.isRequired,

@@ -64,7 +64,10 @@ export const AddOrganizationForm = ({ onSubmit }) => {
             />
           </Box>
         </Spacing>
-        <SelectOrganizationLogo />
+        <SelectOrganizationLogo
+          control={control}
+          register={register({ required: true })}
+        />
       </FormSection>
       <Button
         style={{ position: "absolute", top: 80, right: 40 }}
