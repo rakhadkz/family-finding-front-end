@@ -32,10 +32,12 @@ function App() {
         <Router>
           <Switch>
             <Route
+              exact
               path={`/${ORGANIZATIONS}`}
               component={SuperAdminDashboardPage}
             />
             <Route
+              exact
               path={`/${ORGANIZATIONS}/${ADD}`}
               component={AddOrganizationPage}
             />

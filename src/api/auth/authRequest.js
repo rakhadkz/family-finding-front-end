@@ -2,7 +2,7 @@ import { request } from "../../utils/request";
 
 export const loginRequest = async ({ email, password }) => {
   return request({
-    endpoint: "auth/login",
+    endpoint: "login",
     data: { user: { email, password } },
     method: "POST",
   });
@@ -17,7 +17,7 @@ export const signupRequest = async (user) => {
     last_name: user.last_name,
   };
   return request({
-    endpoint: "auth/signup",
+    endpoint: "signup",
     data: { user: userBody },
     method: "POST",
   });
