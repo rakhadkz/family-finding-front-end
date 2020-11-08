@@ -14,6 +14,7 @@ export const TextInput = (props) => {
     type,
     placeholder = null,
     elemBeforeInput = null,
+    elemAfterInput = null,
     width = 240,
     label = null,
   } = props;
@@ -25,6 +26,7 @@ export const TextInput = (props) => {
         controls={control}
         ref={register}
         elemBeforeInput={elemBeforeInput}
+        elemAfterInput={elemAfterInput}
         name={name}
         placeholder={placeholder}
         id={name}

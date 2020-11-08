@@ -5,7 +5,8 @@ import styled from "styled-components";
 import { useAuth } from "../../../context/auth/authContext";
 
 export const SidebarUser = () => {
-  const { user } = useAuth();
+  var full_name = "";
+
   return (
     <SidebarUserContainer>
       <Avatar
@@ -16,7 +17,7 @@ export const SidebarUser = () => {
       <UserBadgeContainer>
         <Badge appearance="primary">{25}</Badge>
       </UserBadgeContainer>
-      <UserNameText>{"Shyngys Rakhad"}</UserNameText>
+      <UserNameText>{full_name}</UserNameText>
     </SidebarUserContainer>
   );
 };

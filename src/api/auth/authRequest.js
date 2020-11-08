@@ -9,10 +9,12 @@ export const loginRequest = async ({ email, password }) => {
 };
 
 export const signupRequest = async (user) => {
+  console.log("body", user);
   const userBody = {
     email: user.email,
-    password: user.password,
-    password_confirmation: user.password_confirmation,
+    role: user.role.value,
+    phone: user.phone,
+    organization_id: user.organization_id.value,
     first_name: user.first_name,
     last_name: user.last_name,
   };

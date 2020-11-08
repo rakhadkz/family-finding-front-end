@@ -1,5 +1,7 @@
 import DynamicTable from "@atlaskit/dynamic-table";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { fetchUsers } from "../../context/user/userProvider";
 
 const TableCell = styled.span`
   font-family: Helvetica;
@@ -39,65 +41,50 @@ const columns = [
   },
 ];
 
-const rows = [
-  {
-    key: "1",
-    cells: [
-      {
-        key: "name",
-        content: <a href="google.com">Shyngys Rakhad</a>,
-      },
-      {
-        key: "email",
-        content: "rakhad@gmail.com",
-      },
-      {
-        key: "phone",
-        content: "+7 (776) 208 6923",
-      },
-      {
-        key: "organization",
-        content: "Desert Electronics",
-      },
-      {
-        key: "role",
-        content: "Organization Manager",
-      },
-    ],
-  },
-  {
-    key: "2",
-    cells: [
-      {
-        key: "name",
-        content: <a href="google.com">Jobs Steve</a>,
-      },
-      {
-        key: "email",
-        content: "steve@gmail.com",
-      },
-      {
-        key: "phone",
-        content: "+8 (888) 777 6666",
-      },
-      {
-        key: "organization",
-        content: "Apple Corporation",
-      },
-      {
-        key: "role",
-        content: "Organization Admin",
-      },
-    ],
-  },
-];
-
 export const UsersTable = () => {
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    fetchUsers().then((items) => {
+      var rows = items.map(function (item, index) {
+        var organization_name = "";
+        item.organization
+          ? (organization_name = item.organization.name)
+          : (organization_name = "null");
+        return {
+          key: index,
+          cells: [
+            {
+              key: "name",
+              content: item.first_name + " " + item.last_name,
+            },
+            {
+              key: "email",
+              content: item.email,
+            },
+            {
+              key: "phone",
+              content: item.phone,
+            },
+            {
+              key: "organization",
+              content: organization_name,
+            },
+            {
+              key: "role",
+              content: item.role,
+            },
+          ],
+        };
+      });
+      setUsers(rows);
+    });
+  }, []);
+
   return (
     <TableWrapper>
       <DynamicTable
         head={{ cells: columns }}
-        rows={rows}
+        rows={users}
         loadingSpinnerSize="large"
         isLoading={false}
         isFixedSize

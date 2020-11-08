@@ -37,19 +37,17 @@ const signup = (user) => {
     422: "User already exists !",
   };
 
-  return signupRequest(user)
-    .then(handleUserResponse)
-    .catch((err) => {
-      toast.error(errorStatuses[err.status], {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+  return signupRequest(user).catch((err) => {
+    toast.error(errorStatuses[err.status], {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
+  });
 };
 
 const fetchMe = () => {
