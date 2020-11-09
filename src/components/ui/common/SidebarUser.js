@@ -1,23 +1,28 @@
 import Avatar from "@atlaskit/avatar";
 import Badge from "@atlaskit/badge";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { fetchMeRequest } from "../../../api/auth";
 import { useAuth } from "../../../context/auth/authContext";
 
 export const SidebarUser = () => {
-  var full_name = "";
-
+  const [name, setName] = useState("");
+  const [ava, setAva] = useState("");
+  const [badge, setBadge] = useState(25);
+  useEffect(() => {
+    fetchMeRequest("sidebar_profile").then((data) => {
+      console.log(data);
+      setName(data.first_name + " " + data.last_name);
+      setAva(data.ava);
+    });
+  }, []);
   return (
     <SidebarUserContainer>
-      <Avatar
-        appearance="circle"
-        src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
-        size="large"
-      />
+      <Avatar appearance="circle" src={ava} size="large" />
       <UserBadgeContainer>
         <Badge appearance="primary">{25}</Badge>
       </UserBadgeContainer>
-      <UserNameText>{full_name}</UserNameText>
+      <UserNameText>{name}</UserNameText>
     </SidebarUserContainer>
   );
 };

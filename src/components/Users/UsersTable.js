@@ -1,6 +1,7 @@
 import DynamicTable from "@atlaskit/dynamic-table";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { tableData, userTableData } from "../../content/user.data";
 import { fetchUsers } from "../../context/user/userProvider";
 
 const TableCell = styled.span`
@@ -9,7 +10,7 @@ const TableCell = styled.span`
   font-weight: normal;
   font-size: 14px;
   line-height: 20px;
-
+  margin-top: 40px;
   color: #172b4d;
 `;
 
@@ -45,38 +46,7 @@ export const UsersTable = () => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
     fetchUsers().then((items) => {
-      var rows = items.map(function (item, index) {
-        var organization_name = "";
-        item.organization
-          ? (organization_name = item.organization.name)
-          : (organization_name = "null");
-        return {
-          key: index,
-          cells: [
-            {
-              key: "name",
-              content: item.first_name + " " + item.last_name,
-            },
-            {
-              key: "email",
-              content: item.email,
-            },
-            {
-              key: "phone",
-              content: item.phone,
-            },
-            {
-              key: "organization",
-              content: organization_name,
-            },
-            {
-              key: "role",
-              content: item.role,
-            },
-          ],
-        };
-      });
-      setUsers(rows);
+      setUsers(userTableData(items));
     });
   }, []);
 

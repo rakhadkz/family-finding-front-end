@@ -25,9 +25,28 @@ export const signupRequest = async (user) => {
   });
 };
 
-export const fetchMeRequest = async () => {
+export const fetchMeRequest = async (view = "") => {
   return request({
-    endpoint: "users/me",
+    endpoint: "users/me?view=" + view,
     method: "GET",
+  });
+};
+
+export const resetRequest = async (data) => {
+  return request({
+    endpoint: "auth/forgot_password",
+    data: { email: data.email },
+    method: "POST",
+  });
+};
+
+export const newPasswordRequest = async (data) => {
+  return request({
+    endpoint: "auth/reset_password",
+    data: {
+      change_password_token: data.token,
+      password: data.password,
+    },
+    method: "POST",
   });
 };
