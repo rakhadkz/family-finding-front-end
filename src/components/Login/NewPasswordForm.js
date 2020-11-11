@@ -14,7 +14,7 @@ export const NewPasswordForm = ({ onSubmit }) => {
 
   const onSubmitHandle = (data) => {
     setPending(true);
-    data.token = history.location.search.substring(7) // ?token=#{@token}
+    data.token = history.location.search.substring(7); // ?token=#{@token}
     onSubmit(data)
       .then(() => history.push(`/`))
       .finally(() => setPending(false));

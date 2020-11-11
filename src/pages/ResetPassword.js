@@ -8,7 +8,7 @@ export const ResetPassword = () => {
 
   return (
     <LoginContainer>
-      <ResetPasswordForm onSubmit={reset}/>
+      <ResetPasswordForm onSubmit={reset} />
     </LoginContainer>
   );
 };

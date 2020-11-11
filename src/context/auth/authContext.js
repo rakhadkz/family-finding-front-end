@@ -41,7 +41,10 @@ export const AuthProvider = (props) => {
 
   const reset = React.useCallback((form) => auth.reset(form).then(setUser), []);
 
-  const newPassword = React.useCallback((form) => {console.log(form); return auth.newPassword(form).then(setUser)}, []);
+  const newPassword = React.useCallback((form) => {
+    console.log(form);
+    return auth.newPassword(form).then(setUser);
+  }, []);
 
   const logout = React.useCallback(() => {
     auth.logout();
@@ -49,8 +52,28 @@ export const AuthProvider = (props) => {
   }, []);
 
   const value = React.useMemo(
-    () => ({ user, isSignedIn, login, logout, sign, reset, newPassword, fetchMe, setUser }),
-    [user, isSignedIn, login, logout, sign, reset, newPassword, fetchMe, setUser]
+    () => ({
+      user,
+      isSignedIn,
+      login,
+      logout,
+      sign,
+      reset,
+      newPassword,
+      fetchMe,
+      setUser,
+    }),
+    [
+      user,
+      isSignedIn,
+      login,
+      logout,
+      sign,
+      reset,
+      newPassword,
+      fetchMe,
+      setUser,
+    ]
   );
 
   return <AuthContext.Provider value={value} {...props} />;

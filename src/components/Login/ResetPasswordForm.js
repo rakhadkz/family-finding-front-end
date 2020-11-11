@@ -1,7 +1,7 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
 import { FormHeader, FormSection } from "@atlaskit/form";
 import EmailIcon from "@atlaskit/icon/glyph/email";
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form, Spacing } from "../ui/atoms";
 import { TextInput } from "../ui/molecules";
@@ -36,10 +36,10 @@ export const ResetPasswordForm = ({ onSubmit }) => {
 
       <Spacing m={{ t: "20px" }}>
         <ButtonGroup>
-          <Button 
-            isDisabled={pending} 
-            style={{ fontSize: 14 }} 
-            type="submit" 
+          <Button
+            isDisabled={pending}
+            style={{ fontSize: 14 }}
+            type="submit"
             appearance="primary"
           >
             Send
