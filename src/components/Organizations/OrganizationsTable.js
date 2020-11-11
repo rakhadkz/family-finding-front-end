@@ -1,5 +1,8 @@
 import DynamicTable from "@atlaskit/dynamic-table";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { tableData } from "../../content/sample.data";
+import { fetchOrganizations } from "../../context/organization/organizationProvider";
 
 const TableCell = styled.span`
   font-family: Helvetica;
@@ -70,11 +73,18 @@ const rows = [
 ];
 
 export const OrganizationsTable = () => {
+  const [organizations, setOrganizations] = useState([]);
+  useEffect(() => {
+    fetchOrganizations().then((items) => {
+      setOrganizations(tableData(items, columns));
+    });
+  }, []);
+
   return (
     <TableWrapper>
       <DynamicTable
         head={{ cells: columns }}
-        rows={rows}
+        rows={organizations}
         loadingSpinnerSize="large"
         isLoading={false}
         isFixedSize

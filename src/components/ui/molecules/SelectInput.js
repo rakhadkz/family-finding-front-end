@@ -14,8 +14,10 @@ export const SelectInput = (props) => {
     type,
     placeholder = null,
     elemBeforeInput = null,
+    elemAfterInput = null,
     width = 240,
     label = null,
+    options,
   } = props;
 
   return (
@@ -28,20 +30,12 @@ export const SelectInput = (props) => {
         name={name}
         as={Select}
         width={width}
+        elemAfterInput={elemAfterInput}
         placeholder={placeholder}
         id={name}
         className="single-select"
         classNamePrefix="react-select"
-        options={[
-          { label: "Adelaide", value: "adelaide" },
-          { label: "Brisbane", value: "brisbane" },
-          { label: "Canberra", value: "canberra" },
-          { label: "Darwin", value: "darwin" },
-          { label: "Hobart", value: "hobart" },
-          { label: "Melbourne", value: "melbourne" },
-          { label: "Perth", value: "perth" },
-          { label: "Sydney", value: "sydney" },
-        ]}
+        options={options}
       />
       {error && (
         <StyledTextError>
@@ -58,6 +52,7 @@ SelectInput.propTypes = {
   errors: PropTypes.any.isRequired,
   control: PropTypes.any.isRequired,
   elemBeforeInput: PropTypes.node,
+  elemAfterInput: PropTypes.node,
   placeholder: PropTypes.string,
   type: PropTypes.string,
   width: PropTypes.number,
