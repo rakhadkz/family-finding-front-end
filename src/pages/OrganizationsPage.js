@@ -9,7 +9,7 @@ import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
 
-export const SuperAdminDashboardPage = () => {
+export const OrganizationsPage = () => {
   const history = useHistory();
   return (
     <SidebarTemplate sidebar={<Sidebar />}>

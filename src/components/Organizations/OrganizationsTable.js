@@ -1,8 +1,8 @@
 import DynamicTable from "@atlaskit/dynamic-table";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { tableData } from "../../content/sample.data";
-import { fetchOrganizations } from "../../context/organization/organizationProvider";
+import { useOrganization } from "../../context/organization/organizationContext";
 
 const TableCell = styled.span`
   font-family: Helvetica;
@@ -42,49 +42,18 @@ const columns = [
   },
 ];
 
-const rows = [
-  {
-    key: `1`,
-    cells: [
-      {
-        key: "name",
-        content: <a href="https://atlassian.design">2000 Spays and Neuters</a>,
-      },
-      {
-        key: "address",
-        content: (
-          <TableCell>111 West Middle River St. Desoto, TX 75115"</TableCell>
-        ),
-      },
-      {
-        key: "city",
-        content: "New York",
-      },
-      {
-        key: "state",
-        content: "New York",
-      },
-      {
-        key: "zip",
-        content: "10001",
-      },
-    ],
-  },
-];
-
 export const OrganizationsTable = () => {
-  const [organizations, setOrganizations] = useState([]);
+  const { organizations, fetchOrganizations } = useOrganization();
+
   useEffect(() => {
-    fetchOrganizations().then((items) => {
-      setOrganizations(tableData(items, columns));
-    });
-  }, []);
+    fetchOrganizations();
+  }, [fetchOrganizations]);
 
   return (
     <TableWrapper>
       <DynamicTable
         head={{ cells: columns }}
-        rows={organizations}
+        rows={organizations ? tableData(organizations, columns) : []}
         loadingSpinnerSize="large"
         isLoading={false}
         isFixedSize

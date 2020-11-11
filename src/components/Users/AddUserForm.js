@@ -1,14 +1,13 @@
 import Button from "@atlaskit/button";
 import { FormSection } from "@atlaskit/form";
-import React, { useState, useEffect } from "react";
+import SearchIcon from "@atlaskit/icon/glyph/search";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import { fetchOrganizations } from "../../context/organization/organizationProvider";
 import { Box, Form, Spacing } from "../ui/atoms";
 import { SelectInput, TextInput } from "../ui/molecules";
-import SearchIcon from "@atlaskit/icon/glyph/search";
-import { toast } from "react-toastify";
-import Select from "@atlaskit/select";
-import { fetchOrganizations } from "../../context/organization/organizationProvider";
 
 export const AddUserForm = ({ onSubmit }) => {
   const history = useHistory();
@@ -43,6 +42,7 @@ export const AddUserForm = ({ onSubmit }) => {
           draggable: true,
           progress: undefined,
         });
+        history.goBack();
       })
       .finally(() => setPending(false));
   };
@@ -75,18 +75,24 @@ export const AddUserForm = ({ onSubmit }) => {
             />
             <TextInput
               name={"email"}
-              register={register({ required: true })}
+              register={register({
+                required: true,
+                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+              })}
               control={control}
               error={errors.email}
               label="Email"
             />
             <TextInput
               name={"phone"}
-              register={register({ required: true })}
+              register={register({
+                required: true,
+                pattern: /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
+              })}
               control={control}
               error={errors.phone}
               label="Phone"
-              type={"number"}
+              type={"phone"}
             />
           </Box>
         </Spacing>

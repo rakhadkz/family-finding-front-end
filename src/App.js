@@ -18,11 +18,11 @@ import {
 } from "./helpers/routes";
 import {
   AddOrganizationPage,
-  NewPassword,
-  ResetPassword,
-  SuperAdminDashboardPage,
-  UsersPage,
   AddUserPage,
+  NewPassword,
+  OrganizationsPage,
+  ResetPassword,
+  UsersPage,
 } from "./pages";
 import LoginPage from "./pages/Login";
 
@@ -39,7 +39,7 @@ function App() {
             <Route
               exact
               path={`/${ORGANIZATIONS}`}
-              component={SuperAdminDashboardPage}
+              component={OrganizationsPage}
             />
             <Route
               exact
