@@ -1,17 +1,27 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
 import { FormHeader, FormSection } from "@atlaskit/form";
 import LockIcon from "@atlaskit/icon/glyph/lock";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form, Spacing } from "../ui/atoms";
 import { TextInput } from "../ui/molecules";
+import { useHistory } from "react-router-dom";
 
-export const NewPasswordForm = () => {
+export const NewPasswordForm = ({ onSubmit }) => {
+  const history = useHistory();
   const { register, handleSubmit, control, errors, watch } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const [pending, setPending] = useState(false);
+
+  const onSubmitHandle = (data) => {
+    setPending(true);
+    data.token = history.location.search.substring(7); // ?token=#{@token}
+    onSubmit(data)
+      .then(() => history.push(`/`))
+      .finally(() => setPending(false));
+  };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <Form onSubmit={handleSubmit(onSubmitHandle)} noValidate>
       <FormSection>
         <FormHeader title="New password" />
         <TextInput
@@ -38,7 +48,12 @@ export const NewPasswordForm = () => {
       </FormSection>
       <Spacing m={{ t: "20px" }}>
         <ButtonGroup>
-          <Button style={{ fontSize: 14 }} type="submit" appearance="primary">
+          <Button
+            isDisabled={pending}
+            style={{ fontSize: 14 }}
+            type="submit"
+            appearance="primary"
+          >
             Send
           </Button>
         </ButtonGroup>

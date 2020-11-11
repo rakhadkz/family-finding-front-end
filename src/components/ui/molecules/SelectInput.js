@@ -1,11 +1,11 @@
-import Textfield from "@atlaskit/textfield";
+import Select from "@atlaskit/select";
 import PropTypes from "prop-types";
 import React from "react";
-import styled from "styled-components";
+import { Controller } from "react-hook-form";
 import { formErrors } from "../../../helpers/formErrors";
 import { Box, Label, StyledTextError } from "../atoms";
 
-export const TextInput = (props) => {
+export const SelectInput = (props) => {
   const {
     name,
     register,
@@ -17,22 +17,25 @@ export const TextInput = (props) => {
     elemAfterInput = null,
     width = 240,
     label = null,
+    options,
   } = props;
 
   return (
     <Box w={`${width}px`}>
       {label && <Label htmlFor={name}>{label}</Label>}
-      <StyledTextField
-        controls={control}
+      <Controller
+        control={control}
         ref={register}
-        elemBeforeInput={elemBeforeInput}
-        elemAfterInput={elemAfterInput}
+        rules={register}
         name={name}
+        as={Select}
+        width={width}
+        elemAfterInput={elemAfterInput}
         placeholder={placeholder}
         id={name}
-        type={type || name}
-        width={width}
-        isCompact
+        className="single-select"
+        classNamePrefix="react-select"
+        options={options}
       />
       {error && (
         <StyledTextError>
@@ -43,19 +46,15 @@ export const TextInput = (props) => {
   );
 };
 
-const StyledTextField = styled(Textfield)`
-  min-height: 36px;
-`;
-
-TextInput.propTypes = {
+SelectInput.propTypes = {
   name: PropTypes.string.isRequired,
   register: PropTypes.any.isRequired,
   errors: PropTypes.any.isRequired,
   control: PropTypes.any.isRequired,
   elemBeforeInput: PropTypes.node,
+  elemAfterInput: PropTypes.node,
   placeholder: PropTypes.string,
   type: PropTypes.string,
   width: PropTypes.number,
-  height: PropTypes.number,
   label: PropTypes.node,
 };

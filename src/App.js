@@ -8,8 +8,22 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "./context/auth/authContext";
-import { FORGOT_PASSWORD, LOGIN, NEW_PASSWORD } from "./helpers/routes";
-import { NewPassword, ResetPassword } from "./pages";
+import {
+  ADD,
+  FORGOT_PASSWORD,
+  LOGIN,
+  NEW_PASSWORD,
+  ORGANIZATIONS,
+  USERS,
+} from "./helpers/routes";
+import {
+  AddOrganizationPage,
+  NewPassword,
+  ResetPassword,
+  SuperAdminDashboardPage,
+  UsersPage,
+  AddUserPage,
+} from "./pages";
 import LoginPage from "./pages/Login";
 
 function App() {
@@ -18,14 +32,31 @@ function App() {
   return (
     <>
       {isSignedIn ? (
-        "Hello here auth"
+        <Router>
+          <Switch>
+            <Route exact path={`/${USERS}`} component={UsersPage} />
+            <Route exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
+            <Route
+              exact
+              path={`/${ORGANIZATIONS}`}
+              component={SuperAdminDashboardPage}
+            />
+            <Route
+              exact
+              path={`/${ORGANIZATIONS}/${ADD}`}
+              component={AddOrganizationPage}
+            />
+            <Redirect exact from="/" to={`/${ORGANIZATIONS}`} />
+            <Redirect exact from="/login" to={`/${ORGANIZATIONS}`} />
+          </Switch>
+        </Router>
       ) : (
         <Router>
           <Switch>
             <Route path={`/${LOGIN}`} component={LoginPage} />
             <Route path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
             <Route path={`/${NEW_PASSWORD}`} component={NewPassword} />
-            <Redirect exact from="/" to={`/${LOGIN}`} />
+            <Redirect from="/" to={`/${LOGIN}`} />
           </Switch>
         </Router>
       )}
