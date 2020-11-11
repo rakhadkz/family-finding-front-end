@@ -98,6 +98,66 @@ const newPassword = (data) => {
     });
 };
 
+const reset = (data) => {
+  const errorStatuses = {
+    500: "Error on Server !",
+    404: "Incorrect Password!"
+  };
+
+  return resetRequest(data)
+    .then(()=>{
+      toast.success('Check your inbox to reset your password!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+    })
+    .catch((err) => {
+      toast.error(errorStatuses[err.status], {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+}
+
+const newPassword = (data) => {
+  const errorStatuses = {
+    500: "Error on Server !",
+  };
+
+  return newPasswordRequest(data).then(()=>{
+    toast.success('Your password has been successfully updated!', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+  })
+    .catch((err) => {
+      toast.error(errorStatuses[err.status], {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+}
+
 const signup = (user) => {
   const errorStatuses = {
     500: "Error on Server !",

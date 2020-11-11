@@ -48,10 +48,10 @@ export const NewPasswordForm = ({ onSubmit }) => {
       </FormSection>
       <Spacing m={{ t: "20px" }}>
         <ButtonGroup>
-          <Button
-            isDisabled={pending}
-            style={{ fontSize: 14 }}
-            type="submit"
+          <Button 
+            isDisabled={pending} 
+            style={{ fontSize: 14 }} 
+            type="submit" 
             appearance="primary"
           >
             Send
