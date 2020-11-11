@@ -3,6 +3,7 @@ import { FormSection } from "@atlaskit/form";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import { states } from "../../content/states.data";
 import { Box, Form, Spacing } from "../ui/atoms";
 import { SelectInput, TextInput } from "../ui/molecules";
 import { SelectOrganizationLogo } from "./SelectOrganizationLogo";
@@ -16,9 +17,9 @@ export const AddOrganizationForm = ({ onSubmit }) => {
   const onSubmitHandle = (data) => {
     setPending(true);
     console.log(data);
-    // onSubmit(data)
-    //   .then(() => history.goBack())
-    //   .finally(() => setPending(false));
+    onSubmit(data)
+      .then(() => history.goBack())
+      .finally(() => setPending(false));
   };
 
   return (
@@ -51,6 +52,7 @@ export const AddOrganizationForm = ({ onSubmit }) => {
               name={"state"}
               register={register({ required: true })}
               control={control}
+              options={states.map((state) => ({ label: state, value: state }))}
               error={errors.state}
               label="State"
               placeholder="Choose State"

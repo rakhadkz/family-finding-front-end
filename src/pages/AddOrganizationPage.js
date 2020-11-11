@@ -5,8 +5,11 @@ import { AddOrganizationForm } from "../components/Organizations";
 import { Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
+import { useOrganization } from "../context/organization/organizationContext";
 
 export const AddOrganizationPage = () => {
+  const { createOrgnaization } = useOrganization();
+
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Organizations</Title>
@@ -24,7 +27,7 @@ export const AddOrganizationPage = () => {
           <BreadcrumbsItem text="Add organization" />
         </Breadcrumbs>
       </Spacing>
-      <AddOrganizationForm />
+      <AddOrganizationForm onSubmit={createOrgnaization} />
     </SidebarTemplate>
   );
 };
