@@ -1,10 +1,21 @@
 import Button from "@atlaskit/button";
 import { useState } from "react";
-import styled from "styled-components";
+import styled from "styled-components"
 import { Label, Spacing } from "../ui/atoms";
+import {
+  uploadRequest
+} from "../../api/cloudinary";
 
-export const SelectOrganizationLogo = ({ onClick, control, register, setLogoUrl }) => {
+export const SelectOrganizationLogo = ({ onClick, control, register, setLogoUrl, setPending }) => {
   const [logo, setLogo] = useState();
+  const handleChange = (target) => {
+    setPending(true);
+    uploadRequest(target.files[0])
+      .then( payload => setLogoUrl(payload.public_id))   // console.log(payload)
+      .catch(err => console.log(err))
+      .finally(() => setPending(false));
+    setLogo(URL.createObjectURL(target.files[0]));
+  }
   return (
     <Container>
       <Label style={{ display: "block" }}>Logo</Label>
@@ -18,26 +29,7 @@ export const SelectOrganizationLogo = ({ onClick, control, register, setLogoUrl 
         <InvisibleFileInput
           type="file"
           name="logo"
-          onChange={({ target }) =>{
-            const url = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`;
-            const formData = new FormData();
-            formData.append('file', target.files[0]);
-            formData.append("upload_preset", `${process.env.REACT_APP_CLOUDINARY_PRESET}`);
-            window.fetch(url, {
-              method: "post",
-              body: formData
-            })
-            .then(res => res.json())
-            .then(payload => {
-                // console.log(payload)
-                setLogoUrl(payload.public_id)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-            setLogo(URL.createObjectURL(target.files[0]))
-            }
-          }
+          onChange={ ({ target }) => handleChange(target)}
           accept="image/*"
           control={control}
           ref={register}

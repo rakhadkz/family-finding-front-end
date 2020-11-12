@@ -72,6 +72,7 @@ export const AddOrganizationForm = ({ onSubmit }) => {
           control={control}
           register={register({ required: true })}
           setLogoUrl={setLogoUrl}
+          setPending={setPending}
         />
       </FormSection>
       <Button
