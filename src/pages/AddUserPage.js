@@ -6,9 +6,15 @@ import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
 import { AddUserForm } from "../components/Users";
 import { useAuth } from "../context/auth/authContext";
+import { useHistory } from "react-router-dom";
 
 export const AddUserPage = () => {
   const { sign } = useAuth();
+  const history = useHistory();
+  const backToUsers = (e) => {
+    e.preventDefault();
+    history.push("./");
+  };
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Users</Title>
@@ -20,8 +26,8 @@ export const AddUserPage = () => {
                 <PeopleIcon primaryColor="#2684FF" />
               </Spacing>
             }
-            href="/users"
             text="Users"
+            onClick={backToUsers}
           />
           <BreadcrumbsItem text="Add user" />
         </Breadcrumbs>
