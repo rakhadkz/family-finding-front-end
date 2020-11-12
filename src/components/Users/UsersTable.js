@@ -1,7 +1,7 @@
 import DynamicTable from "@atlaskit/dynamic-table";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { tableData, userTableData } from "../../content/user.data";
+import { userTableData } from "../../content/user.data";
 import { fetchUsers } from "../../context/user/userProvider";
 
 const TableCell = styled.span`
@@ -46,7 +46,7 @@ export const UsersTable = () => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
     fetchUsers().then((items) => {
-      setUsers(userTableData(items));
+      if (items) setUsers(userTableData(items));
     });
   }, []);
 
