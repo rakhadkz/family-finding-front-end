@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Label, Spacing } from "../ui/atoms";
 
-export const SelectOrganizationLogo = ({ onClick, control, register }) => {
+export const SelectOrganizationLogo = ({ onClick, control, register, setLogoUrl }) => {
   const [logo, setLogo] = useState();
   return (
     <Container>
@@ -18,8 +18,25 @@ export const SelectOrganizationLogo = ({ onClick, control, register }) => {
         <InvisibleFileInput
           type="file"
           name="logo"
-          onChange={({ target }) =>
+          onChange={({ target }) =>{
+            const url = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`;
+            const formData = new FormData();
+            formData.append('file', target.files[0]);
+            formData.append("upload_preset", `${process.env.REACT_APP_CLOUDINARY_PRESET}`);
+            window.fetch(url, {
+              method: "post",
+              body: formData
+            })
+            .then(res => res.json())
+            .then(payload => {
+                // console.log(payload)
+                setLogoUrl(payload.public_id)
+            })
+            .catch(err => {
+                console.log(err)
+            })
             setLogo(URL.createObjectURL(target.files[0]))
+            }
           }
           accept="image/*"
           control={control}

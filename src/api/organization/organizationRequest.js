@@ -13,7 +13,7 @@ export const createOrganizationRequest = async (organization) => {
     name: organization.name,
     address: organization.address,
     phone: organization.phone,
-    logo: organization?.logo[0]?.name,
+    logo: organization.logo,
     website: organization.first_name,
     city: organization?.city,
     zip: organization?.zip,
