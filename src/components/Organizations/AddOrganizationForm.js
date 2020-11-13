@@ -13,9 +13,11 @@ export const AddOrganizationForm = ({ onSubmit }) => {
   const { register, handleSubmit, control, errors } = useForm();
 
   const [pending, setPending] = useState(false);
+  const [logoUrl, setLogoUrl] = useState();
 
   const onSubmitHandle = (data) => {
     setPending(true);
+    data.logo = logoUrl ? logoUrl : data.logo;
     console.log(data);
     onSubmit(data)
       .then(() => history.goBack())
@@ -69,6 +71,8 @@ export const AddOrganizationForm = ({ onSubmit }) => {
         <SelectOrganizationLogo
           control={control}
           register={register({ required: true })}
+          setLogoUrl={setLogoUrl}
+          setPending={setPending}
         />
       </FormSection>
       <Button
