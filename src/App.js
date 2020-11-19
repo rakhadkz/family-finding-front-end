@@ -15,6 +15,7 @@ import {
   NEW_PASSWORD,
   ORGANIZATIONS,
   USERS,
+  ACTION_ITEMS,
 } from "./helpers/routes";
 import {
   AddOrganizationPage,
@@ -24,6 +25,7 @@ import {
   ResetPassword,
   UsersPage,
 } from "./pages";
+import { ActionItemsPage } from "./pages/ActionItemsPage";
 import LoginPage from "./pages/Login";
 
 function App() {
@@ -45,6 +47,11 @@ function App() {
               exact
               path={`/${ORGANIZATIONS}/${ADD}`}
               component={AddOrganizationPage}
+            />
+            <Route
+              exact
+              path={`/${ACTION_ITEMS}`}
+              component={ActionItemsPage}
             />
             <Redirect exact from="/" to={`/${ORGANIZATIONS}`} />
             <Redirect exact from="/login" to={`/${ORGANIZATIONS}`} />
