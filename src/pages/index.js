@@ -5,3 +5,4 @@ export * from "./NewPassword";
 export * from "./OrganizationsPage";
 export * from "./ResetPassword";
 export * from "./UsersPage";
+export * from "./ReportsPage"
