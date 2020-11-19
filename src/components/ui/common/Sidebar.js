@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/auth/authContext";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
+import SettingsIcon from "@atlaskit/icon/glyph/settings";
 
 const SIDEBAR_ITEMS = [
   {
@@ -17,6 +18,12 @@ const SIDEBAR_ITEMS = [
     to: "/users",
     title: "Users",
     icon: () => <People />,
+  },
+  {
+    to: "/settings",
+    title: "Settings",
+    icon: () => <SettingsIcon />,
+    atLeast: "manager",
   },
 ];
 
