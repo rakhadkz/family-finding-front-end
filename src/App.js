@@ -15,6 +15,7 @@ import {
   NEW_PASSWORD,
   ORGANIZATIONS,
   USERS,
+  SEARCHVECTOR
 } from "./helpers/routes";
 import {
   AddOrganizationPage,
@@ -23,6 +24,7 @@ import {
   OrganizationsPage,
   ResetPassword,
   UsersPage,
+  SearchVectorsPage,
 } from "./pages";
 import LoginPage from "./pages/Login";
 
@@ -34,6 +36,7 @@ function App() {
       {isSignedIn ? (
         <Router>
           <Switch>
+            <Route exact path={`/${SEARCHVECTOR}`} component={SearchVectorsPage} />
             <Route exact path={`/${USERS}`} component={UsersPage} />
             <Route exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
             <Route

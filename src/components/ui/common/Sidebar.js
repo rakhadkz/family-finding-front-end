@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/auth/authContext";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
+import ChildIssuesIcon from "@atlaskit/icon/glyph/child-issues";
 
 const SIDEBAR_ITEMS = [
   {
@@ -18,6 +19,11 @@ const SIDEBAR_ITEMS = [
     title: "Users",
     icon: () => <People />,
   },
+  {
+    to: "/search-vectors",
+    title: "Search Vectors",
+    icon: () => <ChildIssuesIcon />,
+    exact: "admin",  },
 ];
 
 export const Sidebar = () => {
