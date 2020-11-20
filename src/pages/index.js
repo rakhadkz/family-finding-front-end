@@ -6,3 +6,4 @@ export * from "./OrganizationsPage";
 export * from "./ResetPassword";
 export * from "./UsersPage";
 export * from "./SettingsPage";
+export * from "./ReportsPage";

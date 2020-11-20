@@ -7,6 +7,7 @@ import { useAuth } from "../../../context/auth/authContext";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
 import SettingsIcon from "@atlaskit/icon/glyph/settings";
+import QueuesIcon from "@atlaskit/icon/glyph/queues";
 
 const SIDEBAR_ITEMS = [
   {
@@ -24,6 +25,11 @@ const SIDEBAR_ITEMS = [
     title: "Settings",
     icon: () => <SettingsIcon />,
     atLeast: "manager",
+  },
+  {
+    to: "/reports",
+    title: "Reports",
+    icon: () => <QueuesIcon />,
   },
 ];
 
