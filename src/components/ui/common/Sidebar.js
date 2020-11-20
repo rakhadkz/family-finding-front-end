@@ -24,7 +24,7 @@ const SIDEBAR_ITEMS = [
   },
 
   {
-    to: "/action_items",
+    to: "/action-items",
     title: "Action Items",
     icon: () => <Screen />,
     atLeast: "manager",
