@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/auth/authContext";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
+import QueuesIcon from "@atlaskit/icon/glyph/queues";
+
 
 const SIDEBAR_ITEMS = [
   {
@@ -17,6 +19,11 @@ const SIDEBAR_ITEMS = [
     to: "/users",
     title: "Users",
     icon: () => <People />,
+  },
+  {
+    to: "/reports",
+    title: "Reports",
+    icon: () => <QueuesIcon />,
   },
 ];
 
