@@ -5,3 +5,7 @@ export const ORGANIZATIONS = "organizations";
 export const USERS = "users";
 export const ADD = "add";
 export const ACTION_ITEMS = "action-items";
+export const  SEARCHVECTOR = "search-vectors";
+export const SETTINGS = "settings";
+export const COMMUNICATION_TEMPLATES = "communications-templates";
+export const REPORTS = "reports";

@@ -6,3 +6,8 @@ export * from "./OrganizationsPage";
 export * from "./ResetPassword";
 export * from "./UsersPage";
 export * from "./ActionItemsPage";
+export * from "./SearchVectorPage";
+export * from "./SettingsPage";
+export * from "./ReportsPage";
+export * from "./CommunicationTemplatesPage";
+export * from "./ReportsPage";
