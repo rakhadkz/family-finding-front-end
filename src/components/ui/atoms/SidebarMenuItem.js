@@ -14,7 +14,7 @@ export const SidebarMenuItem = styled.div`
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
-    line-height: 40px;
+    height: 40px;
     border-radius: 3px;
     text-decoration: none;
     cursor: pointer;

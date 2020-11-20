@@ -17,7 +17,7 @@ const userTableData = (data) => {
         },
         {
           key: "organization",
-          content: item.organization.name,
+          content: item.organization?.name,
         },
         {
           key: "role",
