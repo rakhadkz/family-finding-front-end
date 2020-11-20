@@ -14,8 +14,8 @@ import { useAuth } from "../../../context/auth/authContext";
 import { GroupAccess } from "../../common";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
+import MentionIcon from "@atlaskit/icon/glyph/mention";
 import QueuesIcon from "@atlaskit/icon/glyph/queues";
-
 
 const SIDEBAR_ITEMS = [
   {
@@ -72,6 +72,12 @@ const SIDEBAR_ITEMS = [
     title: "Settings",
     icon: () => <SettingsIcon />,
     atLeast: "user",
+  },
+  {
+    to: "/communications-templates",
+    title: "Communications Templates",
+    icon: () => <MentionIcon />,
+    exact: "admin",
   },
   {
     to: "/reports",
