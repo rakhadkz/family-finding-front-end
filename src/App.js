@@ -15,6 +15,7 @@ import {
   NEW_PASSWORD,
   ORGANIZATIONS,
   USERS,
+  SEARCHVECTOR,
   SETTINGS,
   COMMUNICATION_TEMPLATES,
   REPORTS,
@@ -26,6 +27,7 @@ import {
   OrganizationsPage,
   ResetPassword,
   UsersPage,
+  SearchVectorsPage,
   SettingsPage,
   CommunicationTemplatesPage,
   ReportsPage,
@@ -40,7 +42,8 @@ function App() {
       {isSignedIn ? (
         <Router>
           <Switch>
-           <Route exact path={`/${SETTINGS}`} component={SettingsPage} />
+            <Route exact path={`/${SEARCHVECTOR}`} component={SearchVectorsPage} />
+            <Route exact path={`/${SETTINGS}`} component={SettingsPage} />
             <Route exact path={`/${COMMUNICATION_TEMPLATES}`} component={CommunicationTemplatesPage} />
             <Route exact path={`/${REPORTS}`} component={ReportsPage} />
             <Route exact path={`/${USERS}`} component={UsersPage} />

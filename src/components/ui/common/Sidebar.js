@@ -14,6 +14,7 @@ import { useAuth } from "../../../context/auth/authContext";
 import { GroupAccess } from "../../common";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
+import ChildIssuesIcon from "@atlaskit/icon/glyph/child-issues";
 import SettingsIcon from "@atlaskit/icon/glyph/settings";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
 import QueuesIcon from "@atlaskit/icon/glyph/queues";
@@ -87,6 +88,11 @@ const SIDEBAR_ITEMS = [
     atLeast: "manager",
   },
   {
+    to: "/search-vectors",
+    title: "Search Vectors",
+    icon: () => <ChildIssuesIcon />,
+    exact: "admin",  
+  },
     to: "/reports",
     title: "Reports",
     icon: () => <QueuesIcon />,
