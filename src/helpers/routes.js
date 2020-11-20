@@ -5,3 +5,4 @@ export const ORGANIZATIONS = "organizations";
 export const USERS = "users";
 export const ADD = "add";
 export const COMMUNICATION_TEMPLATES = "communications-templates";
+export const REPORTS = "reports";

@@ -7,6 +7,7 @@ import { useAuth } from "../../../context/auth/authContext";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
+import QueuesIcon from "@atlaskit/icon/glyph/queues";
 
 const SIDEBAR_ITEMS = [
   {
@@ -24,6 +25,11 @@ const SIDEBAR_ITEMS = [
     title: "Communications Templates",
     icon: () => <MentionIcon />,
     exact: "admin",
+  },
+  {
+    to: "/reports",
+    title: "Reports",
+    icon: () => <QueuesIcon />,
   },
 ];
 
