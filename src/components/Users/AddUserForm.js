@@ -2,6 +2,7 @@ import Button from "@atlaskit/button";
 import { FormSection } from "@atlaskit/form";
 import SearchIcon from "@atlaskit/icon/glyph/search";
 import React, { useEffect, useState } from "react";
+import Select from "@atlaskit/select";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -16,7 +17,7 @@ export const AddUserForm = ({ onSubmit }) => {
   const [organizations, setOrganizations] = useState([]);
 
   useEffect(() => {
-    fetchOrganizations("extended").then((items) => {
+    fetchOrganizations("short").then((items) => {
       var options = items.map(function (item) {
         return {
           label: item.name,
@@ -97,14 +98,16 @@ export const AddUserForm = ({ onSubmit }) => {
           </Box>
         </Spacing>
         <SelectInput
-          name={"organization_id"}
+          name={"organizations"}
           elemAfterInput={<SearchIcon />}
           options={organizations}
+          width={400}
           register={register({ required: true })}
           control={control}
           error={errors.organization}
           label="Organization"
           placeholder="Choose organization"
+          isMulti={true}
         />
         <Spacing m={{ t: "33px" }}>
           <SelectInput

@@ -17,6 +17,7 @@ export const SelectInput = (props) => {
     elemAfterInput = null,
     width = 240,
     label = null,
+    isMulti = false,
     options,
   } = props;
 
@@ -26,6 +27,7 @@ export const SelectInput = (props) => {
       <Controller
         control={control}
         ref={register}
+        isMulti={isMulti}
         rules={register}
         name={name}
         as={Select}
