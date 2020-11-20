@@ -7,6 +7,7 @@ import { useAuth } from "../../../context/auth/authContext";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
 import ChildIssuesIcon from "@atlaskit/icon/glyph/child-issues";
+import QueuesIcon from "@atlaskit/icon/glyph/queues";
 
 const SIDEBAR_ITEMS = [
   {
@@ -23,7 +24,12 @@ const SIDEBAR_ITEMS = [
     to: "/search-vectors",
     title: "Search Vectors",
     icon: () => <ChildIssuesIcon />,
-    exact: "admin",  },
+    exact: "admin",  
+  },
+    to: "/reports",
+    title: "Reports",
+    icon: () => <QueuesIcon />,
+  },
 ];
 
 export const Sidebar = () => {
