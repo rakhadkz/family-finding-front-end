@@ -24,8 +24,8 @@ import {
   OrganizationsPage,
   ResetPassword,
   UsersPage,
+  ActionItemsPage,
 } from "./pages";
-import { ActionItemsPage } from "./pages/ActionItemsPage";
 import LoginPage from "./pages/Login";
 
 function App() {
