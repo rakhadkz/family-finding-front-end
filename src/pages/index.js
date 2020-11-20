@@ -5,5 +5,7 @@ export * from "./NewPassword";
 export * from "./OrganizationsPage";
 export * from "./ResetPassword";
 export * from "./UsersPage";
+export * from "./SettingsPage";
+export * from "./ReportsPage";
 export * from "./CommunicationTemplatesPage";
-export * from "./ReportsPage"
+export * from "./ReportsPage";

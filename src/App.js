@@ -15,6 +15,7 @@ import {
   NEW_PASSWORD,
   ORGANIZATIONS,
   USERS,
+  SETTINGS,
   COMMUNICATION_TEMPLATES,
   REPORTS,
 } from "./helpers/routes";
@@ -25,6 +26,7 @@ import {
   OrganizationsPage,
   ResetPassword,
   UsersPage,
+  SettingsPage,
   CommunicationTemplatesPage,
   ReportsPage,
 } from "./pages";
@@ -38,6 +40,7 @@ function App() {
       {isSignedIn ? (
         <Router>
           <Switch>
+           <Route exact path={`/${SETTINGS}`} component={SettingsPage} />
             <Route exact path={`/${COMMUNICATION_TEMPLATES}`} component={CommunicationTemplatesPage} />
             <Route exact path={`/${REPORTS}`} component={ReportsPage} />
             <Route exact path={`/${USERS}`} component={UsersPage} />
