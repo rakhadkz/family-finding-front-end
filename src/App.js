@@ -16,6 +16,7 @@ import {
   ORGANIZATIONS,
   USERS,
   ACTION_ITEMS,
+  CHILDREN,
   SEARCHVECTOR,
   SETTINGS,
   COMMUNICATION_TEMPLATES,
@@ -28,6 +29,7 @@ import {
   OrganizationsPage,
   ResetPassword,
   UsersPage,
+  ChildrenPage,
   ActionItemsPage,
   SearchVectorsPage,
   SettingsPage,
@@ -65,6 +67,7 @@ function App() {
               path={`/${ACTION_ITEMS}`}
               component={ActionItemsPage}
             />
+            <Route exact path={`/${CHILDREN}`} component={ChildrenPage} />
             <Redirect exact from="/" to={`/${ORGANIZATIONS}`} />
             <Redirect exact from="/login" to={`/${ORGANIZATIONS}`} />
           </Switch>
