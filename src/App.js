@@ -15,6 +15,7 @@ import {
   NEW_PASSWORD,
   ORGANIZATIONS,
   USERS,
+  ACTION_ITEMS,
   SEARCHVECTOR,
   SETTINGS,
   COMMUNICATION_TEMPLATES,
@@ -27,6 +28,7 @@ import {
   OrganizationsPage,
   ResetPassword,
   UsersPage,
+  ActionItemsPage,
   SearchVectorsPage,
   SettingsPage,
   CommunicationTemplatesPage,
@@ -57,6 +59,11 @@ function App() {
               exact
               path={`/${ORGANIZATIONS}/${ADD}`}
               component={AddOrganizationPage}
+            />
+            <Route
+              exact
+              path={`/${ACTION_ITEMS}`}
+              component={ActionItemsPage}
             />
             <Redirect exact from="/" to={`/${ORGANIZATIONS}`} />
             <Redirect exact from="/login" to={`/${ORGANIZATIONS}`} />

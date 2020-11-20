@@ -4,12 +4,12 @@ import {
   fetchOrganizationsRequest,
 } from "../../api/organization";
 
-const fetchOrganizations = () => {
+const fetchOrganizations = (view = "") => {
   const errorStatuses = {
     500: "Error on Server !",
   };
 
-  return fetchOrganizationsRequest("extended").catch((err) => {
+  return fetchOrganizationsRequest(view).catch((err) => {
     toast.error(errorStatuses[err.status], {
       position: "top-center",
       autoClose: 2000,
