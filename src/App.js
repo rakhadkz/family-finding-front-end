@@ -17,6 +17,10 @@ import {
   USERS,
   ACTION_ITEMS,
   CHILDREN,
+  SEARCHVECTOR,
+  SETTINGS,
+  COMMUNICATION_TEMPLATES,
+  REPORTS,
 } from "./helpers/routes";
 import {
   AddOrganizationPage,
@@ -26,8 +30,12 @@ import {
   ResetPassword,
   UsersPage,
   ChildrenPage,
+  ActionItemsPage,
+  SearchVectorsPage,
+  SettingsPage,
+  CommunicationTemplatesPage,
+  ReportsPage,
 } from "./pages";
-import { ActionItemsPage } from "./pages/ActionItemsPage";
 import LoginPage from "./pages/Login";
 
 function App() {
@@ -38,6 +46,10 @@ function App() {
       {isSignedIn ? (
         <Router>
           <Switch>
+            <Route exact path={`/${SEARCHVECTOR}`} component={SearchVectorsPage} />
+            <Route exact path={`/${SETTINGS}`} component={SettingsPage} />
+            <Route exact path={`/${COMMUNICATION_TEMPLATES}`} component={CommunicationTemplatesPage} />
+            <Route exact path={`/${REPORTS}`} component={ReportsPage} />
             <Route exact path={`/${USERS}`} component={UsersPage} />
             <Route exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
             <Route

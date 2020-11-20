@@ -14,6 +14,10 @@ import { useAuth } from "../../../context/auth/authContext";
 import { GroupAccess } from "../../common";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
+import ChildIssuesIcon from "@atlaskit/icon/glyph/child-issues";
+import SettingsIcon from "@atlaskit/icon/glyph/settings";
+import MentionIcon from "@atlaskit/icon/glyph/mention";
+import QueuesIcon from "@atlaskit/icon/glyph/queues";
 
 const SIDEBAR_ITEMS = [
   {
@@ -27,19 +31,19 @@ const SIDEBAR_ITEMS = [
     to: "/action_items",
     title: "Action Items",
     icon: () => <Screen />,
-    atLeast: "manager",
+    atLeast: "user",
   },
   {
     to: "/children",
     title: "Children",
     icon: () => <EmojiSymbolsIcon />,
-    atLeast: "manager",
+    atLeast: "user",
   },
   {
     to: "/continuous_search",
     title: "Continuous Searches",
     icon: () => <SearchIcon />,
-    atLeast: "manager",
+    atLeast: "user",
   },
   {
     to: "/reports",
@@ -69,7 +73,29 @@ const SIDEBAR_ITEMS = [
     to: "/settings",
     title: "Settings",
     icon: () => <SettingsIcon />,
+    atLeast: "user",
+  },
+  {
+    to: "/communications-templates",
+    title: "Communications Templates",
+    icon: () => <MentionIcon />,
+    exact: "admin",
+  },
+  {
+    to: "/settings",
+    title: "Settings",
+    icon: () => <SettingsIcon />,
     atLeast: "manager",
+  },
+  {
+    to: "/search-vectors",
+    title: "Search Vectors",
+    icon: () => <ChildIssuesIcon />,
+    exact: "admin",  
+  },
+    to: "/reports",
+    title: "Reports",
+    icon: () => <QueuesIcon />,
   },
 ];
 
