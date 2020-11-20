@@ -5,7 +5,7 @@ import styled from "styled-components";
 export const AddChildButton = ({ onClick }) => {
   return (
     <ButtonWrapper>
-      <Button appearance="primary" onClick={onClick}>
+      <Button appearance="warning" onClick={onClick}>
         <ButtonContentWrapper>
           <EmojiAddIcon />
           Add Child

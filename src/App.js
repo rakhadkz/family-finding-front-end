@@ -25,6 +25,7 @@ import {
   OrganizationsPage,
   ResetPassword,
   UsersPage,
+  ChildrenPage,
   ActionItemsPage,
 } from "./pages";
 import LoginPage from "./pages/Login";
@@ -54,6 +55,8 @@ function App() {
               path={`/${ACTION_ITEMS}`}
               component={ActionItemsPage}
             />
+            <Route exact path={`/${CHILDREN}`} component={ChildrenPage} />
+            <Route exact path={`/${CHILDREN}/*`} component={ChildrenPage} />
             <Redirect exact from="/" to={`/${ORGANIZATIONS}`} />
             <Redirect exact from="/login" to={`/${ORGANIZATIONS}`} />
           </Switch>
