@@ -40,6 +40,7 @@ function App() {
           <Switch>
             <Route exact path={`/${USERS}`} component={UsersPage} />
             <Route exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
+            <Route exact path={`/${USERS}/:id`} component={UsersPage} />
             <Route
               exact
               path={`/${ORGANIZATIONS}`}

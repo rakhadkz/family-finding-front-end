@@ -6,3 +6,10 @@ export const fetchUsersRequest = async () => {
     method: "GET",
   });
 };
+
+export const fetchConcreteUserRequest = async (id) => {
+  return request({
+    endpoint: "admin/users/" + id,
+    method: "GET",
+  });
+};

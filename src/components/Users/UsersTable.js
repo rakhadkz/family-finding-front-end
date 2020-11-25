@@ -1,5 +1,6 @@
 import DynamicTable from "@atlaskit/dynamic-table";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { userTableData } from "../../content/user.data";
 import { fetchUsers } from "../../context/user/userProvider";
@@ -42,12 +43,19 @@ const columns = [
   },
 ];
 
-export const UsersTable = () => {
+export const UsersTable = ({ fetch, isConcreteUser = false, id = 0 }) => {
   const [users, setUsers] = useState([]);
+  const history = useHistory();
   useEffect(() => {
-    fetchUsers().then((items) => {
-      if (items) setUsers(userTableData(items));
-    });
+    if (isConcreteUser) {
+      fetch(id).then((item) => {
+        if (item) setUsers(userTableData([item], isConcreteUser, history));
+      });
+    } else {
+      fetch().then((items) => {
+        if (items) setUsers(userTableData(items, isConcreteUser, history));
+      });
+    }
   }, []);
 
   return (

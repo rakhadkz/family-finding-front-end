@@ -17,6 +17,7 @@ export const TextInput = (props) => {
     elemAfterInput = null,
     width = 240,
     label = null,
+    value,
   } = props;
 
   return (
@@ -24,6 +25,7 @@ export const TextInput = (props) => {
       {label && <Label htmlFor={name}>{label}</Label>}
       <StyledTextField
         controls={control}
+        value={value}
         ref={register}
         elemBeforeInput={elemBeforeInput}
         elemAfterInput={elemAfterInput}
