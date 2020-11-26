@@ -36,7 +36,7 @@ export const UsersTable = ({ fetch, isConcreteUser = false, id = 0 }) => {
   const [users, setUsers] = useState([]);
   const history = useHistory();
   useEffect(() => {
-    fetch(id).then(
+    fetch({ id: id, view: "extended" }).then(
       (items) =>
         items && setUsers(userTableData(items, isConcreteUser, history))
     );

@@ -6,12 +6,12 @@ const getToken = async () => {
   return window.localStorage.getItem(localStorageKey);
 };
 
-const fetchUsers = (id = 0) => {
+const fetchUsers = (params) => {
   const errorStatuses = {
     500: "Error on Server !",
   };
 
-  return fetchUsersRequest(id).catch((err) => {
+  return fetchUsersRequest(params).catch((err) => {
     toast.error(errorStatuses[err.status], {
       position: "top-center",
       autoClose: 2000,

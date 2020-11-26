@@ -31,15 +31,32 @@ const userTableData = (data, isConcreteUser = false, history) => {
         },
         {
           key: "organization",
-          content: item.organization?.name,
+          content: item.user_organizations?.map((item) => (
+            <p>{item.organization.name}</p>
+          )),
         },
         {
           key: "role",
-          content: item.role,
+          content: item.user_organizations?.map((item) => (
+            <p>{role_label(item.role)}</p>
+          )),
         },
       ],
     };
   });
+};
+
+const role_label = (role) => {
+  switch (role) {
+    case "super_admin":
+      return "Super admin";
+    case "admin":
+      return "Organization admin";
+    case "manager":
+      return "Organization manager";
+    default:
+      return "Organization user";
+  }
 };
 
 export { userTableData };
