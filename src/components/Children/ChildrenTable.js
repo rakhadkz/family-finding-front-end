@@ -2,7 +2,6 @@ import DynamicTable from "@atlaskit/dynamic-table";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { childTableData } from "../../content/child.data";
-import { tableData } from "../../content/sample.data";
 import { fetchChildren } from "../../context/children/childProvider";
 
 const TableCell = styled.span`
@@ -52,7 +51,7 @@ export const ChildrenTable = () => {
   const [children, setChildren] = useState([]);
 
   useEffect(() => {
-    fetchChildren("table").then((items) => {
+    fetchChildren("").then((items) => {
       if (items) setChildren(childTableData(items));
     });
   }, []);

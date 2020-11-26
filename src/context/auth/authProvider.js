@@ -11,7 +11,7 @@ import {
   localStorageKey,
 } from "../../utils/requestHandler";
 
-const getToken = async () => {
+const getToken = () => {
   return window.localStorage.getItem(localStorageKey);
 };
 

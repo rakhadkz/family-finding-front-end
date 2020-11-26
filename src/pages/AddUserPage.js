@@ -1,20 +1,17 @@
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
-import React from "react";
 import PeopleIcon from "@atlaskit/icon/glyph/people";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import { Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
 import { AddUserForm } from "../components/Users";
 import { useAuth } from "../context/auth/authContext";
-import { useHistory } from "react-router-dom";
 
 export const AddUserPage = () => {
   const { sign } = useAuth();
   const history = useHistory();
-  const backToUsers = (e) => {
-    e.preventDefault();
-    history.push("./");
-  };
+
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Users</Title>
@@ -27,7 +24,7 @@ export const AddUserPage = () => {
               </Spacing>
             }
             text="Users"
-            onClick={backToUsers}
+            onClick={() => history.goBack()}
           />
           <BreadcrumbsItem text="Add user" />
         </Breadcrumbs>

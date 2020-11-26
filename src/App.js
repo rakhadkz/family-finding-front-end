@@ -1,86 +1,100 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { Redirect, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "./context/auth/authContext";
 import {
+  ACTION_ITEMS,
   ADD,
+  CHILDREN,
+  COMMUNICATION_TEMPLATES,
   FORGOT_PASSWORD,
   LOGIN,
   NEW_PASSWORD,
   ORGANIZATIONS,
-  USERS,
-  ACTION_ITEMS,
-  CHILDREN,
+  REPORTS,
   SEARCHVECTOR,
   SETTINGS,
-  COMMUNICATION_TEMPLATES,
-  REPORTS,
+  USERS,
 } from "./helpers/routes";
 import {
+  ActionItemsPage,
   AddOrganizationPage,
   AddUserPage,
+  ChildrenPage,
+  CommunicationTemplatesPage,
   NewPassword,
   OrganizationsPage,
+  ReportsPage,
   ResetPassword,
-  UsersPage,
-  ChildrenPage,
-  ActionItemsPage,
   SearchVectorsPage,
   SettingsPage,
-  CommunicationTemplatesPage,
-  ReportsPage,
+  UsersPage,
 } from "./pages";
+import { ChildProfilePage } from "./pages/ChildProfilePage";
 import LoginPage from "./pages/Login";
 
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const { isAuthorized } = useAuth();
+
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        isAuthorized() ? <Component {...props} /> : <Redirect to="/login" />
+      }
+    />
+  );
+};
+
 function App() {
-  const { isSignedIn } = useAuth();
+  const { isAuthorized } = useAuth();
+  let location = useLocation();
+
+  console.log(location, isAuthorized());
 
   return (
     <>
-      {isSignedIn ? (
-        <Router>
-          <Switch>
-            <Route exact path={`/${SEARCHVECTOR}`} component={SearchVectorsPage} />
-            <Route exact path={`/${SETTINGS}`} component={SettingsPage} />
-            <Route exact path={`/${COMMUNICATION_TEMPLATES}`} component={CommunicationTemplatesPage} />
-            <Route exact path={`/${REPORTS}`} component={ReportsPage} />
-            <Route exact path={`/${USERS}`} component={UsersPage} />
-            <Route exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
-            <Route
-              exact
-              path={`/${ORGANIZATIONS}`}
-              component={OrganizationsPage}
-            />
-            <Route
-              exact
-              path={`/${ORGANIZATIONS}/${ADD}`}
-              component={AddOrganizationPage}
-            />
-            <Route
-              exact
-              path={`/${ACTION_ITEMS}`}
-              component={ActionItemsPage}
-            />
-            <Route exact path={`/${CHILDREN}`} component={ChildrenPage} />
-            <Redirect exact from="/" to={`/${ORGANIZATIONS}`} />
-            <Redirect exact from="/login" to={`/${ORGANIZATIONS}`} />
-          </Switch>
-        </Router>
-      ) : (
-        <Router>
-          <Switch>
-            <Route path={`/${LOGIN}`} component={LoginPage} />
-            <Route path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
-            <Route path={`/${NEW_PASSWORD}`} component={NewPassword} />
-            <Redirect from="/" to={`/${LOGIN}`} />
-          </Switch>
-        </Router>
+      <PrivateRoute
+        exact
+        path={`/${SEARCHVECTOR}`}
+        component={SearchVectorsPage}
+      />
+      <PrivateRoute exact path={`/${SETTINGS}`} component={SettingsPage} />
+      <PrivateRoute
+        exact
+        path={`/${COMMUNICATION_TEMPLATES}`}
+        component={CommunicationTemplatesPage}
+      />
+      <PrivateRoute exact path={`/${REPORTS}`} component={ReportsPage} />
+      <PrivateRoute exact path={`/${USERS}`} component={UsersPage} />
+      <PrivateRoute exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
+      <PrivateRoute
+        exact
+        path={`/${ORGANIZATIONS}`}
+        component={OrganizationsPage}
+      />
+      <PrivateRoute
+        exact
+        path={`/${ORGANIZATIONS}/${ADD}`}
+        component={AddOrganizationPage}
+      />
+      <PrivateRoute
+        exact
+        path={`/${ACTION_ITEMS}`}
+        component={ActionItemsPage}
+      />
+      <PrivateRoute exact path={`/${CHILDREN}`} component={ChildrenPage} />
+      <PrivateRoute
+        exact
+        path={`/${CHILDREN}/profile`}
+        component={ChildProfilePage}
+      />
+      <Route path={`/${LOGIN}`} component={LoginPage} />
+      <Route path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
+      <Route path={`/${NEW_PASSWORD}`} component={NewPassword} />
+      {location.pathname === "/" && (
+        <Redirect to={`/${isAuthorized() ? ORGANIZATIONS : LOGIN}`} />
       )}
       <ToastContainer />
     </>
