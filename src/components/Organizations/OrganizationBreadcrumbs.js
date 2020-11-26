@@ -1,10 +1,10 @@
 import React from "react";
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
-import PeopleIcon from "@atlaskit/icon/glyph/people";
+import OfficeBuilding from "@atlaskit/icon/glyph/office-building";
 import { Spacing } from "../../components/ui/atoms";
 import { useHistory } from "react-router-dom";
 
-export const UserBreadcrumbs = ({ text = "Add User" }) => {
+export const OrganizationBreadcrumbs = ({ text = "Add Organization" }) => {
   const history = useHistory();
   const back = (e) => {
     e.preventDefault();
@@ -17,10 +17,10 @@ export const UserBreadcrumbs = ({ text = "Add User" }) => {
         <BreadcrumbsItem
           iconBefore={
             <Spacing m={{ r: "7px" }}>
-              <PeopleIcon primaryColor="#2684FF" />
+              <OfficeBuilding primaryColor="#2684FF" />
             </Spacing>
           }
-          text="Users"
+          text="Organizations"
           onClick={back}
         />
         <BreadcrumbsItem text={text} />

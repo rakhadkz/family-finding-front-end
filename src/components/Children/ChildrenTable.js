@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { childTableData } from "../../content/child.data";
 import { tableData } from "../../content/sample.data";
 import { fetchChildren } from "../../context/children/childProvider";
+import { TableWrapper } from "../ui/common";
 
 const TableCell = styled.span`
   font-family: Helvetica;
@@ -70,7 +71,3 @@ export const ChildrenTable = () => {
     </TableWrapper>
   );
 };
-
-const TableWrapper = styled.div`
-  width: 100%;
-`;

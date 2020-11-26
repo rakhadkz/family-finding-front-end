@@ -1,8 +1,11 @@
 import { request } from "../../utils/request";
 
-export const fetchOrganizationsRequest = async (view = null) => {
+export const fetchOrganizationsRequest = async (params) => {
   return request({
-    endpoint: "super_admin/organizations?view=" + view,
+    endpoint:
+      "super_admin/organizations" +
+      (params.id ? "/" + params.id : "") +
+      (params.view ? "?view=" + params.view : ""),
     method: "GET",
   });
 };

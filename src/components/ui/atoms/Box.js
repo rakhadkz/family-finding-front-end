@@ -9,4 +9,5 @@ export const Box = styled.div`
   align-items: ${prop("align", "unset")};
   justify-content: ${prop("justify", "unset")};
   flex-direction: ${prop("direction", "row")};
+  margin-right: ${prop("mr", "0px")};
 `;

@@ -18,12 +18,14 @@ export const TextInput = (props) => {
     width = 240,
     label = null,
     value,
+    className,
   } = props;
 
   return (
-    <Box w={`${width}px`}>
+    <Box w={`${width}px`} mr="23px">
       {label && <Label htmlFor={name}>{label}</Label>}
       <StyledTextField
+        className={className}
         controls={control}
         value={value}
         ref={register}
@@ -60,4 +62,5 @@ TextInput.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
   label: PropTypes.node,
+  className: PropTypes.string,
 };

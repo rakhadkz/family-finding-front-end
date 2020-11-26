@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { OrganizationsTable } from "./components/Organizations";
 import { useAuth } from "./context/auth/authContext";
 import {
   ADD,
@@ -50,6 +51,11 @@ function App() {
               exact
               path={`/${ORGANIZATIONS}/${ADD}`}
               component={AddOrganizationPage}
+            />
+            <Route
+              exact
+              path={`/${ORGANIZATIONS}/:id`}
+              component={OrganizationsPage}
             />
             <Route
               exact

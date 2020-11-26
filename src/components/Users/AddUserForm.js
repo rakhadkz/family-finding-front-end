@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Box, Form, Spacing } from "../ui/atoms";
+import { Box, Form, Spacing, Title } from "../ui/atoms";
 import { TextInput } from "../ui/molecules";
 import { AddOrganizationForm } from "./AddOrganizationForm";
 
@@ -38,9 +38,10 @@ export const AddUserForm = ({ onSubmit }) => {
     <>
       <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
         <FormSection>
-          <Spacing m={{ t: "18px", b: "18px" }}>
+          <Spacing m={{ t: "18px" }}>
             <Box d="flex" w="100%" justify="space-between">
               <TextInput
+                className="input"
                 name={"first_name"}
                 register={register({ required: true })}
                 control={control}
@@ -48,6 +49,7 @@ export const AddUserForm = ({ onSubmit }) => {
                 label="First name"
               />
               <TextInput
+                className="input"
                 name={"last_name"}
                 register={register({ required: true })}
                 control={control}
@@ -55,6 +57,7 @@ export const AddUserForm = ({ onSubmit }) => {
                 label="Last name"
               />
               <TextInput
+                className="input"
                 name={"email"}
                 register={register({
                   required: true,
@@ -65,10 +68,10 @@ export const AddUserForm = ({ onSubmit }) => {
                 label="Email"
               />
               <TextInput
+                width={170}
                 name={"phone"}
                 register={register({
                   required: true,
-                  pattern: /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
                 })}
                 control={control}
                 error={errors.phone}

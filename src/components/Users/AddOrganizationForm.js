@@ -8,6 +8,7 @@ import { Box, Form, Spacing } from "../ui/atoms";
 import { SelectInput } from "../ui/molecules";
 import CrossIcon from "@atlaskit/icon/glyph/cross";
 import "@atlaskit/css-reset";
+import { TableWrapper } from "../ui/common";
 
 export const AddOrganizationForm = ({ setOrgRoles }) => {
   const { register, handleSubmit, control, errors } = useForm();
@@ -36,7 +37,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
   };
 
   useEffect(() => {
-    fetchOrganizations("short").then((items) => {
+    fetchOrganizations({ view: "short" }).then((items) => {
       var options = items.map(function (item) {
         return {
           label: item.name,
@@ -64,9 +65,10 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
         noValidate
       >
         <FormSection>
-          <Spacing m={{ t: "33px" }}>
-            <Box align="flex-end" d="flex" w="70%" justify="space-between">
+          <Spacing>
+            <Box align="flex-end" d="flex" w="67%" justify="space-between">
               <SelectInput
+                className="input"
                 name="organization"
                 elemAfterInput={<SearchIcon />}
                 options={organizations}
@@ -77,6 +79,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
                 placeholder="Choose organization"
               />
               <SelectInput
+                className="input"
                 name="role"
                 label="Role"
                 options={options}
@@ -86,37 +89,43 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
                 placeholder="Select a role"
               />
               <Button type="submit" appearance="primary">
-                Add Organization
+                Add organization
               </Button>
             </Box>
           </Spacing>
         </FormSection>
       </Form>
       <Spacing m={{ t: "33px" }}>
-        <table>
-          <thead>
-            <tr>
-              <th>Organization</th>
-              <th>Role</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fields.map((item, index) => {
-              return (
-                <tr key={item.organization.value}>
-                  <td>{item.organization.label}</td>
-                  <td>{item.role.label}</td>
-                  <td>
-                    <Button onClick={() => remove(index)}>
-                      <CrossIcon />
-                    </Button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <TableWrapper>
+          <table>
+            <thead>
+              <tr>
+                <th>Organization</th>
+                <th>Role</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fields.map((item, index) => {
+                return (
+                  <tr key={item.organization.value}>
+                    <td>{item.organization.label}</td>
+                    <td>{item.role.label}</td>
+                    <td>
+                      <Button
+                        height="32px"
+                        width="32px"
+                        onClick={() => remove(index)}
+                      >
+                        <CrossIcon size="small" />
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </TableWrapper>
       </Spacing>
     </>
   );

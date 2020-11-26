@@ -1,18 +1,8 @@
 import DynamicTable from "@atlaskit/dynamic-table";
-import { useEffect } from "react";
-import styled from "styled-components";
-import { tableData } from "../../content/sample.data";
-import { useOrganization } from "../../context/organization/organizationContext";
-
-const TableCell = styled.span`
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-
-  color: #172b4d;
-`;
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { organizationTableData } from "../../content/organization.data";
+import { TableWrapper } from "../ui/common";
 
 const columns = [
   {
@@ -42,18 +32,28 @@ const columns = [
   },
 ];
 
-export const OrganizationsTable = () => {
-  const { organizations, fetchOrganizations } = useOrganization();
-
+export const OrganizationsTable = ({
+  fetch,
+  isConcreteOrganization = false,
+  id = 0,
+}) => {
+  const [organizations, setOrganizations] = useState([]);
+  const history = useHistory();
   useEffect(() => {
-    fetchOrganizations();
-  }, [fetchOrganizations]);
+    fetch({ id: id }).then(
+      (items) =>
+        items &&
+        setOrganizations(
+          organizationTableData(items, isConcreteOrganization, history)
+        )
+    );
+  }, []);
 
   return (
     <TableWrapper>
       <DynamicTable
         head={{ cells: columns }}
-        rows={organizations ? tableData(organizations, columns) : []}
+        rows={organizations}
         loadingSpinnerSize="large"
         isLoading={false}
         isFixedSize
@@ -61,7 +61,3 @@ export const OrganizationsTable = () => {
     </TableWrapper>
   );
 };
-
-const TableWrapper = styled.div`
-  width: 100%;
-`;

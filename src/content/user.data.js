@@ -1,6 +1,7 @@
-import { useHistory } from "react-router-dom";
+import Button from "@atlaskit/button";
 
 const userTableData = (data, isConcreteUser = false, history) => {
+  if (isConcreteUser) data = [data];
   return data.map(function (item, index) {
     var full_name = item.first_name + " " + item.last_name;
     return {
@@ -11,7 +12,13 @@ const userTableData = (data, isConcreteUser = false, history) => {
           content: isConcreteUser ? (
             full_name
           ) : (
-            <a onClick={() => history.push("/users/" + item.id)}>{full_name}</a>
+            <Button
+              onClick={() => history.push("/users/" + item.id)}
+              appearance="link"
+              spacing="none"
+            >
+              {full_name}
+            </Button>
           ),
         },
         {

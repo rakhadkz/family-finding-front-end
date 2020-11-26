@@ -1,19 +1,8 @@
 import DynamicTable from "@atlaskit/dynamic-table";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import styled from "styled-components";
 import { userTableData } from "../../content/user.data";
-import { fetchUsers } from "../../context/user/userProvider";
-
-const TableCell = styled.span`
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  margin-top: 40px;
-  color: #172b4d;
-`;
+import { TableWrapper } from "../ui/common";
 
 const columns = [
   {
@@ -47,15 +36,10 @@ export const UsersTable = ({ fetch, isConcreteUser = false, id = 0 }) => {
   const [users, setUsers] = useState([]);
   const history = useHistory();
   useEffect(() => {
-    if (isConcreteUser) {
-      fetch(id).then((item) => {
-        if (item) setUsers(userTableData([item], isConcreteUser, history));
-      });
-    } else {
-      fetch().then((items) => {
-        if (items) setUsers(userTableData(items, isConcreteUser, history));
-      });
-    }
+    fetch(id).then(
+      (items) =>
+        items && setUsers(userTableData(items, isConcreteUser, history))
+    );
   }, []);
 
   return (
@@ -70,7 +54,3 @@ export const UsersTable = ({ fetch, isConcreteUser = false, id = 0 }) => {
     </TableWrapper>
   );
 };
-
-const TableWrapper = styled.div`
-  width: 100%;
-`;
