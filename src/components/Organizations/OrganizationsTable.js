@@ -1,7 +1,4 @@
 import DynamicTable from "@atlaskit/dynamic-table";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { organizationTableData } from "../../content/organization.data";
 import { TableWrapper } from "../ui/common";
 
 const columns = [
@@ -32,30 +29,13 @@ const columns = [
   },
 ];
 
-export const OrganizationsTable = ({
-  fetch,
-  isConcreteOrganization = false,
-  id = 0,
-}) => {
-  const [organizations, setOrganizations] = useState([]);
-  const history = useHistory();
-  useEffect(() => {
-    fetch({ id: id }).then(
-      (items) =>
-        items &&
-        setOrganizations(
-          organizationTableData(items, isConcreteOrganization, history)
-        )
-    );
-  }, []);
-
+export const OrganizationsTable = ({ items }) => {
   return (
     <TableWrapper>
       <DynamicTable
         head={{ cells: columns }}
-        rows={organizations}
+        rows={items}
         loadingSpinnerSize="large"
-        isLoading={false}
         isFixedSize
       />
     </TableWrapper>

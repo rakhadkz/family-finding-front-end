@@ -1,6 +1,7 @@
 import { request } from "../../utils/request";
 
 export const fetchOrganizationsRequest = async (params) => {
+  console.log("PARAM ID: ", params.id);
   return request({
     endpoint:
       "super_admin/organizations" +

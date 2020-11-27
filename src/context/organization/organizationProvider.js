@@ -4,7 +4,7 @@ import {
   fetchOrganizationsRequest,
 } from "../../api/organization";
 
-const fetchOrganizations = (params) => {
+const fetchOrganizations = (params = null) => {
   const errorStatuses = {
     500: "Error on Server !",
   };

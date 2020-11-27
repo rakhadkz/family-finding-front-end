@@ -1,15 +1,17 @@
 import Button from "@atlaskit/button";
 
-const userTableData = (data, isConcreteUser = false, history) => {
-  if (isConcreteUser) data = [data];
-  return data.map(function (item, index) {
+const userTableData = (data, history) => {
+  console.log("IT IS FUKKING DATA: ", data);
+  const isArray = Array.isArray(data);
+  data = isArray ? data : (data = [data]);
+  return data.map((item, index) => {
     var full_name = item.first_name + " " + item.last_name;
     return {
       key: index,
       cells: [
         {
           key: "name",
-          content: isConcreteUser ? (
+          content: !isArray ? (
             full_name
           ) : (
             <Button

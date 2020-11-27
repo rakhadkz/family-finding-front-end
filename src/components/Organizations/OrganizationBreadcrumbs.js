@@ -4,7 +4,7 @@ import OfficeBuilding from "@atlaskit/icon/glyph/office-building";
 import { Spacing } from "../../components/ui/atoms";
 import { useHistory } from "react-router-dom";
 
-export const OrganizationBreadcrumbs = ({ text = "Add Organization" }) => {
+export const OrganizationBreadcrumbs = ({ text }) => {
   const history = useHistory();
   const back = (e) => {
     e.preventDefault();

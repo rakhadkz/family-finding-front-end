@@ -1,18 +1,14 @@
 import Button from "@atlaskit/button";
 
-const organizationTableData = (
-  data,
-  isConcreteOrganization = false,
-  history
-) => {
-  console.log("CONCRETE ORGANIZATION");
-  data = isConcreteOrganization ? (data = [data]) : data;
+const organizationTableData = (data, history) => {
+  const isArray = Array.isArray(data);
+  data = isArray ? data : (data = [data]);
   return data.map((item, index) => ({
     key: index,
     cells: [
       {
         key: "name",
-        content: isConcreteOrganization ? (
+        content: !isArray ? (
           item.name
         ) : (
           <Button

@@ -32,25 +32,10 @@ const columns = [
   },
 ];
 
-export const UsersTable = ({ fetch, isConcreteUser = false, id = 0 }) => {
-  const [users, setUsers] = useState([]);
-  const history = useHistory();
-  useEffect(() => {
-    fetch({ id: id, view: "extended" }).then(
-      (items) =>
-        items && setUsers(userTableData(items, isConcreteUser, history))
-    );
-  }, []);
-
+export const UsersTable = ({ items }) => {
   return (
     <TableWrapper>
-      <DynamicTable
-        head={{ cells: columns }}
-        rows={users}
-        loadingSpinnerSize="large"
-        isLoading={false}
-        isFixedSize
-      />
+      <DynamicTable head={{ cells: columns }} rows={items} isFixedSize />
     </TableWrapper>
   );
 };

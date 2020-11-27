@@ -1,5 +1,5 @@
 import Button from "@atlaskit/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   AddOrganizationButton,
@@ -10,6 +10,7 @@ import {
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
+import { organizationTableData } from "../content/organization.data";
 import { fetchOrganizations } from "../context/organization/organizationProvider";
 
 const AllOrganizations = ({ history }) => (
@@ -22,23 +23,13 @@ const AllOrganizations = ({ history }) => (
         />
       </Box>
     </Spacing>
-    <Spacing m={{ t: "23px" }}>
-      <OrganizationsTable fetch={fetchOrganizations} />
-    </Spacing>
   </>
 );
 
-const ConcreteOrganization = ({ id }) => (
+const ConcreteOrganization = ({ name }) => (
   <>
     <Spacing m={{ t: "23px" }}>
-      <OrganizationBreadcrumbs text={id} />
-    </Spacing>
-    <Spacing m={{ t: "23px" }}>
-      <OrganizationsTable
-        fetch={fetchOrganizations}
-        id={id}
-        isConcreteOrganization={true}
-      />
+      <OrganizationBreadcrumbs text={name} />
     </Spacing>
   </>
 );
@@ -46,14 +37,25 @@ const ConcreteOrganization = ({ id }) => (
 export const OrganizationsPage = (props) => {
   const history = useHistory();
   const id = props.match.params.id;
+  const [name, setName] = useState("");
+  const [organizations, setOrganizations] = useState([]);
+  useEffect(() => {
+    fetchOrganizations({ id: id }).then((items) => {
+      setName(items.name);
+      setOrganizations(organizationTableData(items, history));
+    });
+  }, [id]);
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Organizations</Title>
       {id ? (
-        <ConcreteOrganization id={id} />
+        <ConcreteOrganization name={name} />
       ) : (
         <AllOrganizations history={history} />
       )}
+      <Spacing m={{ t: "23px" }}>
+        <OrganizationsTable items={organizations} />
+      </Spacing>
     </SidebarTemplate>
   );
 };
