@@ -27,19 +27,19 @@ const SIDEBAR_ITEMS = [
     to: "/action-items",
     title: "Action Items",
     icon: () => <Screen />,
-    atLeast: "manager",
+    atLeast: "user",
   },
   {
     to: "/children",
     title: "Children",
     icon: () => <EmojiSymbolsIcon />,
-    atLeast: "manager",
+    atLeast: "user",
   },
   {
-    to: "/continuous_search",
+    to: "/continuous-search",
     title: "Continuous Searches",
     icon: () => <SearchIcon />,
-    atLeast: "manager",
+    atLeast: "user",
   },
   {
     to: "/reports",
@@ -54,13 +54,7 @@ const SIDEBAR_ITEMS = [
     exact: "super_admin",
   },
   {
-    to: "/search_vectors",
-    title: "Search Vectors",
-    icon: () => <ChildIssuesIcon />,
-    exact: "admin",
-  },
-  {
-    to: "/communications_templates",
+    to: "/communications-templates",
     title: "Communications Templates",
     icon: () => <MentionIcon />,
     exact: "admin",
@@ -69,7 +63,18 @@ const SIDEBAR_ITEMS = [
     to: "/settings",
     title: "Settings",
     icon: () => <SettingsIcon />,
-    atLeast: "manager",
+    atLeast: "user",
+  },
+  {
+    to: "/search-vectors",
+    title: "Search Vectors",
+    icon: () => <ChildIssuesIcon />,
+    exact: "admin",
+  },
+  {
+    to: "/reports",
+    title: "Reports",
+    icon: () => <QueuesIcon />,
   },
 ];
 

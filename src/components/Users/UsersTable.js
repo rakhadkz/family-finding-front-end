@@ -1,7 +1,5 @@
 import DynamicTable from "@atlaskit/dynamic-table";
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { userTableData } from "../../content/user.data";
+import React from "react";
 import { TableWrapper } from "../ui/common";
 
 const columns = [

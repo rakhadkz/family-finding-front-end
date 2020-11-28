@@ -1,4 +1,5 @@
 import Button from "@atlaskit/button";
+import { role_label } from "./sample.data";
 
 const userTableData = (data, history) => {
   console.log("IT IS FUKKING DATA: ", data);
@@ -46,19 +47,6 @@ const userTableData = (data, history) => {
       ],
     };
   });
-};
-
-const role_label = (role) => {
-  switch (role) {
-    case "super_admin":
-      return "Super admin";
-    case "admin":
-      return "Organization admin";
-    case "manager":
-      return "Organization manager";
-    default:
-      return "Organization user";
-  }
 };
 
 export { userTableData };

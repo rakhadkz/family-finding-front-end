@@ -54,7 +54,8 @@ export const ChildrenTable = () => {
   const [children, setChildren] = useState([]);
 
   useEffect(() => {
-    fetchChildren("table").then((items) => {
+    fetchChildren({ view: "table" }).then((items) => {
+      console.log("THIS IS CHILDREN:", items);
       if (items) setChildren(childTableData(items));
     });
   }, []);

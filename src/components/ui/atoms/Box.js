@@ -10,4 +10,6 @@ export const Box = styled.div`
   justify-content: ${prop("justify", "unset")};
   flex-direction: ${prop("direction", "row")};
   margin-right: ${prop("mr", "0px")};
+  margin-top: ${prop("mt", "0px")};
+  margin-bottom: ${prop("mb", "0px")};
 `;

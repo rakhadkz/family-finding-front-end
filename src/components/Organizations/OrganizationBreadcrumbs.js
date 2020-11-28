@@ -6,11 +6,6 @@ import { useHistory } from "react-router-dom";
 
 export const OrganizationBreadcrumbs = ({ text }) => {
   const history = useHistory();
-  const back = (e) => {
-    e.preventDefault();
-    history.push("./");
-  };
-
   return (
     <>
       <Breadcrumbs>
@@ -21,7 +16,7 @@ export const OrganizationBreadcrumbs = ({ text }) => {
             </Spacing>
           }
           text="Organizations"
-          onClick={back}
+          onClick={() => history.goBack()}
         />
         <BreadcrumbsItem text={text} />
       </Breadcrumbs>

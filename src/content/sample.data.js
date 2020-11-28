@@ -18,4 +18,17 @@ const fillCells = (data, cells) => {
   });
 };
 
+export const role_label = (role) => {
+  switch (role) {
+    case "super_admin":
+      return "Super admin";
+    case "admin":
+      return "Organization admin";
+    case "manager":
+      return "Organization manager";
+    default:
+      return "Organization user";
+  }
+};
+
 export { tableData };
