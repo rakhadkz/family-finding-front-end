@@ -100,7 +100,7 @@ export const AddUserForm = ({ onSubmit }) => {
           name={"organization_id"}
           elemAfterInput={<SearchIcon />}
           options={organizations}
-          register={register({ required: true })}
+          register={{ required: true }}
           control={control}
           error={errors.organization}
           label="Organization"
@@ -110,7 +110,7 @@ export const AddUserForm = ({ onSubmit }) => {
           <SelectInput
             name={"role"}
             options={options}
-            register={register({ required: true })}
+            register={{ required: true }}
             control={control}
             error={errors.role}
             placeholder="Choose role"

@@ -6,3 +6,11 @@ export const fetchChildrenRequest = (view = "") => {
     method: "GET",
   });
 };
+
+export const createChildRequest = (data) => {
+  return request({
+    endpoint: "children",
+    method: "POST",
+    data,
+  });
+};

@@ -52,7 +52,7 @@ export const AddOrganizationForm = ({ onSubmit }) => {
             />
             <SelectInput
               name={"state"}
-              register={register({ required: true })}
+              register={{ required: true }}
               control={control}
               options={states.map((state) => ({ label: state, value: state }))}
               error={errors.state}

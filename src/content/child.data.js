@@ -1,5 +1,5 @@
-import { Box } from "../components/ui/atoms";
 import Avatar from "@atlaskit/avatar";
+import { Box } from "../components/ui/atoms";
 
 const childTableData = (data) => {
   return data.map(function (item, index) {
@@ -12,7 +12,7 @@ const childTableData = (data) => {
             <Box d="flex" align="center">
               <Avatar appearance="circle" src={item.avatar} size="medium" />
               <a href="" style={{ marginLeft: "8px" }}>
-                {item.full_name}
+                {item.first_name} {item.last_name}
               </a>
             </Box>
           ),
