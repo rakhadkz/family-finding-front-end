@@ -1,9 +1,10 @@
 import Tabs from "@atlaskit/tabs";
 import React from "react";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
+import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
 const tabs = [
-  { label: "Family Tree" },
+  { label: "Family Tree", content: <FamilyTreePage /> },
   { label: "Family Search" },
   { label: "Comments" },
   { label: "Attachments", content: <AttachmentsPage /> },
