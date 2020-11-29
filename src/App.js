@@ -68,6 +68,7 @@ function App() {
       />
       <PrivateRoute exact path={`/${REPORTS}`} component={ReportsPage} />
       <PrivateRoute exact path={`/${USERS}`} component={UsersPage} />
+      <PrivateRoute exact path={`/${USERS}/:id`} component={UsersPage} />
       <PrivateRoute exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
       <PrivateRoute
         exact
@@ -78,6 +79,11 @@ function App() {
         exact
         path={`/${ORGANIZATIONS}/${ADD}`}
         component={AddOrganizationPage}
+      />
+      <PrivateRoute
+        exact
+        path={`/${ORGANIZATIONS}/:id`}
+        component={OrganizationsPage}
       />
       <PrivateRoute
         exact
