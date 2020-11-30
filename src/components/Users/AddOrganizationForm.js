@@ -68,7 +68,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
       >
         <FormSection>
           <Spacing>
-            <Box align="flex-end" d="flex" w="67%" justify="space-between">
+            <Box align="flex-end" d="flex">
               <SelectInput
                 className="input"
                 name="organization"
