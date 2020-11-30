@@ -1,5 +1,6 @@
 import { Box } from "../components/ui/atoms";
 import Avatar from "@atlaskit/avatar";
+import { role_label } from "./sample.data";
 
 const actionItemTableData = (data) => {
   return data.map(function (item, index) {
@@ -16,7 +17,7 @@ const actionItemTableData = (data) => {
         },
         {
           key: "user",
-          content: item.user.role,
+          content: role_label(item.user.role),
         },
         {
           key: "child",

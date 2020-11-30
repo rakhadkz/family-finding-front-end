@@ -53,8 +53,6 @@ function App() {
   const { isAuthorized, user } = useAuth();
   let location = useLocation();
 
-  console.log(location, isAuthorized(), user);
-
   return (
     <>
       <PrivateRoute
@@ -70,6 +68,7 @@ function App() {
       />
       <PrivateRoute exact path={`/${REPORTS}`} component={ReportsPage} />
       <PrivateRoute exact path={`/${USERS}`} component={UsersPage} />
+
       <PrivateRoute exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
       <PrivateRoute
         exact
@@ -88,13 +87,18 @@ function App() {
       />
       <PrivateRoute
         exact
+        path={`/${ORGANIZATIONS}/:id`}
+        component={OrganizationsPage}
+      />
+      <PrivateRoute
+        exact
         path={`/${ACTION_ITEMS}`}
         component={ActionItemsPage}
       />
       <PrivateRoute exact path={`/${CHILDREN}`} component={ChildrenPage} />
       <PrivateRoute
         exact
-        path={`/${CHILDREN}/profile`}
+        path={`/${CHILDREN}/:id`}
         component={ChildProfilePage}
       />
       <Route path={`/${LOGIN}`} component={LoginPage} />

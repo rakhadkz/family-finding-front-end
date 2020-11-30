@@ -8,7 +8,7 @@ export const AddUserButton = ({ onClick }) => {
       <Button appearance="primary" onClick={onClick}>
         <ButtonContentWrapper>
           <PersonIcon />
-          Add User
+          Add user
         </ButtonContentWrapper>
       </Button>
     </ButtonWrapper>
