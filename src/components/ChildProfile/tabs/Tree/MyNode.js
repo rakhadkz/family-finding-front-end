@@ -36,11 +36,6 @@ const MyNode = ({ nodeData }) => {
 };
 
 const Card = styled.div`
-  .orgchart.myChart {
-    background: #fff;
-    height: 200px;
-  }
-
   .orgchart.myChart > ul > li > ul li::before {
     border-top-color: #a0a0a0;
   }
@@ -49,6 +44,7 @@ const Card = styled.div`
   .orgchart.myChart ul li .oc-node:not(:only-child)::after {
     background-color: #a0a0a0;
   }
+  background: #cee9e9;
   border-radius: 50px;
   padding-right: 23px;
   .content {

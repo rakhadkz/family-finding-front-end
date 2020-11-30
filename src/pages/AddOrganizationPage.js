@@ -10,7 +10,7 @@ import { SidebarTemplate } from "../components/ui/templates";
 import { useOrganization } from "../context/organization/organizationContext";
 
 export const AddOrganizationPage = () => {
-  const { createOrgnaization } = useOrganization();
+  const { createOrganization } = useOrganization();
   const history = useHistory();
 
   return (

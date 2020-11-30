@@ -1,5 +1,6 @@
 import Avatar from "@atlaskit/avatar";
 import Button from "@atlaskit/button";
+import { Box } from "../components/ui/atoms";
 
 const childTableData = (data, history) =>
   data.map((item, index) => ({
