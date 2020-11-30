@@ -1,10 +1,10 @@
 import Tabs from "@atlaskit/tabs";
 import React from "react";
+import { PotentialMatches } from "../Children/PotentialMatches";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
 export const ChildTabs = ({ contacts, attachments }) => {
-  console.log("FAMILY", contacts);
   const tabs = [
     { label: "Family Tree", content: <FamilyTreePage contacts={contacts} /> },
     { label: "Family Search" },
@@ -13,7 +13,7 @@ export const ChildTabs = ({ contacts, attachments }) => {
       label: "Attachments",
       content: <AttachmentsPage attachments={attachments} />,
     },
-    { label: "Potential Matches" },
+    { label: "Potential Matches",content: <PotentialMatches /> },
   ];
   return <Tabs tabs={tabs} />;
 };

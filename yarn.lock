@@ -271,6 +271,16 @@
     exenv "^1.2.2"
     tiny-invariant "^0.0.3"
 
+"@atlaskit/radio@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@atlaskit/radio/-/radio-5.0.3.tgz#fc68982a25b543d3b546be27b2eba83b22f186d7"
+  integrity sha512-bql9gL0jUp+GhnSwlUL5XybXTxC3P9qKWWv+SL3waqE30q2NWpKdYq5okb3cylTn4j6YuhQLx2LbQ4+6PjyNdw==
+  dependencies:
+    "@atlaskit/analytics-next" "^8.0.0"
+    "@atlaskit/theme" "^11.0.0"
+    "@babel/runtime" "^7.0.0"
+    "@emotion/core" "^10.0.9"
+
 "@atlaskit/select@^13.0.0", "@atlaskit/select@^13.0.6":
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/@atlaskit/select/-/select-13.1.1.tgz#27a77790242ea5683b1cbe71c388a961528245c2"
