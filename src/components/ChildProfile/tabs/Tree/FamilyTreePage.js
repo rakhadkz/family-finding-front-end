@@ -8,13 +8,13 @@ import { Box, Spacing, Title } from "../../../ui/atoms";
 import MyNode from "./MyNode";
 import Button from "@atlaskit/button";
 
-export const FamilyTreePage = () => {
-  const [contacts, setContacts] = useState([]);
-  useEffect(() => {
-    fetchChildren({ id: 1, view: "contacts" }).then((items) => {
-      setContacts(childContactsTableData(items));
-    });
-  }, []);
+export const FamilyTreePage = ({ contacts }) => {
+  // const [contacts, setContacts] = useState([]);
+  // useEffect(() => {
+  //   fetchChildren({ id: 1, view: "contacts" }).then((items) => {
+  //     setContacts(childContactsTableData(items));
+  //   });
+  // }, []);
   return (
     <Wrapper>
       <Box d="flex" direction="row-reverse">
@@ -31,11 +31,16 @@ export const FamilyTreePage = () => {
       </Spacing>
       <Title size={"16px"}>Contact List</Title>
       <Spacing m={{ t: "20px" }}>
-        <ContactsTable contacts={contacts} />
+        <ContactsTable contacts={childContactsTableData(contacts)} />
       </Spacing>
     </Wrapper>
   );
 };
+
+const Card = styled.div`
+  background: #cee9e9;
+  border-radius: 50px;
+`;
 
 const Wrapper = styled.div`
   width: 100%;

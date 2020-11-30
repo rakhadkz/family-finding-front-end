@@ -6,14 +6,14 @@ import { fetchChildAttachments } from "../../../../context/children/childProvide
 import { childAttachmentTableData } from "../../../../content/childAttachment.data";
 import { AttachmentsTable } from "./AttachmentsTable";
 
-export const AttachmentsPage = () => {
-  const [attachments, setAttachments] = useState([]);
+export const AttachmentsPage = ({ attachments }) => {
+  // const [attachments, setAttachments] = useState([]);
 
-  useEffect(() => {
-    fetchChildAttachments(1).then((items) => {
-      setAttachments(childAttachmentTableData(items));
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetchChildAttachments(1).then((items) => {
+  //     setAttachments(childAttachmentTableData(items));
+  //   });
+  // }, []);
 
   return (
     <div>
@@ -25,7 +25,7 @@ export const AttachmentsPage = () => {
         </Box>
       </Spacing>
       <Spacing m={{ t: "23px" }}>
-        <AttachmentsTable attachments={attachments} />
+        <AttachmentsTable attachments={childAttachmentTableData(attachments)} />
       </Spacing>
     </div>
   );

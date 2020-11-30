@@ -1,5 +1,5 @@
 const childContactsTableData = (data) =>
-  data.contacts.map((item, index) => ({
+  data.map((item, index) => ({
     key: index,
     cells: [
       {

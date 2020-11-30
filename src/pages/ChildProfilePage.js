@@ -1,7 +1,7 @@
 import AvatarGroup from "@atlaskit/avatar-group";
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import EmojiSymbolsIcon from "@atlaskit/icon/glyph/emoji/symbols";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   Assign,
@@ -16,10 +16,20 @@ import {
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
+import { fetchChildren } from "../context/children/childProvider";
 import { CHILDREN } from "../helpers";
 
-export const ChildProfilePage = () => {
+export const ChildProfilePage = (props) => {
   const history = useHistory();
+  const id = props.match.params.id;
+  const [child, setChild] = useState({});
+  useEffect(() => {
+    fetchChildren({ id: id, view: "extended" }).then((item) => {
+      console.log("This is child", item.contacts);
+      setChild(item);
+    });
+  }, []);
+
   const data = [
     {
       email: "makhanbet.kyzylorda@gmail.com",
@@ -62,7 +72,7 @@ export const ChildProfilePage = () => {
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Box d="flex" justify="space-between">
-        <Title>Children Profile</Title>
+        <Title>{`${child.first_name} ${child.last_name}`}</Title>
         <Box d="flex">
           <SetReminder />
           <Spacing m="0px 10px">
@@ -79,17 +89,17 @@ export const ChildProfilePage = () => {
                 <EmojiSymbolsIcon primaryColor="#2684FF" />
               </Spacing>
             }
-            onClick={() => history.replace(CHILDREN)}
+            onClick={() => history.push(`../${CHILDREN}`)}
             text="Children"
           />
-          <BreadcrumbsItem text="Children Profile" />
+          <BreadcrumbsItem text={`${child.first_name} ${child.last_name}`} />
         </Breadcrumbs>
       </Spacing>
       <Spacing m={{ t: "22px" }}>
-        <ChildInformation />
+        <ChildInformation child={child} />
       </Spacing>
       <Spacing m={{ t: "22px" }}>
-        <RelativesList />
+        <RelativesList relatives={child.contacts || []} />
       </Spacing>
       <Spacing m={{ t: "16px" }}>
         <Box d="flex">
@@ -101,7 +111,10 @@ export const ChildProfilePage = () => {
         </Box>
       </Spacing>
       <Spacing m={{ t: "40px" }}>
-        <ChildTabs />
+        <ChildTabs
+          attachments={child.attachments}
+          contacts={child.contacts || []}
+        />
       </Spacing>
     </SidebarTemplate>
   );

@@ -52,11 +52,11 @@ const columns = [
 
 export const ChildrenTable = () => {
   const [children, setChildren] = useState([]);
-
+  const history = useHistory();
   useEffect(() => {
     fetchChildren({ view: "table" }).then((items) => {
       console.log("THIS IS CHILDREN:", items);
-      if (items) setChildren(childTableData(items));
+      if (items) setChildren(childTableData(items, history));
     });
   }, []);
 

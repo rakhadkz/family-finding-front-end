@@ -15,28 +15,28 @@ export const ChildInformation = ({ child }) => {
           />
           <Spacing m={{ l: "17px" }}>
             <StyledLabel>Full name</StyledLabel>
-            <Title size="18px">Bekzat Makhanbet</Title>
+            <Title size="18px">{`${child.first_name} ${child.last_name}`}</Title>
           </Spacing>
         </Box>
         <Spacing>
           <StyledLabel>Birth date</StyledLabel>
-          <Text>04/20/2015</Text>
+          <Text>{child.birthday}</Text>
         </Spacing>
         <Spacing>
           <StyledLabel>Gender</StyledLabel>
-          <Text>Male</Text>
+          <Text>{child.gender}</Text>
         </Spacing>
         <Spacing>
           <StyledLabel>Race</StyledLabel>
-          <Text>White</Text>
+          <Text>{child.race}</Text>
         </Spacing>
         <Spacing>
-          <StyledLabel>Permamency goal</StyledLabel>
-          <Text>Return to parent</Text>
+          <StyledLabel>Permanency goal</StyledLabel>
+          <Text>{child.permanency_goal}</Text>
         </Spacing>
         <Spacing>
           <StyledLabel>System status</StyledLabel>
-          <Text>in searching</Text>
+          <Text>{child.system_status}</Text>
         </Spacing>
         <Spacing>
           <StyledLabel>Matches</StyledLabel>

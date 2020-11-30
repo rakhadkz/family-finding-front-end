@@ -5,7 +5,7 @@ import ExcelSpreadsheet24Icon from "@atlaskit/icon-file-type/glyph/excel-spreads
 import { Box } from "../components/ui/atoms";
 
 const childAttachmentTableData = (data) =>
-  data.attachments.map((item, index) => ({
+  data.map((item, index) => ({
     key: index,
     cells: [
       {

@@ -1,7 +1,8 @@
 import { Box } from "../components/ui/atoms";
 import Avatar from "@atlaskit/avatar";
+import Button from "@atlaskit/button";
 
-const childTableData = (data) =>
+const childTableData = (data, history) =>
   data.map((item, index) => ({
     key: index,
     cells: [
@@ -10,9 +11,14 @@ const childTableData = (data) =>
         content: (
           <Box d="flex" align="center">
             <Avatar appearance="circle" src={item.avatar} size="medium" />
-            <a href="" style={{ marginLeft: "8px" }}>
+            <Button
+              style={{ marginLeft: "8px" }}
+              onClick={() => history.push("/children/" + item.id)}
+              appearance="link"
+              spacing="none"
+            >
               {item.full_name}
-            </a>
+            </Button>
           </Box>
         ),
       },

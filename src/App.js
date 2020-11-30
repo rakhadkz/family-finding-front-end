@@ -93,7 +93,7 @@ function App() {
       <PrivateRoute exact path={`/${CHILDREN}`} component={ChildrenPage} />
       <PrivateRoute
         exact
-        path={`/${CHILDREN}/profile`}
+        path={`/${CHILDREN}/:id`}
         component={ChildProfilePage}
       />
       <Route path={`/${LOGIN}`} component={LoginPage} />
