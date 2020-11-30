@@ -35,6 +35,7 @@ import {
 } from "./pages";
 import { ChildProfilePage } from "./pages/ChildProfilePage";
 import LoginPage from "./pages/Login";
+import { localStorageKey } from "./utils/requestHandler";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const { isAuthorized } = useAuth();
@@ -43,7 +44,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) =>
-        isAuthorized() ? <Component {...props} /> : <Redirect to="/login" />
+        window.localStorage.getItem(localStorageKey) ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/login" />
+        )
       }
     />
   );
@@ -101,14 +106,21 @@ function App() {
         path={`/${CHILDREN}/:id`}
         component={ChildProfilePage}
       />
+      <PrivateRoute
+        exact
+        path={`/`}
+        component={() =>
+          user ? (
+            <Redirect to={`/${initialRoutesByRoles[user.role]}`} />
+          ) : (
+            <div>Loading</div>
+          )
+        }
+      />
       <Route path={`/${LOGIN}`} component={LoginPage} />
       <Route path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
       <Route path={`/${NEW_PASSWORD}`} component={NewPassword} />
-      {location.pathname === "/" && user && (
-        <Redirect
-          to={`/${isAuthorized() ? initialRoutesByRoles[user.role] : LOGIN}`}
-        />
-      )}
+
       <ToastContainer />
     </>
   );
