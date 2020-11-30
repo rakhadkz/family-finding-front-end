@@ -27,20 +27,22 @@ export const AddOrganizationForm = ({ onSubmit }) => {
   return (
     <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
       <FormSection>
-        <TextInput
-          name={"name"}
-          register={register({ required: true })}
-          control={control}
-          error={errors.name}
-          label="Name"
-        />
-        <TextInput
-          name={"phone"}
-          register={register({ required: true })}
-          control={control}
-          error={errors.phone}
-          label="Phone"
-        />
+        <Box d="flex" w="100%">
+          <TextInput
+            name={"name"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.name}
+            label="Name"
+          />
+          <TextInput
+            name={"phone"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.phone}
+            label="Phone"
+          />
+        </Box>
         <Spacing m={{ t: "18px" }}>
           <Box d="flex" w="100%">
             <TextInput
