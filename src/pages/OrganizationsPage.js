@@ -40,7 +40,7 @@ export const OrganizationsPage = (props) => {
   const [name, setName] = useState("");
   const [organizations, setOrganizations] = useState([]);
   useEffect(() => {
-    id != "add" &&
+    id !== "add" &&
       fetchOrganizations({ id: id }).then((items) => {
         if (items) {
           setName(items.name);

@@ -22,7 +22,6 @@ const fetchOrganizations = (params = null) => {
 };
 
 const createOrganization = (data) => {
-  console.log("HELLLO", data);
   const errorStatuses = {
     500: "Error on Server !",
   };
