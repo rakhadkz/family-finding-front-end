@@ -16,7 +16,7 @@ export const UserBreadcrumbs = ({ text = "Add User" }) => {
             </Spacing>
           }
           text="Users"
-          onClick={() => history.goBack()}
+          onClick={() => history.push("../users")}
         />
         <BreadcrumbsItem text={text} />
       </Breadcrumbs>

@@ -16,7 +16,7 @@ export const OrganizationBreadcrumbs = ({ text }) => {
             </Spacing>
           }
           text="Organizations"
-          onClick={() => history.goBack()}
+          onClick={() => history.push("../organizations")}
         />
         <BreadcrumbsItem text={text} />
       </Breadcrumbs>

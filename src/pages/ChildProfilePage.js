@@ -24,10 +24,9 @@ export const ChildProfilePage = (props) => {
   const id = props.match.params.id;
   const [child, setChild] = useState({});
   useEffect(() => {
-    fetchChildren({ id: id, view: "extended" }).then((item) => {
-      console.log("This is child", item.contacts);
-      setChild(item);
-    });
+    fetchChildren({ id: id, view: "extended" }).then(
+      (item) => item && setChild(item)
+    );
   }, []);
 
   const data = [
