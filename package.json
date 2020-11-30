@@ -9,6 +9,7 @@
     "@atlaskit/breadcrumbs": "^10.0.9",
     "@atlaskit/button": "^15.1.2",
     "@atlaskit/css-reset": "^6.0.5",
+    "@atlaskit/datetime-picker": "^10.0.7",
     "@atlaskit/dynamic-table": "^14.1.4",
     "@atlaskit/form": "^8.1.6",
     "@atlaskit/icon": "^21.1.4",

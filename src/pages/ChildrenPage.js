@@ -7,6 +7,7 @@ import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
 
 export const ChildrenPage = () => {
+  const history = useHistory();
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Children</Title>
