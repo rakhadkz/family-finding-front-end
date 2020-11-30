@@ -23,7 +23,7 @@ export const SelectInput = (props) => {
   } = props;
 
   return (
-    <Box w={`${width}px`} mr="23px">
+    <Box w={`${width}px`} mr="35px">
       {label && <Label htmlFor={name}>{label}</Label>}
       <Controller
         control={control}

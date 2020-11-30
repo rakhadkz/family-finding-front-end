@@ -39,7 +39,7 @@ export const AddUserForm = ({ onSubmit }) => {
       <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
         <FormSection>
           <Spacing m={{ t: "18px" }}>
-            <Box d="flex" w="100%" justify="space-between">
+            <Box d="flex" w="100%">
               <TextInput
                 className="input"
                 name={"first_name"}
