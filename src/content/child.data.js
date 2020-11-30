@@ -1,4 +1,3 @@
-import { Box } from "../components/ui/atoms";
 import Avatar from "@atlaskit/avatar";
 import Button from "@atlaskit/button";
 

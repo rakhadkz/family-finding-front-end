@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { childTableData } from "../../content/child.data";
-import { tableData } from "../../content/sample.data";
 import { fetchChildren } from "../../context/children/childProvider";
 import { TableWrapper } from "../ui/common";
 

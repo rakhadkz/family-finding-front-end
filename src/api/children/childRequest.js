@@ -16,3 +16,11 @@ export const fetchChildAttachmentsRequest = (id) => {
     method: "GET",
   });
 };
+
+export const createChildRequest = (data) => {
+  return request({
+    endpoint: "children",
+    method: "POST",
+    data,
+  });
+};

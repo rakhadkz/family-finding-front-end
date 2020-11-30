@@ -10,9 +10,11 @@ export const ReportsPage = () => {
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Reports</Title>
       <Spacing m={{ t: "23px" }}>
-        <Box d="flex" justify="space-between"></Box>
+        <Box d="flex" justify="space-between">
+        </Box>
       </Spacing>
-      <Spacing m={{ t: "20px" }}></Spacing>
+      <Spacing m={{ t: "20px" }}>
+      </Spacing>
     </SidebarTemplate>
   );
 };

@@ -10,9 +10,11 @@ export const CommunicationTemplatesPage = () => {
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Communication Templates</Title>
       <Spacing m={{ t: "23px" }}>
-        <Box d="flex" justify="space-between"></Box>
+        <Box d="flex" justify="space-between">
+        </Box>
       </Spacing>
-      <Spacing m={{ t: "20px" }}></Spacing>
+      <Spacing m={{ t: "20px" }}>
+      </Spacing>
     </SidebarTemplate>
   );
 };

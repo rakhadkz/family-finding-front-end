@@ -1,8 +1,9 @@
 import { toast } from "react-toastify";
 import {
-  fetchChildAttachmentsRequest,
   fetchChildrenRequest,
+  createChildRequest
 } from "../../api/children";
+
 
 const fetchChildren = (params = null) => {
   const errorStatuses = {
@@ -22,12 +23,13 @@ const fetchChildren = (params = null) => {
   });
 };
 
-const fetchChildAttachments = (id) => {
+const createChild = (data) => {
+  console.log("HELLLO", data);
   const errorStatuses = {
-    500: "Error on Server!",
+    500: "Error on Server !",
   };
 
-  return fetchChildAttachmentsRequest(id).catch((err) => {
+  return createChildRequest(data).catch((err) => {
     toast.error(errorStatuses[err.status], {
       position: "top-center",
       autoClose: 2000,
@@ -40,4 +42,5 @@ const fetchChildAttachments = (id) => {
   });
 };
 
-export { fetchChildren, fetchChildAttachments };
+
+export { fetchChildren,createChild };

@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { initialRoutesByRoles } from "./content/initialRoutersByRoles.data";
 import { useAuth } from "./context/auth/authContext";
 import {
   ACTION_ITEMS,
@@ -19,6 +20,7 @@ import {
 } from "./helpers/routes";
 import {
   ActionItemsPage,
+  AddChildPage,
   AddOrganizationPage,
   AddUserPage,
   ChildrenPage,
@@ -48,10 +50,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 function App() {
-  const { isAuthorized } = useAuth();
+  const { isAuthorized, user } = useAuth();
   let location = useLocation();
-
-  console.log(location, isAuthorized());
 
   return (
     <>
@@ -68,8 +68,13 @@ function App() {
       />
       <PrivateRoute exact path={`/${REPORTS}`} component={ReportsPage} />
       <PrivateRoute exact path={`/${USERS}`} component={UsersPage} />
-      <PrivateRoute exact path={`/${USERS}/:id`} component={UsersPage} />
+
       <PrivateRoute exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
+      <PrivateRoute
+        exact
+        path={`/${CHILDREN}/${ADD}`}
+        component={AddChildPage}
+      />
       <PrivateRoute
         exact
         path={`/${ORGANIZATIONS}`}
@@ -99,8 +104,10 @@ function App() {
       <Route path={`/${LOGIN}`} component={LoginPage} />
       <Route path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
       <Route path={`/${NEW_PASSWORD}`} component={NewPassword} />
-      {location.pathname === "/" && (
-        <Redirect to={`/${isAuthorized() ? ORGANIZATIONS : LOGIN}`} />
+      {location.pathname === "/" && user && (
+        <Redirect
+          to={`/${isAuthorized() ? initialRoutesByRoles[user.role] : LOGIN}`}
+        />
       )}
       <ToastContainer />
     </>

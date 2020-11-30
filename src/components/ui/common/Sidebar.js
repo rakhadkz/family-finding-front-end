@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/auth/authContext";
 import { GroupAccess } from "../../common";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
-import { SidebarUser } from "./SidebarUser";
+import { SidebarUser } from "./SidebarUser"
 
 const SIDEBAR_ITEMS = [
   {
