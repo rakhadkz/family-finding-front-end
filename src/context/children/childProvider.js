@@ -1,12 +1,16 @@
 import { toast } from "react-toastify";
-import { createChildRequest, fetchChildrenRequest } from "../../api/children";
+import {
+  fetchChildrenRequest,
+  createChildRequest
+} from "../../api/children";
 
-const fetchChildren = (view = "") => {
+
+const fetchChildren = (params = null) => {
   const errorStatuses = {
     500: "Error on Server!",
   };
 
-  return fetchChildrenRequest(view).catch((err) => {
+  return fetchChildrenRequest(params).catch((err) => {
     toast.error(errorStatuses[err.status], {
       position: "top-center",
       autoClose: 2000,
@@ -38,4 +42,5 @@ const createChild = (data) => {
   });
 };
 
-export { fetchChildren, createChild };
+
+export { fetchChildren,createChild };

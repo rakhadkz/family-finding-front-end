@@ -35,7 +35,6 @@ const StyledLabel = styled(Label)`
   font-weight: normal;
   font-size: 12px;
   line-height: 16px;
-
   color: #6b778c;
 `;
 
@@ -46,7 +45,6 @@ const Text = styled.div`
   font-size: 14px;
   line-height: 20px;
   min-width: 119px;
-
   color: #172b4d;
 `;
 

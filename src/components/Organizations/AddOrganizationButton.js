@@ -8,7 +8,7 @@ export const AddOrganizationButton = ({ onClick }) => {
       <Button appearance="primary" onClick={onClick}>
         <ButtonContentWrapper>
           <OfficeBuilding />
-          Add Organization
+          Add organization
         </ButtonContentWrapper>
       </Button>
     </ButtonWrapper>
