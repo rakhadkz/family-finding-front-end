@@ -2,7 +2,10 @@ import styled from "styled-components";
 
 export const Label = styled.label`
   margin-bottom: 4px;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
   font-size: 12px;
-  font-weight: 600;
-  color: rgb(107, 119, 140);
+  line-height: 16px;
+  color: #6b778c;
 `;

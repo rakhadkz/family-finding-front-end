@@ -3,6 +3,7 @@ export * from "./Form";
 export * from "./Label";
 export * from "./Logo";
 export * from "./Page";
+export * from "./Rectangle";
 export * from "./SidebarMenuItem";
 export * from "./Spacing";
 export * from "./StyledContainers";

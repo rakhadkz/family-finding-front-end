@@ -6,8 +6,6 @@ export const authURL = "http://localhost:3000/api/v1";
 export const request = async ({ endpoint, data, method }) => {
   const token = await getToken();
 
-  console.log("TOKEN", token);
-
   const config = {
     method,
     body: data ? JSON.stringify(data) : null,
