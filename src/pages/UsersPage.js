@@ -37,7 +37,7 @@ export const UsersPage = (props) => {
   const [name, setName] = useState("");
   const [users, setUsers] = useState([]);
   useEffect(() => {
-    id != "add" &&
+    id !== "add" &&
       fetchUsers({ id: id, view: "extended" }).then((items) => {
         if (items) {
           const full_name = Array.isArray(items)

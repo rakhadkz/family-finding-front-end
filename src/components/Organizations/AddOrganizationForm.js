@@ -20,7 +20,7 @@ export const AddOrganizationForm = ({ onSubmit }) => {
     data.logo = logoUrl ? logoUrl : data.logo;
     console.log(data);
     onSubmit(data)
-      .then(() => history.goBack())
+      .then(() => history.push("../organizations"))
       .finally(() => setPending(false));
   };
 
@@ -34,8 +34,15 @@ export const AddOrganizationForm = ({ onSubmit }) => {
           error={errors.name}
           label="Name"
         />
+        <TextInput
+          name={"phone"}
+          register={register({ required: true })}
+          control={control}
+          error={errors.phone}
+          label="Phone"
+        />
         <Spacing m={{ t: "18px" }}>
-          <Box d="flex" w="100%" justify="space-between">
+          <Box d="flex" w="100%">
             <TextInput
               name={"address"}
               register={register({ required: true })}
