@@ -34,7 +34,7 @@ const userTableData = (data, history) => {
         {
           key: "organization",
           content: item.user_organizations?.map((item) => (
-            <p>{item.organization.name}</p>
+            <p>{item.organization?.name}</p>
           )),
         },
         {
