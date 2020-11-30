@@ -12,15 +12,13 @@ export const signupRequest = async (user) => {
   console.log("body", user);
   const userBody = {
     email: user.email,
-    role: user.role.value,
     phone: user.phone,
-    organization_id: user.organization_id.value,
     first_name: user.first_name,
     last_name: user.last_name,
   };
   return request({
     endpoint: "auth/signup",
-    data: { user: userBody },
+    data: { user: userBody, organizations: user.organizations },
     method: "POST",
   });
 };

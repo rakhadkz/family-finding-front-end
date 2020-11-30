@@ -5,7 +5,7 @@ const AuthContext = React.createContext();
 
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
-  const [isSignedIn, setSignedIn] = useState(!!user);
+  const [isSignedIn, setSignedIn] = useState(true);
 
   useEffect(() => {
     isAuthorized();
@@ -25,13 +25,16 @@ export const AuthProvider = (props) => {
     if (isSignedIn) fetchMe();
   }, [fetchMe, isSignedIn]);
 
-  const isAuthorized = async () => {
-    const token = await auth.getToken();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const isAuthorized = () => {
+    const token = auth.getToken();
 
     if (token) {
       setSignedIn(true);
+      return true;
     } else {
       setSignedIn(false);
+      return false;
     }
   };
 
@@ -49,12 +52,14 @@ export const AuthProvider = (props) => {
   const logout = React.useCallback(() => {
     auth.logout();
     setUser(null);
+    setSignedIn(false);
   }, []);
 
   const value = React.useMemo(
     () => ({
       user,
       isSignedIn,
+      isAuthorized,
       login,
       logout,
       sign,
@@ -66,6 +71,7 @@ export const AuthProvider = (props) => {
     [
       user,
       isSignedIn,
+      isAuthorized,
       login,
       logout,
       sign,

@@ -1,10 +1,21 @@
 import Button from "@atlaskit/button";
 import { useState } from "react";
-import styled from "styled-components";
+import styled from "styled-components"
 import { Label, Spacing } from "../ui/atoms";
+import {
+  uploadRequest
+} from "../../api/cloudinary";
 
-export const SelectOrganizationLogo = ({ onClick, control, register }) => {
+export const SelectOrganizationLogo = ({ onClick, control, register, setLogoUrl, setPending }) => {
   const [logo, setLogo] = useState();
+  const handleChange = (target) => {
+    setPending(true);
+    uploadRequest(target.files[0])
+      .then( payload => setLogoUrl(payload.public_id))   // console.log(payload)
+      .catch(err => console.log(err))
+      .finally(() => setPending(false));
+    setLogo(URL.createObjectURL(target.files[0]));
+  }
   return (
     <Container>
       <Label style={{ display: "block" }}>Logo</Label>
@@ -18,9 +29,7 @@ export const SelectOrganizationLogo = ({ onClick, control, register }) => {
         <InvisibleFileInput
           type="file"
           name="logo"
-          onChange={({ target }) =>
-            setLogo(URL.createObjectURL(target.files[0]))
-          }
+          onChange={ ({ target }) => handleChange(target)}
           accept="image/*"
           control={control}
           ref={register}

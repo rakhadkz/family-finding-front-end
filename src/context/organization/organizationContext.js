@@ -11,7 +11,7 @@ export const OrganizationProvider = (props) => {
     []
   );
 
-  const createOrgnaization = React.useCallback(
+  const createOrganization = React.useCallback(
     (form) =>
       organization.createOrganization(form).then(() => fetchOrganizations),
     [fetchOrganizations]
@@ -21,9 +21,9 @@ export const OrganizationProvider = (props) => {
     () => ({
       organizations,
       fetchOrganizations,
-      createOrgnaization,
+      createOrganization,
     }),
-    [organizations, fetchOrganizations, createOrgnaization]
+    [organizations, fetchOrganizations, createOrganization]
   );
 
   return <OrganizationContext.Provider value={value} {...props} />;

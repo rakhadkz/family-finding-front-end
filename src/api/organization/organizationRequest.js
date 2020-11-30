@@ -1,8 +1,12 @@
 import { request } from "../../utils/request";
 
-export const fetchOrganizationsRequest = async (view = null) => {
+export const fetchOrganizationsRequest = async (params) => {
+  console.log("PARAM ID: ", params.id);
   return request({
-    endpoint: "super_admin/organizations?view=" + view,
+    endpoint:
+      "super_admin/organizations" +
+      (params.id ? "/" + params.id : "") +
+      (params.view ? "?view=" + params.view : ""),
     method: "GET",
   });
 };
@@ -13,7 +17,7 @@ export const createOrganizationRequest = async (organization) => {
     name: organization.name,
     address: organization.address,
     phone: organization.phone,
-    logo: organization?.logo[0]?.name,
+    logo: organization.logo,
     website: organization.first_name,
     city: organization?.city,
     zip: organization?.zip,
