@@ -38,13 +38,15 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
 
   useEffect(() => {
     fetchOrganizations({ view: "short" }).then((items) => {
-      var options = items.map(function (item) {
-        return {
-          label: item.name,
-          value: item.id,
-        };
-      });
-      setOrganizations(options);
+      if (items) {
+        var options = items.map(function (item) {
+          return {
+            label: item.name,
+            value: item.id,
+          };
+        });
+        setOrganizations(options);
+      }
     });
   }, []);
 

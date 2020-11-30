@@ -40,10 +40,13 @@ export const OrganizationsPage = (props) => {
   const [name, setName] = useState("");
   const [organizations, setOrganizations] = useState([]);
   useEffect(() => {
-    fetchOrganizations({ id: id }).then((items) => {
-      setName(items.name);
-      setOrganizations(organizationTableData(items, history));
-    });
+    id != "add" &&
+      fetchOrganizations({ id: id }).then((items) => {
+        if (items) {
+          setName(items.name);
+          setOrganizations(organizationTableData(items, history));
+        }
+      });
   }, [id]);
   return (
     <SidebarTemplate sidebar={<Sidebar />}>

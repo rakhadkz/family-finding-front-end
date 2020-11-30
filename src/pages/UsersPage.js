@@ -37,13 +37,16 @@ export const UsersPage = (props) => {
   const [name, setName] = useState("");
   const [users, setUsers] = useState([]);
   useEffect(() => {
-    fetchUsers({ id: id, view: "extended" }).then((items) => {
-      const full_name = Array.isArray(items)
-        ? ""
-        : `${items.first_name} ${items.last_name}`;
-      setName(full_name);
-      setUsers(userTableData(items, history));
-    });
+    id != "add" &&
+      fetchUsers({ id: id, view: "extended" }).then((items) => {
+        if (items) {
+          const full_name = Array.isArray(items)
+            ? ""
+            : `${items.first_name} ${items.last_name}`;
+          setName(full_name);
+          setUsers(userTableData(items, history));
+        }
+      });
   }, [id]);
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
