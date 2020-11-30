@@ -1,3 +1,9 @@
 {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "iosfwd": "cpp",
+        "ios": "cpp",
+        "iostream": "cpp",
+        "utility": "cpp"
+    }
 }

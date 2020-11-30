@@ -11,7 +11,7 @@ export const PlaceCall = ({ onClick }) => {
         <Button appearance="primary" isSelected onClick={onClick}>
           <ButtonContentWrapper>
             <MobileIcon />
-            <Spacing m={{ l: "4px" }}>PlaceCall</Spacing>
+            <Spacing m={{ l: "4px" }}>Place Call</Spacing>
           </ButtonContentWrapper>
         </Button>
       </ButtonWrapper>

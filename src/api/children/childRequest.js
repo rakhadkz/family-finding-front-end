@@ -6,3 +6,10 @@ export const fetchChildrenRequest = (view = "") => {
     method: "GET",
   });
 };
+
+export const fetchChildComments = (id) => {
+  return request({
+    endpoint: `children/${id}?view=comments`,
+    method: "GET",
+  });
+};
