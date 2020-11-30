@@ -53,7 +53,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
   useEffect(() => {
     setOrgRoles(
       fields.map((item) => ({
-        organization_id: item.organization.value,
+        id: item.organization.value,
         role: item.role.value,
       }))
     );
@@ -91,7 +91,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
                 placeholder="Select a role"
               />
               <Button type="submit" appearance="primary">
-                Add organization
+                Add
               </Button>
             </Box>
           </Spacing>
