@@ -1,11 +1,13 @@
 import Button from "@atlaskit/button";
+import TrashIcon from "@atlaskit/icon/glyph/trash";
+import { GroupAccess } from "../components/common";
 import { role_label } from "./sample.data";
 
-const userTableData = (data, history) => {
+const userTableData = (data, history, onDelete, organizationName) => {
   const isArray = Array.isArray(data);
   data = isArray ? data : (data = [data]);
   return data.map((item, index) => {
-    var full_name = item.first_name + " " + item.last_name;
+    var full_name = item?.first_name + " " + item?.last_name;
     return {
       key: index,
       cells: [
@@ -33,15 +35,27 @@ const userTableData = (data, history) => {
         },
         {
           key: "organization",
-          content: item.user_organizations?.map((item) => (
-            <p>{item.organization?.name}</p>
-          )),
+          content:
+            organizationName ||
+            item.user_organizations?.map((item) => (
+              <p>{item.organization?.name}</p>
+            )),
         },
         {
           key: "role",
           content: item.user_organizations?.map((item) => (
             <p>{role_label(item.role)}</p>
           )),
+        },
+        {
+          key: "actions",
+          content: (
+            <GroupAccess atLeast="admin" exact="super_admin">
+              <Button onClick={() => onDelete(item.id)} appearance="warning">
+                <TrashIcon />
+              </Button>
+            </GroupAccess>
+          ),
         },
       ],
     };
