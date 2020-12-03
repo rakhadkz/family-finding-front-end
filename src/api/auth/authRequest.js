@@ -30,6 +30,12 @@ export const fetchMeRequest = async (view = "") => {
   });
 };
 
+export const fetchMeAsAdminRequest = async (adminId) =>
+  request({
+    endpoint: `super_admin/admins/${adminId}`,
+    method: "GET",
+  });
+
 export const resetRequest = async (data) => {
   return request({
     endpoint: "auth/forgot_password",

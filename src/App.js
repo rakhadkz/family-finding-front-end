@@ -13,6 +13,7 @@ import {
   LOGIN,
   NEW_PASSWORD,
   ORGANIZATIONS,
+  ORGANIZATION_USERS,
   REPORTS,
   SEARCHVECTOR,
   SETTINGS,
@@ -72,7 +73,16 @@ function App() {
         component={CommunicationTemplatesPage}
       />
       <PrivateRoute exact path={`/${REPORTS}`} component={ReportsPage} />
-      <PrivateRoute exact path={`/${USERS}`} component={UsersPage} />
+      <PrivateRoute
+        exact
+        path={`/${USERS}`}
+        component={(props) => <UsersPage isOrganization={false} {...props} />}
+      />
+      <PrivateRoute
+        exact
+        path={`/${ORGANIZATION_USERS}`}
+        component={(props) => <UsersPage isOrganization={true} {...props} />}
+      />
       <PrivateRoute exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
       <PrivateRoute exact path={`/${USERS}/:id`} component={UsersPage} />
       <PrivateRoute
