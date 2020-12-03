@@ -28,6 +28,11 @@ const columns = [
     content: "Role",
     width: 15,
   },
+  {
+    key: "actions",
+    content: "Actions",
+    width: 10,
+  },
 ];
 
 export const UsersTable = ({ items }) => {
