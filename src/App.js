@@ -83,11 +83,11 @@ function App() {
         path={`/${ORGANIZATION_USERS}`}
         component={(props) => <UsersPage isOrganization={true} {...props} />}
       />
-      <PrivateRoute exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
+      <PrivateRoute exact path={`/${USERS}-${ADD}`} component={AddUserPage} />
       <PrivateRoute exact path={`/${USERS}/:id`} component={UsersPage} />
       <PrivateRoute
         exact
-        path={`/${CHILDREN}/${ADD}`}
+        path={`/${CHILDREN}-${ADD}`}
         component={AddChildPage}
       />
       <PrivateRoute
@@ -97,7 +97,7 @@ function App() {
       />
       <PrivateRoute
         exact
-        path={`/${ORGANIZATIONS}/${ADD}`}
+        path={`/${ORGANIZATIONS}-${ADD}`}
         component={AddOrganizationPage}
       />
       <PrivateRoute
