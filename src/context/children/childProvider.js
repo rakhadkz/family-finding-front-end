@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
 import {
   fetchChildrenRequest,
-  createChildRequest
+  createChildRequest,
+  fetchChildComments
 } from "../../api/children";
 
 

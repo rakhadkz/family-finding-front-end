@@ -1,29 +1,46 @@
 import Avatar from "@atlaskit/avatar";
-import React from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { Box, Spacing, Title } from "../ui/atoms";
 import Button from "@atlaskit/button";
-
+import CommentsForm from './CommentsForm';
+import {useClickOutside} from '../../hooks/index'
 
 const Comments = ({data}) => {  
+  const [showInput, setShowInput] = useState(false);
+  const replyRef = useRef();
+  const outsideClick = useClickOutside(
+    [replyRef],
+    showInput,
+    ()=>{setShowInput(false);console.log('closed');},
+  );
   return (
+    <Spacing m={{t:"17px"}}>
     <Box d="flex" justify="space-between">
       <Avatar
         appearance="circle"
         src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
         size="large"
         />
-      <Spacing m={{ l: "17px" }}>
+      <Spacing m={{ l: "7px" }}>
         <Title size="14px">{`${data.user.first_name} ${data.user.last_name}`}</Title>
         <Text>{data.body}</Text>
-        <Button appearance="link" onClick={()=>{}} style={{  "padding" : "0px"}}>
+        <Box ref={replyRef}>
+        {showInput ? 
+        <Spacing m={{ t: "-22px" }}>
+          <CommentsForm />
+        </Spacing> :
+        <Button appearance="link" onClick={()=>{setShowInput(true)}} style={{  "padding" : "0px"}}>
           <ButtonContentWrapper>
           Reply
           </ButtonContentWrapper>
-        </Button>
+        </Button> 
+        }
+        </Box>
         {data.replies.map(reply => <Comments data={reply} />)}
       </Spacing>  
     </Box>
+    </Spacing>
   )
 }
 
