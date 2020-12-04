@@ -1,18 +1,6 @@
 import DynamicTable from "@atlaskit/dynamic-table";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { userTableData } from "../../content/user.data";
-import { fetchUsers } from "../../context/user/userProvider";
-
-const TableCell = styled.span`
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  margin-top: 40px;
-  color: #172b4d;
-`;
+import React from "react";
+import { TableWrapper } from "../ui/common";
 
 const columns = [
   {
@@ -42,27 +30,10 @@ const columns = [
   },
 ];
 
-export const UsersTable = () => {
-  const [users, setUsers] = useState([]);
-  useEffect(() => {
-    fetchUsers().then((items) => {
-      if (items) setUsers(userTableData(items));
-    });
-  }, []);
-
+export const UsersTable = ({ items }) => {
   return (
     <TableWrapper>
-      <DynamicTable
-        head={{ cells: columns }}
-        rows={users}
-        loadingSpinnerSize="large"
-        isLoading={false}
-        isFixedSize
-      />
+      <DynamicTable head={{ cells: columns }} rows={items} isFixedSize />
     </TableWrapper>
   );
 };
-
-const TableWrapper = styled.div`
-  width: 100%;
-`;

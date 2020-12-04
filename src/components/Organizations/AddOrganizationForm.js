@@ -20,22 +20,31 @@ export const AddOrganizationForm = ({ onSubmit }) => {
     data.logo = logoUrl ? logoUrl : data.logo;
     console.log(data);
     onSubmit(data)
-      .then(() => history.goBack())
+      .then(() => history.push("../organizations"))
       .finally(() => setPending(false));
   };
 
   return (
     <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
       <FormSection>
-        <TextInput
-          name={"name"}
-          register={register({ required: true })}
-          control={control}
-          error={errors.name}
-          label="Name"
-        />
+        <Box d="flex" w="100%">
+          <TextInput
+            name={"name"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.name}
+            label="Name"
+          />
+          <TextInput
+            name={"phone"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.phone}
+            label="Phone"
+          />
+        </Box>
         <Spacing m={{ t: "18px" }}>
-          <Box d="flex" w="100%" justify="space-between">
+          <Box d="flex" w="100%">
             <TextInput
               name={"address"}
               register={register({ required: true })}
@@ -52,7 +61,7 @@ export const AddOrganizationForm = ({ onSubmit }) => {
             />
             <SelectInput
               name={"state"}
-              register={register({ required: true })}
+              register={{ required: true }}
               control={control}
               options={states.map((state) => ({ label: state, value: state }))}
               error={errors.state}

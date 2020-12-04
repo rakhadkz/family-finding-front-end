@@ -1,8 +1,10 @@
 import DynamicTable from "@atlaskit/dynamic-table";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { childTableData } from "../../content/child.data";
 import { fetchChildren } from "../../context/children/childProvider";
+import { TableWrapper } from "../ui/common";
 
 const TableCell = styled.span`
   font-family: Helvetica;
@@ -49,10 +51,10 @@ const columns = [
 
 export const ChildrenTable = () => {
   const [children, setChildren] = useState([]);
-
+  const history = useHistory();
   useEffect(() => {
-    fetchChildren("").then((items) => {
-      if (items) setChildren(childTableData(items));
+    fetchChildren({ view: "table" }).then((items) => {
+      if (items) setChildren(childTableData(items, history));
     });
   }, []);
 
@@ -68,7 +70,3 @@ export const ChildrenTable = () => {
     </TableWrapper>
   );
 };
-
-const TableWrapper = styled.div`
-  width: 100%;
-`;

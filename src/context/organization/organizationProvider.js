@@ -4,12 +4,11 @@ import {
   fetchOrganizationsRequest,
 } from "../../api/organization";
 
-const fetchOrganizations = (view = "") => {
+const fetchOrganizations = (params = null) => {
   const errorStatuses = {
     500: "Error on Server !",
   };
-
-  return fetchOrganizationsRequest(view).catch((err) => {
+  return fetchOrganizationsRequest(params).catch((err) => {
     toast.error(errorStatuses[err.status], {
       position: "top-center",
       autoClose: 2000,
@@ -23,7 +22,6 @@ const fetchOrganizations = (view = "") => {
 };
 
 const createOrganization = (data) => {
-  console.log("HELLLO", data);
   const errorStatuses = {
     500: "Error on Server !",
   };

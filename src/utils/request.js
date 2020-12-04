@@ -1,12 +1,10 @@
 import { getToken } from "../context/auth/authProvider";
 
-// export const authURL = "https://family-finding-api.herokuapp.com/api/v1";
-export const authURL = "http://localhost:3000/api/v1";
+export const authURL = "https://family-finding-api.herokuapp.com/api/v1";
+// export const authURL = "http://localhost:3000/api/v1";
 
 export const request = async ({ endpoint, data, method }) => {
   const token = await getToken();
-
-  console.log("TOKEN", token);
 
   const config = {
     method,

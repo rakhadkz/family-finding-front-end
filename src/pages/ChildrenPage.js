@@ -1,9 +1,8 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { ChildrenSearchBar, ChildrenTable } from "../components/Children";
 import { AddChildButton } from "../components/Children/AddChildButton";
-import { ChildrenSearchBar } from "../components/Children/ChildrenSearchBar";
-import { ChildrenTable } from "../components/Children/ChildrenTable";
-import { Spacing, Title, Box } from "../components/ui/atoms";
+import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
 
@@ -15,7 +14,7 @@ export const ChildrenPage = () => {
       <Spacing m={{ t: "23px" }}>
         <Box d="flex" justify="space-between">
           <ChildrenSearchBar />
-          <AddChildButton />
+          <AddChildButton onClick={() => history.push("/children/add")} />
         </Box>
       </Spacing>
       <Spacing m={{ t: "20px" }}>

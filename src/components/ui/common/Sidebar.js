@@ -69,7 +69,7 @@ const SIDEBAR_ITEMS = [
     to: "/search-vectors",
     title: "Search Vectors",
     icon: () => <ChildIssuesIcon />,
-    exact: "admin",  
+    exact: "admin",
   },
   {
     to: "/reports",
