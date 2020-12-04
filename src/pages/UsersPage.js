@@ -39,7 +39,7 @@ export const UsersPage = (props) => {
   const [name, setName] = useState("");
   const [users, setUsers] = useState([]);
   const { user } = useAuth();
-  const [refresh, setRefresh] = useState();
+  const [refresh, setRefresh] = useState(true);
 
   console.log("USEER", user);
   const organization =
@@ -49,7 +49,7 @@ export const UsersPage = (props) => {
       : { users: [], name: "" });
 
   const onDelete = (userId) => {
-    deleteUser(userId).then(setRefresh);
+    deleteUser(userId).then(() => setRefresh((prev) => !prev));
   };
 
   useEffect(() => {

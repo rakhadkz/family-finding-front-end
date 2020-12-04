@@ -1,5 +1,5 @@
 import Button from "@atlaskit/button";
-import TrashIcon from "@atlaskit/icon/glyph/trash";
+import CrossIcon from "@atlaskit/icon/glyph/cross";
 import { GroupAccess } from "../components/common";
 import { role_label } from "./sample.data";
 
@@ -51,8 +51,12 @@ const userTableData = (data, history, onDelete, organizationName) => {
           key: "actions",
           content: (
             <GroupAccess atLeast="admin" exact="super_admin">
-              <Button onClick={() => onDelete(item.id)} appearance="warning">
-                <TrashIcon />
+              <Button
+                onClick={() => onDelete(item.id)}
+                height="32px"
+                width="32px"
+              >
+                <CrossIcon size="small" />
               </Button>
             </GroupAccess>
           ),
