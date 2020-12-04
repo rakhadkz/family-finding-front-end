@@ -12,7 +12,7 @@ export const fetchUsersRequest = async (params) => {
 
 export const deleteUsersRequest = async (userId) => {
   return request({
-    endpoint: `users/${userId}`,
+    endpoint: `admin/users/${userId}`,
     method: "DELETE",
   });
 };
