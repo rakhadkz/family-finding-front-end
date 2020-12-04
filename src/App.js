@@ -18,6 +18,7 @@ import {
   SEARCHVECTOR,
   SETTINGS,
   USERS,
+  CONTINUOUS_SEARCH,
 } from "./helpers/routes";
 import {
   ActionItemsPage,
@@ -33,6 +34,7 @@ import {
   SearchVectorsPage,
   SettingsPage,
   UsersPage,
+  ContinuousSearchPage,
 } from "./pages";
 import { ChildProfilePage } from "./pages/ChildProfilePage";
 import LoginPage from "./pages/Login";
@@ -61,6 +63,11 @@ function App() {
 
   return (
     <>
+      <PrivateRoute
+        exact
+        path={`/${CONTINUOUS_SEARCH}`}
+        component={ContinuousSearchPage}
+      />
       <PrivateRoute
         exact
         path={`/${SEARCHVECTOR}`}
