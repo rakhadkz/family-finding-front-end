@@ -16,7 +16,7 @@ const AllUsers = ({ history }) => (
     <Spacing m={{ t: "23px" }}>
       <Box d="flex" justify="space-between">
         <UsersSearchBar />
-        <AddUserButton onClick={() => history.push("/users/add")} />
+        <AddUserButton onClick={() => history.push("/users-add")} />
       </Box>
     </Spacing>
   </>
@@ -54,8 +54,6 @@ export const UsersPage = (props) => {
   const [users, setUsers] = useState([]);
   const { user, reset } = useAuth();
   const [refresh, setRefresh] = useState(true);
-
-  console.log("USEER", user);
   const organization =
     user &&
     (isOrganization && user?.user_organizations
@@ -79,7 +77,6 @@ export const UsersPage = (props) => {
             )
           )
         : fetchUsers({ id: id, view: "extended" }).then((items) => {
-            console.log("SALAMALEIKUM", isOrganization);
             if (items) {
               const full_name = Array.isArray(items)
                 ? ""

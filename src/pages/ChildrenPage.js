@@ -14,7 +14,7 @@ export const ChildrenPage = () => {
       <Spacing m={{ t: "23px" }}>
         <Box d="flex" justify="space-between">
           <ChildrenSearchBar />
-          <AddChildButton onClick={() => history.push("/children/add")} />
+          <AddChildButton onClick={() => history.push("/children-add")} />
         </Box>
       </Spacing>
       <Spacing m={{ t: "20px" }}>
