@@ -31,20 +31,23 @@ const ConcreteUser = ({ name, email }) => {
       <Spacing m={{ t: "23px" }}>
         <Box d="flex" justify="space-between" align-items="flex-start">
           <UserBreadcrumbs text={name} />
-          <Button 
-          isDisabled={pending}
-          appearance="danger" 
-          onClick={()=>{
-            setPending(true);
-            reset({email})
-            .then(() => history.push(`/${USERS}`))
-            .finally(() => setPending(false));
-          }}>Reset password</Button>
+          <Button
+            isDisabled={pending}
+            appearance="danger"
+            onClick={() => {
+              setPending(true);
+              reset({ email })
+                .then(() => history.push(`/${USERS}`))
+                .finally(() => setPending(false));
+            }}
+          >
+            Reset password
+          </Button>
         </Box>
       </Spacing>
     </>
-  )
-}
+  );
+};
 export const UsersPage = (props) => {
   const history = useHistory();
   const { id } = props.match.params;
@@ -52,7 +55,7 @@ export const UsersPage = (props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [users, setUsers] = useState([]);
-  const { user, reset } = useAuth();
+  const { user } = useAuth();
   const [refresh, setRefresh] = useState(true);
   const organization =
     user &&
@@ -61,37 +64,46 @@ export const UsersPage = (props) => {
       : { users: [], name: "" });
 
   const onDelete = (userId) => {
-    deleteUser(userId).then(() => setRefresh((prev) => !prev));
+    deleteUser(userId).finally(() => {
+      setRefresh((prev) => !prev);
+      id && history.push("../users");
+    });
   };
 
   useEffect(() => {
-    id !== "add" &&
-      (isOrganization
-        ? organization &&
-          setUsers(
-            userTableData(
-              organization?.users,
-              history,
-              onDelete,
-              organization?.name
-            )
+    isOrganization
+      ? organization &&
+        setUsers(
+          userTableData(
+            organization?.users,
+            history,
+            onDelete,
+            organization?.name,
+            user
           )
-        : fetchUsers({ id: id, view: "extended" }).then((items) => {
-            if (items) {
-              const full_name = Array.isArray(items)
-                ? ""
-                : `${items.first_name} ${items.last_name}`;
-              setName(full_name);
-              setEmail(items.email);
-              setUsers(userTableData(items, history, onDelete));
-            }
-          }));
+        )
+      : fetchUsers({ id: id, view: "extended" }).then((items) => {
+          if (items) {
+            const full_name = Array.isArray(items)
+              ? ""
+              : `${items.first_name} ${items.last_name}`;
+            setName(full_name);
+            setEmail(items.email);
+            setUsers(
+              userTableData(items, history, onDelete, organization?.name, user)
+            );
+          }
+        });
   }, [id, refresh]);
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>{isOrganization && "Organization "}Users</Title>
-      {id ? <ConcreteUser name={name} email={email}/> : <AllUsers history={history} />}
+      {id ? (
+        <ConcreteUser name={name} email={email} />
+      ) : (
+        <AllUsers history={history} />
+      )}
       <Spacing m={{ t: "23px" }}>
         <UsersTable items={users} isOrganization={isOrganization} />
       </Spacing>
