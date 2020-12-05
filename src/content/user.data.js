@@ -52,7 +52,7 @@ const userTableData = (data, history, onDelete, organizationName, user) => {
           content: (
             <GroupAccess atLeast="admin" exact="super_admin">
               <Button
-                isDisabled={user.id == item.id ? true : false}
+                isDisabled={user?.id === item.id ? true : false}
                 onClick={() => {
                   onDelete(item.id);
                 }}
