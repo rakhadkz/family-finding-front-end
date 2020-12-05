@@ -19,7 +19,7 @@ const AllOrganizations = ({ history }) => (
       <Box d="flex" justify="space-between">
         <OrganizationsSearchBar />
         <AddOrganizationButton
-          onClick={() => history.push("/organizations/add")}
+          onClick={() => history.push("/organizations-add")}
         />
       </Box>
     </Spacing>

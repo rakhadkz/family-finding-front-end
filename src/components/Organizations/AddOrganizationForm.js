@@ -79,7 +79,6 @@ export const AddOrganizationForm = ({ onSubmit }) => {
         </Spacing>
         <SelectOrganizationLogo
           control={control}
-          register={register({ required: true })}
           setLogoUrl={setLogoUrl}
           setPending={setPending}
         />

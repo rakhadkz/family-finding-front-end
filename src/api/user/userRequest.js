@@ -9,3 +9,10 @@ export const fetchUsersRequest = async (params) => {
     method: "GET",
   });
 };
+
+export const deleteUsersRequest = async (userId) => {
+  return request({
+    endpoint: `admin/users/${userId}`,
+    method: "DELETE",
+  });
+};

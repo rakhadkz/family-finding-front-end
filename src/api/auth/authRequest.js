@@ -15,6 +15,7 @@ export const signupRequest = async (user) => {
     phone: user.phone,
     first_name: user.first_name,
     last_name: user.last_name,
+    role: user.role,
   };
   return request({
     endpoint: "auth/signup",
@@ -29,6 +30,12 @@ export const fetchMeRequest = async (view = "") => {
     method: "GET",
   });
 };
+
+export const fetchMeAsAdminRequest = async (adminId) =>
+  request({
+    endpoint: `super_admin/admins/${adminId}`,
+    method: "GET",
+  });
 
 export const resetRequest = async (data) => {
   return request({

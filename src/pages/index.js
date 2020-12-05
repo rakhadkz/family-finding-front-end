@@ -12,3 +12,4 @@ export * from "./ResetPassword";
 export * from "./SearchVectorPage";
 export * from "./SettingsPage";
 export * from "./UsersPage";
+export * from "./ContinuousSearchPage";

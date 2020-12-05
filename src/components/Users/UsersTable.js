@@ -1,5 +1,5 @@
 import DynamicTable from "@atlaskit/dynamic-table";
-import React from "react";
+import React, { useState } from "react";
 import { TableWrapper } from "../ui/common";
 
 const columns = [
@@ -28,12 +28,24 @@ const columns = [
     content: "Role",
     width: 15,
   },
+  {
+    key: "actions",
+    content: "Actions",
+    width: 10,
+  },
 ];
 
 export const UsersTable = ({ items }) => {
+  const [pending, setPending] = useState(true);
   return (
     <TableWrapper>
-      <DynamicTable head={{ cells: columns }} rows={items} isFixedSize />
+      <DynamicTable
+        isLoading={pending}
+        head={{ cells: columns }}
+        rows={items}
+        onPageRowsUpdate={() => setPending(false)}
+        isFixedSize
+      />
     </TableWrapper>
   );
 };

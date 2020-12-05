@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import {
+  fetchMeAsAdminRequest,
   fetchMeRequest,
   loginRequest,
   newPasswordRequest,
@@ -121,8 +122,21 @@ const fetchMe = () => {
   return fetchMeRequest().then(handleUserResponse).catch(logout);
 };
 
+const fetchMeAsAdmin = (adminId) => {
+  return fetchMeAsAdminRequest(adminId).then(handleUserResponse).catch(logout);
+};
+
 const logout = async () => {
   window.localStorage.removeItem(localStorageKey);
 };
 
-export { getToken, login, signup, logout, reset, newPassword, fetchMe };
+export {
+  getToken,
+  login,
+  signup,
+  logout,
+  reset,
+  newPassword,
+  fetchMe,
+  fetchMeAsAdmin,
+};
