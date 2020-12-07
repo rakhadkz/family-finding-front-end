@@ -26,7 +26,7 @@ function CommentsTab({ child, setChild}) {
           console.log(items)
         }
       });
-    }, [child, dummy]);
+    }, [child, shouldUpdate]);
 
   return (
     <Spacing m={{ t: "22px" }}>
