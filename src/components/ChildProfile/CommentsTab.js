@@ -9,39 +9,24 @@ import { fetchComments } from "../../context/children/childProvider";
 import { FormSection } from "@atlaskit/form";
 import { useHistory } from "react-router-dom";
 import CommentsForm from './CommentsForm'
+import { postCommentRequest } from '../../api/comments'
+import { fetchChildren } from "../../context/children/childProvider";
 
-function CommentsTab() {
+function CommentsTab({ child, setChild}) {
   const history = useHistory();
-  const { register, handleSubmit, control, errors } = useForm();
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState(child.comments);
+  const [shouldUpdate, increaseShouldUpdate] = useState(0)
 
-  useEffect(() => {
-    let child_id = 1;
-    fetchComments(child_id).then((items) => {
-      if (items) setComments((items));
-    });
-  }, []);
-
-  const onSubmit=()=>{}
-
-  const onSubmitHandle = (data) => {
-    // setPending(true);
-    // console.log(data);
-    onSubmit(data)
-      // .then(() => {
-        // toast.success("User successfully created!", {
-        //   position: "top-center",
-        //   autoClose: 2000,
-        //   hideProgressBar: true,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        // });
-        // history.goBack();
-      // })
-      // .finally(() => setPending(false));
-  };
+  useEffect(
+    () => {
+      console.log(child.id)
+      fetchComments(child.id).then((items) => {
+        if (items) {
+          setComments(items.comments);
+          console.log(items)
+        }
+      });
+    }, [child, dummy]);
 
   return (
     <Spacing m={{ t: "22px" }}>
@@ -52,102 +37,20 @@ function CommentsTab() {
           size="large"
         />
         <Spacing m={{ l: "17px", t: "-22px" }}>
-          <CommentsForm />
+          <CommentsForm 
+            shouldUpdate={shouldUpdate} 
+            increaseShouldUpdate={increaseShouldUpdate} 
+            id={child.id} 
+            setChild={setChild} 
+            inReply={0} 
+            onSubmit={postCommentRequest} />
         </Spacing>
       </Box>
       <Spacing m={{ t: "22px"}}>
-        { data.map ( comment => <Comments data={comment}/> )}
+        { comments && comments.filter( comment => !comment.in_reply_to ).map ( comment => <Comments data={comment}/> )}
       </Spacing>
     </Spacing>
   )
 }
 
 export default CommentsTab
-
-const data = [
-  {
-    "id": 1,
-    "attachments": [],
-    "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-    "in_reply_to": null,
-    "replies": [
-      {
-          "id": 2,
-          "attachments": [],
-          "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-          "created_at": "2020-11-28T14:36:07.837+0000",
-          "in_reply_to": {
-              "id": 1,
-              "body": "Body",
-              "title": "Title",
-              "user_id": 1
-          },
-          "replies": [],
-          "title": "Title",
-          "user": {
-              "id": 1,
-              "email": "murat",
-              "first_name": "Shyngsys",
-              "last_name": "Rakhad",
-              "phone": "(504) 123 0000",
-              "role": "super_admin"
-          },
-          "user_id": 1
-      },
-      {
-        "id": 2,
-        "attachments": [],
-        "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-        "in_reply_to": {
-            "id": 1,
-            "body": "Body",
-            "title": "Title",
-            "user_id": 1
-        },
-        "replies": [{
-          "id": 2,
-          "attachments": [],
-          "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-          "created_at": "2020-11-28T14:36:07.837+0000",
-          "in_reply_to": {
-              "id": 1,
-              "body": "Body",
-              "title": "Title",
-              "user_id": 1
-          },
-          "replies": [],
-          "title": "Title",
-          "user": {
-              "id": 1,
-              "email": "murat",
-              "first_name": "Bekzat",
-              "last_name": "Makhanbet",
-              "phone": "(504) 123 0000",
-              "role": "super_admin"
-          },
-          "user_id": 1
-      }],
-        "title": "Title",
-        "user": {
-            "id": 1,
-            "email": "murat",
-            "first_name": "Murat",
-            "last_name": "Tishkul",
-            "phone": "(504) 123 0000",
-            "role": "super_admin"
-        },
-        "user_id": 1
-    }
-  ],
-    "title": "Title",
-    "user_id": 1,
-    "user": {
-      "id": 1,
-      "email": "murat",
-      "first_name": "Shyngsys",
-      "last_name": "Rakhad",
-      "phone": "(504) 123 0000",
-      "role": "super_admin"
-    },
-  }
-]

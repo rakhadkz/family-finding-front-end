@@ -16,6 +16,7 @@ export const fetchChildComments = (id) => {
     method: "GET",
   });
 };
+
 export const fetchChildAttachmentsRequest = (id) => {
   return request({
     endpoint: `children/${id}?view=attachments`,

@@ -14,9 +14,10 @@ const Comments = ({data}) => {
     showInput,
     ()=>{setShowInput(false);console.log('closed');},
   );
+
   return (
     <Spacing m={{t:"17px"}}>
-    <Box d="flex" justify="space-between">
+    <Box d="flex">
       <Avatar
         appearance="circle"
         src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
@@ -25,16 +26,16 @@ const Comments = ({data}) => {
       <Spacing m={{ l: "7px" }}>
         <Title size="14px">{`${data.user.first_name} ${data.user.last_name}`}</Title>
         <Text>{data.body}</Text>
-        <Box ref={replyRef}>
-        {showInput ? 
-        <Spacing m={{ t: "-22px" }}>
-          <CommentsForm />
-        </Spacing> :
-        <Button appearance="link" onClick={()=>{setShowInput(true)}} style={{  "padding" : "0px"}}>
-          <ButtonContentWrapper>
-          Reply
-          </ButtonContentWrapper>
-        </Button> 
+        <Box ref={replyRef} w="200px">
+          {showInput ? 
+          <Spacing m={{ t: "-22px" }}>
+            <CommentsForm />
+          </Spacing> :
+          <Button appearance="link" onClick={()=>{setShowInput(true)}} style={{  "padding" : "0px"}}>
+            <ButtonContentWrapper>
+            Reply
+            </ButtonContentWrapper>
+          </Button> 
         }
         </Box>
         {data.replies.map(reply => <Comments data={reply} />)}

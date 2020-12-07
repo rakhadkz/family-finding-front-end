@@ -5,8 +5,6 @@ import { formErrors } from "../../../helpers/formErrors";
 import { Box, Label, StyledTextError } from "../atoms";
 import PropTypes from "prop-types";
 
-
-
 export const MentionInput = (props) => {
   const {
     name,
@@ -20,6 +18,8 @@ export const MentionInput = (props) => {
     width = 240,
     label = null,
     mentions,
+    reset,
+    isSubmitSuccessful
   } = props;
   const [suggestions, setSuggestions] = useState([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState('')
@@ -87,7 +87,7 @@ export const MentionInput = (props) => {
           selectedText(selectedSuggestion)
           setSelectedSuggestion('')
         }
-      }
+      } 
     }
   }
 
@@ -112,6 +112,13 @@ export const MentionInput = (props) => {
     showSuggestions();
   },[userName])
 
+  useEffect(() => {
+    console.log(isSubmitSuccessful)
+    if (isSubmitSuccessful) {
+      setText('')
+    }
+  }, [isSubmitSuccessful, reset]);
+
 return (
   <Box w={`${width}px`} onKeyDown = {(e)=>handleKeyDown(e)}>
 
@@ -128,7 +135,8 @@ return (
       type={type || name}
       width={width}
       isCompact
-      className = "ers" value={text} onChange={event => onTextChange(event)}
+      value={text} 
+      onChange={event => onTextChange(event)}
     />
 
     {renderSuggestions()}
@@ -177,11 +185,6 @@ const StyledTextField = styled(Textfield)`
   line-height: 1.42857143;
   color: #333;
   border: 1px solid #dedede;
-  &:focus,
-  &:active {
-    outline: none;
-    border: 1px solid #3fb9de;
-  }
   &::placeholder {
     color: #a4b0be;
     font-size: 14px;
@@ -200,6 +203,8 @@ type: PropTypes.string,
 width: PropTypes.number,
 height: PropTypes.number,
 label: PropTypes.node,
+reset: PropTypes.any.isRequired,
+isSubmitSuccessful: PropTypes.any.isRequired,
 };
 
  
