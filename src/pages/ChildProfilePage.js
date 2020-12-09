@@ -111,8 +111,8 @@ export const ChildProfilePage = (props) => {
       </Spacing>
       <Spacing m={{ t: "40px" }}>
         <ChildTabs
-          attachments={child.attachments}
-          contacts={child.contacts || []}
+          child={child}
+          setChild={setChild}
         />
       </Spacing>
     </SidebarTemplate>
