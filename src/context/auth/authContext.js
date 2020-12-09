@@ -19,7 +19,15 @@ export const AuthProvider = (props) => {
     }
   }, [user]);
 
-  const fetchMe = React.useCallback(() => auth.fetchMe().then(setUser), []);
+  const fetchMe = React.useCallback(
+    () =>
+      auth.fetchMe().then(async (user) => {
+        if (user?.role === "admin") {
+          auth.fetchMeAsAdmin(user?.id).then(setUser);
+        } else setUser(user);
+      }),
+    []
+  );
 
   useEffect(() => {
     if (isSignedIn) fetchMe();

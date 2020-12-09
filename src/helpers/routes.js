@@ -10,3 +10,5 @@ export const SEARCHVECTOR = "search-vectors";
 export const SETTINGS = "settings";
 export const COMMUNICATION_TEMPLATES = "communications-templates";
 export const REPORTS = "reports";
+export const ORGANIZATION_USERS = "organization_users";
+export const CONTINUOUS_SEARCH = "continuous-search";

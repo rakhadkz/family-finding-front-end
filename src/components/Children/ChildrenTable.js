@@ -51,6 +51,7 @@ const columns = [
 
 export const ChildrenTable = () => {
   const [children, setChildren] = useState([]);
+  const [pending, setPending] = useState(true);
   const history = useHistory();
   useEffect(() => {
     fetchChildren({ view: "table" }).then((items) => {
@@ -64,7 +65,8 @@ export const ChildrenTable = () => {
         head={{ cells: columns }}
         rows={children}
         loadingSpinnerSize="large"
-        isLoading={false}
+        isLoading={pending}
+        onPageRowsUpdate={() => setPending(false)}
         isFixedSize
       />
     </TableWrapper>
