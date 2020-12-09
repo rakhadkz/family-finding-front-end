@@ -1,10 +1,9 @@
-import Button from "@atlaskit/button";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Spacing, Title } from "../components/ui/atoms";
-import { ModalDialog, Pagination, Sidebar } from "../components/ui/common";
+import { ModalDialog, Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
-import { AddUserButton, UsersSearchBar, UsersTable } from "../components/Users";
+import PersonIcon from "@atlaskit/icon/glyph/person";
 import { UserBreadcrumbs } from "../components/Users/UserBreadcrumbs";
 import { userTableData } from "../content/user.data";
 import { useAuth } from "../context/auth/authContext";
@@ -12,12 +11,22 @@ import { reset } from "../context/auth/authProvider";
 import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
 import { fetchUsersMeta } from "../api/user";
+import { SearchBar } from "../components/ui/molecules/SearchBar";
+import { Table } from "../components/ui/common/Table";
+import { usersTableColumns } from "../content/columns.data";
+import Button from "@atlaskit/button";
 const AllUsers = ({ history }) => (
   <>
     <Spacing m={{ t: "23px" }}>
       <Box d="flex" justify="space-between">
-        <UsersSearchBar />
-        <AddUserButton onClick={() => history.push("/users-add")} />
+        <SearchBar />
+        <Button
+          appearance="primary"
+          iconBefore={<PersonIcon />}
+          onClick={() => history.push("/users-add")}
+        >
+          Add user
+        </Button>
       </Box>
     </Spacing>
   </>
@@ -63,6 +72,7 @@ export const UsersPage = (props) => {
   const [currentUser, setCurrentUser] = useState(-1);
   const [tablePending, setTablePending] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [totalPage, setTotalPage] = useState(null);
 
   const organization =
     user &&
@@ -80,6 +90,7 @@ export const UsersPage = (props) => {
   };
 
   useEffect(() => {
+    fetchUsersMeta().then((response) => setTotalPage(response.num_pages));
     isOrganization
       ? organization &&
         setUsers(
@@ -105,7 +116,6 @@ export const UsersPage = (props) => {
                 userTableData(
                   items,
                   history,
-                  onDelete,
                   organization?.name,
                   user,
                   setIsOpen,
@@ -127,11 +137,12 @@ export const UsersPage = (props) => {
         <AllUsers history={history} />
       )}
       <Spacing m={{ t: "23px" }}>
-        {!id && <Pagination fetch={fetchUsersMeta} currentPage={currentPage} />}
-        <UsersTable
+        <Table
+          totalPage={!id && totalPage}
+          currentPage={currentPage}
           items={users}
-          isOrganization={isOrganization}
           pending={tablePending}
+          head={usersTableColumns}
         />
       </Spacing>
       <ModalDialog

@@ -2,7 +2,7 @@ import SearchIcon from "@atlaskit/icon/glyph/search";
 import Textfield from "@atlaskit/textfield";
 import styled from "styled-components";
 
-export const UsersSearchBar = () => {
+export const SearchBar = () => {
   return (
     <SearchBarContainer>
       <SearchInput

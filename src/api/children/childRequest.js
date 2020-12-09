@@ -5,8 +5,17 @@ export const fetchChildrenRequest = (params) => {
     endpoint:
       "children" +
       (params.id ? `/${params.id}` : ``) +
-      (params.view ? `?view=${params.view}` : ``),
+      (params.view ? `?view=${params.view}` : ``) +
+      (params.page ? `&page=${params.page}` : ``),
     method: "GET",
+  });
+};
+
+export const fetchChildrenMeta = () => {
+  return request({
+    endpoint: "children",
+    method: "GET",
+    meta: true,
   });
 };
 

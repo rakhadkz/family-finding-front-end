@@ -5,38 +5,34 @@ import ChevronLeftLargeIcon from "@atlaskit/icon/glyph/chevron-left-large";
 import ChevronRightLargeIcon from "@atlaskit/icon/glyph/chevron-right-large";
 import { Box } from "../atoms";
 
-export const Pagination = ({ fetch, currentPage }) => {
+export const Pagination = ({ totalPage, currentPage }) => {
   const history = useHistory();
   const [pagination, setPagination] = useState();
-  const [totalPage, setTotalPage] = useState(1);
   useEffect(() => {
-    fetch().then((data) => {
-      setTotalPage(data.num_pages);
-      var pages = [];
-      for (var i = 1; i <= data.num_pages; ++i) {
-        pages.push(i);
-      }
-      setPagination(
-        pages.map((i) =>
-          parseInt(currentPage) === i ? (
-            <Button spacing="compact" appearance="primary" isSelected>
-              {i}
-            </Button>
-          ) : (
-            <Button
-              spacing="compact"
-              appearance="subtle"
-              onClick={() => history.push(`?page=${i}`)}
-            >
-              {i}
-            </Button>
-          )
+    var pages = [];
+    for (var i = 1; i <= totalPage; ++i) {
+      pages.push(i);
+    }
+    setPagination(
+      pages.map((i) =>
+        parseInt(currentPage) === i ? (
+          <Button spacing="compact" appearance="primary" isSelected>
+            {i}
+          </Button>
+        ) : (
+          <Button
+            spacing="compact"
+            appearance="subtle"
+            onClick={() => history.push(`?page=${i}`)}
+          >
+            {i}
+          </Button>
         )
-      );
-    });
+      )
+    );
   }, [currentPage]);
 
-  return (
+  return totalPage ? (
     <Box d="flex" justify="center" w="100%">
       <Button
         spacing="compact"
@@ -59,5 +55,5 @@ export const Pagination = ({ fetch, currentPage }) => {
         <ChevronRightLargeIcon />
       </Button>
     </Box>
-  );
+  ) : null;
 };

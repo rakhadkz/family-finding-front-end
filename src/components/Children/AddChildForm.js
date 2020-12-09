@@ -66,17 +66,32 @@ export const AddChildForm = ({ onSubmit }) => {
               label="Permanency Goal"
               placeholder="Choose status"
               options={[
-                { value: true, label: "On" },
-                { value: false, label: "Off" },
+                {
+                  value: "return_to_parent",
+                  label: "Return to Parent(s) (Reunification)",
+                },
+                { value: "adoption", label: "Adoption" },
+                {
+                  value: "permanent_legal_custody",
+                  label: "Permanent Legal Custody (PLC)",
+                },
+                {
+                  value: "permanent_placement",
+                  label: "Permanent Placement with a Fit and Willing Relative",
+                },
+                {
+                  value: "appla",
+                  label: "Another Planned Permanent Living Arrangement (APPLA)",
+                },
               ]}
             />
           </Box>
         </Spacing>
         <Button
+          appearance="primary"
           style={{ position: "absolute", top: 80, right: 40 }}
           isDisabled={pending}
           type="submit"
-          appearance="primary"
         >
           Save
         </Button>
