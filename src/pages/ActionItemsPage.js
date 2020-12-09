@@ -6,11 +6,16 @@ import { SidebarTemplate } from "../components/ui/templates";
 import { actionItemTableData } from "../content/actionItem.data";
 import { fetchActionItems } from "../context/actionItems/actionItemProvider";
 import { actionItemsTableColumns } from "../content/columns.data";
+import { fetchActionItemsMeta } from "../api/actionItems";
 
-export const ActionItemsPage = () => {
+export const ActionItemsPage = (props) => {
   const [items, setItems] = useState([]);
   const [tablePending, setTablePending] = useState(true);
+  const [totalPage, setTotalPage] = useState(null);
+  const query = new URLSearchParams(props.location.search);
+  var currentPage = query.get("page") || 1;
   useEffect(() => {
+    fetchActionItemsMeta().then((total) => setTotalPage(total.num_pages));
     fetchActionItems()
       .then((items) => setItems(actionItemTableData(items)))
       .finally(() => setTablePending(false));
@@ -20,6 +25,8 @@ export const ActionItemsPage = () => {
       <Title>Action Items</Title>
       <Spacing m={{ t: "29px" }}>
         <Table
+          totalPage={totalPage}
+          currentPage={currentPage}
           items={items}
           head={actionItemsTableColumns}
           pending={tablePending}

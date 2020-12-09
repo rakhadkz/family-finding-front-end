@@ -18,9 +18,10 @@ export const DatepickerInput = (props) => {
   } = props;
 
   return (
-    <Box w={`${width}px`}>
+    <Box w={`${width}px`} mr="35px">
       {label && <Label htmlFor={name}>{label}</Label>}
       <Controller
+        dateFormat={"YYYY-MM-DD"}
         control={control}
         ref={register}
         rules={register}

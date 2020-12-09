@@ -20,6 +20,7 @@ export const SelectInput = (props) => {
     label = null,
     isMulti = false,
     options,
+    defaultValue = null,
   } = props;
 
   return (
@@ -31,6 +32,7 @@ export const SelectInput = (props) => {
         isMulti={isMulti}
         rules={register}
         name={name}
+        defaultValue={defaultValue}
         as={Select}
         width={width}
         elemAfterInput={elemAfterInput}
