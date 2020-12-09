@@ -6,3 +6,6 @@ export * from "./PlaceCall";
 export * from "./RelativesList";
 export * from "./SendEmail";
 export * from "./SetReminder";
+export * from "./Comments";
+export * from "./CommentsForm";
+export * from "./CommentsTab";

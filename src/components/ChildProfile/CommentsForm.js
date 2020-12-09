@@ -1,28 +1,20 @@
-import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
-import { Box, Form, Label, Rectangle, Spacing, Title } from "../ui/atoms";
+import React, { useEffect, useState } from "react";
+import { Form } from "../ui/atoms";
 import { MentionInput } from "../ui/molecules";
 import { useForm } from "react-hook-form";
 import { FormSection } from "@atlaskit/form";
-import { useHistory } from "react-router-dom";
-import Button from "@atlaskit/button";
-import { reset } from "../../context/auth/authProvider";
+import { useAuth } from "../../context/auth/authContext";
 
-const mentions = `
-Andrew Stewart
-Shyngys Rakhad
-Murat Tishkul
-Mura Tishkul
-Murathan Tishkulbek
-Bekzat Makhanbet`.split("\n");
-
-function CommentsForm({ onSubmit, id, inReply, shouldUpdate, increaseShouldUpdate}) {
-  const history = useHistory();
+export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShouldUpdate, setShowInput}) => {
+  const { user } = useAuth();
   const { register, handleSubmit, control, errors , reset, formState: { isSubmitSuccessful }} = useForm();
-  const [pending, setPending] = useState(false);
+  const [mentions, setMentions] = useState();
 
-  const onSubmitHandle = (data) => {
-    setPending(true);
+  useEffect( () => {
+    user && setMentions(user.user_organizations[0].organization.users.map(user=>`${user.first_name} ${user.last_name}`));
+  }, [user]);
+
+  const onSubmitHandle = async (data) => {
     console.log(data)
     onSubmit({
       "comment": {
@@ -34,7 +26,7 @@ function CommentsForm({ onSubmit, id, inReply, shouldUpdate, increaseShouldUpdat
     .then((items) => {
       increaseShouldUpdate(shouldUpdate+1); 
     })
-    .finally(() => {setPending(false); }  );
+    .finally(() => { setShowInput && setShowInput(false) });
   };
 
   return (
@@ -54,5 +46,3 @@ function CommentsForm({ onSubmit, id, inReply, shouldUpdate, increaseShouldUpdat
     </Form>
   )
 }
-
-export default CommentsForm

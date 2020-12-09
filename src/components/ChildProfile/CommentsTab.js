@@ -1,29 +1,20 @@
 import Avatar from "@atlaskit/avatar";
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Box, Form, Label, Rectangle, Spacing, Title } from "../ui/atoms";
-import { MentionInput } from "../ui/molecules";
-import { useForm } from "react-hook-form";
-import Comments from './Comments'
+import { Box, Spacing } from "../ui/atoms";
+import { Comments } from './Comments'
 import { fetchComments } from "../../context/children/childProvider";
-import { FormSection } from "@atlaskit/form";
-import { useHistory } from "react-router-dom";
-import CommentsForm from './CommentsForm'
+import {CommentsForm} from './CommentsForm'
 import { postCommentRequest } from '../../api/comments'
-import { fetchChildren } from "../../context/children/childProvider";
 
-function CommentsTab({ child, setChild}) {
-  const history = useHistory();
+export const CommentsTab = ({ child, setChild}) => {
   const [comments, setComments] = useState(child.comments);
   const [shouldUpdate, increaseShouldUpdate] = useState(0)
 
   useEffect(
     () => {
-      console.log(child.id)
       fetchComments(child.id).then((items) => {
         if (items) {
           setComments(items.comments);
-          console.log(items)
         }
       });
     }, [child, shouldUpdate]);
@@ -41,16 +32,23 @@ function CommentsTab({ child, setChild}) {
             shouldUpdate={shouldUpdate} 
             increaseShouldUpdate={increaseShouldUpdate} 
             id={child.id} 
-            setChild={setChild} 
             inReply={0} 
-            onSubmit={postCommentRequest} />
+            onSubmit={postCommentRequest} 
+          />
         </Spacing>
       </Box>
       <Spacing m={{ t: "22px"}}>
-        { comments && comments.filter( comment => !comment.in_reply_to ).map ( comment => <Comments data={comment}/> )}
+        { comments && 
+            comments.filter( comment => !comment.in_reply_to ).map ( 
+              comment => 
+                <Comments
+                  id={child.id} 
+                  data={comment}  
+                  shouldUpdate={shouldUpdate} 
+                  increaseShouldUpdate={increaseShouldUpdate} 
+                /> 
+              )}
       </Spacing>
     </Spacing>
   )
-}
-
-export default CommentsTab
+};

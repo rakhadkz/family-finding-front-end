@@ -21,11 +21,22 @@ export const MentionInput = (props) => {
     reset,
     isSubmitSuccessful
   } = props;
-  const [suggestions, setSuggestions] = useState([]);
-  const [selectedSuggestion, setSelectedSuggestion] = useState('')
-  const [userName, setUserName] = useState({});
-  const [isTypingName, setIsTypingName] = useState(false);
+
   const [text, setText] = useState("");
+  const [userName, setUserName] = useState({});
+  const [suggestions, setSuggestions] = useState([]);
+  const [isTypingName, setIsTypingName] = useState(false);
+  const [selectedSuggestion, setSelectedSuggestion] = useState('');
+
+  useEffect(()=> {
+    showSuggestions();
+  },[userName])
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      setText('');
+    }
+  }, [isSubmitSuccessful, reset]);
 
   const showSuggestions = () => {
     let suggestion = [];
@@ -36,7 +47,7 @@ export const MentionInput = (props) => {
       setSuggestions(suggestion);
     }
     else{
-      setSuggestions([])
+      setSuggestions([]);
     }
   };
 
@@ -50,13 +61,11 @@ export const MentionInput = (props) => {
 
     if (lastChar === "@") {
       setIsTypingName(true);
-      console.log('@ was hit')
     }
 
     if (isTypingName) {
       const words = value.split(" ");
       let v=words[words.length - 1].substring(1);
-      console.log(v)
       setUserName(v);
     }
 
@@ -75,8 +84,8 @@ export const MentionInput = (props) => {
       event.preventDefault();
       if(!selectedSuggestion || !selectedSuggestion.length) setSelectedSuggestion(suggestions[0]);
       else {
-        let index = suggestions.indexOf(selectedSuggestion)
-        setSelectedSuggestion(suggestions[(index+1)%suggestions.length])
+        let index = suggestions.indexOf(selectedSuggestion);
+        setSelectedSuggestion(suggestions[(index+1)%suggestions.length]);
       }
     }
     
@@ -84,40 +93,22 @@ export const MentionInput = (props) => {
       if(suggestions.length > 0){
         event.preventDefault();
         if(selectedSuggestion.length>0){
-          selectedText(selectedSuggestion)
-          setSelectedSuggestion('')
+          selectedText(selectedSuggestion);
+          setSelectedSuggestion('');
         }
-      } 
+      }
     }
   }
 
-  const renderSuggestions = () => {
-    console.log('rendered!!!!', suggestions)
-    if (suggestions.length === 0) {
-      
-    }
-
-    return (
-        <StyledList styles={{"width": "50px", "display": suggestions ? "inline-block" : "none", "left": `${(text.length - userName.length)*7}px`}}>
-          {suggestions.map((item, index) => (
-            <StyledListItem color={selectedSuggestion===item ? "background-color : #daf4fa;" : ''} key={index} onClick={() => selectedText(item)}>
-              {item}
-            </StyledListItem>
-          ))}
-        </StyledList>
-    );
-  };
-
-  useEffect(()=> {
-    showSuggestions();
-  },[userName])
-
-  useEffect(() => {
-    console.log(isSubmitSuccessful)
-    if (isSubmitSuccessful) {
-      setText('')
-    }
-  }, [isSubmitSuccessful, reset]);
+  const renderSuggestions = () => (
+    <StyledList styles={{"width": "50px", "display": suggestions ? "inline-block" : "none", "left": `${(text.length - userName.length)*7}px`}}>
+      {suggestions.map((item, index) => (
+        <StyledListItem color={selectedSuggestion===item ? "background-color : #daf4fa;" : ''} key={index} onClick={() => selectedText(item)}>
+          {item}
+        </StyledListItem>
+      ))}
+    </StyledList>
+  );
 
 return (
   <Box w={`${width}px`} onKeyDown = {(e)=>handleKeyDown(e)}>
@@ -204,7 +195,7 @@ width: PropTypes.number,
 height: PropTypes.number,
 label: PropTypes.node,
 reset: PropTypes.any.isRequired,
-isSubmitSuccessful: PropTypes.any.isRequired,
+isSubmitSuccessful: PropTypes.any.isRequired
 };
 
  
