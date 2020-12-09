@@ -11,10 +11,11 @@ export const Pagination = ({ fetch, currentPage }) => {
   const [totalPage, setTotalPage] = useState(1);
   useEffect(() => {
     fetch().then((data) => {
-      setTotalPage(data.num_pages);
+      data && setTotalPage(data.num_pages);
       var pages = [];
-      for (var i = 1; i <= data.num_pages; ++i) {
-        pages.push(i);
+      if(data) {
+        for (var i = 1; i <= data.num_pages; ++i) 
+          pages.push(i);
       }
       setPagination(
         pages.map((i) =>
