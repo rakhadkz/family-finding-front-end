@@ -13,10 +13,12 @@ import {
   LOGIN,
   NEW_PASSWORD,
   ORGANIZATIONS,
+  ORGANIZATION_USERS,
   REPORTS,
   SEARCHVECTOR,
   SETTINGS,
   USERS,
+  CONTINUOUS_SEARCH,
 } from "./helpers/routes";
 import {
   ActionItemsPage,
@@ -32,6 +34,7 @@ import {
   SearchVectorsPage,
   SettingsPage,
   UsersPage,
+  ContinuousSearchPage,
 } from "./pages";
 import { ChildProfilePage } from "./pages/ChildProfilePage";
 import LoginPage from "./pages/Login";
@@ -62,6 +65,11 @@ function App() {
     <>
       <PrivateRoute
         exact
+        path={`/${CONTINUOUS_SEARCH}`}
+        component={ContinuousSearchPage}
+      />
+      <PrivateRoute
+        exact
         path={`/${SEARCHVECTOR}`}
         component={SearchVectorsPage}
       />
@@ -72,12 +80,21 @@ function App() {
         component={CommunicationTemplatesPage}
       />
       <PrivateRoute exact path={`/${REPORTS}`} component={ReportsPage} />
-      <PrivateRoute exact path={`/${USERS}`} component={UsersPage} />
-      <PrivateRoute exact path={`/${USERS}/${ADD}`} component={AddUserPage} />
+      <PrivateRoute
+        exact
+        path={`/${USERS}`}
+        component={(props) => <UsersPage isOrganization={false} {...props} />}
+      />
+      <PrivateRoute
+        exact
+        path={`/${ORGANIZATION_USERS}`}
+        component={(props) => <UsersPage isOrganization={true} {...props} />}
+      />
+      <PrivateRoute exact path={`/${USERS}-${ADD}`} component={AddUserPage} />
       <PrivateRoute exact path={`/${USERS}/:id`} component={UsersPage} />
       <PrivateRoute
         exact
-        path={`/${CHILDREN}/${ADD}`}
+        path={`/${CHILDREN}-${ADD}`}
         component={AddChildPage}
       />
       <PrivateRoute
@@ -87,7 +104,7 @@ function App() {
       />
       <PrivateRoute
         exact
-        path={`/${ORGANIZATIONS}/${ADD}`}
+        path={`/${ORGANIZATIONS}-${ADD}`}
         component={AddOrganizationPage}
       />
       <PrivateRoute

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Box, Form, Spacing, Title } from "../ui/atoms";
+import { Box, Form, Spacing } from "../ui/atoms";
 import { TextInput } from "../ui/molecules";
 import { AddOrganizationForm } from "./AddOrganizationForm";
 
@@ -17,7 +17,11 @@ export const AddUserForm = ({ onSubmit }) => {
   const onSubmitHandle = (data) => {
     setPending(true);
     data["organizations"] = orgRoles;
+    if (orgRoles.length > 0) {
+      data.role = orgRoles[0].role;
+    }
     console.log(data);
+
     onSubmit(data)
       .then(() => {
         toast.success("User successfully created!", {
