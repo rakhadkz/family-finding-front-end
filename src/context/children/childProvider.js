@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
 import {
   fetchChildrenRequest,
-  createChildRequest
+  createChildRequest,
+  fetchChildComments
 } from "../../api/children";
 
 
@@ -11,6 +12,24 @@ const fetchChildren = (params = null) => {
   };
 
   return fetchChildrenRequest(params).catch((err) => {
+    toast.error(errorStatuses[err.status], {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  });
+};
+
+const fetchComments = (id) => {
+  const errorStatuses = {
+    500: "Error on Server!",
+  };
+
+  return fetchChildComments(id).catch((err) => {
     toast.error(errorStatuses[err.status], {
       position: "top-center",
       autoClose: 2000,
@@ -42,5 +61,4 @@ const createChild = (data) => {
   });
 };
 
-
-export { fetchChildren,createChild };
+export { fetchChildren, fetchComments, createChild };
