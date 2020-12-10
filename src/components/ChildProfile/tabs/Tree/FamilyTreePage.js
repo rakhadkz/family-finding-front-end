@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from "react";
 import OrganizationChart from "@dabeng/react-orgchart";
 import styled from "styled-components";
-import { fetchChildren } from "../../../../context/children/childProvider";
 import { childContactsTableData } from "../../../../content/childContacts.data";
-import { ContactsTable } from "./ContactsTable";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import MyNode from "./MyNode";
+import { Table } from "../../../ui/common/Table";
+import { contactsTableColumns } from "../../../../content/columns.data";
 import Button from "@atlaskit/button";
 
 export const FamilyTreePage = ({ contacts }) => {
-  // const [contacts, setContacts] = useState([]);
-  // useEffect(() => {
-  //   fetchChildren({ id: 1, view: "contacts" }).then((items) => {
-  //     setContacts(childContactsTableData(items));
-  //   });
-  // }, []);
   return (
     <Wrapper>
       <Box d="flex" direction="row-reverse">
@@ -31,16 +24,14 @@ export const FamilyTreePage = ({ contacts }) => {
       </Spacing>
       <Title size={"16px"}>Contact List</Title>
       <Spacing m={{ t: "20px" }}>
-        <ContactsTable contacts={childContactsTableData(contacts)} />
+        <Table
+          items={childContactsTableData(contacts)}
+          head={contactsTableColumns}
+        />
       </Spacing>
     </Wrapper>
   );
 };
-
-const Card = styled.div`
-  background: #cee9e9;
-  border-radius: 50px;
-`;
 
 const Wrapper = styled.div`
   width: 100%;

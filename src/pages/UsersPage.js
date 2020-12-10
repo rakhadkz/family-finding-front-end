@@ -1,22 +1,32 @@
-import Button from "@atlaskit/button";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Spacing, Title } from "../components/ui/atoms";
-import { Sidebar } from "../components/ui/common";
+import { ModalDialog, Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
-import { AddUserButton, UsersSearchBar, UsersTable } from "../components/Users";
+import PersonIcon from "@atlaskit/icon/glyph/person";
 import { UserBreadcrumbs } from "../components/Users/UserBreadcrumbs";
 import { userTableData } from "../content/user.data";
 import { useAuth } from "../context/auth/authContext";
 import { reset } from "../context/auth/authProvider";
 import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
+import { fetchUsersMeta } from "../api/user";
+import { SearchBar } from "../components/ui/molecules/SearchBar";
+import { Table } from "../components/ui/common/Table";
+import { usersTableColumns } from "../content/columns.data";
+import Button from "@atlaskit/button";
 const AllUsers = ({ history }) => (
   <>
     <Spacing m={{ t: "23px" }}>
       <Box d="flex" justify="space-between">
-        <UsersSearchBar />
-        <AddUserButton onClick={() => history.push("/users-add")} />
+        <SearchBar />
+        <Button
+          appearance="primary"
+          iconBefore={<PersonIcon />}
+          onClick={() => history.push("/users-add")}
+        >
+          Add user
+        </Button>
       </Box>
     </Spacing>
   </>
@@ -50,13 +60,20 @@ const ConcreteUser = ({ name, email }) => {
 };
 export const UsersPage = (props) => {
   const history = useHistory();
+  const query = new URLSearchParams(props.location.search);
   const { id } = props.match.params;
+  var currentPage = query.get("page") || 1;
   const { isOrganization } = props;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [users, setUsers] = useState([]);
   const { user } = useAuth();
-  const [refresh, setRefresh] = useState(true);
+  const [refresh, setRefresh] = useState(false);
+  const [currentUser, setCurrentUser] = useState(-1);
+  const [tablePending, setTablePending] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [totalPage, setTotalPage] = useState(null);
+
   const organization =
     user &&
     (isOrganization && user?.user_organizations
@@ -64,37 +81,52 @@ export const UsersPage = (props) => {
       : { users: [], name: "" });
 
   const onDelete = (userId) => {
+    setRefresh(true);
     deleteUser(userId).finally(() => {
-      setRefresh((prev) => !prev);
+      setRefresh(false);
+      setIsOpen(false);
       id && history.push("../users");
     });
   };
 
   useEffect(() => {
+    fetchUsersMeta().then((response) => setTotalPage(response.num_pages));
     isOrganization
       ? organization &&
         setUsers(
           userTableData(
             organization?.users,
             history,
-            onDelete,
             organization?.name,
-            user
+            user,
+            setIsOpen,
+            setCurrentUser
           )
         )
-      : fetchUsers({ id: id, view: "extended" }).then((items) => {
-          if (items) {
-            const full_name = Array.isArray(items)
-              ? ""
-              : `${items.first_name} ${items.last_name}`;
-            setName(full_name);
-            setEmail(items.email);
-            setUsers(
-              userTableData(items, history, onDelete, organization?.name, user)
-            );
+      : fetchUsers({ id: id, view: "extended", page: currentPage || 1 }).then(
+          (response) => {
+            if (response) {
+              const items = response;
+              const full_name = Array.isArray(items)
+                ? ""
+                : `${items.first_name} ${items.last_name}`;
+              setName(full_name);
+              setEmail(items.email);
+              setUsers(
+                userTableData(
+                  items,
+                  history,
+                  organization?.name,
+                  user,
+                  setIsOpen,
+                  setCurrentUser
+                )
+              );
+              setTablePending(false);
+            }
           }
-        });
-  }, [id, refresh]);
+        );
+  }, [id, refresh, currentPage]);
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
@@ -105,8 +137,23 @@ export const UsersPage = (props) => {
         <AllUsers history={history} />
       )}
       <Spacing m={{ t: "23px" }}>
-        <UsersTable items={users} isOrganization={isOrganization} />
+        <Table
+          totalPage={!id && totalPage}
+          currentPage={currentPage}
+          items={users}
+          pending={tablePending}
+          head={usersTableColumns}
+        />
       </Spacing>
+      <ModalDialog
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onClick={() => onDelete(currentUser)}
+        positiveLabel="Delete"
+        heading="Delete"
+        body="It will permanently delete all related artifacts (comments, attachments and etc). This can't be undone"
+        appearance="danger"
+      />
     </SidebarTemplate>
   );
 };

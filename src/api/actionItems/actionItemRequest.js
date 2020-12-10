@@ -6,3 +6,11 @@ export const fetchActionItemsRequest = () => {
     method: "GET",
   });
 };
+
+export const fetchActionItemsMeta = () => {
+  return request({
+    endpoint: "action_items",
+    method: "GET",
+    meta: true,
+  });
+};

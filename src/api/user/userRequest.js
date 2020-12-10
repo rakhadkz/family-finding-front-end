@@ -5,8 +5,17 @@ export const fetchUsersRequest = async (params) => {
     endpoint:
       "admin/users" +
       (params.id ? "/" + params.id : "") +
-      (params.view ? "?view=" + params.view : ""),
+      (params.view ? "?view=" + params.view : "") +
+      (params.page ? "&page=" + params.page : "1"),
     method: "GET",
+  });
+};
+
+export const fetchUsersMeta = async () => {
+  return request({
+    endpoint: "admin/users",
+    method: "GET",
+    meta: true,
   });
 };
 

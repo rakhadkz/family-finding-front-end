@@ -1,9 +1,16 @@
-import Button from "@atlaskit/button";
+import Button, { LoadingButton } from "@atlaskit/button";
 import CrossIcon from "@atlaskit/icon/glyph/cross";
 import { GroupAccess } from "../components/common";
 import { role_label } from "./sample.data";
 
-const userTableData = (data, history, onDelete, organizationName, user) => {
+const userTableData = (
+  data,
+  history,
+  organizationName,
+  user,
+  setIsOpen,
+  setCurrentUser
+) => {
   const isArray = Array.isArray(data);
   data = isArray ? data : (data = [data]);
   return data.map((item, index) => {
@@ -51,16 +58,17 @@ const userTableData = (data, history, onDelete, organizationName, user) => {
           key: "actions",
           content: (
             <GroupAccess atLeast="admin" exact="super_admin">
-              <Button
+              <LoadingButton
                 isDisabled={user?.id === item.id ? true : false}
                 onClick={() => {
-                  onDelete(item.id);
+                  setIsOpen(true);
+                  setCurrentUser(item.id);
                 }}
                 height="32px"
                 width="32px"
               >
                 <CrossIcon size="small" />
-              </Button>
+              </LoadingButton>
             </GroupAccess>
           ),
         },

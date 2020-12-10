@@ -1,9 +1,9 @@
 import { getToken } from "../context/auth/authProvider";
 
-export const authURL = "https://family-finding-api.herokuapp.com/api/v1";
-//export const authURL = "http://localhost:3000/api/v1";
+//export const authURL = "https://family-finding-api.herokuapp.com/api/v1";
+export const authURL = "http://localhost:3000/api/v1";
 
-export const request = async ({ endpoint, data, method }) => {
+export const request = async ({ endpoint, data, method, meta = false }) => {
   const token = await getToken();
 
   const config = {
@@ -20,7 +20,8 @@ export const request = async ({ endpoint, data, method }) => {
     .then(async (response) => {
       console.log(response);
       if (response.ok) {
-        const { data } = await response.json();
+        const res = await response.json();
+        const data = meta ? res.meta : res.data;
         console.log("Data", data);
         return data;
       } else {

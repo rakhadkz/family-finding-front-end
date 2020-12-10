@@ -14,9 +14,8 @@ export const AddChildForm = ({ onSubmit }) => {
   const [pending, setPending] = useState(false);
   const onSubmitHandle = (data) => {
     setPending(true);
-    console.log(data);
-    const { permanency_goal, ...rest } = data;
-    onSubmit(rest)
+    data.permanency_goal = data.permanency_goal.value;
+    onSubmit(data)
       .then(() => {
         toast.success("Child successfully created!", {
           position: "top-center",
@@ -36,7 +35,7 @@ export const AddChildForm = ({ onSubmit }) => {
     <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
       <FormSection>
         <Spacing m={{ t: "18px", b: "18px" }}>
-          <Box d="flex" w="100%" justify="space-between">
+          <Box d="flex" w="100%">
             <TextInput
               name={"first_name"}
               register={register({ required: true })}
@@ -60,23 +59,43 @@ export const AddChildForm = ({ onSubmit }) => {
               placeholder="Select birthday of child"
             />
             <SelectInput
+              defaultValue={{
+                value: "return_to_parent",
+                label: "Return to Parent(s) (Reunification)",
+              }}
               name={"permanency_goal"}
-              register={{}}
+              ref={register({ required: true })}
               control={control}
+              error={errors.permanency_goal}
               label="Permanency Goal"
               placeholder="Choose status"
               options={[
-                { value: true, label: "On" },
-                { value: false, label: "Off" },
+                {
+                  value: "return_to_parent",
+                  label: "Return to Parent(s) (Reunification)",
+                },
+                { value: "adoption", label: "Adoption" },
+                {
+                  value: "permanent_legal_custody",
+                  label: "Permanent Legal Custody (PLC)",
+                },
+                {
+                  value: "permanent_placement",
+                  label: "Permanent Placement with a Fit and Willing Relative",
+                },
+                {
+                  value: "appla",
+                  label: "Another Planned Permanent Living Arrangement (APPLA)",
+                },
               ]}
             />
           </Box>
         </Spacing>
         <Button
+          appearance="primary"
           style={{ position: "absolute", top: 80, right: 40 }}
           isDisabled={pending}
           type="submit"
-          appearance="primary"
         >
           Save
         </Button>

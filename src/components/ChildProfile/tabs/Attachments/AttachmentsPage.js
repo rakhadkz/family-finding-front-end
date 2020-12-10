@@ -1,21 +1,24 @@
-import Button from "@atlaskit/button";
-import React, { useEffect, useState } from "react";
 import { Box, Spacing } from "../../../ui/atoms";
 import DocumentIcon from "@atlaskit/icon/glyph/document";
 import { childAttachmentTableData } from "../../../../content/childAttachment.data";
-import { AttachmentsTable } from "./AttachmentsTable";
+import { Table } from "../../../ui/common/Table";
+import { attachmentsTableColumns } from "../../../../content/columns.data";
+import Button from "@atlaskit/button";
 
 export const AttachmentsPage = ({ attachments }) => (
   <div>
     <Spacing m={{ t: "23px" }}>
       <Box w="100%" d="flex" direction="row-reverse">
-        <Button iconBefore={DocumentIcon} appearance="primary">
+        <Button appearance="primary" iconBefore={<DocumentIcon />}>
           Upload new file
         </Button>
       </Box>
     </Spacing>
     <Spacing m={{ t: "23px" }}>
-      <AttachmentsTable attachments={childAttachmentTableData(attachments)} />
+      <Table
+        head={attachmentsTableColumns}
+        items={childAttachmentTableData(attachments)}
+      />
     </Spacing>
   </div>
 );
