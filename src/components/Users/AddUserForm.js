@@ -19,6 +19,7 @@ export const AddUserForm = ({ onSubmit }) => {
     data["organizations"] = orgRoles;
     if (orgRoles.length > 0) {
       data.role = orgRoles[0].role;
+      data.organization_id = orgRoles[0].id;
     }
     console.log(data);
 

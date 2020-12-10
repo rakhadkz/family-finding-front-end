@@ -119,7 +119,7 @@ const signup = (user) => {
 };
 
 const fetchMe = () => {
-  return fetchMeRequest().then(handleUserResponse).catch(logout);
+  return fetchMeRequest("extended").then(handleUserResponse).catch(logout);
 };
 
 const fetchMeAsAdmin = (adminId) => {
