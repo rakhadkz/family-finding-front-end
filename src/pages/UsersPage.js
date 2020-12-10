@@ -63,7 +63,6 @@ export const UsersPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   const { id } = props.match.params;
   var currentPage = query.get("page") || 1;
-  const { isOrganization } = props;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [users, setUsers] = useState([]);
@@ -73,12 +72,10 @@ export const UsersPage = (props) => {
   const [tablePending, setTablePending] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [totalPage, setTotalPage] = useState(null);
-
   const organization =
-    user &&
-    (isOrganization && user?.user_organizations
+    user && user?.user_organizations
       ? user?.user_organizations[0]?.organization
-      : { users: [], name: "" });
+      : { users: [], name: "" };
 
   const onDelete = (userId) => {
     setRefresh(true);
@@ -91,46 +88,26 @@ export const UsersPage = (props) => {
 
   useEffect(() => {
     fetchUsersMeta().then((response) => setTotalPage(response.num_pages));
-    isOrganization
-      ? organization &&
-        setUsers(
-          userTableData(
-            organization?.users,
-            history,
-            organization?.name,
-            user,
-            setIsOpen,
-            setCurrentUser
-          )
-        )
-      : fetchUsers({ id: id, view: "extended", page: currentPage || 1 }).then(
-          (response) => {
-            if (response) {
-              const items = response;
-              const full_name = Array.isArray(items)
-                ? ""
-                : `${items.first_name} ${items.last_name}`;
-              setName(full_name);
-              setEmail(items.email);
-              setUsers(
-                userTableData(
-                  items,
-                  history,
-                  organization?.name,
-                  user,
-                  setIsOpen,
-                  setCurrentUser
-                )
-              );
-              setTablePending(false);
-            }
-          }
-        );
+    fetchUsers({ id: id, view: "extended", page: currentPage || 1 }).then(
+      (items) => {
+        if (items) {
+          !Array.isArray(items) &&
+            setName(`${items.first_name} ${items.last_name}`) &&
+            setEmail(items.email);
+          setUsers(
+            userTableData(items, history, user, setIsOpen, setCurrentUser)
+          );
+          setTablePending(false);
+        }
+      }
+    );
   }, [id, refresh, currentPage]);
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
-      <Title>{isOrganization && "Organization "}Users</Title>
+      <Title>
+        {user?.role === "super_admin" ? "Users" : organization?.name + " Users"}
+      </Title>
       {id ? (
         <ConcreteUser name={name} email={email} />
       ) : (
