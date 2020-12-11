@@ -20,9 +20,10 @@ export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   var currentPage = query.get("page") || 1;
   useEffect(() => {
-    fetchChildrenMeta().then((total) => setTotalPage(total.num_pages));
-    fetchChildren({ view: "table", page: currentPage })
-      .then((items) => {
+    fetchChildren({ view: "table", page: currentPage, meta: true })
+      .then((response) => {
+        const items = response.data;
+        setTotalPage(response.meta.num_pages);
         if (items) setChildren(childTableData(items, history));
       })
       .finally(() => setTablePending(false));

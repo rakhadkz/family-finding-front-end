@@ -48,16 +48,17 @@ export const OrganizationsPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   var currentPage = query.get("page") || 1;
   useEffect(() => {
-    fetchOrganizationsMeta().then((response) =>
-      setTotalPage(response.num_pages)
-    );
-    fetchOrganizations({ id: id, page: currentPage || 1 }).then((items) => {
-      if (items) {
-        setName(items.name);
-        setOrganizations(organizationTableData(items, history));
-        setTablePending(false);
+    fetchOrganizations({ id: id, page: currentPage || 1, meta: true }).then(
+      (response) => {
+        if (response) {
+          const items = response.data;
+          setTotalPage(response.meta.num_pages);
+          setName(items.name);
+          setOrganizations(organizationTableData(items, history));
+          setTablePending(false);
+        }
       }
-    });
+    );
   }, [id, currentPage]);
   return (
     <SidebarTemplate sidebar={<Sidebar />}>

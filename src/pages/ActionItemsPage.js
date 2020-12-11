@@ -6,7 +6,6 @@ import { SidebarTemplate } from "../components/ui/templates";
 import { actionItemTableData } from "../content/actionItem.data";
 import { fetchActionItems } from "../context/actionItems/actionItemProvider";
 import { actionItemsTableColumns } from "../content/columns.data";
-import { fetchActionItemsMeta } from "../api/actionItems";
 
 export const ActionItemsPage = (props) => {
   const [items, setItems] = useState([]);
@@ -15,9 +14,12 @@ export const ActionItemsPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   var currentPage = query.get("page") || 1;
   useEffect(() => {
-    fetchActionItemsMeta().then((total) => setTotalPage(total.num_pages));
-    fetchActionItems()
-      .then((items) => setItems(actionItemTableData(items)))
+    fetchActionItems({ page: currentPage, meta: true })
+      .then((response) => {
+        const items = response.data;
+        setTotalPage(response.meta.num_pages);
+        setItems(actionItemTableData(items));
+      })
       .finally(() => setTablePending(false));
   }, []);
   return (

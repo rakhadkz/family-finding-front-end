@@ -8,13 +8,17 @@ import { UserBreadcrumbs } from "../components/Users/UserBreadcrumbs";
 import { userTableData } from "../content/user.data";
 import { useAuth } from "../context/auth/authContext";
 import { reset } from "../context/auth/authProvider";
-import { deleteUser, fetchUsers } from "../context/user/userProvider";
+import {
+  deleteOrganizationUser,
+  deleteUser,
+  fetchUsers,
+} from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
-import { fetchUsersMeta } from "../api/user";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { Table } from "../components/ui/common/Table";
 import { usersTableColumns } from "../content/columns.data";
 import Button from "@atlaskit/button";
+import { deleteUsersRequest } from "../api/user";
 const AllUsers = ({ history }) => (
   <>
     <Spacing m={{ t: "23px" }}>
@@ -72,42 +76,44 @@ export const UsersPage = (props) => {
   const [tablePending, setTablePending] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [totalPage, setTotalPage] = useState(null);
+  const head = usersTableColumns(user?.role === "super_admin");
   const organization =
     user && user?.user_organizations
       ? user?.user_organizations[0]?.organization
       : { users: [], name: "" };
 
-  const onDelete = (userId) => {
+  const deleteMethod =
+    user?.role === "super_admin" ? deleteUser : deleteOrganizationUser;
+
+  const onDelete = (id) => {
     setRefresh(true);
-    deleteUser(userId).finally(() => {
+    deleteMethod(id).finally(() => {
       setRefresh(false);
       setIsOpen(false);
-      id && history.push("../users");
+      history.push("../users");
     });
   };
 
   useEffect(() => {
-    fetchUsersMeta().then((response) => setTotalPage(response.num_pages));
-    fetchUsers({ id: id, view: "extended", page: currentPage || 1 }).then(
-      (items) => {
-        if (items) {
+    fetchUsers({ id: id, view: "extended", page: currentPage, meta: true })
+      .then((response) => {
+        if (response) {
+          const items = response.data;
+          setTotalPage(response.meta.num_pages);
           !Array.isArray(items) &&
             setName(`${items.first_name} ${items.last_name}`) &&
             setEmail(items.email);
           setUsers(
             userTableData(items, history, user, setIsOpen, setCurrentUser)
           );
-          setTablePending(false);
         }
-      }
-    );
+      })
+      .finally(() => setTablePending(false));
   }, [id, refresh, currentPage]);
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
-      <Title>
-        {user?.role === "super_admin" ? "Users" : organization?.name + " Users"}
-      </Title>
+      <Title>{user?.role !== "super_admin" && organization?.name} Users</Title>
       {id ? (
         <ConcreteUser name={name} email={email} />
       ) : (
@@ -119,7 +125,7 @@ export const UsersPage = (props) => {
           currentPage={currentPage}
           items={users}
           pending={tablePending}
-          head={usersTableColumns}
+          head={head}
         />
       </Spacing>
       <ModalDialog
@@ -127,8 +133,8 @@ export const UsersPage = (props) => {
         setIsOpen={setIsOpen}
         onClick={() => onDelete(currentUser)}
         positiveLabel="Delete"
-        heading="Delete"
-        body="It will permanently delete all related artifacts (comments, attachments and etc). This can't be undone"
+        heading="Are you sure you want to remove this user?"
+        body="This user will no longer have access to your organization"
         appearance="danger"
       />
     </SidebarTemplate>

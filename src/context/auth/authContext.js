@@ -23,12 +23,9 @@ export const AuthProvider = (props) => {
     () =>
       auth.fetchMe().then(async (user) => {
         if (user) {
-          user.role = user.user_organizations
-            ? user.user_organizations[0].role
-            : "user";
-          user.organization_id = user.user_organizations
-            ? user.user_organizations[0].organization_id
-            : null;
+          user.role = user.user_organizations[0]?.role || "user";
+          user.organization_id =
+            user.user_organizations[0]?.organization_id || null;
           setUser(user);
         }
       }),

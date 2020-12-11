@@ -26,38 +26,44 @@ export const organizationsTableColumns = [
   },
 ];
 
-export const usersTableColumns = [
-  {
-    key: "name",
-    content: "Name",
-    width: 25,
-  },
-  {
-    key: "email",
-    content: "Email",
-    width: 25,
-  },
-  {
-    key: "phone",
-    content: "Phone",
-    width: 15,
-  },
-  {
-    key: "organization",
-    content: "Organization",
-    width: 16,
-  },
-  {
-    key: "role",
-    content: "Role",
-    width: 15,
-  },
-  {
-    key: "actions",
-    content: "Actions",
-    width: 10,
-  },
-];
+export const usersTableColumns = (isSuperAdmin = false) => {
+  const columns1 = [
+    {
+      key: "name",
+      content: "Name",
+      width: 25,
+    },
+    {
+      key: "email",
+      content: "Email",
+      width: 25,
+    },
+    {
+      key: "phone",
+      content: "Phone",
+      width: 15,
+    },
+  ];
+  if (isSuperAdmin)
+    columns1.push({
+      key: "organization",
+      content: "Organization",
+      width: 16,
+    });
+  const columns2 = [
+    {
+      key: "role",
+      content: "Role",
+      width: 15,
+    },
+    {
+      key: "actions",
+      content: "Actions",
+      width: 10,
+    },
+  ];
+  return columns1.concat(columns2);
+};
 
 export const childrenTableColumns = [
   {
