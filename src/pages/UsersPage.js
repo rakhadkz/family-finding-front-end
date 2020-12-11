@@ -18,7 +18,6 @@ import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { Table } from "../components/ui/common/Table";
 import { usersTableColumns } from "../content/columns.data";
 import Button from "@atlaskit/button";
-import { deleteUsersRequest } from "../api/user";
 const AllUsers = ({ history }) => (
   <>
     <Spacing m={{ t: "23px" }}>
@@ -95,17 +94,28 @@ export const UsersPage = (props) => {
   };
 
   useEffect(() => {
-    fetchUsers({ id: id, view: "extended", page: currentPage, meta: true })
+    fetchUsers({
+      id: id,
+      view: "extended",
+      page: currentPage,
+      meta: true,
+    })
       .then((response) => {
         if (response) {
-          const items = response.data;
-          setTotalPage(response.meta.num_pages);
-          !Array.isArray(items) &&
-            setName(`${items.first_name} ${items.last_name}`) &&
-            setEmail(items.email);
-          setUsers(
-            userTableData(items, history, user, setIsOpen, setCurrentUser)
-          );
+          if (id) {
+            const data = response.data;
+            setUsers(
+              userTableData(data, history, user, setIsOpen, setCurrentUser)
+            );
+            setName(`${data.first_name} ${data.last_name}`) &&
+              setEmail(data.email);
+          } else {
+            const items = response.data;
+            setTotalPage(response.meta.num_pages);
+            setUsers(
+              userTableData(items, history, user, setIsOpen, setCurrentUser)
+            );
+          }
         }
       })
       .finally(() => setTablePending(false));
