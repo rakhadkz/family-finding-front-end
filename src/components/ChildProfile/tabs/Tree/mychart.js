@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { removeChildContactRequest } from "../../../../api/childContact";
 import {
   createChildContact,
-  updateChildContact,
+  updateChildContact
 } from "../../../../context/children/childProvider";
 import { EditNodeForm } from "./EditNodeForm";
 import "./my-node.css";
@@ -48,7 +48,7 @@ class Chart extends Component {
           var node = chart.get(that.nodeId);
           node.Name = contact.label;
           node.Relationship = that.titleInput.value;
-          console.log(that.nodeId, contact.value, node.Relationship);
+
           updateChildContact(
             {
               child_contact: {
@@ -70,8 +70,6 @@ class Chart extends Component {
 
       this.editForm.style.display = "block";
       var node = chart.get(nodeId);
-      console.log("NODE", node);
-      this.contactInput.value = true;
       this.titleInput.value = node.Relationship;
     };
 
@@ -139,7 +137,7 @@ class Chart extends Component {
       "</image>";
 
     OrgChart.templates.yellow.nodeMenuButton =
-      '<g style="cursor:pointer;" transform="matrix(1,0,0,1,170,13)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="0" fill="#ffffff"></circle><circle cx="0" cy="6" r="0" fill="#ffffff"></circle><circle cx="0" cy="12" r="0" fill="#ffffff"></circle></g>';
+      '<g style="cursor:pointer;" transform="matrix(1,0,0,1,170,13)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="2" fill="#ffffff"></circle><circle cx="0" cy="6" r="2" fill="#ffffff"></circle><circle cx="0" cy="12" r="2" fill="#ffffff"></circle></g>';
 
     const chart = new OrgChart(this.divRef.current, {
       nodes: this.props.nodes,

@@ -1,17 +1,18 @@
 import AvatarGroup from "@atlaskit/avatar-group";
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
+import Button from "@atlaskit/button";
+import EmailIcon from "@atlaskit/icon/glyph/email";
 import EmojiSymbolsIcon from "@atlaskit/icon/glyph/emoji/symbols";
+import MentionIcon from "@atlaskit/icon/glyph/mention";
+import MobileIcon from "@atlaskit/icon/glyph/mobile";
+import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
+import WatchIcon from "@atlaskit/icon/glyph/watch";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
-  Assign,
   ChildInformation,
   ChildTabs,
-  GenerateLetter,
-  PlaceCall,
-  RelativesList,
-  SendEmail,
-  SetReminder,
+  RelativesList
 } from "../components/ChildProfile";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
@@ -73,9 +74,13 @@ export const ChildProfilePage = (props) => {
       <Box d="flex" justify="space-between">
         <Title>{`${child.first_name} ${child.last_name}`}</Title>
         <Box d="flex">
-          <SetReminder />
+          <Button appearance="primary" iconBefore={<NotificationIcon />}>
+            Set Reminder
+          </Button>
           <Spacing m="0px 10px">
-            <Assign />
+            <Button appearance="primary" iconBefore={<WatchIcon />}>
+              Assign
+            </Button>
           </Spacing>
           <AvatarGroup appearance="stack" data={data} />
         </Box>
@@ -102,11 +107,17 @@ export const ChildProfilePage = (props) => {
       </Spacing>
       <Spacing m={{ t: "16px" }}>
         <Box d="flex">
-          <GenerateLetter />
+          <Button iconBefore={<EmailIcon />} isSelected>
+            Generate Letter
+          </Button>
           <Spacing m="0px 10px">
-            <SendEmail />
+            <Button iconBefore={<MentionIcon />} isSelected>
+              Send Email
+            </Button>
           </Spacing>
-          <PlaceCall />
+          <Button iconBefore={<MobileIcon />} isSelected>
+            PlaceCall
+          </Button>
         </Box>
       </Spacing>
       <Spacing m={{ t: "40px" }}>

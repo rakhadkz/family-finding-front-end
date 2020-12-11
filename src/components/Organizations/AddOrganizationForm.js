@@ -42,6 +42,13 @@ export const AddOrganizationForm = ({ onSubmit }) => {
             error={errors.phone}
             label="Phone"
           />
+          <TextInput
+            name={"website"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.website}
+            label="Website"
+          />
         </Box>
         <Spacing m={{ t: "18px" }}>
           <Box d="flex" w="100%">

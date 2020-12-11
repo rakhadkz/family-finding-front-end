@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { constructTree } from "../../../../content/childContact.tree.data";
 import { childContactsTableData } from "../../../../content/childContacts.data";
+import { contactsTableColumns } from "../../../../content/columns.data";
 import { Box, Spacing, Title } from "../../../ui/atoms";
-import { ContactsTable } from "./ContactsTable";
+import { Table } from "../../../ui/common/Table";
 import OrgChart from "./mychart";
 
 export const FamilyTreePage = (props) => {
@@ -24,7 +25,10 @@ export const FamilyTreePage = (props) => {
         <Title size={"16px"}>Contact List</Title>
       </Spacing>
       <Spacing m={{ t: "20px" }}>
-        <ContactsTable contacts={childContactsTableData(props.contacts)} />
+        <Table
+          items={childContactsTableData(props.contacts)}
+          head={contactsTableColumns}
+        />
       </Spacing>
     </Wrapper>
   );

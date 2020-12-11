@@ -16,6 +16,7 @@ export const signupRequest = async (user) => {
     first_name: user.first_name,
     last_name: user.last_name,
     role: user.role,
+    organization_id: user.organization_id,
   };
   return request({
     endpoint: "auth/signup",

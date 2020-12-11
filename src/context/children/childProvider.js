@@ -3,9 +3,13 @@ import {
   createChildContactRequest,
   fetchContactsRequest,
   removeChildContactRequest,
-  updateChildContactRequest,
+  updateChildContactRequest
 } from "../../api/childContact";
-import { createChildRequest, fetchChildrenRequest } from "../../api/children";
+import {
+  createChildRequest,
+
+  fetchChildComments, fetchChildrenRequest
+} from "../../api/children";
 
 const fetchChildren = (params = null) => {
   const errorStatuses = {
@@ -31,6 +35,23 @@ const fetchContacts = (params = null) => {
   };
 
   return fetchContactsRequest(params).catch((err) => {
+    toast.error(errorStatuses[err.status], {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  });
+};
+
+const fetchComments = (id) => {
+  const errorStatuses = {
+    500: "Error on Server!",
+  };
+  return fetchChildComments(id).catch((err) => {
     toast.error(errorStatuses[err.status], {
       position: "top-center",
       autoClose: 2000,
@@ -125,4 +146,5 @@ export {
   updateChildContact,
   removeChildContact,
   fetchContacts,
+  fetchComments,
 };

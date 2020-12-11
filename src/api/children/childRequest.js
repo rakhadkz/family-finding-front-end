@@ -5,7 +5,24 @@ export const fetchChildrenRequest = (params) => {
     endpoint:
       "children" +
       (params.id ? `/${params.id}` : ``) +
-      (params.view ? `?view=${params.view}` : ``),
+      (params.view ? `?view=${params.view}` : ``) +
+      (params.page ? `&page=${params.page}` : ``),
+    method: "GET",
+    meta: params.meta || false,
+  });
+};
+
+
+export const fetchChildrenMeta = () => {
+  return request({
+    endpoint: "children",
+    method: "GET",
+    meta: true,
+  })
+}
+export const fetchChildComments = (id) => {
+  return request({
+    endpoint: `children/${id}?view=comments`,
     method: "GET",
   });
 };

@@ -20,25 +20,38 @@ export const SelectInput = (props) => {
     label = null,
     isMulti = false,
     options,
+    defaultValue = null,
+    myValue,
+    myOnChange,
   } = props;
 
   return (
     <Box w={`${width}px`} mr="35px">
       {label && <Label htmlFor={name}>{label}</Label>}
       <Controller
+        name={name}
         control={control}
         ref={{ register }}
-        isMulti={isMulti}
         rules={register}
-        name={name}
-        as={Select}
+        defaultValue={defaultValue}
+        render={(props) => (
+          <Select
+            control={control}
+            name={name}
+            options={options}
+            onChange={(value) => {
+              console.log("VALUE", myValue);
+              props.onChange(value);
+              myOnChange && myOnChange(value);
+            }}
+          />
+        )}
         width={width}
         id={id}
         elemAfterInput={elemAfterInput}
         placeholder={placeholder}
         className="multi-select"
         classNamePrefix="react-select"
-        options={options}
       />
       {error && (
         <StyledTextError>
