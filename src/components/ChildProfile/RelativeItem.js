@@ -17,8 +17,12 @@ export const RelativeItem = ({ relative }) => {
             size="large"
           />
           <Spacing m={{ l: "17px" }}>
-            <StyledLabel>{getRelationTitle(relative.relationship)}</StyledLabel>
-            <Text>{`${relative.contact.first_name} ${relative.contact.last_name}`}</Text>
+            <StyledLabel>
+              {getRelationTitle(relative?.relationship)}
+            </StyledLabel>
+            <Text>{`${relative?.contact?.first_name || ""} ${
+              relative?.contact?.last_name || ""
+            }`}</Text>
           </Spacing>
         </Box>
       </Spacing>

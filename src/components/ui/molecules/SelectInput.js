@@ -1,4 +1,3 @@
-import { Field } from "@atlaskit/form";
 import Select from "@atlaskit/select";
 import PropTypes from "prop-types";
 import React from "react";
@@ -13,6 +12,7 @@ export const SelectInput = (props) => {
     error,
     control,
     type,
+    id,
     placeholder = null,
     elemBeforeInput = null,
     elemAfterInput = null,
@@ -33,9 +33,9 @@ export const SelectInput = (props) => {
         name={name}
         as={Select}
         width={width}
+        id={id}
         elemAfterInput={elemAfterInput}
         placeholder={placeholder}
-        id={name}
         className="multi-select"
         classNamePrefix="react-select"
         options={options}

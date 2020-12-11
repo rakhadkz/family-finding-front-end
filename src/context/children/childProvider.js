@@ -1,9 +1,11 @@
 import { toast } from "react-toastify";
 import {
-  fetchChildrenRequest,
-  createChildRequest
-} from "../../api/children";
-
+  createChildContactRequest,
+  fetchContactsRequest,
+  removeChildContactRequest,
+  updateChildContactRequest,
+} from "../../api/childContact";
+import { createChildRequest, fetchChildrenRequest } from "../../api/children";
 
 const fetchChildren = (params = null) => {
   const errorStatuses = {
@@ -11,6 +13,24 @@ const fetchChildren = (params = null) => {
   };
 
   return fetchChildrenRequest(params).catch((err) => {
+    toast.error(errorStatuses[err.status], {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  });
+};
+
+const fetchContacts = (params = null) => {
+  const errorStatuses = {
+    500: "Error on Server!",
+  };
+
+  return fetchContactsRequest(params).catch((err) => {
     toast.error(errorStatuses[err.status], {
       position: "top-center",
       autoClose: 2000,
@@ -42,5 +62,67 @@ const createChild = (data) => {
   });
 };
 
+const createChildContact = (data) => {
+  console.log("HELLLO", data);
+  const errorStatuses = {
+    500: "Error on Server !",
+  };
 
-export { fetchChildren,createChild };
+  return createChildContactRequest(data).catch((err) => {
+    toast.error(errorStatuses[err.status], {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  });
+};
+
+const updateChildContact = (data, contactId) => {
+  console.log("HELLLO", data);
+  const errorStatuses = {
+    500: "Error on Server !",
+  };
+
+  return updateChildContactRequest(data, contactId).catch((err) => {
+    toast.error(errorStatuses[err.status], {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  });
+};
+
+const removeChildContact = (contactId) => {
+  const errorStatuses = {
+    500: "Error on Server !",
+  };
+
+  return removeChildContactRequest(contactId).catch((err) => {
+    toast.error(errorStatuses[err.status], {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  });
+};
+
+export {
+  fetchChildren,
+  createChild,
+  createChildContact,
+  updateChildContact,
+  removeChildContact,
+  fetchContacts,
+};

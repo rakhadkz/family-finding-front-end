@@ -110,10 +110,7 @@ export const ChildProfilePage = (props) => {
         </Box>
       </Spacing>
       <Spacing m={{ t: "40px" }}>
-        <ChildTabs
-          attachments={child.attachments}
-          contacts={child.contacts || []}
-        />
+        {Object.keys(child).length > 0 && <ChildTabs {...child} />}
       </Spacing>
     </SidebarTemplate>
   );
