@@ -82,12 +82,9 @@ export const UsersPage = (props) => {
       ? user?.user_organizations[0]?.organization
       : { users: [], name: "" };
 
-  const deleteMethod =
-    user?.role === "super_admin" ? deleteUser : deleteOrganizationUser;
-
   const onDelete = (id) => {
     setRefresh(true);
-    deleteMethod(id).finally(() => {
+    deleteUser(id).finally(() => {
       setRefresh(false);
       setIsOpen(false);
       history.push("../users");
