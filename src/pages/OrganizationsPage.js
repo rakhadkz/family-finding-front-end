@@ -1,17 +1,16 @@
+import Button from "@atlaskit/button";
+import OfficeBuilding from "@atlaskit/icon/glyph/office-building";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { fetchOrganizationsMeta } from "../api/organization";
 import { OrganizationBreadcrumbs } from "../components/Organizations";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
-import OfficeBuilding from "@atlaskit/icon/glyph/office-building";
+import { Table } from "../components/ui/common/Table";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { SidebarTemplate } from "../components/ui/templates";
+import { organizationsTableColumns } from "../content/columns.data";
 import { organizationTableData } from "../content/organization.data";
 import { fetchOrganizations } from "../context/organization/organizationProvider";
-import { Table } from "../components/ui/common/Table";
-import { organizationsTableColumns } from "../content/columns.data";
-import Button from "@atlaskit/button";
 
 const AllOrganizations = ({ history }) => (
   <>
@@ -52,8 +51,8 @@ export const OrganizationsPage = (props) => {
       (response) => {
         if (response) {
           const items = response.data;
-          setTotalPage(response.meta.num_pages);
-          setName(items.name);
+          setTotalPage(response.meta?.num_pages);
+          setName(items?.name);
           setOrganizations(organizationTableData(items, history));
           setTablePending(false);
         }

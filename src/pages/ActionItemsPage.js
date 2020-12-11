@@ -4,8 +4,8 @@ import { Sidebar } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
 import { SidebarTemplate } from "../components/ui/templates";
 import { actionItemTableData } from "../content/actionItem.data";
-import { fetchActionItems } from "../context/actionItems/actionItemProvider";
 import { actionItemsTableColumns } from "../content/columns.data";
+import { fetchActionItems } from "../context/actionItems/actionItemProvider";
 
 export const ActionItemsPage = (props) => {
   const [items, setItems] = useState([]);
@@ -13,15 +13,17 @@ export const ActionItemsPage = (props) => {
   const [totalPage, setTotalPage] = useState(null);
   const query = new URLSearchParams(props.location.search);
   var currentPage = query.get("page") || 1;
+  
   useEffect(() => {
     fetchActionItems({ page: currentPage, meta: true })
       .then((response) => {
         const items = response.data;
-        setTotalPage(response.meta.num_pages);
+        setTotalPage(response.meta?.num_pages);
         setItems(actionItemTableData(items));
       })
       .finally(() => setTablePending(false));
   }, []);
+  
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Action Items</Title>

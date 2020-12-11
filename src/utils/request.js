@@ -17,13 +17,17 @@ export const request = async ({ endpoint, data, method, meta = false }) => {
   return window
     .fetch(`${authURL}/${endpoint}`, config)
     .then(async (response) => {
-      if (response.ok) {
-        const res = await response.json();
-        const data = meta ? res : res.data;
-        console.log(`Response data from ${endpoint}`, data);
-        return data;
-      } else {
-        return Promise.reject(response);
+      try {
+        if (response.ok) {
+          const res = await response.json();
+          const data = meta ? res : res.data;
+          console.log(`Response data from ${endpoint}`, data);
+          return data;
+        } else {
+          return Promise.reject(response);
+        }
+      } catch (err) {
+        console.log(err);
       }
     });
 };

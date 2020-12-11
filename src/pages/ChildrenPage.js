@@ -2,7 +2,6 @@ import Button from "@atlaskit/button";
 import EmojiAddIcon from "@atlaskit/icon/glyph/emoji-add";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { fetchChildrenMeta } from "../api/children";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
@@ -19,15 +18,17 @@ export const ChildrenPage = (props) => {
   const [totalPage, setTotalPage] = useState(null);
   const query = new URLSearchParams(props.location.search);
   var currentPage = query.get("page") || 1;
+
   useEffect(() => {
     fetchChildren({ view: "table", page: currentPage, meta: true })
       .then((response) => {
         const items = response.data;
-        setTotalPage(response.meta.num_pages);
+        setTotalPage(response.meta?.num_pages);
         if (items) setChildren(childTableData(items, history));
       })
       .finally(() => setTablePending(false));
   }, [currentPage]);
+  
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Children</Title>

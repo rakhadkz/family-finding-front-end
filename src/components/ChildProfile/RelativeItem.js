@@ -2,6 +2,7 @@ import Avatar from "@atlaskit/avatar";
 import Tooltip from "@atlaskit/tooltip";
 import React from "react";
 import styled from "styled-components";
+import { getRelationTitle } from "../../content/tree.data";
 import { Box, Label, Spacing } from "../ui/atoms";
 import { RelativeTooltip } from "./RelativeTooltip";
 
@@ -16,8 +17,12 @@ export const RelativeItem = ({ relative }) => {
             size="large"
           />
           <Spacing m={{ l: "17px" }}>
-            <StyledLabel>{relative.relationship}</StyledLabel>
-            <Text>{`${relative.contact.first_name} ${relative.contact.last_name}`}</Text>
+            <StyledLabel>
+              {getRelationTitle(relative?.relationship)}
+            </StyledLabel>
+            <Text>{`${relative?.contact?.first_name || ""} ${
+              relative?.contact?.last_name || ""
+            }`}</Text>
           </Spacing>
         </Box>
       </Spacing>

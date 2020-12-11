@@ -12,6 +12,7 @@ export const TextInput = (props) => {
     error,
     control,
     type,
+    id,
     placeholder = null,
     elemBeforeInput = null,
     elemAfterInput = null,
@@ -25,6 +26,8 @@ export const TextInput = (props) => {
     <Box w={`${width}px`} mr="35px">
       {label && <Label htmlFor={name}>{label}</Label>}
       <StyledTextField
+        itemID={id}
+        id={id}
         className={className}
         controls={control}
         value={value}
@@ -33,7 +36,6 @@ export const TextInput = (props) => {
         elemAfterInput={elemAfterInput}
         name={name}
         placeholder={placeholder}
-        id={name}
         type={type || name}
         width={width}
         isCompact

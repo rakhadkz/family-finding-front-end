@@ -1,23 +1,23 @@
 import Avatar from "@atlaskit/avatar";
-import React, { useState, useEffect } from "react";
-import { Box, Spacing } from "../ui/atoms";
-import { Comments } from './Comments'
+import React, { useEffect, useState } from "react";
+import { postCommentRequest } from '../../api/comments';
 import { fetchComments } from "../../context/children/childProvider";
-import {CommentsForm} from './CommentsForm'
-import { postCommentRequest } from '../../api/comments'
+import { Box, Spacing } from "../ui/atoms";
+import { Comments } from './Comments';
+import { CommentsForm } from './CommentsForm';
 
-export const CommentsTab = ({ child, setChild}) => {
-  const [comments, setComments] = useState(child.comments);
+export const CommentsTab = ({ childId, childComments, setChild}) => {
+  const [comments, setComments] = useState(childComments);
   const [shouldUpdate, increaseShouldUpdate] = useState(0)
 
   useEffect(
     () => {
-      fetchComments(child.id).then((items) => {
+      fetchComments(childId).then((items) => {
         if (items) {
           setComments(items.comments);
         }
       });
-    }, [child, shouldUpdate]);
+    }, [childId, shouldUpdate]);
 
   return (
     <Spacing m={{ t: "22px" }}>
@@ -31,7 +31,7 @@ export const CommentsTab = ({ child, setChild}) => {
           <CommentsForm 
             shouldUpdate={shouldUpdate} 
             increaseShouldUpdate={increaseShouldUpdate} 
-            id={child.id} 
+            id={childId} 
             inReply={0} 
             onSubmit={postCommentRequest} 
           />
@@ -42,7 +42,7 @@ export const CommentsTab = ({ child, setChild}) => {
             comments.filter( comment => !comment.in_reply_to ).map ( 
               comment => 
                 <Comments
-                  id={child.id} 
+                  id={childId} 
                   data={comment}  
                   shouldUpdate={shouldUpdate} 
                   increaseShouldUpdate={increaseShouldUpdate} 
