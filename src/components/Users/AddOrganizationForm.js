@@ -11,11 +11,18 @@ import "@atlaskit/css-reset";
 import { TableWrapper } from "../ui/common";
 
 export const AddOrganizationForm = ({ setOrgRoles }) => {
-  const { register, handleSubmit, control, errors } = useForm();
+  const { handleSubmit, control, errors, watch, reset } = useForm();
+  const [roles, setRoles] = useState([
+    { label: "Organization admin", value: "admin" },
+    { label: "Organization manager", value: "manager" },
+    { label: "Organization user", value: "user" },
+  ]);
+  const [role, setRole] = useState(null);
   const { fields, append, remove } = useFieldArray({
     control,
     name: "user_organizations",
   });
+  const superAdminOrganization = watch("organization");
 
   const [organizations, setOrganizations] = useState([]);
 
@@ -35,6 +42,22 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
       },
     });
   };
+
+  useEffect(() => {
+    const super_admin_role = [
+      {
+        label: "Super Admin",
+        value: "super_admin",
+      },
+      ...options,
+    ];
+    if (superAdminOrganization && superAdminOrganization?.value === 3) {
+      setRoles(super_admin_role);
+    } else {
+      setRoles(options);
+    }
+    setRole(null);
+  }, [superAdminOrganization]);
 
   useEffect(() => {
     fetchOrganizations({ view: "short" }).then((items) => {
@@ -74,7 +97,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
                 name="organization"
                 elemAfterInput={<SearchIcon />}
                 options={organizations}
-                ref={register({ required: true })}
+                register={{ required: true }}
                 control={control}
                 error={errors.organization}
                 label="Organization"
@@ -84,9 +107,11 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
                 className="input"
                 name="role"
                 label="Role"
-                options={options}
                 register={{ required: true }}
+                options={roles}
                 control={control}
+                myOnChange={setRole}
+                myValue={role}
                 error={errors.role}
                 placeholder="Select a role"
               />
@@ -134,7 +159,6 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
 };
 
 const options = [
-  { label: "Super admin", value: "super_admin" },
   { label: "Organization admin", value: "admin" },
   { label: "Organization manager", value: "manager" },
   { label: "Organization user", value: "user" },

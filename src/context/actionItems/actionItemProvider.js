@@ -1,12 +1,12 @@
 import { toast } from "react-toastify";
 import { fetchActionItemsRequest } from "../../api/actionItems";
 
-const fetchActionItems = () => {
+const fetchActionItems = (params = {}) => {
   const errorStatuses = {
     500: "Error on Server!",
   };
 
-  return fetchActionItemsRequest().catch((err) => {
+  return fetchActionItemsRequest(params).catch((err) => {
     toast.error(errorStatuses[err.status], {
       position: "top-center",
       autoClose: 2000,

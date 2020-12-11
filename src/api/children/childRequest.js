@@ -8,6 +8,7 @@ export const fetchChildrenRequest = (params) => {
       (params.view ? `?view=${params.view}` : ``) +
       (params.page ? `&page=${params.page}` : ``),
     method: "GET",
+    meta: params.meta || false,
   });
 };
 

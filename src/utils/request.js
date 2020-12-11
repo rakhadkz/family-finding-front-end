@@ -18,11 +18,10 @@ export const request = async ({ endpoint, data, method, meta = false }) => {
   return window
     .fetch(`${authURL}/${endpoint}`, config)
     .then(async (response) => {
-      console.log(response);
       if (response.ok) {
         const res = await response.json();
-        const data = meta ? res.meta : res.data;
-        console.log("Data", data);
+        const data = meta ? res : res.data;
+        console.log(`Response data from ${endpoint}`, data);
         return data;
       } else {
         return Promise.reject(response);
