@@ -33,9 +33,7 @@ const userTableData = (data, history, user, setIsOpen, setCurrentUser) => {
           isDisabled={user?.id === item.id}
           onClick={() => {
             setIsOpen(true);
-            user?.role === "super_admin"
-              ? setCurrentUser(item.id)
-              : setCurrentUser(item.user_organizations[0]?.id);
+            setCurrentUser(item.id);
           }}
           height="32px"
           width="32px"
