@@ -11,22 +11,35 @@ import "@atlaskit/css-reset";
 import { TableWrapper } from "../ui/common";
 
 export const AddOrganizationForm = ({ setOrgRoles }) => {
-  const { handleSubmit, control, errors, watch, reset } = useForm();
+  const { handleSubmit, control, errors, watch, setValue } = useForm();
   const [roles, setRoles] = useState([
     { label: "Organization admin", value: "admin" },
     { label: "Organization manager", value: "manager" },
     { label: "Organization user", value: "user" },
   ]);
   const [role, setRole] = useState(null);
+  const [organizations, setOrganizations] = useState([]);
+  const [organization, setOrganization] = useState(null);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "user_organizations",
   });
   const superAdminOrganization = watch("organization");
 
-  const [organizations, setOrganizations] = useState([]);
+  const clearOrganization = () => {
+    setValue("organization", null, { shouldDirty: true });
+    setOrganization(null);
+  };
+
+  const clearRole = () => {
+    setValue("role", null, { shouldDirty: true });
+    setRole(null);
+  };
 
   const onAddOrganizationHandle = (data) => {
+    clearRole();
+    clearOrganization();
     fields.map(
       (item, index) =>
         item.organization.value === data.organization.value && remove(index)
@@ -44,6 +57,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
   };
 
   useEffect(() => {
+    clearRole();
     const super_admin_role = [
       {
         label: "Super Admin",
@@ -56,7 +70,6 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
     } else {
       setRoles(options);
     }
-    setRole(null);
   }, [superAdminOrganization]);
 
   useEffect(() => {
@@ -100,6 +113,8 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
                 register={{ required: true }}
                 control={control}
                 error={errors.organization}
+                myValue={organization}
+                myOnChange={setOrganization}
                 label="Organization"
                 placeholder="Choose organization"
               />

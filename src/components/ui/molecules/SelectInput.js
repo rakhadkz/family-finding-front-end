@@ -39,8 +39,8 @@ export const SelectInput = (props) => {
             control={control}
             name={name}
             options={options}
+            value={myValue}
             onChange={(value) => {
-              console.log("VALUE", myValue);
               props.onChange(value);
               myOnChange && myOnChange(value);
             }}

@@ -6,7 +6,7 @@ import { RelativeItem } from "./RelativeItem";
 export const RelativesList = ({ relatives }) => {
   return (
     <Rectangle p="14px 26px 14px 26px">
-      <Title size="14px">Relatives(3)</Title>
+      <Title size="14px">Relatives ({relatives?.length})</Title>
       <Spacing m={{ t: "8px" }}>
         <RelativeListContainer>
           {relatives.map((relative) => (
