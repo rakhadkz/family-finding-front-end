@@ -18,7 +18,6 @@ export const AddOrganizationForm = ({ onSubmit }) => {
   const onSubmitHandle = (data) => {
     setPending(true);
     data.logo = logoUrl ? logoUrl : data.logo;
-    console.log(data);
     onSubmit(data)
       .then(() => history.push("../organizations"))
       .finally(() => setPending(false));
