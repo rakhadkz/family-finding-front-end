@@ -18,6 +18,7 @@ const constructTree = ({ firstName = "", lastName = "", contacts = [] }) => {
       Name: `${item?.contact?.first_name || ""} ${
         item?.contact?.last_name || ""
       }`,
+      contactId: item?.contact?.id,
       Relationship: item?.relationship,
       pid: item.parent_id || 0,
       Avatar:

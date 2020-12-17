@@ -9,6 +9,7 @@ export function ModalDialog({
   heading,
   body,
   appearance = "warning",
+  hasActions = true
 }) {
   const close = () => setIsOpen(false);
   return (
@@ -16,7 +17,7 @@ export function ModalDialog({
       <ModalTransition>
         {isOpen && (
           <Modal
-            actions={[
+            actions={hasActions && [
               { text: positiveLabel, onClick: onClick },
               { text: negativeLabel, onClick: close },
             ]}

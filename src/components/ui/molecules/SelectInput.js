@@ -38,6 +38,7 @@ export const SelectInput = (props) => {
           <Select
             control={control}
             name={name}
+            inputId={id}
             options={options}
             value={myValue}
             onChange={(value) => {
@@ -47,7 +48,6 @@ export const SelectInput = (props) => {
           />
         )}
         width={width}
-        id={id}
         elemAfterInput={elemAfterInput}
         placeholder={placeholder}
         className="multi-select"
