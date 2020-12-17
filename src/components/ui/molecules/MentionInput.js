@@ -100,6 +100,8 @@ export const MentionInput = (props) => {
     }
   }
 
+  console.log(selectedSuggestion)
+
   const renderSuggestions = () => (
     <StyledList styles={{"width": "50px", "display": suggestions ? "inline-block" : "none", "left": `${(text.length - userName.length)*7}px`}}>
       {suggestions.map((item, index) => (
