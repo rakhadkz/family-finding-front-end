@@ -23,6 +23,7 @@ export const ChildrenPage = (props) => {
 
   useEffect(() => {
     history.push(updateQueryParams(currentPage, search));
+    setTablePending(true);
     fetchChildren({
       view: "table",
       page: currentPage,

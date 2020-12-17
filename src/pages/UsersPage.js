@@ -102,6 +102,7 @@ export const UsersPage = (props) => {
 
   useEffect(() => {
     //!id && history.push(updateQueryParams(currentPage, search));
+    setTablePending(true);
     fetchUsers({
       id: id,
       view: "extended",
