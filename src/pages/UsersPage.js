@@ -12,18 +12,30 @@ import { usersTableColumns } from "../content/columns.data";
 import { userTableData } from "../content/user.data";
 import { useAuth } from "../context/auth/authContext";
 import { reset } from "../context/auth/authProvider";
-import {
-  deleteOrganizationUser,
-  deleteUser,
-  fetchUsers
-} from "../context/user/userProvider";
+import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
+import { SearchBar } from "../components/ui/molecules/SearchBar";
+import { usersTableColumns } from "../content/columns.data";
+import Button from "@atlaskit/button";
+import { Table } from "../components/ui/common/Table";
 
-const AllUsers = ({ history }) => (
+const AllUsers = ({ history, search, setSearch }) => (
   <>
     <Spacing m={{ t: "23px" }}>
       <Box d="flex" justify="space-between">
-        <SearchBar />
+        <Box d="flex" align="flex-end">
+          <SearchBar
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Button
+            onClick={() =>
+              history.push(`?page=1${search && `&search=${search}`}`)
+            }
+          >
+            Search
+          </Button>
+        </Box>
         <Button
           appearance="primary"
           iconBefore={<PersonIcon />}
@@ -65,8 +77,7 @@ const ConcreteUser = ({ name, email }) => {
 export const UsersPage = (props) => {
   const history = useHistory();
   const query = new URLSearchParams(props.location.search);
-  const { id } = props.match.params;
-  var currentPage = query.get("page") || 1;
+  const id = props.match.params.id;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [users, setUsers] = useState([]);
@@ -76,6 +87,8 @@ export const UsersPage = (props) => {
   const [tablePending, setTablePending] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [totalPage, setTotalPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
+  const [search, setSearch] = useState(query.get("search") || "");
   const head = usersTableColumns(user?.role === "super_admin");
   const organization =
     user && user?.user_organizations
@@ -83,18 +96,20 @@ export const UsersPage = (props) => {
       : { users: [], name: "" };
 
   const onDelete = (id) => {
-    setRefresh(true);
+    //setRefresh(true);
     deleteUser(id).finally(() => {
-      setRefresh(false);
+      //setRefresh(false);
       setIsOpen(false);
       history.push("../users");
     });
   };
 
   useEffect(() => {
+    //!id && history.push(updateQueryParams(currentPage, search));
     fetchUsers({
       id: id,
       view: "extended",
+      search: search,
       page: currentPage,
       meta: true,
     })
@@ -117,7 +132,7 @@ export const UsersPage = (props) => {
         }
       })
       .finally(() => setTablePending(false));
-  }, [id, refresh, currentPage]);
+  }, [id, currentPage]);
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
@@ -125,12 +140,13 @@ export const UsersPage = (props) => {
       {id ? (
         <ConcreteUser name={name} email={email} />
       ) : (
-        <AllUsers history={history} />
+        <AllUsers history={history} search={search} setSearch={setSearch} />
       )}
       <Spacing m={{ t: "23px" }}>
         <Table
           totalPage={!id && totalPage}
           currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
           items={users}
           pending={tablePending}
           head={head}

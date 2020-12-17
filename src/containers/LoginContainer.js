@@ -9,7 +9,7 @@ import {
 } from "../components/ui/atoms";
 import Cover from "./../assets/Cover.svg";
 import frame from "./../assets/Frame.svg";
-import logo from "./../assets/logo.png";
+import logo from "./../assets/app_logo.jpg";
 
 function LoginContainer({ children }) {
   return (
@@ -24,7 +24,7 @@ function LoginContainer({ children }) {
 
         <div className="row">
           <StyledField className="col">
-            <img src={logo} alt="logo" />
+            <img src={logo} style={{ width: "150px" }} alt="logo" />
           </StyledField>
           <StyledField className="col">{children}</StyledField>
         </div>

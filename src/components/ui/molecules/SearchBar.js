@@ -2,10 +2,12 @@ import SearchIcon from "@atlaskit/icon/glyph/search";
 import Textfield from "@atlaskit/textfield";
 import styled from "styled-components";
 
-export const SearchBar = () => {
+export const SearchBar = ({ onChange, value }) => {
   return (
     <SearchBarContainer>
       <SearchInput
+        value={value}
+        onChange={onChange}
         placeholder="Search"
         elemBeforeInput={
           <IconContainer>
