@@ -14,10 +14,6 @@ import { useAuth } from "../context/auth/authContext";
 import { reset } from "../context/auth/authProvider";
 import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
-import { SearchBar } from "../components/ui/molecules/SearchBar";
-import { usersTableColumns } from "../content/columns.data";
-import Button from "@atlaskit/button";
-import { Table } from "../components/ui/common/Table";
 
 const AllUsers = ({ history, search, setSearch }) => (
   <>

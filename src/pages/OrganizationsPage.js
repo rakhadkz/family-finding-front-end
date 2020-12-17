@@ -11,9 +11,6 @@ import { SidebarTemplate } from "../components/ui/templates";
 import { organizationsTableColumns } from "../content/columns.data";
 import { organizationTableData } from "../content/organization.data";
 import { fetchOrganizations } from "../context/organization/organizationProvider";
-import { organizationsTableColumns } from "../content/columns.data";
-import Button from "@atlaskit/button";
-import { Table } from "../components/ui/common/Table";
 
 export const updateQueryParams = (currentPage, search) => {
   return `?page=${currentPage}${search ? `&search=${search}` : ``}`;
