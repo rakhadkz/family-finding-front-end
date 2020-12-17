@@ -58,6 +58,7 @@ export const OrganizationsPage = (props) => {
   const [search, setSearch] = useState(query.get("search") || "");
   useEffect(() => {
     !id && history.push(updateQueryParams(currentPage, search));
+    setTablePending(true);
     fetchOrganizations({
       id: id,
       page: currentPage,
