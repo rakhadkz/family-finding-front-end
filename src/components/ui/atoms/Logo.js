@@ -1,6 +1,18 @@
 import React from "react";
-import SidebarLogo from "../../../assets/SidebarLogo.svg";
+import SidebarLogo from "../../../assets/app_logo.jpg";
 
-export const Logo = ({ h = "50px" }) => {
-  return <img style={{ height: h }} alt="Logo" src={SidebarLogo} />;
+export const Logo = ({}) => {
+  return (
+    <img
+      style={{
+        height: "80px",
+        width: "80px",
+        marginTop: "10px",
+        marginBottom: "20px",
+        marginLeft: "40px",
+      }}
+      alt="Logo"
+      src={SidebarLogo}
+    />
+  );
 };

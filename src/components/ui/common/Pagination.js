@@ -1,12 +1,10 @@
 import Button from "@atlaskit/button";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import ChevronLeftLargeIcon from "@atlaskit/icon/glyph/chevron-left-large";
 import ChevronRightLargeIcon from "@atlaskit/icon/glyph/chevron-right-large";
 import { Box } from "../atoms";
 
-export const Pagination = ({ totalPage, currentPage }) => {
-  const history = useHistory();
+export const Pagination = ({ totalPage, currentPage, setCurrentPage }) => {
   const [pagination, setPagination] = useState();
   useEffect(() => {
     var pages = [];
@@ -23,23 +21,21 @@ export const Pagination = ({ totalPage, currentPage }) => {
           <Button
             spacing="compact"
             appearance="subtle"
-            onClick={() => history.push(`?page=${i}`)}
+            onClick={() => setCurrentPage(i)}
           >
             {i}
           </Button>
         )
       )
     );
-  }, [currentPage]);
+  }, [totalPage, currentPage]);
 
   return totalPage ? (
     <Box d="flex" justify="center" w="100%">
       <Button
         spacing="compact"
         appearance="subtle"
-        onClick={() =>
-          currentPage > 1 && history.push(`?page=${parseInt(currentPage) - 1}`)
-        }
+        onClick={() => setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))}
       >
         <ChevronLeftLargeIcon />
       </Button>
@@ -48,8 +44,7 @@ export const Pagination = ({ totalPage, currentPage }) => {
         spacing="compact"
         appearance="subtle"
         onClick={() =>
-          totalPage > parseInt(currentPage) &&
-          history.push(`?page=${parseInt(currentPage) + 1}`)
+          setCurrentPage((prev) => (totalPage > prev ? prev + 1 : prev))
         }
       >
         <ChevronRightLargeIcon />

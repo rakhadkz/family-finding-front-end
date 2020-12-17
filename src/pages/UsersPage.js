@@ -13,7 +13,7 @@ import { USERS } from "../helpers/routes";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { usersTableColumns } from "../content/columns.data";
 import Button from "@atlaskit/button";
-import { Table2 } from "../components/ui/common/Table2";
+import { Table } from "../components/ui/common/Table";
 
 const AllUsers = ({ history, search, setSearch }) => (
   <>
@@ -139,7 +139,7 @@ export const UsersPage = (props) => {
         <AllUsers history={history} search={search} setSearch={setSearch} />
       )}
       <Spacing m={{ t: "23px" }}>
-        <Table2
+        <Table
           totalPage={!id && totalPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

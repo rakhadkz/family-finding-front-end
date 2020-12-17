@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
-import { Table2 } from "../components/ui/common/Table2";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { SidebarTemplate } from "../components/ui/templates";
 import { childTableData } from "../content/child.data";
@@ -61,7 +60,7 @@ export const ChildrenPage = (props) => {
         </Box>
       </Spacing>
       <Spacing m={{ t: "20px" }}>
-        <Table2
+        <Table
           totalPage={totalPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

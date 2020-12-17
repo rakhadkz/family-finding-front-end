@@ -1,24 +1,25 @@
 import DynamicTable from "@atlaskit/dynamic-table";
-import { useEffect } from "react";
 import { Spacing } from "../atoms";
 import { Pagination } from "./Pagination";
 import { TableWrapper } from "./TableWrapper";
 
 export const Table = ({
   totalPage = null,
-  currentPage = null,
+  setCurrentPage = null,
   items,
   pending = false,
   head,
+  currentPage,
 }) => {
-  useEffect(() => {
-    fetch({});
-  });
   return (
     <div>
       {totalPage && (
         <Spacing m={{ b: "6px" }}>
-          <Pagination totalPage={totalPage} currentPage={currentPage} />
+          <Pagination
+            totalPage={totalPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
         </Spacing>
       )}
       <TableWrapper>
