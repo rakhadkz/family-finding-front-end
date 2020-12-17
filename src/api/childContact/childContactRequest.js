@@ -29,3 +29,12 @@ export const removeChildContactRequest = (contactId) => {
     method: "DELETE",
   });
 };
+
+
+export const createContactRequest = (data) => {
+  return request({
+    endpoint: "contacts",
+    data,
+    method: "POST",
+  });
+};

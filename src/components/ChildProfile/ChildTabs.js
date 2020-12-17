@@ -14,18 +14,20 @@ export const ChildTabs = (
     comments = [],
     contacts = [],
     attachments = [],
+    refreshContacts
   },
-  setChild
+  setChild,
 ) => {
   console.log(firstName, lastName, contacts);
   const tabs = [
     {
       label: "Family Tree",
-      content: (
+      content: contacts.length && (
         <FamilyTreePage
           firstName={firstName}
           lastName={lastName}
           contacts={contacts}
+          refreshContacts={refreshContacts}
         />
       ),
     },

@@ -24,7 +24,6 @@ class Chart extends Component {
 
   componentDidMount() {
     const { childId } = this.state;
-
     var editForm = function () {
       this.nodeId = null;
     };
@@ -70,7 +69,10 @@ class Chart extends Component {
 
       this.editForm.style.display = "block";
       var node = chart.get(nodeId);
+      console.log("NODE ", node, this.contactInput);
       this.titleInput.value = node.Relationship;
+      this.contactInput.defaultInputValue = node.Name;
+
     };
 
     editForm.prototype.hide = function (showldUpdateTheNode) {
@@ -202,11 +204,14 @@ class Chart extends Component {
       );
     });
 
-    chart.on("add", function (sender, node) {
+    const { refreshContacts } = this.props;
+
+    chart.on("add", async function (sender, node) {
       console.log(sender, node, childId);
-      createChildContact({
+      await createChildContact({
         child_contact: { child_id: childId, parent_id: node.pid },
       });
+      await refreshContacts();
     });
 
     chart.on("remove", function (sender, nodeId, newIds) {

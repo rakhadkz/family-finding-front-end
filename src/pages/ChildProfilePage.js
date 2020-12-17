@@ -25,10 +25,16 @@ export const ChildProfilePage = (props) => {
   const id = props.match.params.id;
   const [child, setChild] = useState({});
   useEffect(() => {
-    fetchChildren({ id: id, view: "extended" }).then(
+    fetchChildProfile();
+  }, []);
+
+  const fetchChildProfile = async () => {
+    console.log("CALLED FETCH PROFILE");
+    setChild({})
+    await fetchChildren({ id: id, view: "extended" }).then(
       (item) => item && setChild(item)
     );
-  }, []);
+  };
 
   const data = [
     {
@@ -121,7 +127,7 @@ export const ChildProfilePage = (props) => {
         </Box>
       </Spacing>
       <Spacing m={{ t: "40px" }}>
-        {Object.keys(child).length > 0 && <ChildTabs {...child} />}
+        {<ChildTabs {...child} refreshContacts={fetchChildProfile} />}
       </Spacing>
     </SidebarTemplate>
   );
