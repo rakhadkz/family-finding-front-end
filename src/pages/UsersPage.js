@@ -106,7 +106,7 @@ export const UsersPage = (props) => {
               userTableData(data, history, user, setIsOpen, setCurrentUser)
             );
             setName(`${data.first_name} ${data.last_name}`) &&
-              setEmail(data.email);
+            setEmail(data.email);
           } else {
             const items = response.data;
             setTotalPage(response.meta.num_pages);

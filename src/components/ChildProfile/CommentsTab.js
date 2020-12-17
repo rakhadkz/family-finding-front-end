@@ -39,7 +39,7 @@ export const CommentsTab = ({ childId, childComments, setChild}) => {
       </Box>
       <Spacing m={{ t: "22px"}}>
         { comments && 
-            comments.filter( comment => !comment.in_reply_to ).map ( 
+            comments.filter( comment => !comment.in_reply_to ).sort((a,b)=>a.created_at-b.created_at).map ( 
               comment => 
                 <Comments
                   id={childId} 

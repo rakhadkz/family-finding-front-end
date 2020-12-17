@@ -1,9 +1,25 @@
 import { Box } from "../components/ui/atoms";
 import Avatar from "@atlaskit/avatar";
 import { role_label } from "./sample.data";
+import CrossIcon from "@atlaskit/icon/glyph/cross";
+import Button, { LoadingButton } from "@atlaskit/button";
 
-const actionItemTableData = (data) => {
+const actionItemTableData = (data, history, action, setIsOpen, setCurrentItem) => {
+  console.log(data)
   return data.map(function (item, index) {
+    const action = (
+        <LoadingButton
+          isDisabled={false}
+          onClick={() => {
+            setIsOpen(true);
+            setCurrentItem(item.id);
+          }}
+          height="32px"
+          width="32px"
+        >
+          <CrossIcon size="small" />
+        </LoadingButton>
+    )
     return {
       key: index,
       cells: [
@@ -15,17 +31,13 @@ const actionItemTableData = (data) => {
           key: "description",
           content: item.description,
         },
-        {
-          key: "user",
-          content: role_label(item.user.role),
-        },
-        {
+        item.child ? {
           key: "child",
           content: (
             <Box d="flex" align="center">
               <Avatar
                 appearance="circle"
-                src={item.child.avatar}
+                // src={/*item.child.avatar*/}
                 size="medium"
               />
               <a href="" style={{ marginLeft: "8px" }}>
@@ -33,14 +45,13 @@ const actionItemTableData = (data) => {
               </a>
             </Box>
           ),
-        },
-        {
-          key: "status",
-          content: item.status,
+        } : {          
+          key: "child",
+          content: ""
         },
         {
           key: "resolve",
-          content: "Resolve",
+          content: action,
         },
       ],
     };
