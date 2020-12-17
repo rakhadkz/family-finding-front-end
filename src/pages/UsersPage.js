@@ -25,6 +25,7 @@ const AllUsers = ({ history, search, setSearch }) => (
             onChange={(e) => setSearch(e.target.value)}
           />
           <Button
+            appearance="link"
             onClick={() =>
               history.push(`?page=1${search && `&search=${search}`}`)
             }
@@ -92,9 +93,9 @@ export const UsersPage = (props) => {
       : { users: [], name: "" };
 
   const onDelete = (id) => {
-    //setRefresh(true);
+    setRefresh(true);
     deleteUser(id).finally(() => {
-      //setRefresh(false);
+      setRefresh(false);
       setIsOpen(false);
       history.push("../users");
     });
@@ -129,7 +130,7 @@ export const UsersPage = (props) => {
         }
       })
       .finally(() => setTablePending(false));
-  }, [id, currentPage]);
+  }, [id,refresh, currentPage]);
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
