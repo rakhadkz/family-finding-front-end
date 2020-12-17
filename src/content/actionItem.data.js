@@ -40,7 +40,7 @@ const actionItemTableData = (data, history, action, setIsOpen, setCurrentItem) =
                 // src={/*item.child.avatar*/}
                 size="medium"
               />
-              <a href="" style={{ marginLeft: "8px" }}>
+              <a href={`children/${item.child.id}#comments`} style={{ marginLeft: "8px" }}>
                 {item.child.first_name + " " + item.child.last_name}
               </a>
             </Box>
