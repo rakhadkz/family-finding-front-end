@@ -4,7 +4,9 @@ const childContactsTableData = (data) =>
     cells: [
       {
         key: "full_name",
-        content: `${item.contact.first_name} ${item.contact.last_name}`,
+        content: `${item?.contact?.first_name || ""} ${
+          item?.contact?.last_name || ""
+        }`,
       },
       {
         key: "relationship",
@@ -12,15 +14,15 @@ const childContactsTableData = (data) =>
       },
       {
         key: "birth_date",
-        content: item.contact.birthday,
+        content: item.contact?.birthday,
       },
       {
         key: "address",
-        content: item.contact.address,
+        content: item.contact?.address,
       },
       {
         key: "phone",
-        content: item.contact.phone,
+        content: item.contact?.phone,
       },
     ],
   }));

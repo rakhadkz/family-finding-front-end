@@ -1,8 +1,7 @@
 import { toast } from "react-toastify";
 import {
-  deleteUsersRequest,
-  fetchUsersRequest,
-  deleteOrganizationUserRequest,
+  deleteOrganizationUserRequest, deleteUsersRequest,
+  fetchUsersRequest
 } from "../../api/user";
 import { localStorageKey } from "../../utils/requestHandler";
 

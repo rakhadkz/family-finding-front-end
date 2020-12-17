@@ -15,3 +15,10 @@ export const fetchActionItemsMeta = () => {
     meta: true,
   });
 };
+
+export const deleteActionItemRequest = async (itemId) => {
+  return request({
+    endpoint: `action_items/${itemId}`,
+    method: "DELETE",
+  });
+};

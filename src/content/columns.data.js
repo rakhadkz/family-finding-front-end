@@ -110,19 +110,9 @@ export const actionItemsTableColumns = [
     width: 21,
   },
   {
-    key: "user",
-    content: "Assignee",
-    width: 10,
-  },
-  {
     key: "child",
     content: "Associated Child Case",
     width: 18,
-  },
-  {
-    key: "status",
-    content: "Status",
-    width: 7,
   },
   {
     key: "resolve",

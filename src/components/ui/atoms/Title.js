@@ -7,4 +7,5 @@ export const Title = styled.div`
   font-weight: bold;
   font-size: ${prop("size", "20px")};
   line-height: 24px;
+  color: #172B4D;
 `;

@@ -31,7 +31,7 @@ export const ChildrenPage = (props) => {
     })
       .then((response) => {
         const items = response.data;
-        setTotalPage(response.meta.num_pages);
+        setTotalPage(response.meta?.num_pages);
         if (items) setChildren(childTableData(items, history));
       })
       .finally(() => setTablePending(false));
