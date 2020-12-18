@@ -65,7 +65,7 @@ export const FamilyTreePage = (props) => {
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
         heading="Add Contact"
-        appearance="primary"
+        appearance={null}
         body={
           <AddContactForm
             onSubmit={onAddContact}

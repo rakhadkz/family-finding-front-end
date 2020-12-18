@@ -33,7 +33,7 @@ class Chart extends Component {
       this.obj = obj;
       this.editForm = document.getElementById("editForm");
       this.contactInput = document.getElementById("contact");
-      this.titleInput = document.getElementById("title");
+      this.titleInput = document.getElementById("relationship");
       this.cancelButton = document.getElementById("cancel");
       this.saveButton = document.getElementById("save");
 
@@ -43,10 +43,10 @@ class Chart extends Component {
 
       this.saveButton.addEventListener("click", function () {
         setTimeout(() => {
-          const contact = JSON.parse(localStorage.getItem("selectValue"));
+          const {contact,relationship} = JSON.parse(localStorage.getItem("selectValue"));
           var node = chart.get(that.nodeId);
           node.Name = contact.label;
-          node.Relationship = that.titleInput.value;
+          node.Relationship = relationship.value;
 
           updateChildContact(
             {
@@ -151,6 +151,7 @@ class Chart extends Component {
         fit: true,
         expandAll: true,
       },
+      enableSearch:false,
       tags: {
         child: {
           template: "yellow",
