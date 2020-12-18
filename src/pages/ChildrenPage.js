@@ -24,18 +24,23 @@ export const ChildrenPage = (props) => {
   useEffect(() => {
     history.push(updateQueryParams(currentPage, search));
     setTablePending(true);
-    fetchChildren({
-      view: "table",
-      page: currentPage,
-      meta: true,
-      search: search,
-    })
-      .then((response) => {
-        const items = response.data;
-        setTotalPage(response.meta?.num_pages);
-        if (items) setChildren(childTableData(items, history));
-      })
-      .finally(() => setTablePending(false));
+    const timer = setTimeout(
+      () =>
+        fetchChildren({
+          view: "table",
+          page: currentPage,
+          meta: true,
+          search: search,
+        })
+          .then((response) => {
+            const items = response.data;
+            setTotalPage(response.meta.num_pages);
+            if (items) setChildren(childTableData(items, history));
+          })
+          .finally(() => setTablePending(false)),
+      search.length === 0 ? 0 : 1000
+    );
+    return () => clearTimeout(timer);
   }, [currentPage, search]);
 
   useEffect(() => {

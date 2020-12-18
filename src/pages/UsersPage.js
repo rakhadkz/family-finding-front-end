@@ -14,6 +14,11 @@ import { useAuth } from "../context/auth/authContext";
 import { reset } from "../context/auth/authProvider";
 import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
+import { SearchBar } from "../components/ui/molecules/SearchBar";
+import { usersTableColumns } from "../content/columns.data";
+import Button from "@atlaskit/button";
+import { Table } from "../components/ui/common/Table";
+import { updateQueryParams } from "./OrganizationsPage";
 
 const AllUsers = ({ history, search, setSearch }) => (
   <>
@@ -24,14 +29,6 @@ const AllUsers = ({ history, search, setSearch }) => (
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Button
-            appearance="link"
-            onClick={() =>
-              history.push(`?page=1${search && `&search=${search}`}`)
-            }
-          >
-            Search
-          </Button>
         </Box>
         <Button
           appearance="primary"
@@ -74,12 +71,12 @@ const ConcreteUser = ({ name, email }) => {
 export const UsersPage = (props) => {
   const history = useHistory();
   const query = new URLSearchParams(props.location.search);
-  const id = props.match.params.id;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [users, setUsers] = useState([]);
   const { user } = useAuth();
   const [refresh, setRefresh] = useState(false);
+  const [id, setId] = useState(props.match.params.id);
   const [currentUser, setCurrentUser] = useState(-1);
   const [tablePending, setTablePending] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -102,35 +99,43 @@ export const UsersPage = (props) => {
   };
 
   useEffect(() => {
-    //!id && history.push(updateQueryParams(currentPage, search));
+    // history.replace(
+    //   id ? `../users/${id}` : updateQueryParams(currentPage, search)
+    // );
+    id && history.replace(`../users/${id}`);
     setTablePending(true);
-    fetchUsers({
-      id: id,
-      view: "extended",
-      search: search,
-      page: currentPage,
-      meta: true,
-    })
-      .then((response) => {
-        if (response) {
-          if (id) {
-            const data = response.data;
-            setUsers(
-              userTableData(data, history, user, setIsOpen, setCurrentUser)
-            );
-            setName(`${data.first_name} ${data.last_name}`) &&
-            setEmail(data.email);
-          } else {
-            const items = response.data;
-            setTotalPage(response.meta.num_pages);
-            setUsers(
-              userTableData(items, history, user, setIsOpen, setCurrentUser)
-            );
-          }
-        }
-      })
-      .finally(() => setTablePending(false));
-  }, [id,refresh, currentPage]);
+    const timer = setTimeout(
+      () =>
+        fetchUsers({
+          id: id,
+          view: "extended",
+          search: search,
+          page: currentPage,
+          meta: true,
+        })
+          .then((response) => {
+            if (response) {
+              if (id) {
+                const data = response.data;
+                setUsers(
+                  userTableData(data, setId, user, setIsOpen, setCurrentUser)
+                );
+                setName(`${data.first_name} ${data.last_name}`) &&
+                  setEmail(data.email);
+              } else {
+                const items = response.data;
+                setTotalPage(response.meta.num_pages);
+                setUsers(
+                  userTableData(items, setId, user, setIsOpen, setCurrentUser)
+                );
+              }
+            }
+          })
+          .finally(() => setTablePending(false)),
+      search.length === 0 ? 0 : 1000
+    );
+    return () => clearTimeout(timer);
+  }, [id, refresh, currentPage, search]);
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
