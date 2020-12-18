@@ -1,10 +1,14 @@
+import Button from "@atlaskit/button";
+import PersonIcon from "@atlaskit/icon/glyph/person";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog, Sidebar } from "../components/ui/common";
+import { Table } from "../components/ui/common/Table";
+import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { SidebarTemplate } from "../components/ui/templates";
-import PersonIcon from "@atlaskit/icon/glyph/person";
 import { UserBreadcrumbs } from "../components/Users/UserBreadcrumbs";
+import { usersTableColumns } from "../content/columns.data";
 import { userTableData } from "../content/user.data";
 import { useAuth } from "../context/auth/authContext";
 import { reset } from "../context/auth/authProvider";

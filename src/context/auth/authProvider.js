@@ -5,11 +5,11 @@ import {
   loginRequest,
   newPasswordRequest,
   resetRequest,
-  signupRequest,
+  signupRequest
 } from "../../api/auth";
 import {
   handleUserResponse,
-  localStorageKey,
+  localStorageKey
 } from "../../utils/requestHandler";
 
 const getToken = () => {

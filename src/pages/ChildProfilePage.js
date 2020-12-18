@@ -1,34 +1,40 @@
 import AvatarGroup from "@atlaskit/avatar-group";
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
-import WatchIcon from "@atlaskit/icon/glyph/watch";
-import MobileIcon from "@atlaskit/icon/glyph/mobile";
-import EmojiSymbolsIcon from "@atlaskit/icon/glyph/emoji/symbols";
+import Button from "@atlaskit/button";
 import EmailIcon from "@atlaskit/icon/glyph/email";
+import EmojiSymbolsIcon from "@atlaskit/icon/glyph/emoji/symbols";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
+import MobileIcon from "@atlaskit/icon/glyph/mobile";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
+import WatchIcon from "@atlaskit/icon/glyph/watch";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   ChildInformation,
   ChildTabs,
-  RelativesList,
+  RelativesList
 } from "../components/ChildProfile";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
 import { fetchChildren } from "../context/children/childProvider";
 import { CHILDREN } from "../helpers";
-import Button from "@atlaskit/button";
 
 export const ChildProfilePage = (props) => {
   const history = useHistory();
   const id = props.match.params.id;
   const [child, setChild] = useState({});
   useEffect(() => {
-    fetchChildren({ id: id, view: "extended" }).then(
+    fetchChildProfile();
+  }, []);
+
+  const fetchChildProfile = async () => {
+    console.log("CALLED FETCH PROFILE");
+    setChild({})
+    await fetchChildren({ id: id, view: "extended" }).then(
       (item) => item && setChild(item)
     );
-  }, []);
+  };
 
   const data = [
     {
@@ -121,10 +127,7 @@ export const ChildProfilePage = (props) => {
         </Box>
       </Spacing>
       <Spacing m={{ t: "40px" }}>
-        <ChildTabs
-          attachments={child.attachments}
-          contacts={child.contacts || []}
-        />
+        {<ChildTabs {...child} refreshContacts={fetchChildProfile} />}
       </Spacing>
     </SidebarTemplate>
   );
