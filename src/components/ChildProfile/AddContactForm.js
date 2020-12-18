@@ -114,7 +114,7 @@ export const AddContactForm = ({ onSubmit, onCancel }) => {
               control={control}
               error={errors.birthday}
               label="Birthday"
-              placeholder="Select birthday of child"
+              placeholder="Select birthday"
             />
             <Spacing m={{ r: "30px" }}>
               <Box d="flex">
