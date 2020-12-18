@@ -24,7 +24,7 @@ const childTableData = (data, history) =>
       },
       {
         key: "permanency_goal",
-        content: <p align="center">{item.permanency_goal}</p>,
+        content: <p align="left">{item.permanency_goal}</p>,
       },
       {
         key: "continuous_search",

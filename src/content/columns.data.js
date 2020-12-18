@@ -73,7 +73,7 @@ export const childrenTableColumns = [
   },
   {
     key: "permanency_goal",
-    content: <p align="center">Permanency Goal</p>,
+    content: <p align="left">Permanency Goal</p>,
     width: 20,
   },
   {

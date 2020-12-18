@@ -33,9 +33,10 @@ export const ChildrenPage = (props) => {
           search: search,
         })
           .then((response) => {
-            const items = response.data;
-            setTotalPage(response.meta.num_pages);
-            if (items) setChildren(childTableData(items, history));
+            if (response){
+              setTotalPage(response.meta.num_pages);
+              setChildren(childTableData(response.data, history));
+            }
           })
           .finally(() => setTablePending(false)),
       search.length === 0 ? 0 : 1000
