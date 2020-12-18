@@ -69,31 +69,31 @@ export const childrenTableColumns = [
   {
     key: "full_name",
     content: "Full Name",
-    width: 30,
+    width: 25,
   },
   {
     key: "permanency_goal",
-    content: "Permanency Goal",
-    width: 15,
+    content: <p align="center">Permanency Goal</p>,
+    width: 20,
   },
   {
     key: "continuous_search",
-    content: "Continuous Search",
+    content: <p align="center">Continuous Search</p>,
     width: 14,
   },
   {
     key: "days_in_system",
-    content: "Days in system",
+    content: <p align="center">Days in system</p>,
     width: 12,
   },
   {
     key: "relatives",
-    content: "Relatives",
+    content: <p align="center">Relatives</p>,
     width: 12,
   },
   {
     key: "matches",
-    content: "Matches",
+    content: <p align="center">Matches</p>,
     width: 12,
   },
 ];

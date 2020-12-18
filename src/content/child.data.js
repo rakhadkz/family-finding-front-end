@@ -24,23 +24,23 @@ const childTableData = (data, history) =>
       },
       {
         key: "permanency_goal",
-        content: item.permanency_goal,
+        content: <p align="center">{item.permanency_goal}</p>,
       },
       {
         key: "continuous_search",
-        content: item.continuous_search,
+        content: <p align="center">{item.continuous_search}</p>,
       },
       {
         key: "days_in_system",
-        content: item.days_in_system,
+        content: <p align="center">{item.days_in_system}</p>,
       },
       {
         key: "relatives",
-        content: item.relatives,
+        content: <p align="center">{item.relatives}</p>,
       },
       {
         key: "matches",
-        content: item.matches,
+        content: <p align="center">{item.matches}</p>,
       },
     ],
   }));
