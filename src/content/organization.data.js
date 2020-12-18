@@ -1,6 +1,6 @@
 import Button from "@atlaskit/button";
 
-const organizationTableData = (data, history) => {
+const organizationTableData = (data, setId) => {
   const isArray = Array.isArray(data);
   data = isArray ? data : (data = [data]);
   return data.map((item, index) => ({
@@ -12,7 +12,7 @@ const organizationTableData = (data, history) => {
           item.name
         ) : (
           <Button
-            onClick={() => history.push("/organizations/" + item.id)}
+            onClick={() => setId(item.id)}
             appearance="link"
             spacing="none"
           >
