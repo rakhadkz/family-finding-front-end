@@ -15,18 +15,49 @@ import {
   RelativesList
 } from "../components/ChildProfile";
 import { Box, Spacing, Title } from "../components/ui/atoms";
-import { Sidebar } from "../components/ui/common";
+import { ModalDialog, Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
 import { fetchChildren } from "../context/children/childProvider";
 import { CHILDREN } from "../helpers";
+import Select from "@atlaskit/select";
+import '@atlaskit/css-reset'
+import { createChildUserRequest, fetchChildUsersRequest } from "../api/children";
 
 export const ChildProfilePage = (props) => {
   const history = useHistory();
   const id = props.match.params.id;
   const [child, setChild] = useState({});
+  const [ users, setUsers ] = useState({})
+  const [ isOpen, setIsOpen ] = useState(false);
+  const [ assignedUsers, setAssignedUsers ] = useState(null);
+  const [ validationState, setValidationState ] = useState("default");
+  const [ buttonPending, setButtonPending ] = useState(false);
+
   useEffect(() => {
     fetchChildProfile();
+    fetchChildUsers();
   }, []);
+
+  const fetchChildUsers = async () => {
+    await fetchChildUsersRequest({id: id}).then((item) => item && setUsers(
+      { 
+        child_users: item.child_users.map(user => (
+          {
+            email: user.email,
+            key: user.id,
+            name: `${user.first_name} ${user.last_name}`,
+            href: "#"
+          }
+        )),
+        not_child_users: item.not_child_users.map(user => (
+          {
+            label: `${user.first_name} ${user.last_name}`,
+            value: user.id
+          }
+        ))
+      }
+    ));
+  }
 
   const fetchChildProfile = async () => {
     console.log("CALLED FETCH PROFILE");
@@ -36,44 +67,29 @@ export const ChildProfilePage = (props) => {
     );
   };
 
-  const data = [
-    {
-      email: "makhanbet.kyzylorda@gmail.com",
-      key: "makhanbet.kyzylorda@gmail.com",
-      name: "Bekzat",
-      href: "#",
-    },
-    {
-      email: "makhanbet.kyzylorda@gmail.com",
-      key: "makhanbet.kyzylorda@gmail.com",
-      name: "Bekzat",
-      href: "#",
-    },
-    {
-      email: "makhanbet.kyzylorda@gmail.com",
-      key: "makhanbet.kyzylorda@gmail.com",
-      name: "Bekzat",
-      href: "#",
-    },
-    {
-      email: "makhanbet.kyzylorda@gmail.com",
-      key: "makhanbet.kyzylorda@gmail.com",
-      name: "Bekzat",
-      href: "#",
-    },
-    {
-      email: "makhanbet.kyzylorda@gmail.com",
-      key: "makhanbet.kyzylorda@gmail.com",
-      name: "Bekzat",
-      href: "#",
-    },
-    {
-      email: "makhanbet.kyzylorda@gmail.com",
-      key: "makhanbet.kyzylorda@gmail.com",
-      name: "Bekzat",
-      href: "#",
-    },
-  ];
+  const onSubmitUsers = () => {
+    !assignedUsers && setValidationState("error")
+    setButtonPending(true)
+    createChildUserRequest({
+      "user_child": {
+        "users": assignedUsers.map(item => ({
+          "user_id": item.value,
+          "child_id": child.id,
+          "date_approved": new Date()
+        }))
+      }
+    })
+    .then(() => fetchChildUsers())
+    .finally(() => {
+      setButtonPending(false)
+      setIsOpen(false)
+    })
+  }
+
+  const openModal = () => {
+    setAssignedUsers(null)
+    setIsOpen(true)
+  }
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
@@ -84,11 +100,38 @@ export const ChildProfilePage = (props) => {
             Set Reminder
           </Button>
           <Spacing m="0px 10px">
-            <Button appearance="primary" iconBefore={<WatchIcon />}>
+            <Button appearance="primary" iconBefore={<WatchIcon />} onClick={() => openModal()}>
               Assign
             </Button>
+            <ModalDialog
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              heading="Assign a user"
+              positiveLabel="Assign"
+              onClick={() => onSubmitUsers()}
+              width="small"
+              isLoading={buttonPending}
+              appearance="primary"
+              body={
+                <Select
+                  className="multi-select"
+                  classNamePrefix="react-select"
+                  isMulti
+                  menuPortalTarget={document.body}
+                  value={assignedUsers}
+                  validationState={validationState}
+                  onChange={(e) => {
+                    setAssignedUsers(e)
+                    setValidationState("default");
+                  }}
+                  styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                  options={users.not_child_users}
+                  placeholder="Choose a User(s)"
+                />
+              }
+            />
           </Spacing>
-          <AvatarGroup appearance="stack" data={data} />
+          <AvatarGroup appearance="stack" data={users.child_users || []} />
         </Box>
       </Box>
       <Spacing m={{ t: "28px" }}>

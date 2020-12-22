@@ -96,18 +96,23 @@ export const childrenTableColumns = [
     content: <p align="center">Matches</p>,
     width: 12,
   },
+  {
+    key: "status",
+    content: <p align="center">Status</p>,
+    width: 10,
+  }
 ];
 
 export const actionItemsTableColumns = [
   {
     key: "title",
     content: "Title",
-    width: 30,
+    width: 20,
   },
   {
     key: "description",
     content: "Description",
-    width: 21,
+    width: 30,
   },
   {
     key: "child",

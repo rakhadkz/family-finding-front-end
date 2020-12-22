@@ -6,10 +6,12 @@ export function ModalDialog({
   onClick,
   positiveLabel = "Okay",
   negativeLabel = "Cancel",
-  heading,
+  heading = null,
   body,
-  appearance = "warning",
-  hasActions = true
+  appearance = "primary",
+  hasActions = true,
+  width = "medium",
+  isLoading = false
 }) {
   const close = () => setIsOpen(false);
   return (
@@ -17,8 +19,9 @@ export function ModalDialog({
       <ModalTransition>
         {isOpen && (
           <Modal
+            width={width}
             actions={hasActions && [
-              { text: positiveLabel, onClick: onClick },
+              { text: positiveLabel, onClick: onClick, isLoading: isLoading },
               { text: negativeLabel, onClick: close },
             ]}
             onClose={close}

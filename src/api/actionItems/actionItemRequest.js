@@ -16,6 +16,14 @@ export const fetchActionItemsMeta = () => {
   });
 };
 
+export const createActionItemRequest = (data) => {
+  return request({
+    endpoint: "action_items",
+    method: "POST",
+    data,
+  });
+}
+
 export const deleteActionItemRequest = async (itemId) => {
   return request({
     endpoint: `action_items/${itemId}`,

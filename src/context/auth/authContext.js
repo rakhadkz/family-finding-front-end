@@ -21,14 +21,7 @@ export const AuthProvider = (props) => {
 
   const fetchMe = React.useCallback(
     () =>
-      auth.fetchMe().then(async (user) => {
-        if (user) {
-          user.role = user.user_organizations[0]?.role || "super_admin";
-          user.organization_id =
-            user.user_organizations[0]?.organization_id || null;
-          setUser(user);
-        }
-      }),
+      auth.fetchMe().then(async (user) => user && setUser(user)),
     []
   );
 

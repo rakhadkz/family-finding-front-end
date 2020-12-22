@@ -12,6 +12,14 @@ export const fetchChildrenRequest = (params) => {
   });
 };
 
+export const fetchChildUsersRequest = (params) => {
+  return request({
+    endpoint:
+      "children" +
+      (params.id ? `/${params.id}` : ``) + `?view=users`,
+    method: "GET",
+  })
+}
 
 export const fetchChildrenMeta = () => {
   return request({
@@ -20,6 +28,7 @@ export const fetchChildrenMeta = () => {
     meta: true,
   })
 }
+
 export const fetchChildComments = (id) => {
   return request({
     endpoint: `children/${id}?view=comments`,
@@ -41,3 +50,11 @@ export const createChildRequest = (data) => {
     data,
   });
 };
+
+export const createChildUserRequest = (data) => {
+  return request({
+    endpoint: "user_children",
+    method: "POST",
+    data
+  })
+}

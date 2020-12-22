@@ -15,7 +15,7 @@ export const EditNodeForm = () => {
 
   useEffect(() => {
     fetchContacts().then((data) => {
-      const options = data.map((item) => ({
+      const options = data?.map((item) => item && ({
         label: `${item?.first_name} ${item?.last_name}`,
         value: item.id,
       }));
