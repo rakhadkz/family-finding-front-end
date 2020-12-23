@@ -28,10 +28,12 @@ export const EditNodeForm = ({ initialContacts }) => {
 
   useEffect(() => {
     console.log("initialContacts", initialContacts);
-    const options = initialContacts.map(({ contact: item }) => ({
-      label: `${item?.first_name} ${item?.last_name}`,
-      value: item.id,
-    }));
+    const options = initialContacts
+      .filter(({ contact }) => !!contact)
+      .map(({ contact: item }) => ({
+        label: `${item?.first_name} ${item?.last_name}`,
+        value: item.id,
+      }));
     setContacts(options);
   }, [initialContacts]);
 
