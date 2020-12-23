@@ -3,7 +3,7 @@ import Button from "@atlaskit/button";
 import { Box } from "../components/ui/atoms";
 import Lozenge from '@atlaskit/lozenge';
 
-const childTableData = (data, history, assignUser) =>
+const childTableData = (data, history, assignUser, isUser = true) =>
   data.map((item, index) => ({
     key: index,
     cells: [
@@ -43,7 +43,7 @@ const childTableData = (data, history, assignUser) =>
         key: "matches",
         content: <p align="center">{item.matches}</p>,
       },
-      {
+      isUser && {
         key: "status",
         content: 
         <div align="center">{item.user_request ? 

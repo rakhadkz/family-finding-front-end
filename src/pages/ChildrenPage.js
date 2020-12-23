@@ -3,6 +3,7 @@ import EmojiAddIcon from "@atlaskit/icon/glyph/emoji-add";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
+import { fetchMeRequest } from "../api/auth";
 import { createChildUserRequest } from "../api/children";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
@@ -17,13 +18,14 @@ import { updateQueryParams } from "./OrganizationsPage";
 
 export const ChildrenPage = (props) => {
   const history = useHistory();
-  const [children, setChildren] = useState([]);
-  const [tablePending, setTablePending] = useState(true);
-  const [totalPage, setTotalPage] = useState(null);
+  const [ children, setChildren ] = useState([]);
+  const [ tablePending, setTablePending ] = useState(true);
+  const [ totalPage, setTotalPage ] = useState(null);
   const query = new URLSearchParams(props.location.search);
-  const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
-  const [search, setSearch] = useState(query.get("search") || "");
+  const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
+  const [ search, setSearch ] = useState(query.get("search") || "");
   const { user } = useAuth();
+  const head = childrenTableColumns(user?.role === "user");
 
   const assignUser = (child) => {
     user?.role === "user" 
@@ -48,9 +50,9 @@ export const ChildrenPage = (props) => {
       }
     }).then(() => fetchChildrenFunc())
   }
-
-  const fetchChildrenFunc = async() => {
-    await fetchChildren({
+  
+  const fetchChildrenFunc = () => {
+    fetchChildren({
       view: "table",
       page: currentPage,
       meta: true,
@@ -59,14 +61,13 @@ export const ChildrenPage = (props) => {
       .then((response) => {
         if (response){
           setTotalPage(response.meta.num_pages);
-          setChildren(childTableData(response.data, history, assignUser));
+          setChildren(childTableData(response.data, history, assignUser, user?.role === "user"));
         }
       })
       .finally(() => setTablePending(false));
   }
 
   useEffect(() => {
-    console.log(user)
     history.push(updateQueryParams(currentPage, search));
     setTablePending(true);
     const timer = setTimeout(
@@ -106,7 +107,7 @@ export const ChildrenPage = (props) => {
           setCurrentPage={setCurrentPage}
           items={children}
           pending={tablePending}
-          head={childrenTableColumns}
+          head={head}
         />
       </Spacing>
     </SidebarTemplate>

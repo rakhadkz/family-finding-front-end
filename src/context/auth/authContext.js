@@ -21,7 +21,7 @@ export const AuthProvider = (props) => {
 
   const fetchMe = React.useCallback(
     () =>
-      auth.fetchMe().then(async (user) => user && setUser(user)),
+      auth.fetchMe().then((user) => user && setUser(user)),
     []
   );
 

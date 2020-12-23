@@ -17,21 +17,23 @@ import {
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog, Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
-import { fetchChildren } from "../context/children/childProvider";
 import { CHILDREN } from "../helpers";
 import Select from "@atlaskit/select";
 import '@atlaskit/css-reset'
-import { createChildUserRequest, fetchChildUsersRequest } from "../api/children";
+import { createChildUserRequest, fetchChildrenRequest, fetchChildUsersRequest } from "../api/children";
+import { useAuth } from "../context/auth/authContext";
 
 export const ChildProfilePage = (props) => {
   const history = useHistory();
   const id = props.match.params.id;
-  const [child, setChild] = useState({});
+  const { user } = useAuth();
+  const [ child, setChild ] = useState({});
   const [ users, setUsers ] = useState({})
   const [ isOpen, setIsOpen ] = useState(false);
   const [ assignedUsers, setAssignedUsers ] = useState(null);
   const [ validationState, setValidationState ] = useState("default");
   const [ buttonPending, setButtonPending ] = useState(false);
+  const [ hasAccess, setAccess ] = useState(true);
 
   useEffect(() => {
     fetchChildProfile();
@@ -60,11 +62,10 @@ export const ChildProfilePage = (props) => {
   }
 
   const fetchChildProfile = async () => {
-    console.log("CALLED FETCH PROFILE");
-    setChild({})
-    await fetchChildren({ id: id, view: "extended" }).then(
+    await fetchChildrenRequest({ id: id, view: "extended" })
+    .then(
       (item) => item && setChild(item)
-    );
+    ).catch(() => setAccess(false));
   };
 
   const onSubmitUsers = () => {
@@ -75,7 +76,8 @@ export const ChildProfilePage = (props) => {
         "users": assignedUsers.map(item => ({
           "user_id": item.value,
           "child_id": child.id,
-          "date_approved": new Date()
+          "date_approved": new Date(),
+          "date_denied": null
         }))
       }
     })
@@ -92,10 +94,13 @@ export const ChildProfilePage = (props) => {
   }
 
   return (
+    hasAccess ? 
     <SidebarTemplate sidebar={<Sidebar />}>
       <Box d="flex" justify="space-between">
         <Title>{`${child.first_name} ${child.last_name}`}</Title>
-        <Box d="flex">
+        {user?.role !== "user" && (
+          <>
+          <Box d="flex">
           <Button appearance="primary" iconBefore={<NotificationIcon />}>
             Set Reminder
           </Button>
@@ -132,6 +137,8 @@ export const ChildProfilePage = (props) => {
           </Spacing>
           <AvatarGroup appearance="stack" data={users.child_users || []} />
         </Box>
+          </>
+        )}
       </Box>
       <Spacing m={{ t: "28px" }}>
         <Breadcrumbs>
@@ -171,6 +178,6 @@ export const ChildProfilePage = (props) => {
       <Spacing m={{ t: "40px" }}>
         {<ChildTabs {...child} refreshContacts={fetchChildProfile} />}
       </Spacing>
-    </SidebarTemplate>
+    </SidebarTemplate> : "No Access"
   );
 };
