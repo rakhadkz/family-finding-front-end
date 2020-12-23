@@ -1,14 +1,17 @@
 import AvatarGroup from "@atlaskit/avatar-group";
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import Button from "@atlaskit/button";
+import '@atlaskit/css-reset';
 import EmailIcon from "@atlaskit/icon/glyph/email";
 import EmojiSymbolsIcon from "@atlaskit/icon/glyph/emoji/symbols";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
 import MobileIcon from "@atlaskit/icon/glyph/mobile";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
+import Select from "@atlaskit/select";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { createChildUserRequest, fetchChildrenRequest, fetchChildUsersRequest } from "../api/children";
 import {
   ChildInformation,
   ChildTabs,
@@ -17,11 +20,8 @@ import {
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog, Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
-import { CHILDREN } from "../helpers";
-import Select from "@atlaskit/select";
-import '@atlaskit/css-reset'
-import { createChildUserRequest, fetchChildrenRequest, fetchChildUsersRequest } from "../api/children";
 import { useAuth } from "../context/auth/authContext";
+import { CHILDREN } from "../helpers";
 
 export const ChildProfilePage = (props) => {
   const history = useHistory();
