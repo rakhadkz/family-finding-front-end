@@ -111,7 +111,6 @@ export const ChildProfilePage = (props) => {
               onClick={() => onSubmitUsers()}
               width="small"
               isLoading={buttonPending}
-              appearance="primary"
               body={
                 <Select
                   className="multi-select"

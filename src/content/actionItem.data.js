@@ -1,31 +1,23 @@
 import { Box } from "../components/ui/atoms";
 import Avatar from "@atlaskit/avatar";
-import { role_label } from "./sample.data";
 import CrossIcon from "@atlaskit/icon/glyph/cross";
 import Button, { LoadingButton } from "@atlaskit/button";
+import { useState } from "react";
+import { ModalDialog } from "../components/ui/common";
+import { deleteActionItem } from "../context/actionItems/actionItemProvider";
+import { approveChildUserRequest, denyChildUserRequest } from "../api/children";
+import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
+import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 
-const actionItemTableData = (data, history, action, setIsOpen, setCurrentItem) => {
+const actionItemTableData = (data, setRefresh) => {
   console.log(data)
   return data.map(function (item, index) {
-    const action = (
-        <LoadingButton
-          isDisabled={false}
-          onClick={() => {
-            setIsOpen(true);
-            setCurrentItem(item.id);
-          }}
-          height="32px"
-          width="32px"
-        >
-          <CrossIcon size="small" />
-        </LoadingButton>
-    )
     return {
       key: index,
       cells: [
         {
           key: "title",
-          content: item.title,
+          content: title(item.action_type),
         },
         {
           key: "description",
@@ -51,11 +43,75 @@ const actionItemTableData = (data, history, action, setIsOpen, setCurrentItem) =
         },
         {
           key: "resolve",
-          content: action,
+          content: <Action type={item.action_type} id={item.id} setRefresh={setRefresh} user_id={item.related_user_id} child_id={item.child_id}/>,
         },
       ],
     };
   });
 };
+
+const Action = ({type, id, setRefresh, user_id, child_id}) => {
+  const [ isOpen, setIsOpen ] = useState(false);
+  const onDelete = (id) => {
+    deleteActionItem(id).then(() => setRefresh(prev => !prev)).finally(() => setIsOpen(false));
+  };
+
+  const onApprove = async(id, user_id, child_id) => {
+    await deleteActionItem(id);
+    await approveChildUserRequest(user_id, child_id).then(() => setRefresh(prev => !prev)).finally(() => setIsOpen(false));
+  }
+
+  const onDeny = async (id, user_id, child_id) => {
+    await deleteActionItem(id);
+    await denyChildUserRequest(user_id, child_id).then(() => setRefresh(prev => !prev)).finally(() => setIsOpen(false));
+  }
+  switch(type) {
+    case "mention":
+      return (<>
+          <LoadingButton
+            isDisabled={false}
+            onClick={() => setIsOpen(true)}
+            height="32px"
+            width="32px"
+          >
+            <CrossIcon size="small" />
+          </LoadingButton>
+          <ModalDialog
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            onClick={() => onDelete(id)}
+            positiveLabel="Delete"
+            heading="Are you sure you want to remove this action?"
+            body="You will no longer have access to this item"
+            appearance="danger"
+          />
+        </>
+      )
+    case "access_request":
+      return (
+        <>
+          <Button iconBefore={<CheckCircleIcon/>} onClick={() => onApprove(id, user_id, child_id)} style={{marginRight: "10px"}}>
+            Approve
+          </Button>
+          <Button iconBefore={<CrossCircleIcon/>} onClick={() => onDeny(id, user_id, child_id)}>
+            Deny
+          </Button>
+        </>
+      )
+    default:
+      return <div></div>
+  }
+}
+
+const title = (type) => {
+  switch(type){
+    case "mention":
+      return "Comment mention"
+    case "access_request":
+      return "Access request"
+    default:
+      return "Action Item"
+  }
+}
 
 export { actionItemTableData };

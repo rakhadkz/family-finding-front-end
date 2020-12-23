@@ -4,6 +4,7 @@ import { MentionInput } from "../ui/molecules";
 import { useForm } from "react-hook-form";
 import { FormSection } from "@atlaskit/form";
 import { useAuth } from "../../context/auth/authContext";
+import { fetchUsersRequest } from "../../api/user";
 
 export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShouldUpdate, setShowInput}) => {
   const { user } = useAuth();
@@ -11,8 +12,8 @@ export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShou
   const [mentions, setMentions] = useState();
   const [selected, setSelected] = useState();
 
-  useEffect( () => {
-    user && setMentions(user.user_organizations[0].organization.users.map(user=>`${user.first_name} ${user.last_name}`));
+  useEffect(() => {
+    user && fetchUsersRequest().then(response => setMentions(response.map(user => `${user.first_name} ${user.last_name}`)))
   }, [user]);
 
   const getMentionedUsers = (text) => {
@@ -66,7 +67,7 @@ export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShou
           register={register}
           control={control}
           error={''}
-          mentions={mentions}
+          mentions={mentions || []}
           reset={reset}
           isSubmitSuccessful={isSubmitSuccessful}
         />

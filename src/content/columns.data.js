@@ -121,8 +121,8 @@ export const actionItemsTableColumns = [
   },
   {
     key: "resolve",
-    content: "Resolve",
-    width: 10,
+    content: <p align="center">Resolve</p>,
+    width: 15,
   },
 ];
 

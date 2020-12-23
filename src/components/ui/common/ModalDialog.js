@@ -8,7 +8,7 @@ export function ModalDialog({
   negativeLabel = "Cancel",
   heading = null,
   body,
-  appearance = "primary",
+  appearance = null,
   hasActions = true,
   width = "medium",
   isLoading = false
@@ -26,7 +26,7 @@ export function ModalDialog({
             ]}
             onClose={close}
             heading={heading}
-            appearance={appearance}
+            appearance={null}
           >
             {body}
           </Modal>

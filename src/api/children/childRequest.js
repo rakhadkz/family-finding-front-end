@@ -55,6 +55,34 @@ export const createChildUserRequest = (data) => {
   return request({
     endpoint: "user_children",
     method: "POST",
-    data
+    data,
+  })
+}
+
+export const approveChildUserRequest = (user_id, child_id) => {
+  return request({
+    endpoint: "user_children",
+    method: "PUT",
+    data: {
+      "user_child": {
+        "user_id": user_id,
+        "child_id": child_id,
+        "date_approved": new Date()
+      }
+    }
+  })
+}
+
+export const denyChildUserRequest = (user_id, child_id) => {
+  return request({
+    endpoint: "user_children",
+    method: "PUT",
+    data: {
+      "user_child": {
+        "user_id": user_id,
+        "child_id": child_id,
+        "date_denied": new Date()
+      }
+    }
   })
 }

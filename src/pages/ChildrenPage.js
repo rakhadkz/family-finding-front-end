@@ -44,6 +44,7 @@ export const ChildrenPage = (props) => {
         "child_id": child.id,
         "organization_id": user.organization_id,
         "related_user_id": user.id,
+        "action_type": "access_request"
       }
     }).then(() => fetchChildrenFunc())
   }

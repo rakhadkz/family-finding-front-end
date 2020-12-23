@@ -1,11 +1,11 @@
 import { request } from "../../utils/request";
 
-export const fetchUsersRequest = async (params) => {
-  const { view = "", page = "", search = "", meta = false } = params;
+export const fetchUsersRequest = async (params = null) => {
+  const { view = "", page = "", search = "", meta = false } = params || {};
   return request({
     endpoint:
       "admin/users" +
-      (params.id ? "/" + params.id : "") +
+      (params?.id ? "/" + params?.id : "") +
       `?view=${view}&page=${page}&search=${search}`,
     method: "GET",
     meta: meta,
