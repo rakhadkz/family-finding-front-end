@@ -1,8 +1,9 @@
 import Avatar from "@atlaskit/avatar";
 import Button from "@atlaskit/button";
 import { Box } from "../components/ui/atoms";
+import Lozenge from '@atlaskit/lozenge';
 
-const childTableData = (data, history) =>
+const childTableData = (data, history, assignUser, isUser = true) =>
   data.map((item, index) => ({
     key: index,
     cells: [
@@ -42,6 +43,20 @@ const childTableData = (data, history) =>
         key: "matches",
         content: <p align="center">{item.matches}</p>,
       },
+      isUser && {
+        key: "status",
+        content: 
+        <div align="center">{item.user_request ? 
+          (item.user_request.date_approved ? 
+            <Lozenge appearance="success">Approved</Lozenge> 
+            : (item.user_request.date_denied ? 
+              <Lozenge appearance="removed">Denied</Lozenge> 
+                : <Lozenge appearance="inprogress">Pending</Lozenge>
+              )
+          ) 
+          : <Button appearance="link" onClick={() => assignUser(item)}>Request</Button>}
+        </div>
+      }
     ],
   }));
 

@@ -95,10 +95,6 @@ export const UsersPage = (props) => {
   };
 
   useEffect(() => {
-    // history.replace(
-    //   id ? `../users/${id}` : updateQueryParams(currentPage, search)
-    // );
-    id && history.replace(`../users/${id}`);
     setTablePending(true);
     const timer = setTimeout(
       () =>
@@ -114,7 +110,7 @@ export const UsersPage = (props) => {
               if (id) {
                 const data = response.data;
                 setUsers(
-                  userTableData(data, setId, user, setIsOpen, setCurrentUser)
+                  userTableData(data, user, setIsOpen, setCurrentUser)
                 );
                 setName(`${data.first_name} ${data.last_name}`) &&
                   setEmail(data.email);
@@ -122,7 +118,7 @@ export const UsersPage = (props) => {
                 const items = response.data;
                 setTotalPage(response.meta.num_pages);
                 setUsers(
-                  userTableData(items, setId, user, setIsOpen, setCurrentUser)
+                  userTableData(items, user, setIsOpen, setCurrentUser, history)
                 );
               }
             }

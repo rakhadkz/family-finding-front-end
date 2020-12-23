@@ -65,7 +65,7 @@ export const usersTableColumns = (isSuperAdmin = false) => {
   return columns1.concat(columns2);
 };
 
-export const childrenTableColumns = [
+export const childrenTableColumns = (isUser = true) => [
   {
     key: "full_name",
     content: "Full Name",
@@ -96,18 +96,23 @@ export const childrenTableColumns = [
     content: <p align="center">Matches</p>,
     width: 12,
   },
-];
+  isUser && {
+    key: "status",
+    content: <p align="center">Status</p>,
+    width: 10,
+  }
+]
 
 export const actionItemsTableColumns = [
   {
     key: "title",
     content: "Title",
-    width: 30,
+    width: 20,
   },
   {
     key: "description",
     content: "Description",
-    width: 21,
+    width: 30,
   },
   {
     key: "child",
@@ -116,8 +121,8 @@ export const actionItemsTableColumns = [
   },
   {
     key: "resolve",
-    content: "Resolve",
-    width: 10,
+    content: <p align="center">Resolve</p>,
+    width: 15,
   },
 ];
 
