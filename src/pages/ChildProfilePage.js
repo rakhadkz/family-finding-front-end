@@ -28,6 +28,10 @@ export const ChildProfilePage = (props) => {
     fetchChildProfile();
   }, []);
 
+  useEffect(() => {
+    console.log("CHILD",child);
+  }, [child]);
+
   const fetchChildProfile = async () => {
     console.log("CALLED FETCH PROFILE");
     setChild({})
