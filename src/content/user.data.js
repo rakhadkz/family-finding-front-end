@@ -3,7 +3,7 @@ import CrossIcon from "@atlaskit/icon/glyph/cross";
 import { GroupAccess } from "../components/common";
 import { role_label } from "./sample.data";
 
-const userTableData = (data, setId, user, setIsOpen, setCurrentUser) => {
+const userTableData = (data, user, setIsOpen, setCurrentUser, history = null) => {
   const isArray = Array.isArray(data);
   data = isArray ? data : (data = [data]);
   return data.map((item, index) => {
@@ -12,7 +12,7 @@ const userTableData = (data, setId, user, setIsOpen, setCurrentUser) => {
       !isArray ? (
         full_name
       ) : (
-        <Button onClick={() => setId(item.id)} appearance="link" spacing="none">
+        <Button onClick={() => history.push("/users/" + item.id)} appearance="link" spacing="none">
           {full_name}
         </Button>
       ),
