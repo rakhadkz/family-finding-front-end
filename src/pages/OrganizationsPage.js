@@ -57,9 +57,7 @@ export const OrganizationsPage = (props) => {
   const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
   const [search, setSearch] = useState(query.get("search") || "");
   useEffect(() => {
-    history.push(
-      id ? `../organizations/${id}` : updateQueryParams(currentPage, search)
-    );
+    !id && history.push(updateQueryParams(currentPage, search));
     setTablePending(true);
     const timer = setTimeout(
       () =>
@@ -74,7 +72,7 @@ export const OrganizationsPage = (props) => {
               const items = response.data;
               !id && setTotalPage(response.meta.num_pages);
               setName(items.name);
-              setOrganizations(organizationTableData(items, setId));
+              setOrganizations(organizationTableData(items, history));
             }
           })
           .finally(() => setTablePending(false)),

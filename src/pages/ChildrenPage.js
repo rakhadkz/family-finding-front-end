@@ -2,6 +2,9 @@ import Button from "@atlaskit/button";
 import EmojiAddIcon from "@atlaskit/icon/glyph/emoji-add";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
+import { fetchMeRequest } from "../api/auth";
+import { createChildUserRequest } from "../api/children";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
@@ -9,36 +12,67 @@ import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { SidebarTemplate } from "../components/ui/templates";
 import { childTableData } from "../content/child.data";
 import { childrenTableColumns } from "../content/columns.data";
+import { useAuth } from "../context/auth/authContext";
 import { fetchChildren } from "../context/children/childProvider";
 import { updateQueryParams } from "./OrganizationsPage";
 
 export const ChildrenPage = (props) => {
   const history = useHistory();
-  const [children, setChildren] = useState([]);
-  const [tablePending, setTablePending] = useState(true);
-  const [totalPage, setTotalPage] = useState(null);
+  const [ children, setChildren ] = useState([]);
+  const [ tablePending, setTablePending ] = useState(true);
+  const [ totalPage, setTotalPage ] = useState(null);
   const query = new URLSearchParams(props.location.search);
-  const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
-  const [search, setSearch] = useState(query.get("search") || "");
+  const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
+  const [ search, setSearch ] = useState(query.get("search") || "");
+  const { user } = useAuth();
+  const head = childrenTableColumns(user?.role === "user");
+
+  const assignUser = (child) => {
+    user?.role === "user" 
+    && createChildUserRequest({
+      "user_child": {
+        "users": [
+          {
+            "user_id": user.id,
+            "child_id": child.id
+          }
+        ]
+      }
+    })
+    && createActionItemRequest({
+      "action_item": {
+        "title": "User Assign",
+        "description": `${user.first_name} ${user.last_name} sent a request to ${child.full_name}`,
+        "child_id": child.id,
+        "organization_id": user.organization_id,
+        "related_user_id": user.id,
+        "action_type": "access_request"
+      }
+    }).then(() => fetchChildrenFunc())
+  }
+  
+  const fetchChildrenFunc = () => {
+    fetchChildren({
+      view: "table",
+      page: currentPage,
+      meta: true,
+      search: search,
+    })
+      .then((response) => {
+        if (response){
+          setTotalPage(response.meta.num_pages);
+          setChildren(childTableData(response.data, history, assignUser, user?.role === "user"));
+        }
+      })
+      .finally(() => setTablePending(false));
+  }
 
   useEffect(() => {
     history.push(updateQueryParams(currentPage, search));
     setTablePending(true);
     const timer = setTimeout(
       () =>
-        fetchChildren({
-          view: "table",
-          page: currentPage,
-          meta: true,
-          search: search,
-        })
-          .then((response) => {
-            if (response){
-              setTotalPage(response.meta.num_pages);
-              setChildren(childTableData(response.data, history));
-            }
-          })
-          .finally(() => setTablePending(false)),
+        fetchChildrenFunc(),
       search.length === 0 ? 0 : 1000
     );
     return () => clearTimeout(timer);
@@ -73,7 +107,7 @@ export const ChildrenPage = (props) => {
           setCurrentPage={setCurrentPage}
           items={children}
           pending={tablePending}
-          head={childrenTableColumns}
+          head={head}
         />
       </Spacing>
     </SidebarTemplate>
