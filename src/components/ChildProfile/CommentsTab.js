@@ -5,10 +5,25 @@ import { fetchComments } from "../../context/children/childProvider";
 import { Box, Spacing } from "../ui/atoms";
 import { Comments } from './Comments';
 import { CommentsForm } from './CommentsForm';
+import { useAuth } from "../../context/auth/authContext";
+import { fetchUsersRequest } from "../../api/user";
 
 export const CommentsTab = ({ childId, childComments, setChild}) => {
   const [comments, setComments] = useState(childComments);
   const [shouldUpdate, increaseShouldUpdate] = useState(0)
+  const { user } = useAuth();
+  const [mentions, setMentions] = useState();
+
+  useEffect(() => {
+    user && fetchUsersRequest().then(response => setMentions(response.map(user => (
+      { 
+        name: `${user.first_name} ${user.last_name}`,
+        title: 'Staff of Penn State Orphanage',
+        avatar: 'https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png',
+        id: user.id
+      }
+      ))))
+  }, [user]);
 
   useEffect(
     () => {
@@ -34,6 +49,7 @@ export const CommentsTab = ({ childId, childComments, setChild}) => {
             id={childId} 
             inReply={0} 
             onSubmit={postCommentRequest} 
+            mentions={mentions}
           />
         </Spacing>
       </Box>
@@ -44,6 +60,7 @@ export const CommentsTab = ({ childId, childComments, setChild}) => {
                 <Comments
                   id={childId} 
                   data={comment}  
+                  mentions={mentions}
                   shouldUpdate={shouldUpdate} 
                   increaseShouldUpdate={increaseShouldUpdate} 
                 /> 

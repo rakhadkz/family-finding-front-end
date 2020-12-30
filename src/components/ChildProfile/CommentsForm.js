@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Form } from "../ui/atoms";
-import { MentionInput } from "../ui/molecules";
+import { Form, Box, StyledTextError} from "../ui/atoms";
+import { MentionInput, WysiwygEditor } from "../ui/molecules";
 import { useForm } from "react-hook-form";
 import { FormSection } from "@atlaskit/form";
 import { useAuth } from "../../context/auth/authContext";
 import { fetchUsersRequest } from "../../api/user";
+import Button from "@atlaskit/button";
+import ButtonGroup from '@atlaskit/button/button-group';
+import styled from "styled-components";
+import { Controller } from "react-hook-form";
+import { formErrors } from "../../helpers/formErrors";
+import draftToHtml from "draftjs-to-html";
+import { EditorState, RichUtils, convertToRaw } from 'draft-js';
 
-export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShouldUpdate, setShowInput}) => {
+
+export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShouldUpdate, setShowInput, mentions}) => {
   const { user } = useAuth();
-  const { register, handleSubmit, control, errors , reset, formState: { isSubmitSuccessful }} = useForm();
-  const [mentions, setMentions] = useState();
-  const [selected, setSelected] = useState();
-
-  useEffect(() => {
-    user && fetchUsersRequest().then(response => setMentions(response.map(user => `${user.first_name} ${user.last_name}`)))
-  }, [user]);
+  const { register, handleSubmit, control, errors , reset, formState: { isSubmitSuccessful }} = useForm({
+    mode: "onChange"
+  })
 
   const getMentionedUsers = (text) => {
     let res = [];
@@ -26,30 +30,46 @@ export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShou
         }
         let name = text.slice(i+1,i+j-1);
         console.log(name);
-        let users = user.user_organizations[0].organization.users
-        for(let k=0;k<users.length;k++){
-          console.log(users[k])
-          if( users[k].first_name === name){
-            res.push(users[k].id);
-            console.log(users[k]);
-            break;
-          }
-        }
+        console.log(mentions)
+        // let users = user.user_organizations[0].organization.users
+        // for(let k=0;k<users.length;k++){
+        //   console.log(users[k])
+        //   if( users[k].first_name === name){
+        //     res.push(users[k].id);
+        //     console.log(users[k]);
+        //     break;
+        //   }
+        // }
       }
     }
     return res;
   }
+  const [text,setText] = useState('')
+  const [styles,setStyles] = useState('')
+  const [rawData,setRawData] = useState('')
 
-  const onSubmitHandle = async (data) => {
-    console.log(data)
-    const mentionedUsers = getMentionedUsers(data.comment)
+  const onSubmitHandle = async () => {
+    let mentionedUsers = [];
+    for (let key in rawData.entityMap) {
+      if(rawData.entityMap[key].type === "mention"){
+        mentionedUsers.push(rawData.entityMap[key].data.mention.id);
+      }
+    }   
+    console.log(text)
     console.log(mentionedUsers)
+    console.log({"comment": {
+      "body": text,
+      "in_reply_to": inReply,
+      "child_id" : id,
+      "mentions": mentionedUsers
+    }})
+
     onSubmit({
       "comment": {
-        "body": data.comment,
+        "body": text,
         "in_reply_to": inReply,
         "child_id" : id,
-        "mentions": mentionedUsers ? mentionedUsers : []
+        "mentions": mentionedUsers
       }
     })
     .then((items) => {
@@ -58,20 +78,25 @@ export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShou
     .finally(() => { setShowInput && setShowInput(false) });
   };
 
+  console.log(text, rawData)
+
   return (
-    <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
+    <Form w="100%" onSubmit={onSubmitHandle} noValidate>
       <FormSection>
-        <MentionInput 
-          name={"comment"}
-          placeholder="Join the discussion"
-          register={register}
-          control={control}
-          error={''}
-          mentions={mentions || []}
-          reset={reset}
-          isSubmitSuccessful={isSubmitSuccessful}
-        />
+        <WysiwygEditor
+          name="comment"
+          mentions={mentions}
+          onChange={(tex, raw)=>{setText(tex);setRawData(raw)}}
+         /> 
+        <StyledButtonGroup>
+          <Button type="submit" appearance="primary">Send</Button> 
+          <Button appearance="subtle" onClick={()=>setShowInput && setShowInput(false)}>Cancel</Button>
+        </StyledButtonGroup>
       </FormSection>
     </Form>
   )
 }
+
+const StyledButtonGroup = styled(Box)`
+    margin: 0 10px;
+  `
