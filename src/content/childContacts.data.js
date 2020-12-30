@@ -12,7 +12,7 @@ const childContactsTableData = (data) =>
       },
       {
         key: "relationship",
-        content: item?.contact.relationship,
+        content: item?.contact?.relationship,
       },
       {
         key: "birth_date",
