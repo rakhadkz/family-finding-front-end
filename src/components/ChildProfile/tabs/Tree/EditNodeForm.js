@@ -50,7 +50,7 @@ export const EditNodeForm = ({ initialContacts }) => {
         }}
       >
         <Box d="flex">
-          Edit Contact Node
+          Edit
           <Button
             style={{ position: "absolute", right: 10 }}
             id="cancel"

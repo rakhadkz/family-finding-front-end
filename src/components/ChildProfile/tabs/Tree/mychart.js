@@ -175,7 +175,7 @@ class Chart extends Component {
       },
       nodeMenu: {
         edit: {
-          text: "Edit Contact Node",
+          text: "Edit",
         },
         add: {
           text: "Add",
