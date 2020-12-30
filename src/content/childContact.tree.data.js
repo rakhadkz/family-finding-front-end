@@ -1,5 +1,6 @@
+import { sideRelatives } from "./relationshipOptions.data";
+
 const constructTree = ({ firstName = "", lastName = "", contacts = [] }) => {
-  console.log(firstName, lastName, contacts);
   const nodes = [
     {
       id: 0,
@@ -14,7 +15,10 @@ const constructTree = ({ firstName = "", lastName = "", contacts = [] }) => {
   contacts.forEach((item) => {
     nodes.push({
       id: item.id,
-      tags: ["relatives"],
+      tags: [
+        "relatives",
+        sideRelatives.includes(item?.relationship) && "assistant",
+      ],
       Name: `${item?.contact?.first_name || ""} ${
         item?.contact?.last_name || ""
       }`,

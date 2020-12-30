@@ -2,21 +2,33 @@ import Button from "@atlaskit/button";
 import { FormSection } from "@atlaskit/form";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { relationshipOptions } from "../../content/relationshipOptions.data";
 import { states } from "../../content/states.data";
 import { Box, Form, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
 
-export const AddContactForm = ({ onSubmit, onCancel }) => {
-  const { register, handleSubmit, control, errors } = useForm();
+export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
+  console.log("VVs",initialValues);
+  const { register, handleSubmit, control, errors, watch } = useForm({
+    defaultValues: initialValues,
+  });
   const [pending, setPending] = useState(false);
+  const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
     setPending(true);
 
     console.log(data);
-    const { state, ...rest } = data;
+    const { state, relationship, relationship_other, ...rest } = data;
 
-    onSubmit({ ...rest, state: state.value });
+    onSubmit({
+      ...rest,
+      state: state.value,
+      relationship:
+        relationship.value === "Other"
+          ? relationship_other
+          : relationship.value,
+    });
   };
 
   return (
@@ -80,7 +92,7 @@ export const AddContactForm = ({ onSubmit, onCancel }) => {
             <TextInput
               className="input"
               name={"address_2"}
-              register={register({ required: true })}
+              register={register({ required: false })}
               control={control}
               error={errors.address_2}
               label="Another Address"
@@ -116,6 +128,27 @@ export const AddContactForm = ({ onSubmit, onCancel }) => {
               label="Birthday"
               placeholder="Select birthday"
             />
+            <SelectInput
+              name={"relationship"}
+              register={{ required: false }}
+              control={control}
+              options={relationshipOptions}
+              error={errors.relationship}
+              label="Relationship"
+              placeholder="Relationship"
+            />
+            {relationship?.value === "Other" ? (
+              <TextInput
+                className="input"
+                name={"relationship_other"}
+                register={register({ required: false })}
+                control={control}
+                error={errors.relationship_other}
+                label="Relationship name"
+              />
+            ) : (
+              <div style={{ width: 275, height: 50 }} />
+            )}
             <Spacing m={{ r: "30px" }}>
               <Box d="flex">
                 <Button isDisabled={pending} type="submit" appearance="primary">
