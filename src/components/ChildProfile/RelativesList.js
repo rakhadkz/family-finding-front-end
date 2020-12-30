@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 import { Rectangle, Spacing, Title } from "../ui/atoms";
 import { RelativeItem } from "./RelativeItem";
 
-export const RelativesList = ({ relatives }) => {
+export const RelativesList = memo(({ relatives }) => {
   return (
     <Rectangle p="14px 26px 14px 26px">
       <Title size="14px">Relatives ({relatives?.length})</Title>
@@ -16,7 +16,7 @@ export const RelativesList = ({ relatives }) => {
       </Spacing>
     </Rectangle>
   );
-};
+});
 
 const RelativeListContainer = styled.div`
   display: flex;

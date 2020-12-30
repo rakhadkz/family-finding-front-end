@@ -1,9 +1,10 @@
 import Avatar from "@atlaskit/avatar";
-import React from "react";
+import moment from "moment";
+import React, { memo } from "react";
 import styled from "styled-components";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 
-export const ChildInformation = ({ child }) => {
+export const ChildInformation = memo(({ child }) => {
   return (
     <Rectangle>
       <Box d="flex" justify="space-between">
@@ -15,12 +16,12 @@ export const ChildInformation = ({ child }) => {
           />
           <Spacing m={{ l: "17px" }}>
             <StyledLabel>Full name</StyledLabel>
-            <Title size="18px">{`${child.first_name} ${child.last_name}`}</Title>
+            <Title size="18px">{child.first_name ? `${child.first_name} ${child.last_name}` : ""}</Title>
           </Spacing>
         </Box>
         <Spacing>
           <StyledLabel>Birth date</StyledLabel>
-          <Text>{child.birthday}</Text>
+          <Text>{moment(child.birthday).format('YYYY-MM-DD')}</Text>
         </Spacing>
         <Spacing>
           <StyledLabel>Gender</StyledLabel>
@@ -45,7 +46,7 @@ export const ChildInformation = ({ child }) => {
       </Box>
     </Rectangle>
   );
-};
+});
 
 const StyledLabel = styled(Label)`
   font-family: Helvetica;

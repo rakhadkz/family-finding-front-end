@@ -7,6 +7,8 @@ import {
   createContactRequest,
   createTableChildContactRequest
 } from "../../../../api/childContact";
+import { relationshipOptions } from "../../../../content/relationshipOptions.data";
+import { createChildContact } from "../../../../context/children/childProvider";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { ModalDialog } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
@@ -17,14 +19,62 @@ export const FamilyTreePage = (props) => {
   let { id } = useParams();
 
   const onAddContact = async (data) => {
-    createContactRequest(data)
+    await createContactRequest(data)
       .then((data) => {
         console.log("RESULT", data);
         createTableChildContactRequest({
           child_id: props.childId,
           contact_id: data.id,
         })
-          .then(() => {
+          .then(async () => {
+            if (data.relationship) {
+              const { parent } = relationshipOptions.find(
+                (item) => item.value === data.relationship
+              );
+              console.log("PARENT", parent);
+              if (
+                data.relationship === "Mother" ||
+                data.relationship === "Father"
+              ) {
+                await createChildContact({
+                  child_tree_contact: {
+                    child_id: props.childId,
+                    parent_id: 0,
+                    contact_id: data.id,
+                    relationship: data.relationship,
+                  },
+                });
+              } else if (parent) {
+                let parentNode = props.contacts.find((item) => {
+                  console.log(item);
+                  return item.Relationship === parent;
+                });
+                console.log("PARENT NODE", parentNode);
+
+                if (!parentNode) {
+                  if (parent === "Child") {
+                    parentNode = { id: 0 };
+                  } else {
+                    parentNode = await createChildContact({
+                      child_tree_contact: {
+                        child_id: props.childId,
+                        parent_id: 0,
+                        relationship: parent,
+                      },
+                    });
+                  }
+                }
+
+                await createChildContact({
+                  child_tree_contact: {
+                    child_id: props.childId,
+                    parent_id: parentNode.id,
+                    contact_id: data.id,
+                    relationship: data.relationship,
+                  },
+                });
+              }
+            }
             toast.success("User successfully created!", {
               position: "top-center",
               autoClose: 2000,
@@ -71,7 +121,11 @@ export const FamilyTreePage = (props) => {
         appearance={null}
         body={
           <AddContactForm
-            onSubmit={onAddContact}
+            onSubmit={async (data) => {
+              console.log("DATA", data);
+              await onAddContact(data).finally(props.refreshContacts);
+              console.log("FETCHING");
+            }}
             onCancel={() => setIsAddModalOpen(false)}
           />
         }

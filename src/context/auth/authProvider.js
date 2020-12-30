@@ -119,7 +119,7 @@ const signup = (user) => {
 };
 
 const fetchMe = () => {
-  return fetchMeRequest("extended").then(handleUserResponse).catch(logout);
+  return fetchMeRequest("extended").then(handleUserResponse).catch((e) => console.log("ERROR", e));
 };
 
 const fetchMeAsAdmin = (adminId) => {
@@ -127,7 +127,8 @@ const fetchMeAsAdmin = (adminId) => {
 };
 
 const logout = async () => {
-  window.localStorage.removeItem(localStorageKey);
+  await window.localStorage.removeItem(localStorageKey);
+  await window.localStorage.removeItem("role");
 };
 
 export {

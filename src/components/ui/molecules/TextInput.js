@@ -20,6 +20,7 @@ export const TextInput = (props) => {
     label = null,
     value,
     className,
+    ...rest
   } = props;
 
   return (
@@ -39,6 +40,7 @@ export const TextInput = (props) => {
         type={type || name}
         width={width}
         isCompact
+        {...rest}
       />
       {error && (
         <StyledTextError>

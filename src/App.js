@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Route, useLocation } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { initialRoutesByRoles } from "./content/initialRoutersByRoles.data";
@@ -41,8 +41,6 @@ import LoginPage from "./pages/Login";
 import { localStorageKey } from "./utils/requestHandler";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { isAuthorized } = useAuth();
-
   return (
     <Route
       {...rest}
@@ -58,9 +56,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 function App() {
-  const { isAuthorized, user } = useAuth();
-  let location = useLocation();
-
+  const { user } = useAuth();
   return (
     <>
       <PrivateRoute
