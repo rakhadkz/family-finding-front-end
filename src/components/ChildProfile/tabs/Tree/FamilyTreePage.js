@@ -126,7 +126,6 @@ export const FamilyTreePage = (props) => {
               await onAddContact(data).finally(props.refreshContacts);
               console.log("FETCHING");
             }}
-            initialValues={props.initialContacts[0].contact}
             onCancel={() => setIsAddModalOpen(false)}
           />
         }
