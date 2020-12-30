@@ -63,7 +63,7 @@ const Action = ({type, id, setRefresh, user_id, child_id}) => {
     await createActionItemRequest({
       "action_item": {
         "title": "Access granted",
-        "description": `Your request has been approved`,
+        "description": `You have been assigned to a child`,
         "child_id": child_id,
         "user_id": user_id,
         "action_type": "access_granted"
