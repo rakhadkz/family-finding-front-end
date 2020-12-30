@@ -8,7 +8,7 @@ import Screen from "@atlaskit/icon/glyph/screen";
 import SearchIcon from "@atlaskit/icon/glyph/search";
 import SettingsIcon from "@atlaskit/icon/glyph/settings";
 import Signout from "@atlaskit/icon/glyph/sign-out";
-import React from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/auth/authContext";
 import { GroupAccess } from "../../common";
@@ -84,7 +84,7 @@ const SIDEBAR_ITEMS = [
   },
 ];
 
-export const Sidebar = () => {
+const SidebarInner = () => {
   const { logout } = useAuth();
 
   return (
@@ -126,3 +126,5 @@ export const Sidebar = () => {
     </Box>
   );
 };
+
+export const Sidebar = memo(SidebarInner);

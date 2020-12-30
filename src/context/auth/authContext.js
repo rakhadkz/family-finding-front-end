@@ -32,7 +32,7 @@ export const AuthProvider = (props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const isAuthorized = () => {
     const token = auth.getToken();
-
+    console.log("TOKEN", token);
     if (token) {
       setSignedIn(true);
       return true;

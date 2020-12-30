@@ -8,6 +8,7 @@ import { deleteActionItem } from "../context/actionItems/actionItemProvider";
 import { approveChildUserRequest, denyChildUserRequest } from "../api/children";
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
+import { createActionItemRequest } from "../api/actionItems";
 
 const actionItemTableData = (data, setRefresh) => {
   console.log(data)
@@ -17,7 +18,7 @@ const actionItemTableData = (data, setRefresh) => {
       cells: [
         {
           key: "title",
-          content: title(item.action_type),
+          content: item.title,
         },
         {
           key: "description",
@@ -58,15 +59,35 @@ const Action = ({type, id, setRefresh, user_id, child_id}) => {
 
   const onApprove = async(id, user_id, child_id) => {
     await deleteActionItem(id);
-    await approveChildUserRequest(user_id, child_id).then(() => setRefresh(prev => !prev)).finally(() => setIsOpen(false));
+    await approveChildUserRequest(user_id, child_id);
+    await createActionItemRequest({
+      "action_item": {
+        "title": "Access granted",
+        "description": `Your request has been approved`,
+        "child_id": child_id,
+        "user_id": user_id,
+        "action_type": "access_granted"
+      }
+    }).then(() => setRefresh(prev => !prev)).finally(() => setIsOpen(false));
   }
 
   const onDeny = async (id, user_id, child_id) => {
     await deleteActionItem(id);
-    await denyChildUserRequest(user_id, child_id).then(() => setRefresh(prev => !prev)).finally(() => setIsOpen(false));
+    await denyChildUserRequest(user_id, child_id);
+    await createActionItemRequest({
+      "action_item": {
+        "title": "Access denied",
+        "description": `Your request has been denied`,
+        "child_id": child_id,
+        "user_id": user_id,
+        "action_type": "access_denied"
+      }
+    }).then(() => setRefresh(prev => !prev)).finally(() => setIsOpen(false));
   }
   switch(type) {
     case "mention":
+    case "access_granted":
+    case "access_denied":
       return (<>
           <LoadingButton
             isDisabled={false}
@@ -100,17 +121,6 @@ const Action = ({type, id, setRefresh, user_id, child_id}) => {
       )
     default:
       return <div></div>
-  }
-}
-
-const title = (type) => {
-  switch(type){
-    case "mention":
-      return "Comment mention"
-    case "access_request":
-      return "Access request"
-    default:
-      return "Action Item"
   }
 }
 
