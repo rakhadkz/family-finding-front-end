@@ -7,7 +7,7 @@ import MentionIcon from "@atlaskit/icon/glyph/mention";
 import MobileIcon from "@atlaskit/icon/glyph/mobile";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   ChildInformation,
@@ -22,6 +22,7 @@ import Select from "@atlaskit/select";
 import '@atlaskit/css-reset'
 import { createChildUserRequest, fetchChildrenRequest, fetchChildUsersRequest } from "../api/children";
 import { useAuth } from "../context/auth/authContext";
+import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
 
 export const ChildProfilePage = (props) => {
   const history = useHistory();
@@ -93,6 +94,8 @@ export const ChildProfilePage = (props) => {
     setIsOpen(true)
   }
 
+  const AssignedUser = memo(({data}) => <AvatarGroup appearance="stack" data={data} />)
+
   return (
     hasAccess ? 
     <SidebarTemplate sidebar={<Sidebar />}>
@@ -135,24 +138,13 @@ export const ChildProfilePage = (props) => {
               }
             />
           </Spacing>
-          <AvatarGroup appearance="stack" data={users.child_users || []} />
+          <AssignedUser data={users.child_users || []}/>
         </Box>
           </>
         )}
       </Box>
       <Spacing m={{ t: "28px" }}>
-        <Breadcrumbs>
-          <BreadcrumbsItem
-            iconBefore={
-              <Spacing m={{ r: "7px" }}>
-                <EmojiSymbolsIcon primaryColor="#2684FF" />
-              </Spacing>
-            }
-            onClick={() => history.push(`../${CHILDREN}`)}
-            text="Children"
-          />
-          <BreadcrumbsItem text={`${child.first_name} ${child.last_name}`} />
-        </Breadcrumbs>
+        <MyBreadcrumbs text1="Children" text2={`${child.first_name} ${child.last_name}`} path={`../${CHILDREN}`}/>
       </Spacing>
       <Spacing m={{ t: "22px" }}>
         <ChildInformation child={child} />
@@ -181,3 +173,4 @@ export const ChildProfilePage = (props) => {
     </SidebarTemplate> : "No Access"
   );
 };
+

@@ -3,7 +3,6 @@ import EmojiAddIcon from "@atlaskit/icon/glyph/emoji-add";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
-import { fetchMeRequest } from "../api/auth";
 import { createChildUserRequest } from "../api/children";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
@@ -25,7 +24,24 @@ export const ChildrenPage = (props) => {
   const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
   const [ search, setSearch ] = useState(query.get("search") || "");
   const { user } = useAuth();
+  const role = window.localStorage.getItem("role");
   const head = childrenTableColumns(user?.role === "user");
+
+  useEffect(() => {
+    console.log("USER", user);
+    history.push(updateQueryParams(currentPage, search));
+    setTablePending(true);
+    const timer = setTimeout(
+      () =>
+        fetchChildrenFunc(),
+      search?.length === 0 ? 0 : 1000
+    );
+    return () => clearTimeout(timer);
+  }, [currentPage, search]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   const assignUser = (child) => {
     user?.role === "user" 
@@ -61,26 +77,11 @@ export const ChildrenPage = (props) => {
       .then((response) => {
         if (response){
           setTotalPage(response.meta.num_pages);
-          setChildren(childTableData(response.data, history, assignUser, user?.role === "user"));
+          setChildren(childTableData(response.data, history, assignUser, role === "user"));
         }
       })
       .finally(() => setTablePending(false));
   }
-
-  useEffect(() => {
-    history.push(updateQueryParams(currentPage, search));
-    setTablePending(true);
-    const timer = setTimeout(
-      () =>
-        fetchChildrenFunc(),
-      search.length === 0 ? 0 : 1000
-    );
-    return () => clearTimeout(timer);
-  }, [currentPage, search]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search]);
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>

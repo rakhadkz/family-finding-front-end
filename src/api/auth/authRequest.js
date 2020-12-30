@@ -25,7 +25,7 @@ export const signupRequest = async (user) => {
   });
 };
 
-export const fetchMeRequest = async (view = "") => {
+export const fetchMeRequest = (view = "") => {
   return request({
     endpoint: "users/me?view=" + view,
     method: "GET",
