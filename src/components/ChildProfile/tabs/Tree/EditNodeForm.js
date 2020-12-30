@@ -3,32 +3,34 @@ import { FormSection } from "@atlaskit/form";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import { fetchContacts } from "../../../../context/children/childProvider";
+import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { Box, Form, Spacing } from "../../../ui/atoms";
 import { SelectInput, TextInput } from "../../../ui/molecules";
 
-export const EditNodeForm = () => {
+export const EditNodeForm = ({ initialContacts }) => {
   const history = useHistory();
-  const { register, handleSubmit, control, errors } = useForm();
+  const { register, handleSubmit, control, errors, watch } = useForm();
   const [contacts, setContacts] = useState([]);
+  const relationship = watch("relationship"); // you can supply default value as second argument
   const [pending, setPending] = useState(false);
 
   useEffect(() => {
-    fetchContacts().then((data) => {
-      const options = data?.map((item) => item && ({
+    console.log("initialContacts", initialContacts);
+    const options = initialContacts
+      .filter(({ contact }) => !!contact)
+      .map(({ contact: item }) => ({
         label: `${item?.first_name} ${item?.last_name}`,
         value: item.id,
       }));
-      setContacts(options);
-    });
-  }, []);
+    setContacts(options);
+  }, [initialContacts]);
 
   useEffect(() => {
     console.log(contacts);
   }, [contacts]);
 
   const onSubmitHandle = (data) => {
-    localStorage.setItem("selectValue", JSON.stringify(data.contact));
+    localStorage.setItem("selectValue", JSON.stringify({ ...data }));
   };
 
   return (
@@ -48,7 +50,7 @@ export const EditNodeForm = () => {
         }}
       >
         <Box d="flex">
-          Edit Contact Node
+          Edit
           <Button
             style={{ position: "absolute", right: 10 }}
             id="cancel"
@@ -66,15 +68,24 @@ export const EditNodeForm = () => {
             label="Contact"
             options={contacts}
           />
-          <TextInput
-            className="input"
+          <SelectInput
             name={"relationship"}
-            register={register({ required: true })}
+            id="relationship"
+            register={{ required: true }}
             control={control}
-            id="title"
-            error={errors.relationship}
             label="Relationship"
+            options={relationshipOptions}
           />
+          {relationship?.value === "Other" && (
+            <TextInput
+              className="input"
+              name={"relationship_other"}
+              register={register({ required: true })}
+              control={control}
+              error={errors.relationship_other}
+              label="Relationship name"
+            />
+          )}
           <Spacing m={{ t: "10px" }}>
             <Button
               isDisabled={pending}

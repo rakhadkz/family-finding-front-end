@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as auth from "./authProvider";
 
-const AuthContext = React.createContext();
+export const AuthContext = React.createContext();
 
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null);

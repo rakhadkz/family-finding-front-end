@@ -1,7 +1,12 @@
 import Tabs from "@atlaskit/tabs";
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import { constructTree } from "../../content/childContact.tree.data";
+import { childContactsTableData } from "../../content/childContacts.data";
+import { contactsTableColumns } from "../../content/columns.data";
 import { PotentialMatches } from "../Children/PotentialMatches";
+import { Spacing } from "../ui/atoms";
+import { Table } from "../ui/common/Table";
 import { CommentsTab } from "./CommentsTab";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
@@ -13,28 +18,46 @@ export const ChildTabs = (
     last_name: lastName,
     comments = [],
     contacts = [],
+    family_tree = [],
     attachments = [],
     refreshContacts,
   },
-  setChild,
+  setChild
 ) => {
-  console.log(firstName, lastName, contacts);
+  console.log(firstName, lastName, contacts,family_tree);
+
   const tabs = [
     {
       label: "Family Tree",
-      content: contacts.length && (
-        <FamilyTreePage
-          firstName={firstName}
-          lastName={lastName}
-          contacts={contacts}
-          refreshContacts={refreshContacts}
-        />
+      content: (
+        <div>
+          <FamilyTreePage
+            childId={id}
+            firstName={firstName}
+            lastName={lastName}
+            initialContacts={contacts}
+            contacts={constructTree({ contacts: family_tree, firstName, lastName })}
+            refreshContacts={refreshContacts}
+          />
+          <Spacing m={{ t: "20px" }}>
+            <Table
+              items={childContactsTableData(contacts)}
+              head={contactsTableColumns}
+            />
+          </Spacing>
+        </div>
       ),
     },
     { label: "Family Search" },
     {
       label: "Comments",
-      content: <CommentsTab childId={id} childComments={comments} setChild={setChild} />,
+      content: (
+        <CommentsTab
+          childId={id}
+          childComments={comments}
+          setChild={setChild}
+        />
+      ),
     },
     {
       label: "Attachments",
@@ -65,5 +88,7 @@ export const ChildTabs = (
     history.push(`#${tab.label.replace(/\s+/g, "-").toLowerCase()}`);
   };
 
-  return <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />;
+  return firstName && lastName ? (
+    <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />
+  ) : null;
 };
