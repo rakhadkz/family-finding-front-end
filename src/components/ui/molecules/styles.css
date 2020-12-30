@@ -1,0 +1,15 @@
+.editorContainer {
+  padding: 0em 1em 1em 1em;
+  margin: 1em;
+}
+
+.editors {
+  border: 1px transparent solid;
+  padding: 1.5em 2em 2.75em 2em;
+  font-size: 14px;
+  /* letter-spacing: 1.2px; */
+  border-radius: 6px;
+  text-align: left;
+  line-height: 1.5em;
+  color: black;
+}
