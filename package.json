@@ -40,6 +40,7 @@
     "react-date-picker": "^8.0.5",
     "react-dom": "^17.0.1",
     "react-draft-wysiwyg": "^1.14.5",
+    "react-dropzone-uploader": "^2.11.0",
     "react-hook-form": "^6.10.1",
     "react-input-trigger": "^1.1.2",
     "react-phone-number-input": "^3.1.5",

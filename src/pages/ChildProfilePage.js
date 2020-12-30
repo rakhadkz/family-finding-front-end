@@ -164,7 +164,7 @@ export const ChildProfilePage = (props) => {
         </Box>
       </Spacing>
       <Spacing m={{ t: "40px" }}>
-        {<ChildTabs {...child} refreshContacts={fetchChildProfile} />}
+        {<ChildTabs user={user} {...child} refreshContacts={fetchChildProfile} />}
       </Spacing>
     </SidebarTemplate> : "No Access"
   );
