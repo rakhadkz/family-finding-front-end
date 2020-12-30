@@ -21,6 +21,11 @@ export default function FilePicker({user_id, child_id}){
         secure_url, 
         format 
       } = await uploadRequest(f.file);
+      if (!public_id){
+        alert("Upload failed. Try again!");
+        setPending(false);
+        return;
+      }
       const { id } = await createAttachmentRequest({
         "attachment": {
           "file_name": original_filename,
@@ -48,7 +53,7 @@ export default function FilePicker({user_id, child_id}){
       <Dropzone
         onChangeStatus={handleChangeStatus}
         onSubmit={handleSubmit}
-        accept="image/*,audio/*,video/*,application/*"
+        accept="image/*,audio/*,video/*"
         submitButtonDisabled={pending}
       />
     </Spacing> 
