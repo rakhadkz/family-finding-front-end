@@ -3,32 +3,46 @@ import { FormSection } from "@atlaskit/form";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import { fetchContacts } from "../../../../context/children/childProvider";
 import { Box, Form, Spacing } from "../../../ui/atoms";
-import { SelectInput, TextInput } from "../../../ui/molecules";
+import { SelectInput } from "../../../ui/molecules";
 
-export const EditNodeForm = () => {
+const relationshipOptions = [
+  { label: "Mother", value: "Mother" },
+  { label: "Father", value: "Father" },
+  { label: "Maternal Grandfather", value: "Maternal Grandfather" },
+  { label: "Materal Granndmother", value: "Materal Granndmother" },
+  { label: "Paternal Grandfather", value: "Paternal Grandfather" },
+  { label: "Paternal Grandmother", value: "Paternal Grandmother" },
+  { label: "Maternal Aunt", value: "Maternal Aunt" },
+  { label: "Maternal Uncle", value: "Maternal Uncle" },
+  { label: "Paternal Aunt", value: "Paternal Aunt" },
+  { label: "Paternal Uncle", value: "Paternal Uncle" },
+  { label: "Other", value: "Other" },
+];
+
+export const EditNodeForm = ({ initialContacts }) => {
   const history = useHistory();
   const { register, handleSubmit, control, errors } = useForm();
   const [contacts, setContacts] = useState([]);
   const [pending, setPending] = useState(false);
 
   useEffect(() => {
-    fetchContacts().then((data) => {
-      const options = data?.map((item) => item && ({
+    console.log("initialContacts", initialContacts);
+    const options = initialContacts
+      .filter(({ contact }) => !!contact)
+      .map(({ contact: item }) => ({
         label: `${item?.first_name} ${item?.last_name}`,
         value: item.id,
       }));
-      setContacts(options);
-    });
-  }, []);
+    setContacts(options);
+  }, [initialContacts]);
 
   useEffect(() => {
     console.log(contacts);
   }, [contacts]);
 
   const onSubmitHandle = (data) => {
-    localStorage.setItem("selectValue", JSON.stringify(data.contact));
+    localStorage.setItem("selectValue", JSON.stringify({ ...data }));
   };
 
   return (
@@ -66,14 +80,13 @@ export const EditNodeForm = () => {
             label="Contact"
             options={contacts}
           />
-          <TextInput
-            className="input"
+          <SelectInput
             name={"relationship"}
-            register={register({ required: true })}
+            id="relationship"
+            register={{ required: true }}
             control={control}
-            id="title"
-            error={errors.relationship}
             label="Relationship"
+            options={relationshipOptions}
           />
           <Spacing m={{ t: "10px" }}>
             <Button

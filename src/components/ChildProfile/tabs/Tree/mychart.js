@@ -15,11 +15,8 @@ class Chart extends Component {
     this.divRef = React.createRef();
     this.state = {
       childId: props.childId,
+      chart: null,
     };
-  }
-
-  shouldComponentUpdate() {
-    return false;
   }
 
   componentDidMount() {
@@ -33,7 +30,7 @@ class Chart extends Component {
       this.obj = obj;
       this.editForm = document.getElementById("editForm");
       this.contactInput = document.getElementById("contact");
-      this.titleInput = document.getElementById("title");
+      this.titleInput = document.getElementById("relationship");
       this.cancelButton = document.getElementById("cancel");
       this.saveButton = document.getElementById("save");
 
@@ -43,14 +40,16 @@ class Chart extends Component {
 
       this.saveButton.addEventListener("click", function () {
         setTimeout(() => {
-          const contact = JSON.parse(localStorage.getItem("selectValue"));
+          const { contact, relationship } = JSON.parse(
+            localStorage.getItem("selectValue")
+          );
           var node = chart.get(that.nodeId);
           node.Name = contact.label;
-          node.Relationship = that.titleInput.value;
+          node.Relationship = relationship.value;
 
           updateChildContact(
             {
-              child_contact: {
+              child_tree_contact: {
                 contact_id: contact.value,
                 relationship: node.Relationship,
               },
@@ -72,7 +71,6 @@ class Chart extends Component {
       console.log("NODE ", node, this.contactInput);
       this.titleInput.value = node.Relationship;
       this.contactInput.defaultInputValue = node.Name;
-
     };
 
     editForm.prototype.hide = function (showldUpdateTheNode) {
@@ -141,16 +139,24 @@ class Chart extends Component {
     OrgChart.templates.yellow.nodeMenuButton =
       '<g style="cursor:pointer;" transform="matrix(1,0,0,1,170,13)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="2" fill="#ffffff"></circle><circle cx="0" cy="6" r="2" fill="#ffffff"></circle><circle cx="0" cy="12" r="2" fill="#ffffff"></circle></g>';
 
+    OrgChart.templates.myTemplate.exportMenuButton =
+      '<div style="position:absolute; cursor:pointer; right: 10px; top:10px; background-color:#0052CC; width: 65px; height:32px; display:flex;justify-content:center; align-items:center;border-radius:3px;" control-export-menu="">' +
+      '<span style="color:white">Export</span>' +
+      "</div>";
+     
+    
+
     const chart = new OrgChart(this.divRef.current, {
       nodes: this.props.nodes,
       editUI: new editForm(),
       template: "myTemplate",
       toolbar: {
-        layout: true,
-        zoom: true,
-        fit: true,
-        expandAll: true,
+        layout: false,
+        zoom: false,
+        fit: false,
+        expandAll: false,
       },
+      enableSearch: false,
       tags: {
         child: {
           template: "yellow",
@@ -195,7 +201,7 @@ class Chart extends Component {
       console.log(sender, oldNode, newNode);
       updateChildContact(
         {
-          child_contact: {
+          child_tree_contact: {
             relationship: newNode.Relationship,
             parent_id: newNode.pid,
           },
@@ -209,7 +215,7 @@ class Chart extends Component {
     chart.on("add", async function (sender, node) {
       console.log(sender, node, childId);
       await createChildContact({
-        child_contact: { child_id: childId, parent_id: node.pid },
+        child_tree_contact: { child_id: childId, parent_id: node.pid },
       });
       await refreshContacts();
     });
@@ -218,7 +224,7 @@ class Chart extends Component {
       console.log(nodeId, newIds);
       Object.keys(newIds.newPidsForIds).map((id) =>
         updateChildContact(
-          { child_contact: { parent_id: newIds.newPidsForIds[id] } },
+          { child_tree_contact: { parent_id: newIds.newPidsForIds[id] } },
           id
         )
       );
@@ -233,7 +239,7 @@ class Chart extends Component {
     return (
       <>
         <div id="tree" style={{ height: 400 }} ref={this.divRef}></div>
-        <EditNodeForm />
+        <EditNodeForm initialContacts={this.props.initialContacts} />
       </>
     );
   }
