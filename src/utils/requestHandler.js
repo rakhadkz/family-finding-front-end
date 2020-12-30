@@ -5,7 +5,7 @@ export const handleUserResponse = (user) => {
     window.localStorage.setItem(localStorageKey, user.token);
   }
   if (user?.id) {
-    window.localStorage.setItem("user", user.email);
+    window.localStorage.setItem("user", JSON.stringify(user));
   }
 
   window.localStorage.setItem("role", user?.role)

@@ -32,6 +32,7 @@
     "orgchart": "^2.1.10",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-dropzone-uploader": "^2.11.0",
     "react-hook-form": "^6.10.1",
     "react-input-trigger": "^1.1.2",
     "react-phone-number-input": "^3.1.5",

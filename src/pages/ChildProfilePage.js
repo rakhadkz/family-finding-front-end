@@ -1,14 +1,11 @@
 import AvatarGroup from "@atlaskit/avatar-group";
-import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import Button from "@atlaskit/button";
 import EmailIcon from "@atlaskit/icon/glyph/email";
-import EmojiSymbolsIcon from "@atlaskit/icon/glyph/emoji/symbols";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
 import MobileIcon from "@atlaskit/icon/glyph/mobile";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
 import React, { memo, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import {
   ChildInformation,
   ChildTabs,
@@ -25,7 +22,6 @@ import { useAuth } from "../context/auth/authContext";
 import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
 
 export const ChildProfilePage = (props) => {
-  const history = useHistory();
   const id = props.match.params.id;
   const { user } = useAuth();
   const [ child, setChild ] = useState({});
@@ -168,7 +164,7 @@ export const ChildProfilePage = (props) => {
         </Box>
       </Spacing>
       <Spacing m={{ t: "40px" }}>
-        {<ChildTabs {...child} refreshContacts={fetchChildProfile} />}
+        {<ChildTabs user={user} {...child} refreshContacts={fetchChildProfile} />}
       </Spacing>
     </SidebarTemplate> : "No Access"
   );

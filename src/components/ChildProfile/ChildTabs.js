@@ -14,7 +14,7 @@ export const ChildTabs = (
     comments = [],
     contacts = [],
     attachments = [],
-    refreshContacts
+    refreshContacts,
   },
   setChild,
 ) => {
@@ -38,7 +38,7 @@ export const ChildTabs = (
     },
     {
       label: "Attachments",
-      content: <AttachmentsPage attachments={attachments} />,
+      content: <AttachmentsPage child_id={id} attachments={attachments} />,
     },
     {
       label: "Potential Matches",
