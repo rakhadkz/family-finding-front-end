@@ -29,6 +29,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "dotenv": "^8.2.0",
+    "moment": "^2.29.1",
     "orgchart": "^2.1.10",
     "react": "^17.0.1",
     "react-date-picker": "^8.0.5",

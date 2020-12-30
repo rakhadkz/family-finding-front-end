@@ -1,4 +1,5 @@
 import Avatar from "@atlaskit/avatar";
+import moment from "moment";
 import React, { memo } from "react";
 import styled from "styled-components";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
@@ -20,7 +21,7 @@ export const ChildInformation = memo(({ child }) => {
         </Box>
         <Spacing>
           <StyledLabel>Birth date</StyledLabel>
-          <Text>{child.birthday}</Text>
+          <Text>{moment(child.birthday).format('YYYY-MM-DD')}</Text>
         </Spacing>
         <Spacing>
           <StyledLabel>Gender</StyledLabel>

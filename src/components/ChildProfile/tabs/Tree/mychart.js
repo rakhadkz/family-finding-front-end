@@ -40,12 +40,15 @@ class Chart extends Component {
 
       this.saveButton.addEventListener("click", function () {
         setTimeout(() => {
-          const { contact, relationship } = JSON.parse(
+          const { contact, relationship, relationship_other } = JSON.parse(
             localStorage.getItem("selectValue")
           );
           var node = chart.get(that.nodeId);
           node.Name = contact.label;
-          node.Relationship = relationship.value;
+          node.Relationship =
+            relationship.value === "Other"
+              ? relationship_other
+              : relationship.value;
 
           updateChildContact(
             {
@@ -143,13 +146,13 @@ class Chart extends Component {
       '<div style="position:absolute; cursor:pointer; right: 10px; top:10px; background-color:#0052CC; width: 65px; height:32px; display:flex;justify-content:center; align-items:center;border-radius:3px;" control-export-menu="">' +
       '<span style="color:white">Export</span>' +
       "</div>";
-     
-    
 
     const chart = new OrgChart(this.divRef.current, {
       nodes: this.props.nodes,
       editUI: new editForm(),
+      nodeMouseClick: OrgChart.action.none,
       template: "myTemplate",
+      assistantSeparation: 50,
       toolbar: {
         layout: false,
         zoom: false,
@@ -160,6 +163,11 @@ class Chart extends Component {
       tags: {
         child: {
           template: "yellow",
+          nodeMenu: {
+            add: {
+              text: "Add",
+            },
+          },
         },
         relatives: {
           template: "green",
@@ -167,7 +175,7 @@ class Chart extends Component {
       },
       nodeMenu: {
         edit: {
-          text: "Edit Contact Node",
+          text: "Edit",
         },
         add: {
           text: "Add",
@@ -213,10 +221,17 @@ class Chart extends Component {
     const { refreshContacts } = this.props;
 
     chart.on("add", async function (sender, node) {
-      console.log(sender, node, childId);
-      await createChildContact({
+      const res = await createChildContact({
         child_tree_contact: { child_id: childId, parent_id: node.pid },
       });
+      chart.addNode({
+        ...res,
+        pid: res.parent_id,
+        tags: ["relatives"],
+        Avatar:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT63VcFex7-_JFQOKCju4WMQHp3xHIxlBZUJA&usqp=CAU",
+      });
+      chart.removeNode(node.id);
       await refreshContacts();
     });
 
@@ -235,6 +250,11 @@ class Chart extends Component {
     this.chart = chart;
   }
 
+  componentDidUpdate(props){
+    if(this.props.nodes !== props.nodes) {
+      console.log("NODES UPDATED AHHAHAHAHAHAH",this.chart.draw );
+    }
+  }
   render() {
     return (
       <>

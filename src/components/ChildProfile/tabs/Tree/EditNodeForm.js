@@ -3,27 +3,15 @@ import { FormSection } from "@atlaskit/form";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { Box, Form, Spacing } from "../../../ui/atoms";
-import { SelectInput } from "../../../ui/molecules";
-
-const relationshipOptions = [
-  { label: "Mother", value: "Mother" },
-  { label: "Father", value: "Father" },
-  { label: "Maternal Grandfather", value: "Maternal Grandfather" },
-  { label: "Materal Granndmother", value: "Materal Granndmother" },
-  { label: "Paternal Grandfather", value: "Paternal Grandfather" },
-  { label: "Paternal Grandmother", value: "Paternal Grandmother" },
-  { label: "Maternal Aunt", value: "Maternal Aunt" },
-  { label: "Maternal Uncle", value: "Maternal Uncle" },
-  { label: "Paternal Aunt", value: "Paternal Aunt" },
-  { label: "Paternal Uncle", value: "Paternal Uncle" },
-  { label: "Other", value: "Other" },
-];
+import { SelectInput, TextInput } from "../../../ui/molecules";
 
 export const EditNodeForm = ({ initialContacts }) => {
   const history = useHistory();
-  const { register, handleSubmit, control, errors } = useForm();
+  const { register, handleSubmit, control, errors, watch } = useForm();
   const [contacts, setContacts] = useState([]);
+  const relationship = watch("relationship"); // you can supply default value as second argument
   const [pending, setPending] = useState(false);
 
   useEffect(() => {
@@ -62,7 +50,7 @@ export const EditNodeForm = ({ initialContacts }) => {
         }}
       >
         <Box d="flex">
-          Edit Contact Node
+          Edit
           <Button
             style={{ position: "absolute", right: 10 }}
             id="cancel"
@@ -88,6 +76,16 @@ export const EditNodeForm = ({ initialContacts }) => {
             label="Relationship"
             options={relationshipOptions}
           />
+          {relationship?.value === "Other" && (
+            <TextInput
+              className="input"
+              name={"relationship_other"}
+              register={register({ required: true })}
+              control={control}
+              error={errors.relationship_other}
+              label="Relationship name"
+            />
+          )}
           <Spacing m={{ t: "10px" }}>
             <Button
               isDisabled={pending}
