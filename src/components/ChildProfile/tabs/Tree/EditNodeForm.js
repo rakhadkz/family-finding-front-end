@@ -2,13 +2,11 @@ import Button from "@atlaskit/button";
 import { FormSection } from "@atlaskit/form";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
 import { fetchContacts } from "../../../../context/children/childProvider";
 import { Box, Form, Spacing } from "../../../ui/atoms";
 import { SelectInput, TextInput } from "../../../ui/molecules";
 
 export const EditNodeForm = () => {
-  const history = useHistory();
   const { register, handleSubmit, control, errors } = useForm();
   const [contacts, setContacts] = useState([]);
   const [pending, setPending] = useState(false);

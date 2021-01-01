@@ -8,7 +8,5 @@ export const handleUserResponse = (user) => {
     window.localStorage.setItem("user", JSON.stringify(user));
   }
 
-  window.localStorage.setItem("role", user?.role)
-
   return user;
 };

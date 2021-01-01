@@ -3,14 +3,13 @@ import { Form } from "../ui/atoms";
 import { MentionInput } from "../ui/molecules";
 import { useForm } from "react-hook-form";
 import { FormSection } from "@atlaskit/form";
-import { useAuth } from "../../context/auth/authContext";
 import { fetchUsersRequest } from "../../api/user";
+import { getLocalStorageUser } from "../../context/auth/authProvider";
 
 export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShouldUpdate, setShowInput}) => {
-  const { user } = useAuth();
-  const { register, handleSubmit, control, errors , reset, formState: { isSubmitSuccessful }} = useForm();
+  const user = getLocalStorageUser();
+  const { register, handleSubmit, control, reset, formState: { isSubmitSuccessful }} = useForm();
   const [mentions, setMentions] = useState();
-  const [selected, setSelected] = useState();
 
   useEffect(() => {
     user && fetchUsersRequest().then(response => setMentions(response.map(user => `${user.first_name} ${user.last_name}`)))
@@ -19,10 +18,10 @@ export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShou
   const getMentionedUsers = (text) => {
     let res = [];
     for(let i =0; i<text.length;i++){
-      if( text[i] == '@' && (i==0 || text[i-1]==' ') ){ // if find mentions
+      if( text[i] === '@' && (i === 0 || text[i-1] === ' ') ){ // if find mentions
         let j, s  = 0;
-        for(j=1;j+i<text.length && s!=1;j++){ // find last index of mention
-          if(text[i+j]==' ') s++;
+        for(j=1;j+i<text.length && s !== 1;j++){ // find last index of mention
+          if(text[i+j] === ' ') s++;
         }
         let name = text.slice(i+1,i+j-1);
         console.log(name);

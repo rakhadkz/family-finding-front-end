@@ -2,11 +2,10 @@ import Avatar from "@atlaskit/avatar";
 import Badge from "@atlaskit/badge";
 import React from "react";
 import styled from "styled-components";
-import { useAuth } from "../../../context/auth/authContext";
+import { getLocalStorageUser } from "../../../context/auth/authProvider";
 
 export const SidebarUser = () => {
-  const { user } = useAuth();
-
+  const user = getLocalStorageUser();
   return (
     <SidebarUserContainer>
       <Avatar appearance="circle" src={user?.avatar} size="large" />

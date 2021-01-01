@@ -7,10 +7,12 @@ import Button from "@atlaskit/button";
 import { ModalDialog } from "../../../ui/common";
 import { useState } from "react";
 import FilePicker from './FilePicker'
+import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 
 export const AttachmentsPage = ({ attachments, child_id }) => {
   const [ isOpen, setIsOpen ] = useState(false);
-  const { id } = JSON.parse(window.localStorage.getItem("user"))
+  const { id } = getLocalStorageUser();
+
   return (
     <div>
       <Spacing m={{ t: "23px" }}>

@@ -1,11 +1,9 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
 
 export const SettingsPage = () => {
-  const history = useHistory();
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
       <Title>Settings</Title>

@@ -11,7 +11,7 @@ import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { SidebarTemplate } from "../components/ui/templates";
 import { childTableData } from "../content/child.data";
 import { childrenTableColumns } from "../content/columns.data";
-import { useAuth } from "../context/auth/authContext";
+import { getLocalStorageUser } from "../context/auth/authProvider";
 import { fetchChildren } from "../context/children/childProvider";
 import { updateQueryParams } from "./OrganizationsPage";
 
@@ -23,12 +23,10 @@ export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
   const [ search, setSearch ] = useState(query.get("search") || "");
-  const { user } = useAuth();
-  const role = window.localStorage.getItem("role");
+  const user = getLocalStorageUser();
   const head = childrenTableColumns(user?.role === "user");
 
   useEffect(() => {
-    console.log("USER", user);
     history.push(updateQueryParams(currentPage, search));
     setTablePending(true);
     const timer = setTimeout(
@@ -77,7 +75,7 @@ export const ChildrenPage = (props) => {
       .then((response) => {
         if (response){
           setTotalPage(response.meta.num_pages);
-          setChildren(childTableData(response.data, history, assignUser, role === "user"));
+          setChildren(childTableData(response.data, history, assignUser, user.role === "user"));
         }
       })
       .finally(() => setTablePending(false));

@@ -48,8 +48,7 @@ export const ChildTabs = (
   const location = useLocation();
   const [current, setCurrent] = useState(0);
   let history = useHistory();
-  // use history.push('/some/path') here
-
+  
   useEffect(() => {
     if (location.hash.length > 0) {
       let label = location.hash.substr(1);

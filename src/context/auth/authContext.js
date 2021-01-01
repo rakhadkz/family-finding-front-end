@@ -27,7 +27,7 @@ export const AuthProvider = (props) => {
 
   useEffect(() => {
     if (isSignedIn) fetchMe();
-  }, [fetchMe, isSignedIn]);
+  }, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const isAuthorized = () => {

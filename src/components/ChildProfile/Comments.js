@@ -21,10 +21,10 @@ export const Comments = ({data, shouldUpdate, increaseShouldUpdate, id}) => {
     let comment = data.body;
     let ij = [];
     for(let i=0;i<comment.length;i++){ // iterate through comment body
-      if( comment[i] == '@' && (i==0 || comment[i-1]==' ') ){ // if find mentions
+      if( comment[i] === '@' && (i === 0 || comment[i-1] === ' ') ){ // if find mentions
         let j, s  = 0;
-        for(j=1;j+i<comment.length && s!=2;j++){ // find last index of mention
-          if(comment[i+j]==' ') s++;
+        for(j=1;j+i<comment.length && s !== 2;j++){ // find last index of mention
+          if(comment[i+j] === ' ') s++;
         }
         ij.push([i,i+j])
       }
@@ -40,7 +40,7 @@ export const Comments = ({data, shouldUpdate, increaseShouldUpdate, id}) => {
       comment = res;
     }
     setBody(comment)
-  },[])
+  }, [])
 
   return (
     <Spacing m={{t:"17px"}}>
