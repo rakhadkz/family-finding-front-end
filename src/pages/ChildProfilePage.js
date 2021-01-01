@@ -63,8 +63,7 @@ export const ChildProfilePage = (props) => {
   }
 
   const fetchChildProfile = () => {
-    setTimeout(() => {
-      fetchChildrenRequest({ id: id, view: "extended" })
+    fetchChildrenRequest({ id: id, view: "extended" })
       .then(
         (item) => {
           if (item){
@@ -74,7 +73,6 @@ export const ChildProfilePage = (props) => {
         }
       ).catch(() => setAccess(false))
       .finally(() => setPending(false));
-    }, 1000);
   };
 
   const onSubmitUsers = () => {
