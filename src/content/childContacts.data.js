@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const childContactsTableData = (data) =>
   data.map((item, index) => ({
     key: index,
@@ -10,11 +12,11 @@ const childContactsTableData = (data) =>
       },
       {
         key: "relationship",
-        content: item.relationship,
+        content: item?.contact?.relationship,
       },
       {
         key: "birth_date",
-        content: item.contact?.birthday,
+        content: moment(item.contact?.birthday).format('YYYY-MM-DD'),
       },
       {
         key: "address",
