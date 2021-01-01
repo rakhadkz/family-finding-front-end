@@ -15,14 +15,11 @@ export const Comments = ({data, shouldUpdate, increaseShouldUpdate, id, mentions
   useEffect( () => {
     let comment = data.body;
     let ij = [];
-    if(comment){ 
-      for(let i=0;i<comment.length;i++){ // iterate through comment body
-        if( comment[i] == '@' && (i==0 || comment[i-1]==' ') ){ // if find mentions
-          let j, s  = 0;
-          for(j=1;j+i<comment.length && s!=2;j++){ // find last index of mention
-            if(comment[i+j]==' ') s++;
-          }
-          ij.push([i,i+j])
+    for(let i=0;i<comment.length;i++){ // iterate through comment body
+      if( comment[i] === '@' && (i === 0 || comment[i-1] === ' ') ){ // if find mentions
+        let j, s  = 0;
+        for(j=1;j+i<comment.length && s !== 2;j++){ // find last index of mention
+          if(comment[i+j] === ' ') s++;
         }
       }
     } 
@@ -50,8 +47,8 @@ export const Comments = ({data, shouldUpdate, increaseShouldUpdate, id, mentions
     // comment = comment.join()
     console.log("THIS IS COMMENT",comment)
     setBody(comment)
-  },[])
-  console.log(body)
+  }, [])
+
   return (
     <Spacing m={{t:"17px"}}>
       <Box d="flex">

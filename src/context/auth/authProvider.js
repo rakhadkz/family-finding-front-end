@@ -128,8 +128,12 @@ const fetchMeAsAdmin = (adminId) => {
 
 const logout = async () => {
   await window.localStorage.removeItem(localStorageKey);
-  await window.localStorage.removeItem("role");
+  await window.localStorage.removeItem("user");
 };
+
+const getLocalStorageUser = () => {
+  return JSON.parse(window.localStorage.getItem("user"));
+}
 
 export {
   getToken,
@@ -140,4 +144,5 @@ export {
   newPassword,
   fetchMe,
   fetchMeAsAdmin,
+  getLocalStorageUser
 };

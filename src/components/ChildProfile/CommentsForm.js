@@ -3,8 +3,8 @@ import { Form, Box, StyledTextError} from "../ui/atoms";
 import { MentionInput, WysiwygEditor } from "../ui/molecules";
 import { useForm } from "react-hook-form";
 import { FormSection } from "@atlaskit/form";
-import { useAuth } from "../../context/auth/authContext";
 import { fetchUsersRequest } from "../../api/user";
+import { getLocalStorageUser } from "../../context/auth/authProvider";
 import Button from "@atlaskit/button";
 import ButtonGroup from '@atlaskit/button/button-group';
 import styled from "styled-components";
@@ -13,9 +13,8 @@ import { formErrors } from "../../helpers/formErrors";
 import draftToHtml from "draftjs-to-html";
 import { EditorState, RichUtils, convertToRaw } from 'draft-js';
 
-
 export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShouldUpdate, setShowInput, mentions}) => {
-  const { user } = useAuth();
+  const user = getLocalStorageUser();
   const { register, handleSubmit, control, errors , reset, formState: { isSubmitSuccessful }} = useForm({
     mode: "onChange"
   })
@@ -23,10 +22,10 @@ export const CommentsForm = ({ onSubmit, id, inReply, shouldUpdate, increaseShou
   const getMentionedUsers = (text) => {
     let res = [];
     for(let i =0; i<text.length;i++){
-      if( text[i] == '@' && (i==0 || text[i-1]==' ') ){ // if find mentions
+      if( text[i] === '@' && (i === 0 || text[i-1] === ' ') ){ // if find mentions
         let j, s  = 0;
-        for(j=1;j+i<text.length && s!=1;j++){ // find last index of mention
-          if(text[i+j]==' ') s++;
+        for(j=1;j+i<text.length && s !== 1;j++){ // find last index of mention
+          if(text[i+j] === ' ') s++;
         }
         let name = text.slice(i+1,i+j-1);
         console.log(name);

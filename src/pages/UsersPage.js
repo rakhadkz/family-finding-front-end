@@ -10,11 +10,9 @@ import { SidebarTemplate } from "../components/ui/templates";
 import { UserBreadcrumbs } from "../components/Users/UserBreadcrumbs";
 import { usersTableColumns } from "../content/columns.data";
 import { userTableData } from "../content/user.data";
-import { useAuth } from "../context/auth/authContext";
-import { reset } from "../context/auth/authProvider";
+import { getLocalStorageUser, reset } from "../context/auth/authProvider";
 import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
-import { updateQueryParams } from "./OrganizationsPage";
 
 const AllUsers = ({ history, search, setSearch }) => (
   <>
@@ -70,7 +68,7 @@ export const UsersPage = (props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [users, setUsers] = useState([]);
-  const { user } = useAuth();
+  const user = getLocalStorageUser();
   const [refresh, setRefresh] = useState(false);
   const [id, setId] = useState(props.match.params.id);
   const [currentUser, setCurrentUser] = useState(-1);

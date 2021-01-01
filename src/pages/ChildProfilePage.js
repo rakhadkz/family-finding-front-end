@@ -18,19 +18,23 @@ import { CHILDREN } from "../helpers";
 import Select from "@atlaskit/select";
 import '@atlaskit/css-reset'
 import { createChildUserRequest, fetchChildrenRequest, fetchChildUsersRequest } from "../api/children";
-import { useAuth } from "../context/auth/authContext";
 import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
+import { getLocalStorageUser } from "../context/auth/authProvider";
+import Spinner from '@atlaskit/spinner';
+import { useHistory } from "react-router-dom";
 
 export const ChildProfilePage = (props) => {
   const id = props.match.params.id;
-  const { user } = useAuth();
+  const user = getLocalStorageUser();
   const [ child, setChild ] = useState({});
   const [ users, setUsers ] = useState({})
   const [ isOpen, setIsOpen ] = useState(false);
   const [ assignedUsers, setAssignedUsers ] = useState(null);
   const [ validationState, setValidationState ] = useState("default");
   const [ buttonPending, setButtonPending ] = useState(false);
-  const [ hasAccess, setAccess ] = useState(true);
+  const [ hasAccess, setAccess ] = useState(false);
+  const [ pending, setPending ] = useState(true);
+  const history = useHistory();
 
   useEffect(() => {
     fetchChildProfile();
@@ -58,11 +62,17 @@ export const ChildProfilePage = (props) => {
     ));
   }
 
-  const fetchChildProfile = async () => {
-    await fetchChildrenRequest({ id: id, view: "extended" })
-    .then(
-      (item) => item && setChild(item)
-    ).catch(() => setAccess(false));
+  const fetchChildProfile = () => {
+    fetchChildrenRequest({ id: id, view: "extended" })
+      .then(
+        (item) => {
+          if (item){
+            setChild(item)
+            setAccess(true)
+          }
+        }
+      ).catch(() => setAccess(false))
+      .finally(() => setPending(false));
   };
 
   const onSubmitUsers = () => {
@@ -93,9 +103,16 @@ export const ChildProfilePage = (props) => {
   const AssignedUser = memo(({data}) => <AvatarGroup appearance="stack" data={data} />)
 
   return (
-    hasAccess ? 
     <SidebarTemplate sidebar={<Sidebar />}>
-      <Box d="flex" justify="space-between">
+      {pending ? (
+        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
+            <Spinner size="large"/>
+        </div>
+      ) : 
+      (
+        hasAccess ? 
+      (<>
+        <Box d="flex" justify="space-between">
         <Title>{`${child.first_name} ${child.last_name}`}</Title>
         {user?.role !== "user" && (
           <>
@@ -166,7 +183,16 @@ export const ChildProfilePage = (props) => {
       <Spacing m={{ t: "40px" }}>
         {<ChildTabs user={user} {...child} refreshContacts={fetchChildProfile} />}
       </Spacing>
-    </SidebarTemplate> : "No Access"
+      </> ) : 
+        (
+        <div style={{display: 'flex', flexDirection: "column", justifyContent:'center', alignItems:'center', height: '100vh'}}>
+          <h4 style={{ marginBottom: "10px"}}>You do not have an access</h4>
+            <Button onClick={() => history.goBack()}>Go back</Button>
+        </div>
+        )
+      )
+      }
+    </SidebarTemplate>
   );
 };
 
