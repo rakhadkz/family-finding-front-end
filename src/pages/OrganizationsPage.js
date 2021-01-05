@@ -82,7 +82,7 @@ export const OrganizationsPage = (props) => {
   }, [id, currentPage, search]);
 
   useEffect(() => {
-    setCurrentPage(1);
+    search.length > 0 && setCurrentPage(1);
   }, [search]);
 
   return (
