@@ -1,7 +1,7 @@
 import DynamicTable from "@atlaskit/dynamic-table";
-import { Spacing } from "../atoms";
-import { Pagination } from "./Pagination";
+import { Box } from "../atoms";
 import { TableWrapper } from "./TableWrapper";
+import Pagination from '@atlaskit/pagination';
 
 export const Table = ({
   totalPage = null,
@@ -14,13 +14,9 @@ export const Table = ({
   return (
     <div>
       {totalPage && (
-        <Spacing m={{ b: "6px" }}>
-          <Pagination
-            totalPage={totalPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
-        </Spacing>
+        <Box d="flex" justify="center" mb="6px">
+          <Pagination defaultSelectedIndex={currentPage - 1} pages={pagesArray(totalPage)} onChange={(e, page) => setCurrentPage(page)}/>
+        </Box>
       )}
       <TableWrapper>
         <DynamicTable
@@ -34,3 +30,11 @@ export const Table = ({
     </div>
   );
 };
+
+const pagesArray = (totalPage) => {
+  const pages = [];
+  for (var i = 1; i <= totalPage; ++i){
+    pages.push(i);
+  }
+  return pages;
+}
