@@ -1,6 +1,5 @@
 export * from "./DatepickerInput";
-export * from "./Rating";
+export * from "./FitScore";
 export * from "./SelectInput";
 export * from "./TextInput";
 export * from "./MentionInput";
-export * from "./WysiwygEditor";
