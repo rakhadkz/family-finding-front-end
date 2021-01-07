@@ -5,7 +5,7 @@ import { fetchChildrenRequest } from "../../api/children";
 import { constructTree } from "../../content/childContact.tree.data";
 import { childContactsTableData } from "../../content/childContacts.data";
 import { contactsTableColumns } from "../../content/columns.data";
-import { PotentialMatches } from "../Children/PotentialMatches";
+import { Connections } from "./tabs/Connections/Connections";
 import { Spacing } from "../ui/atoms";
 import { Table } from "../ui/common/Table";
 import { CommentsTab } from "./CommentsTab";
@@ -21,7 +21,6 @@ export const ChildTabs = (
   },
   setChild
 ) => {
-
   const [ contacts, setContacts ] = useState([]);
   const [ trigger, setTrigger ] = useState(false);
 
@@ -39,7 +38,11 @@ export const ChildTabs = (
             firstName={firstName}
             lastName={lastName}
             initialContacts={contacts}
-            contacts={constructTree({ contacts: family_tree, firstName, lastName })}
+            contacts={constructTree({
+              contacts: family_tree,
+              firstName,
+              lastName,
+            })}
             refreshContacts={setTrigger}
           />
           <Spacing m={{ t: "20px" }}>
@@ -66,14 +69,14 @@ export const ChildTabs = (
       content: <AttachmentsPage child_id={id} />,
     },
     {
-      label: "Potential Matches",
-      content: <PotentialMatches />,
+      label: "Connections",
+      content: <Connections contacts={contacts} childId={id} />,
     },
   ];
   const location = useLocation();
   const [current, setCurrent] = useState(0);
   let history = useHistory();
-  
+
   useEffect(() => {
     if (location.hash.length > 0) {
       let label = location.hash.substr(1);

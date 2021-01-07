@@ -1,28 +1,26 @@
-import React, { Component } from 'react';
-import { EditorState, RichUtils, convertToRaw } from 'draft-js';
-import Editor from 'draft-js-plugins-editor';
+import React, { Component } from "react";
+import { EditorState, RichUtils, convertToRaw } from "draft-js";
+import Editor from "draft-js-plugins-editor";
+import Toolbar from "./Toolbar";
 import addLinkPlugin from "./LinkPlugin";
-import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
-import mentionsStyles from './mentionsStyles.css';
-// import mentions from './mentions';
-import styled from 'styled-components';
-import './styles.css'
-import { AuthContext } from "../../../context/auth/authContext";
-import { fetchUsersRequest } from "../../../api/user";
-import Toolbar from './Toolbar'
+import createMentionPlugin, {
+  defaultSuggestionsFilter,
+} from "draft-js-mention-plugin";
 import draftToHtml from "draftjs-to-html";
-import {stateToHTML} from 'draft-js-export-html';
+import { stateToHTML } from "draft-js-export-html";
+import mentionsStyles from "./mentionsStyles.css";
+import styled from "styled-components";
 
 const positionSuggestions = ({ state, props }) => {
   let transform;
   let transition;
 
   if (state.isActive && props.suggestions.length > 0) {
-    transform = 'scaleY(1)';
-    transition = 'all 0.25s cubic-bezier(.3,1.2,.2,1)';
+    transform = "scaleY(1)";
+    transition = "all 0.25s cubic-bezier(.3,1.2,.2,1)";
   } else if (state.isActive) {
-    transform = 'scaleY(0)';
-    transition = 'all 0.25s cubic-bezier(.3,1,.2,1)';
+    transform = "scaleY(0)";
+    transition = "all 0.25s cubic-bezier(.3,1,.2,1)";
   }
 
   return {
@@ -44,20 +42,13 @@ const Entry = (props) => {
     <StyledEntry isFocused={isFocused}>
       <StyledEntryContainer>
         <StyledLeft>
-          <StyledAvatar
-            src={mention.avatar}
-            role="presentation"
-          />
+          <StyledAvatar src={mention.avatar} role="presentation" />
         </StyledLeft>
 
         <StyledRight>
-          <StyledText>
-            {mention.name}
-          </StyledText>
+          <StyledText>{mention.name}</StyledText>
 
-          <StyledTitle>
-            {mention.title}
-          </StyledTitle>
+          <StyledTitle>{mention.title}</StyledTitle>
         </StyledRight>
       </StyledEntryContainer>
     </StyledEntry>
@@ -70,11 +61,11 @@ export default class CustomMentionEditor extends Component {
 
     this.mentionPlugin = createMentionPlugin({
       mentions: props.mentions,
-      entityMutability: 'IMMUTABLE',
+      entityMutability: "IMMUTABLE",
       theme: mentionsStyles,
       positionSuggestions,
-      mentionPrefix: '@',
-      supportWhitespace: true
+      mentionPrefix: "@",
+      supportWhitespace: true,
     });
   }
 
@@ -89,8 +80,8 @@ export default class CustomMentionEditor extends Component {
     });
     this.props.onChange(
       stateToHTML(editorState.getCurrentContent()),
-      convertToRaw(editorState.getCurrentContent()),
-      )
+      convertToRaw(editorState.getCurrentContent())
+    );
   };
 
   onSearchChange = ({ value }) => {
@@ -115,7 +106,7 @@ export default class CustomMentionEditor extends Component {
     }
     const content = editorState.getCurrentContent();
     const contentWithEntity = content.createEntity("LINK", "MUTABLE", {
-      url: link
+      url: link,
     });
     const newEditorState = EditorState.push(
       editorState,
@@ -134,10 +125,10 @@ export default class CustomMentionEditor extends Component {
     );
     if (newState) {
       this.onChange(newState);
-      console.log("handled")
+      console.log("handled");
       return "handled";
     }
-    console.log("not-handled")
+    console.log("not-handled");
     return "not-handled";
   };
 
@@ -145,22 +136,24 @@ export default class CustomMentionEditor extends Component {
     const maxDepth = 4;
     this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
   }
-  onFontSizeClick = fontSize => {
-    console.log(fontSize)
-    this.onChange( RichUtils.toggleBlockType( this.state.editorState, 'header-three' ));
-  }
+  onFontSizeClick = (fontSize) => {
+    console.log(fontSize);
+    this.onChange(
+      RichUtils.toggleBlockType(this.state.editorState, "header-three")
+    );
+  };
 
   onOrderedPointsClick = () => {
     this.onChange(
-      RichUtils.toggleBlockType(this.state.editorState, 'ordered-list-item')
+      RichUtils.toggleBlockType(this.state.editorState, "ordered-list-item")
     );
-  }
+  };
 
   onBulletPointsClick = () => {
     this.onChange(
-      RichUtils.toggleBlockType(this.state.editorState, 'unordered-list-item')
+      RichUtils.toggleBlockType(this.state.editorState, "unordered-list-item")
     );
-  }
+  };
 
   onUnderlineClick = () => {
     this.onChange(
@@ -185,15 +178,13 @@ export default class CustomMentionEditor extends Component {
   };
 
   toggleBlockType(blockType) {
-    this.onChange(
-      RichUtils.toggleBlockType(this.state.editorState, blockType)
-    );
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
   }
 
-  onEditorStateChange = editorState => {
+  onEditorStateChange = (editorState) => {
     this.setState({
-      editorState
-    })
+      editorState,
+    });
 
     console.log("PROPS ==> ", this.props);
     return this.props.onChange(
@@ -205,18 +196,18 @@ export default class CustomMentionEditor extends Component {
     const { MentionSuggestions } = this.mentionPlugin;
     const plugins = [this.mentionPlugin, addLinkPlugin];
     const theme = this.mentionPlugin;
-    console.log(convertToRaw(this.state.editorState.getCurrentContent()))
+    console.log(convertToRaw(this.state.editorState.getCurrentContent()));
     const selection = this.state.editorState.getSelection();
     const blockType = this.state.editorState
-    .getCurrentContent()
-    .getBlockForKey(selection.getStartKey())
-    .getType();
+      .getCurrentContent()
+      .getBlockForKey(selection.getStartKey())
+      .getType();
     return (
-      <div className="editorContainer" >
-        <Toolbar 
+      <EditorContainer>
+        <Toolbar
           blockType={blockType}
-          onUnderlineClick={this.onUnderlineClick} 
-          onBoldClick={this.onBoldClick} 
+          onUnderlineClick={this.onUnderlineClick}
+          onBoldClick={this.onBoldClick}
           onItalicClick={this.onItalicClick}
           onStrikeThroughClick={this.onStrikeThroughClick}
           onAddLink={this.onAddLink}
@@ -224,18 +215,20 @@ export default class CustomMentionEditor extends Component {
           onOrderedPointsClick={this.onOrderedPointsClick}
           onFontSizeClick={this.onFontSizeClick}
           toggleBlockType={this.toggleBlockType}
-          />
-        <div className="editors" onClick={this.focus}>
+        />
+        <Editors onClick={this.focus}>
           <Editor
             editorState={this.state.editorState}
             // onEditorStateChange={this.onEditorStateChange}
             onChange={this.onChange}
             handleKeyCommand={this.handleKeyCommand}
             plugins={plugins}
-            ref={(element) => { this.editor = element; }}
+            ref={(element) => {
+              this.editor = element;
+            }}
             name="comment"
             control={this.props.control}
-            error={''}
+            error={""}
             reset={this.props.reset}
           />
           <MentionSuggestions
@@ -244,61 +237,62 @@ export default class CustomMentionEditor extends Component {
             entryComponent={Entry}
             className={theme.mentionSuggestions}
           />
-        </div>
-      </div>
+        </Editors>
+      </EditorContainer>
     );
   }
 }
 
-const StyledEditor = styled(Editor)`
-.editor {
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  cursor: text;
-  padding: 16px;
-  border-radius: 2px;
-  margin-bottom: 2em;
-  box-shadow: inset 0px 1px 8px -3px #ababab;
-  background: #fefefe;
-}
+const EditorContainer = styled.div`
+  padding: 0em 1em 1em 1em;
+  margin: 1em;
+`;
 
-.editor :global(.public-DraftEditor-content) {
-  min-height: 140px;
-}`
+const Editors = styled.div`
+  border: 1px transparent solid;
+  padding: 1.5em 2em 2.75em 2em;
+  font-size: 14px;
+  /* letter-spacing: 1.2px; */
+  border-radius: 6px;
+  text-align: left;
+  line-height: 1.5em;
+  color: black;
+`;
+
 const StyledEntry = styled.div`
   padding: 7px 10px 3px 10px;
   transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);
-  background-color: ${props => props.isFocused ? "#cce7ff" : ""};
-`
+  background-color: ${(props) => (props.isFocused ? "#cce7ff" : "")};
+`;
 const StyledText = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
+`;
 const StyledTitle = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 80%;
   color: #a7a7a7;
-`
+`;
 const StyledEntryContainer = styled.div`
   display: table;
   width: 100%;
-`
+`;
 const StyledRight = styled.div`
   display: table-cell;
   vertical-align: middle;
   width: 100%;
   padding-left: 8px;
-`
+`;
 const StyledLeft = styled.div`
   display: table-cell;
   vertical-align: middle;
-`
+`;
 const StyledAvatar = styled.img`
   display: block;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-`
+`;

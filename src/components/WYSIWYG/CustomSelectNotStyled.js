@@ -1,5 +1,5 @@
 import React from "react";
-import './select.css'
+import "./select.css";
 
 class CustomSelect extends React.Component {
   constructor(props) {
@@ -7,14 +7,14 @@ class CustomSelect extends React.Component {
     this.state = {
       defaultSelectText: "",
       showOptionList: false,
-      optionsList: []
+      optionsList: [],
     };
   }
 
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutside);
     this.setState({
-      defaultSelectText: this.props.defaultText
+      defaultSelectText: this.props.defaultText,
     });
   }
 
@@ -22,28 +22,28 @@ class CustomSelect extends React.Component {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
-  handleClickOutside = e => {
+  handleClickOutside = (e) => {
     if (
       !e.target.classList.contains("custom-select-option") &&
       !e.target.classList.contains("selected-text")
     ) {
       this.setState({
-        showOptionList: false
+        showOptionList: false,
       });
     }
   };
 
   handleListDisplay = () => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
-        showOptionList: !prevState.showOptionList
+        showOptionList: !prevState.showOptionList,
       };
     });
   };
 
-  handleOptionClick = e => {
+  handleOptionClick = (e) => {
     this.setState({
-      showOptionList: false
+      showOptionList: false,
     });
   };
 
@@ -51,7 +51,7 @@ class CustomSelect extends React.Component {
     const { optionsList } = this.props;
     const { showOptionList, defaultSelectText } = this.state;
     return (
-      <div className="custom-select-container" style={{width:'2em'}} >
+      <div className="custom-select-container" style={{ width: "2em" }}>
         <div
           className={showOptionList ? "selected-text active" : "selected-text"}
           onClick={this.handleListDisplay}
@@ -60,7 +60,7 @@ class CustomSelect extends React.Component {
         </div>
         {showOptionList && (
           <ul className="select-options">
-            {optionsList.map(option => {
+            {optionsList.map((option) => {
               return (
                 <li
                   className="custom-select-option"
