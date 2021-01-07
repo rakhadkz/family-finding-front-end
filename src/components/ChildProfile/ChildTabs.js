@@ -1,6 +1,7 @@
 import Tabs from "@atlaskit/tabs";
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import { fetchChildrenRequest } from "../../api/children";
 import { constructTree } from "../../content/childContact.tree.data";
 import { childContactsTableData } from "../../content/childContacts.data";
 import { contactsTableColumns } from "../../content/columns.data";
@@ -16,15 +17,17 @@ export const ChildTabs = (
     id,
     first_name: firstName,
     last_name: lastName,
-    comments = [],
-    contacts = [],
     family_tree = [],
-    attachments = [],
-    refreshContacts,
   },
   setChild
 ) => {
-  console.log(firstName, lastName, contacts,family_tree);
+
+  const [ contacts, setContacts ] = useState([]);
+    const [ trigger, setTrigger ] = useState(false);
+
+  useEffect(() => {
+    fetchChildrenRequest({id: id, view: "contacts"}).then((data) => setContacts(data.contacts))
+  }, [trigger])
 
   const tabs = [
     {
@@ -36,8 +39,9 @@ export const ChildTabs = (
             firstName={firstName}
             lastName={lastName}
             initialContacts={contacts}
+            setTrigger={setTrigger}
             contacts={constructTree({ contacts: family_tree, firstName, lastName })}
-            refreshContacts={refreshContacts}
+            refreshContacts={setTrigger}
           />
           <Spacing m={{ t: "20px" }}>
             <Table
@@ -54,14 +58,13 @@ export const ChildTabs = (
       content: (
         <CommentsTab
           childId={id}
-          childComments={comments}
           setChild={setChild}
         />
       ),
     },
     {
       label: "Attachments",
-      content: <AttachmentsPage child_id={id} attachments={attachments} />,
+      content: <AttachmentsPage child_id={id} />,
     },
     {
       label: "Potential Matches",

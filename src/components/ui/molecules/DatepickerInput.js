@@ -22,7 +22,7 @@ export const DatepickerInput = (props) => {
     <StyledBox w={`${width}px`} mr="35px">
       {label && <StyledLabel htmlFor={name}>{label}</StyledLabel>}
       <Controller
-        dateFormat={"YYYY-MM-DD"}
+        format={"dd/MM/yyyy"}
         control={control}
         ref={register}
         rules={register}
@@ -64,22 +64,6 @@ const StyledDatePicker = styled(DatePicker)`
   .react-date-picker__button__icon {
     stroke: #172B4D;
     color: #172B4D;
-  }
-  .react-calendar {
-    border-radius: 4px;
-    border-width: 2px;
-    width: 350px;
-    max-width: 100%;
-    background: white;
-    font: inherit;
-    line-height: 1.125em;
-    position: absolute;
-    left: -55px;
-    bottom: 40px;
-    margin-bottom: 40px;
-    bottom: 100% !important;
-    top: unset !important;
-    top: 40px;
   }
   background-color: transparent;
   min-height: 36px;

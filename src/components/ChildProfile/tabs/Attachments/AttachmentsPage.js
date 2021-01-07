@@ -5,14 +5,23 @@ import { Table } from "../../../ui/common/Table";
 import { attachmentsTableColumns } from "../../../../content/columns.data";
 import Button from "@atlaskit/button";
 import { ModalDialog } from "../../../ui/common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilePicker from './FilePicker'
 import { getLocalStorageUser } from "../../../../context/auth/authProvider";
+import { fetchChildrenRequest } from "../../../../api/children";
 
-export const AttachmentsPage = ({ attachments, child_id }) => {
+export const AttachmentsPage = ({ child_id }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const { id } = getLocalStorageUser();
-
+  const [ attachments, setAttachments ] = useState([]);
+  const [ trigger, setTrigger ] = useState(false);
+  const [ pending, setPending ] = useState(true);
+  useEffect(() => {
+    setPending(true)
+    fetchChildrenRequest({id: child_id, view: "attachments"})
+      .then(data => setAttachments(data.attachments))
+      .finally(() => setPending(false))
+  }, [trigger])
   return (
     <div>
       <Spacing m={{ t: "23px" }}>
@@ -31,8 +40,9 @@ export const AttachmentsPage = ({ attachments, child_id }) => {
       </Spacing>
       <Spacing m={{ t: "23px" }}>
         <Table
+          pending={pending}
           head={attachmentsTableColumns}
-          items={childAttachmentTableData(attachments)}
+          items={childAttachmentTableData(attachments, setTrigger)}
         />
       </Spacing>
     </div>

@@ -22,6 +22,7 @@ import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
 import { getLocalStorageUser } from "../context/auth/authProvider";
 import Spinner from '@atlaskit/spinner';
 import { useHistory } from "react-router-dom";
+import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
 
 export const ChildProfilePage = (props) => {
   const id = props.match.params.id;
@@ -38,7 +39,7 @@ export const ChildProfilePage = (props) => {
 
   useEffect(() => {
     fetchChildProfile();
-    fetchChildUsers();
+    (user.role === "admin" || user.role === "manager") && fetchChildUsers();
   }, []);
 
   const fetchChildUsers = async () => {
@@ -67,8 +68,8 @@ export const ChildProfilePage = (props) => {
       .then(
         (item) => {
           if (item){
+            (item.id) ? setAccess(true) : setAccess(false)
             setChild(item)
-            setAccess(true)
           }
         }
       ).catch(() => setAccess(false))
@@ -101,6 +102,30 @@ export const ChildProfilePage = (props) => {
   }
 
   const AssignedUser = memo(({data}) => <AvatarGroup appearance="stack" data={data} />)
+
+  const assignUser = () => {
+    user?.role === "user"
+    && createChildUserRequest({
+      "user_child": {
+        "users": [
+          {
+            "user_id": user.id,
+            "child_id": id
+          }
+        ]
+      }
+    })
+    && createActionItemRequest({
+      "action_item": {
+        "title": "User Assign",
+        "description": `${user.first_name} ${user.last_name} has requested access for ${child.first_name} ${child.last_name}`,
+        "child_id": id,
+        "organization_id": user.organization_id,
+        "related_user_id": user.id,
+        "action_type": "access_request"
+      }
+    }).then(() => history.goBack())
+  }
 
   return (
     <SidebarTemplate sidebar={<Sidebar />}>
@@ -181,13 +206,16 @@ export const ChildProfilePage = (props) => {
         </Box>
       </Spacing>
       <Spacing m={{ t: "40px" }}>
-        {<ChildTabs user={user} {...child} refreshContacts={fetchChildProfile} />}
+        {<ChildTabs user={user} {...child} />}
       </Spacing>
       </> ) : 
         (
         <div style={{display: 'flex', flexDirection: "column", justifyContent:'center', alignItems:'center', height: '100vh'}}>
-          <h4 style={{ marginBottom: "10px"}}>You do not have an access</h4>
-            <Button onClick={() => history.goBack()}>Go back</Button>
+          <h4 style={{ marginBottom: "10px"}}>You do not have access to view this child's profile</h4>
+            <Box>
+              <Button onClick={() => assignUser()} appearance="primary">Request access</Button>
+              <Button onClick={() => history.goBack()} appearance="subtle-link">Go back</Button>
+            </Box>
         </div>
         )
       )

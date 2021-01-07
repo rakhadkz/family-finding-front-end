@@ -147,6 +147,11 @@ export const attachmentsTableColumns = [
     content: "Date",
     width: 15,
   },
+  {
+    key: "action",
+    content: "Action",
+    width: 5,
+  },
 ];
 
 export const contactsTableColumns = [

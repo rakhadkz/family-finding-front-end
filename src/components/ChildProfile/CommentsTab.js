@@ -8,8 +8,8 @@ import { CommentsForm } from './CommentsForm';
 import { useAuth } from "../../context/auth/authContext";
 import { fetchUsersRequest } from "../../api/user";
 
-export const CommentsTab = ({ childId, childComments, setChild}) => {
-  const [comments, setComments] = useState(childComments);
+export const CommentsTab = ({ childId, setChild}) => {
+  const [comments, setComments] = useState([]);
   const [shouldUpdate, increaseShouldUpdate] = useState(0)
   const { user } = useAuth();
   const [mentions, setMentions] = useState();

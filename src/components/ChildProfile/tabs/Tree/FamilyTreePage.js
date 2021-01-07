@@ -85,7 +85,10 @@ export const FamilyTreePage = (props) => {
               progress: undefined,
             });
           })
-          .finally(() => setIsAddModalOpen(false));
+          .finally(() => {
+            setIsAddModalOpen(false)
+            props.setTrigger(prev => !prev)
+          });
       })
       .finally(() => setIsAddModalOpen(false));
   };
@@ -123,7 +126,7 @@ export const FamilyTreePage = (props) => {
           <AddContactForm
             onSubmit={async (data) => {
               console.log("DATA", data);
-              await onAddContact(data).finally(props.refreshContacts);
+              await onAddContact(data).finally(() => props.refreshContacts(prev => !prev));
               console.log("FETCHING");
             }}
             onCancel={() => setIsAddModalOpen(false)}

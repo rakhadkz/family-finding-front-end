@@ -5,34 +5,63 @@ import ExcelSpreadsheet24Icon from "@atlaskit/icon-file-type/glyph/excel-spreads
 import Image24Icon from '@atlaskit/icon-file-type/glyph/image/24';
 import Video24Icon from '@atlaskit/icon-file-type/glyph/video/24';
 import { Box } from "../components/ui/atoms";
+import Button from "@atlaskit/button";
+import CrossIcon from "@atlaskit/icon/glyph/cross";
+import { getLocalStorageUser } from "../context/auth/authProvider";
+import { removeAttachmentRequest, removeChildAttachmentRequest } from "../api/attachments/attachmentRequest";
 
-const childAttachmentTableData = (data) =>
-  data && data.map((item, index) => ({
-    key: index,
-    cells: [
-      {
-        key: "file_name",
-        content: (
-          <Box d="flex" align="center">
-            <AttachmentIcon type={item.file_type}/>
-            <a href={item.file_url} target="_blank" style={{ marginLeft: "16px" }}>{`${item.file_name}.${item.file_format || ''}`}</a>
-          </Box>
-        ),
-      },
-      {
-        key: "size",
-        content: humanFileSize(item.file_size),
-      },
-      {
-        key: "author",
-        content: `${item.user.first_name} ${item.user.last_name}`,
-      },
-      {
-        key: "date",
-        content: changeDate(item.created_at),
-      },
-    ],
-  }));
+const childAttachmentTableData = (data, setTrigger) => 
+  data && data.map((item, index) => {
+    const attachment = item.attachment
+    const author = attachment.user
+    return {
+      key: index,
+      cells: [
+        {
+          key: "file_name",
+          content: (
+            <Box d="flex" align="center">
+              <AttachmentIcon type={attachment.file_type}/>
+              <a href={attachment.file_url} target="_blank" style={{ marginLeft: "16px" }}>{`${attachment.file_name}.${attachment.file_format || ''}`}</a>
+            </Box>
+          ),
+        },
+        {
+          key: "size",
+          content: humanReadableFileSize(attachment.file_size),
+        },
+        {
+          key: "author",
+          content: `${author.first_name} ${author.last_name}`,
+        },
+        {
+          key: "date",
+          content: formatDate(item.created_at),
+        },
+        isRemovable(attachment.user_id) && {
+          key: "action",
+          content: (
+            <Button
+              onClick={async() => {
+                await removeAttachmentRequest(item.attachment_id)
+                await removeChildAttachmentRequest(item.id)
+                setTrigger(prev => !prev)
+              }}
+              height="32px"
+              width="32px"
+            >
+              <CrossIcon size="small" />
+            </Button>
+          ),
+        }
+      ],
+    }
+  });
+
+const isRemovable = (user_id) => {
+  const user = getLocalStorageUser()
+  return (user.id === user_id || user.role === "manager" || user.role === "admin")
+}
 
 const AttachmentIcon = ({type}) => {
   switch (type) {
@@ -51,13 +80,13 @@ const AttachmentIcon = ({type}) => {
   }
 };
 
-function changeDate(date){
+function formatDate(date){
   let currentDate = new Date(date);
   var fd = currentDate.toDateString();
   return fd;
 }
 
-function humanFileSize(bytes, si=true, dp=1) {
+function humanReadableFileSize(bytes, si=true, dp=1) {
   const thresh = si ? 1000 : 1024;
 
   if (Math.abs(bytes) < thresh) {

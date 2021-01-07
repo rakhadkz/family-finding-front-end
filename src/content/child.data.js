@@ -54,7 +54,7 @@ const childTableData = (data, history, assignUser, isUser = true) =>
                 : <Lozenge appearance="inprogress">Pending</Lozenge>
               )
           ) 
-          : <Button appearance="link" onClick={() => assignUser(item)}>Request</Button>}
+          : <Button appearance="link" onClick={() => assignUser(item)}>Request Access</Button>}
         </div>
       }
     ],

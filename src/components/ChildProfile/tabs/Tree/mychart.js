@@ -232,7 +232,7 @@ class Chart extends Component {
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT63VcFex7-_JFQOKCju4WMQHp3xHIxlBZUJA&usqp=CAU",
       });
       chart.removeNode(node.id);
-      await refreshContacts();
+      refreshContacts(prev => !prev);
     });
 
     chart.on("remove", function (sender, nodeId, newIds) {

@@ -42,7 +42,7 @@ export const ChildrenPage = (props) => {
   }, [search]);
 
   const assignUser = (child) => {
-    user?.role === "user" 
+    user?.role === "user"
     && createChildUserRequest({
       "user_child": {
         "users": [
@@ -56,7 +56,7 @@ export const ChildrenPage = (props) => {
     && createActionItemRequest({
       "action_item": {
         "title": "User Assign",
-        "description": `${user.first_name} ${user.last_name} sent a request to ${child.full_name}`,
+        "description": `${user.first_name} ${user.last_name} has requested access for ${child.full_name}`,
         "child_id": child.id,
         "organization_id": user.organization_id,
         "related_user_id": user.id,

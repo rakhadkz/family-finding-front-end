@@ -15,3 +15,17 @@ export const createChildAttachmentRequest = (data) => {
     method: "POST",
   });
 };
+
+export const removeChildAttachmentRequest = (childAttachmentId) => {
+  return request({
+    endpoint: "child_attachments/" + childAttachmentId,
+    method: "DELETE",
+  });
+}
+
+export const removeAttachmentRequest = (attachmentId) => {
+  return request({
+    endpoint: "attachments/" + attachmentId,
+    method: "DELETE",
+  });
+}
