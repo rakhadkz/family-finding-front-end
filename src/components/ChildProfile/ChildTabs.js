@@ -31,6 +31,10 @@ export const ChildTabs = (
 
   const tabs = [
     {
+      label: "Connections",
+      content: <Connections contacts={contacts} childId={id} />,
+    },
+    {
       label: "Family Tree",
       content: (
         <div>
@@ -68,10 +72,6 @@ export const ChildTabs = (
     {
       label: "Attachments",
       content: <AttachmentsPage child_id={id} />,
-    },
-    {
-      label: "Connections",
-      content: <Connections contacts={contacts} childId={id} />,
     },
   ];
   const location = useLocation();
