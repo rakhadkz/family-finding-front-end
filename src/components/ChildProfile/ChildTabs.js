@@ -92,11 +92,6 @@ export const ChildTabs = (
   };
 
   return firstName && lastName ? (
-    <Tabs
-      isContentPersisted
-      onSelect={selectTab}
-      selected={tabs[current]}
-      tabs={tabs}
-    />
+    <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />
   ) : null;
 };

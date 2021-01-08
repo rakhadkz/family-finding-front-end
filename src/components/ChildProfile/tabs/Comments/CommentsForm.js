@@ -29,9 +29,8 @@ export const CommentsForm = ({
     mode: "onChange",
   });
 
-  const history = useHistory();
   const [text, setText] = useState("");
-  const [styles, setStyles] = useState("");
+  const [htmlText, setHtmlText] = useState("");
   const [rawData, setRawData] = useState("");
 
   const onSubmitHandle = async () => {
@@ -41,7 +40,8 @@ export const CommentsForm = ({
         mentionedUsers.push(rawData.entityMap[key].data.mention.id);
       }
     }
-    // console.log(text);
+    // console.log("THIS IS TEXT", text);
+    // console.log("THIS IS RAWDATA", rawData);
     // console.log(mentionedUsers);
     // console.log({
     //   comment: {
@@ -54,6 +54,7 @@ export const CommentsForm = ({
 
     onSubmit({
       comment: {
+        html_body: htmlText,
         body: text,
         in_reply_to: inReply,
         child_id: id,
@@ -61,8 +62,6 @@ export const CommentsForm = ({
       },
     })
       .then((items) => {
-        // history.go(0);
-        // setValue("");
         setUpd(upd + 1);
         increaseShouldUpdate(shouldUpdate + 1);
       })
@@ -80,9 +79,10 @@ export const CommentsForm = ({
         <WysiwygEditor
           mentions={mentions}
           upd={upd}
-          onChange={(tex, raw) => {
+          onChange={(tex, raw, html) => {
             setText(tex);
             setRawData(raw);
+            setHtmlText(html);
           }}
         />
         <StyledButtonGroup>

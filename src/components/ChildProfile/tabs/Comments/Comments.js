@@ -19,7 +19,7 @@ export const Comments = ({
   const replyRef = useRef();
 
   useEffect(() => {
-    let comment = data.body;
+    let comment = data.html_body ? data.html_body : data.body;
     let ij = [];
     for (let i = 0; i < comment.length; i++) {
       // iterate through comment body
@@ -44,7 +44,7 @@ export const Comments = ({
         text-decoration:none;
         font:14px Helvetica;
         span:hover {text-decoration:underline;};
-      ">
+        ">
           ${comment.substring(ij[i][0], ij[i][1])}
         </span>`);
         // res.push(<MentionedUser>{comment.substring(ij[i][0], ij[i][1])}</MentionedUser>);
