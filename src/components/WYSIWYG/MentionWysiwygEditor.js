@@ -75,8 +75,11 @@ const MentionWysiwygEditor = (props) => {
   const onChange = (editorState) => {
     setEditorState(editorState);
     props.onChange(
-      stateToHTML(editorState.getCurrentContent()),
       convertToRaw(editorState.getCurrentContent())
+        .blocks.map((block) => (!block.text.trim() && "\n") || block.text)
+        .join("\n"),
+      convertToRaw(editorState.getCurrentContent()),
+      stateToHTML(editorState.getCurrentContent())
     );
   };
 
@@ -172,7 +175,11 @@ const MentionWysiwygEditor = (props) => {
   const { MentionSuggestions } = mentionPlugin;
   const plugins = [mentionPlugin, addLinkPlugin];
   const theme = mentionPlugin;
-  console.log(convertToRaw(editorState.getCurrentContent()));
+  console.log(
+    convertToRaw(editorState.getCurrentContent())
+      .blocks.map((block) => (!block.text.trim() && "\n") || block.text)
+      .join("\n")
+  );
   const selection = editorState.getSelection();
   const blockType = editorState
     .getCurrentContent()
