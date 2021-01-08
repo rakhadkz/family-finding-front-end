@@ -1,5 +1,5 @@
 import React from "react";
-import styled from 'styled-components'
+import styled from "styled-components";
 
 class CustomSelect extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ class CustomSelect extends React.Component {
     this.state = {
       defaultSelectText: "",
       showOptionList: false,
-      optionsList: []
+      optionsList: [],
     };
   }
 
@@ -20,7 +20,7 @@ class CustomSelect extends React.Component {
     // the Custom Select Container
     document.addEventListener("mousedown", this.handleClickOutside);
     this.setState({
-      defaultSelectText: this.props.defaultText
+      defaultSelectText: this.props.defaultText,
     });
   }
 
@@ -31,34 +31,34 @@ class CustomSelect extends React.Component {
 
   // This method handles the click that happens outside the
   // select text and list area
-  handleClickOutside = e => {
+  handleClickOutside = (e) => {
     if (
       !e.target.classList.contains("custom-select-option") &&
       !e.target.classList.contains("selected-text")
     ) {
       this.setState({
-        showOptionList: false
+        showOptionList: false,
       });
     }
   };
 
   // This method handles the display of option list
   handleListDisplay = () => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
-        showOptionList: !prevState.showOptionList
+        showOptionList: !prevState.showOptionList,
       };
     });
   };
 
   // This method handles the setting of name in select text area
   // and list display on selection
-  handleOptionClick = e => {
+  handleOptionClick = (e) => {
     this.setState({
       defaultSelectText: e.target.getAttribute("data-name"),
-      showOptionList: false
+      showOptionList: false,
     });
-    this.props.onChange(e.target.getAttribute("data-name"))
+    this.props.onChange(e.target.getAttribute("data-name"));
   };
 
   render() {
@@ -66,7 +66,7 @@ class CustomSelect extends React.Component {
     const { showOptionList, defaultSelectText } = this.state;
     return (
       <Container>
-        <SelectedText 
+        <SelectedText
           showOptionList={showOptionList}
           // className={showOptionList ? "selected-text active" : "selected-text"}
           onClick={this.handleListDisplay}
@@ -75,7 +75,7 @@ class CustomSelect extends React.Component {
         </SelectedText>
         {showOptionList && (
           <StyledList>
-            {optionsList.map(option => {
+            {optionsList.map((option) => {
               return (
                 <ListItem
                   data-name={option.name}
@@ -95,15 +95,17 @@ class CustomSelect extends React.Component {
 
 export default CustomSelect;
 
-
 const SelectedText = styled.div`
   background-color: #47eded;
   padding: 6px 20px;
   border-bottom: 1px solid #37b0b0;
-  ${props => props.showOptionList ? `&:after {
+  ${(props) =>
+    props.showOptionList
+      ? `&:after {
     top: 8px;
     border-color: transparent transparent #fff transparent;
-  }` : ""}
+  }`
+      : ""}
   &:after {
     content: "";
     position: absolute;
@@ -112,7 +114,7 @@ const SelectedText = styled.div`
     border: 7px solid transparent;
     border-color: #fff transparent transparent transparent;
   }
-`
+`;
 // .title {
 //   text-align: center;
 // }
@@ -121,25 +123,22 @@ const Container = styled.div`
   min-width: 250px;
   text-align: center;
   position: relative;
-`
+`;
 const ListItem = styled.li`
-list-style-type: none;
-padding: 6px 20px;
-background: #47eded;
-border-bottom: 1px solid #37b0b0;
-cursor: pointer;
-&:hover {
-  background-color: #32a6a6;
-  color: #ffffff;
-}
-`
+  list-style-type: none;
+  padding: 6px 20px;
+  background: #47eded;
+  border-bottom: 1px solid #37b0b0;
+  cursor: pointer;
+  &:hover {
+    background-color: #32a6a6;
+    color: #ffffff;
+  }
+`;
 const StyledList = styled.ul`
   margin: 0;
   padding: 0;
   text-align: center;
   position: absolute;
   width: 100%;
-`
-
-
-
+`;

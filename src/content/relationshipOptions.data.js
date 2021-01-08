@@ -7,8 +7,8 @@ export const relationshipOptions = [
     parent: "Mother",
   },
   {
-    label: "Maternal Granndmother",
-    value: "Maternal Granndmother",
+    label: "Maternal Grandmother",
+    value: "Maternal Grandmother",
     parent: "Mother",
   },
   {

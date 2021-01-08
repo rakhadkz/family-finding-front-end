@@ -4,10 +4,10 @@ import { useHistory, useLocation } from "react-router-dom";
 import { constructTree } from "../../content/childContact.tree.data";
 import { childContactsTableData } from "../../content/childContacts.data";
 import { contactsTableColumns } from "../../content/columns.data";
-import { PotentialMatches } from "../Children/PotentialMatches";
+import { Connections } from "./tabs/Connections/Connections";
 import { Spacing } from "../ui/atoms";
 import { Table } from "../ui/common/Table";
-import { CommentsTab } from "./CommentsTab";
+import { CommentsTab } from "./tabs/Comments/CommentsTab";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
@@ -24,7 +24,7 @@ export const ChildTabs = (
   },
   setChild
 ) => {
-  console.log(firstName, lastName, contacts,family_tree);
+  console.log(firstName, lastName, contacts, family_tree);
 
   const tabs = [
     {
@@ -36,7 +36,11 @@ export const ChildTabs = (
             firstName={firstName}
             lastName={lastName}
             initialContacts={contacts}
-            contacts={constructTree({ contacts: family_tree, firstName, lastName })}
+            contacts={constructTree({
+              contacts: family_tree,
+              firstName,
+              lastName,
+            })}
             refreshContacts={refreshContacts}
           />
           <Spacing m={{ t: "20px" }}>
@@ -64,14 +68,14 @@ export const ChildTabs = (
       content: <AttachmentsPage child_id={id} attachments={attachments} />,
     },
     {
-      label: "Potential Matches",
-      content: <PotentialMatches />,
+      label: "Connections",
+      content: <Connections contacts={contacts} childId={id} />,
     },
   ];
   const location = useLocation();
   const [current, setCurrent] = useState(0);
   let history = useHistory();
-  
+
   useEffect(() => {
     if (location.hash.length > 0) {
       let label = location.hash.substr(1);
@@ -88,6 +92,11 @@ export const ChildTabs = (
   };
 
   return firstName && lastName ? (
-    <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />
+    <Tabs
+      isContentPersisted
+      onSelect={selectTab}
+      selected={tabs[current]}
+      tabs={tabs}
+    />
   ) : null;
 };
