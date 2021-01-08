@@ -6,6 +6,7 @@ export const AuthContext = React.createContext();
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
   const [isSignedIn, setSignedIn] = useState(true);
+  const [organization, setOrganization] = useState();
 
   useEffect(() => {
     isAuthorized();
@@ -21,13 +22,32 @@ export const AuthProvider = (props) => {
 
   const fetchMe = React.useCallback(
     () =>
-      auth.fetchMe().then((user) => user && setUser(user)),
+      auth
+        .fetchMe()
+        .then(
+          (user) =>
+            user &&
+            setUser({
+              ...user,
+              role: user?.user_organizations[0]?.role || user.role,
+            })
+        ),
     []
   );
 
   useEffect(() => {
     if (isSignedIn) fetchMe();
   }, []);
+
+  useEffect(() => {
+    if (organization) {
+      setUser({
+        ...user,
+        role: organization.role,
+        activeOrganization: organization,
+      });
+    }
+  }, [organization]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const isAuthorized = () => {
@@ -71,6 +91,8 @@ export const AuthProvider = (props) => {
       newPassword,
       fetchMe,
       setUser,
+      organization,
+      setOrganization,
     }),
     [
       user,

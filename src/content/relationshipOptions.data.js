@@ -34,3 +34,5 @@ export const sideRelatives = [
   "Paternal Aunt",
   "Paternal Uncle",
 ];
+
+export const parents = ["Mother", "Father"];
