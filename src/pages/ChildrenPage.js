@@ -43,6 +43,7 @@ export const ChildrenPage = (props) => {
 
   const assignUser = async(child, isRepeatedly = false) => {
     if (user?.role === "user"){
+      setTablePending(true)
       isRepeatedly ? await updateChildUserRequest({
         "user_child": {
           "user_id": user.id,
