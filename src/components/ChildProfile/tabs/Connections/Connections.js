@@ -9,12 +9,15 @@ import { toast } from "react-toastify";
 import {
   createContactRequest,
   createTableChildContactRequest,
+  updateChildContactRequestConnections,
 } from "../../../../api/childContact";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
-import { Box, Spacing, Title } from "../../../ui/atoms";
+import { Box, Spacing, Title, Form } from "../../../ui/atoms";
 import { ModalDialog } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
+import { useForm } from "react-hook-form";
+import { FormSection } from "@atlaskit/form";
 
 const columns = [
   {
@@ -50,9 +53,35 @@ const columns = [
 ];
 
 export const Connections = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { contacts } = props;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   let { id } = useParams();
+  const {
+    register,
+    handleSubmit,
+    control,
+    errors,
+    reset,
+    formState: { isSubmitSuccessful },
+  } = useForm({});
+
+  // const onSubmitHandle = async () => {
+  //   setIsLoading(true);
+  //   updateChildContactRequestConnections(
+  //     {
+  //       child_contact: {
+  //         potential_match: true,
+  //         family_fit_score: 3,
+  //       },
+  //     }
+  //     // item.id
+  //   )
+  //     .then((items) => {})
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // };
 
   const onAddContact = async (data) => {
     await createContactRequest(data)
@@ -125,13 +154,14 @@ export const Connections = (props) => {
       })
       .finally(() => setIsAddModalOpen(false));
   };
+
   return (
     <Spacing m={{ t: "25px" }}>
       <Spacing m={{ b: "20px" }}>
         <Box d="flex" justify="space-between">
           <Title size={"16px"}>Connections List</Title>
           <Button appearance="warning" onClick={() => setIsAddModalOpen(true)}>
-            Add Connections
+            Add Connection
           </Button>
         </Box>
       </Spacing>
@@ -152,15 +182,22 @@ export const Connections = (props) => {
         }
         hasActions={false}
       />
-      <TableWrapper>
-        <DynamicTable
-          head={{ cells: columns }}
-          loadingSpinnerSize="large"
-          isLoading={false}
-          rows={connectionsTableData(contacts)}
-          isFixedSize
-        />
-      </TableWrapper>
+
+      <Form w="100%" onSubmit={() => {}} noValidate>
+        <FormSection>
+          <TableWrapper>
+            <DynamicTable
+              control={control}
+              register={register}
+              head={{ cells: columns }}
+              loadingSpinnerSize="large"
+              isLoading={isLoading}
+              rows={connectionsTableData(contacts, setIsLoading)}
+              isFixedSize
+            />
+          </TableWrapper>
+        </FormSection>
+      </Form>
     </Spacing>
   );
 };
