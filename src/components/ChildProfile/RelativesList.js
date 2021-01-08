@@ -5,8 +5,9 @@ import { Rectangle, Spacing, Title } from "../ui/atoms";
 import { RelativeItem } from "./RelativeItem";
 
 export const RelativesList = memo(({ relatives }) => {
-  const childParents = relatives.filter(({ contact }) =>
-    parents.includes(contact.relationship)
+  const childParents = relatives.filter(
+    ({ contact }) =>
+      contact?.relationship && parents.includes(contact.relationship)
   );
 
   return (
