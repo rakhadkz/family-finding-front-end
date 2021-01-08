@@ -107,17 +107,17 @@ export const actionItemsTableColumns = [
   {
     key: "title",
     content: "Title",
-    width: 20,
+    width: 15,
   },
   {
     key: "description",
     content: "Description",
-    width: 30,
+    width: 25,
   },
   {
     key: "child",
     content: "Associated Child Case",
-    width: 18,
+    width: 15,
   },
   {
     key: "resolve",
