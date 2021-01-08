@@ -24,7 +24,7 @@ export const ActionItemsPage = (props) => {
         if(response) {
           const items = response.data;
           setTotalPage(response.meta?.num_pages);
-          setItems(actionItemTableData(items, setRefresh));
+          setItems(actionItemTableData(items, setRefresh, setTablePending));
         }
       })
       .finally(() => setTablePending(false));

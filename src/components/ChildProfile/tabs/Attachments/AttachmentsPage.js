@@ -14,7 +14,7 @@ export const AttachmentsPage = ({ child_id }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const { id } = getLocalStorageUser();
   const [ attachments, setAttachments ] = useState([]);
-  const [ trigger, setTrigger ] = useState(false);
+  const [ trigger, setTrigger ] = useState(true);
   const [ pending, setPending ] = useState(true);
   useEffect(() => {
     setPending(true)
@@ -34,7 +34,7 @@ export const AttachmentsPage = ({ child_id }) => {
               setIsOpen={setIsOpen}
               width="small"
               hasActions={false}
-              body={<FilePicker user_id={id} child_id={child_id}/>}
+              body={<FilePicker user_id={id} child_id={child_id} setIsOpen={setIsOpen} setTrigger={setTrigger}/>}
             />
         </Box>
       </Spacing>
@@ -42,7 +42,7 @@ export const AttachmentsPage = ({ child_id }) => {
         <Table
           pending={pending}
           head={attachmentsTableColumns}
-          items={childAttachmentTableData(attachments, setTrigger)}
+          items={childAttachmentTableData(attachments, setTrigger, setPending)}
         />
       </Spacing>
     </div>

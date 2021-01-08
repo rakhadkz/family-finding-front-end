@@ -15,7 +15,7 @@ export const Table = ({
     <div>
       {totalPage && (
         <Box d="flex" justify="center" mb="6px">
-          <Pagination defaultSelectedIndex={currentPage - 1} pages={pagesArray(totalPage)} onChange={(e, page) => setCurrentPage(page)}/>
+          <Pagination selectedIndex={currentPage - 1} pages={pagesArray(totalPage)} onChange={(e, page) => setCurrentPage(page)}/>
         </Box>
       )}
       <TableWrapper>

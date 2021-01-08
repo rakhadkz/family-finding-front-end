@@ -6,7 +6,7 @@ import { createAttachmentRequest, createChildAttachmentRequest } from '../../../
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-export default function FilePicker({user_id, child_id}){
+export default function FilePicker({ user_id, child_id, setIsOpen, setTrigger }){
   const handleChangeStatus = ({ meta, file }, status) => { console.log(status, meta, file) }
   const history = useHistory();
   const [ pending, setPending ] = useState(false);
@@ -44,7 +44,8 @@ export default function FilePicker({user_id, child_id}){
         }
       });
       setPending(false);
-      history.go(0);
+      setIsOpen(false);
+      setTrigger(prev => !prev);
     })
   }
 
@@ -53,7 +54,7 @@ export default function FilePicker({user_id, child_id}){
       <Dropzone
         onChangeStatus={handleChangeStatus}
         onSubmit={handleSubmit}
-        accept="image/*,audio/*,video/*"
+        accept="image/*,audio/*,video/*,application/*"
         submitButtonDisabled={pending}
       />
     </Spacing> 

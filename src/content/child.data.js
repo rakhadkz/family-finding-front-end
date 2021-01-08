@@ -50,7 +50,7 @@ const childTableData = (data, history, assignUser, isUser = true) =>
           (item.user_request.date_approved ? 
             <Lozenge appearance="success">Approved</Lozenge> 
             : (item.user_request.date_denied ? 
-              <Lozenge appearance="removed">Denied</Lozenge> 
+              <Button appearance="link" onClick={() => assignUser(item, true)}>Request Access</Button>
                 : <Lozenge appearance="inprogress">Pending</Lozenge>
               )
           ) 

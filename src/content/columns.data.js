@@ -84,22 +84,22 @@ export const childrenTableColumns = (isUser = true) => [
   {
     key: "days_in_system",
     content: <p align="center">Days in system</p>,
-    width: 12,
+    width: isUser ? 10 : 13,
   },
   {
     key: "relatives",
     content: <p align="center">Relatives</p>,
-    width: 12,
+    width: isUser ? 10 : 13,
   },
   {
     key: "matches",
     content: <p align="center">Matches</p>,
-    width: 12,
+    width: isUser ? 10 : 13,
   },
   isUser && {
     key: "status",
     content: <p align="center">Status</p>,
-    width: 10,
+    width: 16,
   }
 ]
 
