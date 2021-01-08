@@ -87,7 +87,7 @@ export const FamilyTreePage = (props) => {
           })
           .finally(() => {
             setIsAddModalOpen(false)
-            props.setTrigger(prev => !prev)
+            props.refreshContacts(prev => !prev)
           });
       })
       .finally(() => setIsAddModalOpen(false));

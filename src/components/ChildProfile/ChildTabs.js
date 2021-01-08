@@ -23,7 +23,7 @@ export const ChildTabs = (
 ) => {
 
   const [ contacts, setContacts ] = useState([]);
-    const [ trigger, setTrigger ] = useState(false);
+  const [ trigger, setTrigger ] = useState(false);
 
   useEffect(() => {
     fetchChildrenRequest({id: id, view: "contacts"}).then((data) => setContacts(data.contacts))
@@ -39,7 +39,6 @@ export const ChildTabs = (
             firstName={firstName}
             lastName={lastName}
             initialContacts={contacts}
-            setTrigger={setTrigger}
             contacts={constructTree({ contacts: family_tree, firstName, lastName })}
             refreshContacts={setTrigger}
           />

@@ -10,8 +10,8 @@ import CrossIcon from "@atlaskit/icon/glyph/cross";
 import { getLocalStorageUser } from "../context/auth/authProvider";
 import { removeAttachmentRequest, removeChildAttachmentRequest } from "../api/attachments/attachmentRequest";
 
-const childAttachmentTableData = (data, setTrigger) => 
-  data && data.map((item, index) => {
+const childAttachmentTableData = (data, setTrigger, setPending) => {
+  return data && data.map((item, index) => {
     const attachment = item.attachment
     const author = attachment.user
     return {
@@ -43,9 +43,11 @@ const childAttachmentTableData = (data, setTrigger) =>
           content: (
             <Button
               onClick={async() => {
-                await removeAttachmentRequest(item.attachment_id)
+                setPending(true)
                 await removeChildAttachmentRequest(item.id)
+                await removeAttachmentRequest(item.attachment_id)
                 setTrigger(prev => !prev)
+                setPending(false)
               }}
               height="32px"
               width="32px"
@@ -57,6 +59,8 @@ const childAttachmentTableData = (data, setTrigger) =>
       ],
     }
   });
+}
+  
 
 const isRemovable = (user_id) => {
   const user = getLocalStorageUser()

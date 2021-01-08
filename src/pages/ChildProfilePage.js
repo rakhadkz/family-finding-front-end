@@ -213,7 +213,11 @@ export const ChildProfilePage = (props) => {
         <div style={{display: 'flex', flexDirection: "column", justifyContent:'center', alignItems:'center', height: '100vh'}}>
           <h4 style={{ marginBottom: "10px"}}>You do not have access to view this child's profile</h4>
             <Box>
-              <Button onClick={() => assignUser()} appearance="primary">Request access</Button>
+              {
+                !child.request_pending ? 
+                  (<Button onClick={() => assignUser()} appearance="primary">Request access</Button>) : 
+                  (<Button isDisabled>Request pending</Button>)
+              }
               <Button onClick={() => history.goBack()} appearance="subtle-link">Go back</Button>
             </Box>
         </div>

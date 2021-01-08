@@ -3,7 +3,7 @@ import EmojiAddIcon from "@atlaskit/icon/glyph/emoji-add";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
-import { createChildUserRequest } from "../api/children";
+import { createChildUserRequest, updateChildUserRequest } from "../api/children";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
@@ -41,28 +41,36 @@ export const ChildrenPage = (props) => {
     search.length > 0 && setCurrentPage(1);
   }, [search]);
 
-  const assignUser = (child) => {
-    user?.role === "user"
-    && createChildUserRequest({
-      "user_child": {
-        "users": [
-          {
-            "user_id": user.id,
-            "child_id": child.id
-          }
-        ]
-      }
-    })
-    && createActionItemRequest({
-      "action_item": {
-        "title": "User Assign",
-        "description": `${user.first_name} ${user.last_name} has requested access for ${child.full_name}`,
-        "child_id": child.id,
-        "organization_id": user.organization_id,
-        "related_user_id": user.id,
-        "action_type": "access_request"
-      }
-    }).then(() => fetchChildrenFunc())
+  const assignUser = async(child, isRepeatedly = false) => {
+    if (user?.role === "user"){
+      isRepeatedly ? await updateChildUserRequest({
+        "user_child": {
+          "user_id": user.id,
+          "child_id": child.id,
+          "date_denied": null
+        }
+      }) : await createChildUserRequest({
+        "user_child": {
+          "users": [
+            {
+              "user_id": user.id,
+              "child_id": child.id
+            }
+          ]
+        }
+      })
+      await createActionItemRequest({
+        "action_item": {
+          "title": "User Assign",
+          "description": `${user.first_name} ${user.last_name} has requested access for ${child.full_name}`,
+          "child_id": child.id,
+          "organization_id": user.organization_id,
+          "related_user_id": user.id,
+          "action_type": "access_request"
+        }
+      });
+      fetchChildrenFunc();
+    }
   }
   
   const fetchChildrenFunc = () => {

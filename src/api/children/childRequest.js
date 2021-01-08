@@ -59,6 +59,14 @@ export const createChildUserRequest = (data) => {
   })
 }
 
+export const updateChildUserRequest = (data) => {
+  return request({
+    endpoint: `user_children`,
+    method: "PUT",
+    data
+  })
+}
+
 export const approveChildUserRequest = (user_id, child_id) => {
   return request({
     endpoint: "user_children",
