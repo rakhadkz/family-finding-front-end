@@ -45,6 +45,7 @@ export const EditNodeForm = ({ initialContacts }) => {
           position: "absolute",
           backgroundColor: "white",
           border: "1px solid grey",
+          borderRadius:10,
           zIndex: 10000,
           padding: 10,
         }}

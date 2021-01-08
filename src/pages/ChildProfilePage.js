@@ -227,4 +227,3 @@ export const ChildProfilePage = (props) => {
     </SidebarTemplate>
   );
 };
-

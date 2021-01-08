@@ -3,8 +3,8 @@ import { Spacing, Title } from "../components/ui/atoms";
 import { Sidebar } from "../components/ui/common";
 import { SidebarTemplate } from "../components/ui/templates";
 import { AddUserForm } from "../components/Users";
-import { useAuth } from "../context/auth/authContext";
 import { UserBreadcrumbs } from "../components/Users/UserBreadcrumbs";
+import { useAuth } from "../context/auth/authContext";
 
 export const AddUserPage = () => {
   const { sign } = useAuth();

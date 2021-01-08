@@ -8,6 +8,12 @@ import {
 import { EditNodeForm } from "./EditNodeForm";
 import "./my-node.css";
 
+const STAR = (x, y) =>
+  `<svg class="field_2" x="${x}" y="${y}" width="20" height="20" viewBox="0 0 20 20" focusable="false" role="presentation"><path d="M12.072 17.284l-3.905 2.053a1 1 0 0 1-1.451-1.054l.745-4.349-3.159-3.08a1 1 0 0 1 .554-1.705l4.366-.635 1.953-3.956a1 1 0 0 1 1.794 0l1.952 3.956 4.366.635a1 1 0 0 1 .555 1.705l-3.16 3.08.746 4.349a1 1 0 0 1-1.45 1.054l-3.906-2.053z" fill="currentColor" fill-rule="evenodd"></path></svg>`;
+
+const EMPTY_STAR = (x, y) =>
+  `<svg class="field_2" x="${x}" y="${y}" width="20" height="20" viewBox="0 0 20 20" focusable="false" role="presentation"><path d="M12 16.373l3.98 2.193-.76-4.655 3.276-3.347-4.524-.69L12 5.687l-1.972 4.189-4.524.689L8.78 13.91l-.762 4.655L12 16.373zm0 2.283l-3.016 1.662a2 2 0 0 1-2.939-2.075l.599-3.656-2.57-2.624a2 2 0 0 1 1.129-3.377l3.47-.528 1.518-3.224a2 2 0 0 1 3.618 0l1.519 3.224 3.47.528a2 2 0 0 1 1.127 3.377l-2.569 2.624.599 3.656a2 2 0 0 1-2.94 2.075L12 18.656z" fill="currentColor"></path></svg>`;
+
 class Chart extends Component {
   constructor(props) {
     super(props);
@@ -84,7 +90,7 @@ class Chart extends Component {
     OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
     OrgChart.templates.myTemplate.size = [180, 40];
     OrgChart.templates.myTemplate.node =
-      '<rect class="yellow-node" x="0" y="0" height="40" width="180" fill="#039BE5" stroke-width="0" stroke="#aeaeae" rx="20" ry="20"></rect>';
+      '<rect class="yellow-node" x="0" y="0" height="60" width="180" fill="#039BE5" stroke-width="0" stroke="#aeaeae" rx="20" ry="20"></rect>';
 
     OrgChart.templates.myTemplate.ripple = {
       radius: 1,
@@ -112,8 +118,9 @@ class Chart extends Component {
       '<g style="cursor:pointer;" transform="matrix(1,0,0,1,170,13)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="2" fill="#ffffff"></circle><circle cx="0" cy="6" r="2" fill="#ffffff"></circle><circle cx="0" cy="12" r="2" fill="#ffffff"></circle></g>';
 
     OrgChart.templates.green = Object.assign({}, OrgChart.templates.myTemplate);
+    OrgChart.templates.green.size = [220, 60];
     OrgChart.templates.green.node =
-      '<rect class="yellow-node" x="0" y="0" height="40" width="180" fill="#CCEFFF" stroke-width="0" stroke="#aeaeae" rx="20" ry="20"></rect>';
+      '<rect class="yellow-node" x="0" y="0" height="60" width="220" fill="#CCEFFF" stroke-width="0" stroke="#aeaeae" rx="30" ry="30"></rect>';
     OrgChart.templates.yellow = Object.assign(
       {},
       OrgChart.templates.myTemplate
@@ -133,22 +140,62 @@ class Chart extends Component {
       "</image>";
 
     OrgChart.templates.green.img_0 =
-      '<clipPath id="ulaImg">' +
-      '<circle cx="20" cy="20" r="20"></circle>' +
+      '<clipPath id="ulaImg2">' +
+      '<circle cx="30" cy="30" r="30"></circle>' +
       "</clipPath>" +
-      '<image preserveAspectRatio="xMidYMid slice" clip-path="url(#ulaImg)" xlink:href="{val}" x="0" y="0" width="40" height="40">' +
+      '<image preserveAspectRatio="xMidYMid slice" clip-path="url(#ulaImg2)" xlink:href="{val}" x="0" y="0" width="60" height="60">' +
       "</image>";
+    OrgChart.templates.green.field_0 =
+      '<text width="150" class="field_0" style="font-size: 14px;" fill="#172B4D" x="68" y="15" text-anchor="start">{val}</text>';
+    OrgChart.templates.green.field_1 =
+      '<text width="150" class="field_1" style="font-size: 12px;" fill="#6B778C" x="68" y="33" text-anchor="start">{val}</text>';
+
+    OrgChart.templates.green.field_2 = `{val}`;
 
     OrgChart.templates.yellow.nodeMenuButton =
       '<g style="cursor:pointer;" transform="matrix(1,0,0,1,170,13)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="2" fill="#ffffff"></circle><circle cx="0" cy="6" r="2" fill="#ffffff"></circle><circle cx="0" cy="12" r="2" fill="#ffffff"></circle></g>';
+    OrgChart.templates.green.nodeMenuButton =
+      '<g style="cursor:pointer;" transform="matrix(1,0,0,1,205,23)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="2" fill="#ffffff"></circle><circle cx="0" cy="6" r="2" fill="#ffffff"></circle><circle cx="0" cy="12" r="2" fill="#ffffff"></circle></g>';
 
     OrgChart.templates.myTemplate.exportMenuButton =
       '<div style="position:absolute; cursor:pointer; right: 10px; top:10px; background-color:#0052CC; width: 65px; height:32px; display:flex;justify-content:center; align-items:center;border-radius:3px;" control-export-menu="">' +
       '<span style="color:white">Export</span>' +
       "</div>";
 
+    function pdf(nodeId) {
+      chart.exportPDF({
+        filename: "Chart.pdf",
+        expandChildren: true,
+        nodeId: nodeId,
+      });
+    }
+    function png(nodeId) {
+      chart.exportPNG({
+        filename: "Chart.png",
+        expandChildren: true,
+        nodeId: nodeId,
+      });
+    }
+    function svg(nodeId) {
+      chart.exportSVG({
+        filename: "Chart.svg",
+        expandChildren: true,
+        nodeId: nodeId,
+      });
+    }
+    function csv(nodeId) {
+      chart.exportCSV({
+        filename: "Chart.csv",
+        expandChildren: true,
+        nodeId: nodeId,
+      });
+    }
+
     const chart = new OrgChart(this.divRef.current, {
       nodes: this.props.nodes,
+      showXScroll: OrgChart.scroll.visible,
+      showYScroll: OrgChart.scroll.visible,
+      mouseScrool: OrgChart.action.scroll,
       editUI: new editForm(),
       nodeMouseClick: OrgChart.action.none,
       template: "myTemplate",
@@ -176,31 +223,56 @@ class Chart extends Component {
       nodeMenu: {
         edit: {
           text: "Edit",
+          icon: OrgChart.icon.edit(20, 20, "#42526E"),
         },
         add: {
           text: "Add",
+          icon: OrgChart.icon.add(20, 20, "#42526E"),
         },
         remove: {
           text: "Remove",
+          icon: OrgChart.icon.remove(19, 19, "#42526E"),
         },
       },
       nodeBinding: {
         field_0: "Name",
         field_1: "Relationship",
+        field_2: function (sender, node) {
+          var data = sender.get(node.id);
+          const rating = Math.floor(Math.random() * Math.floor(5));
+          console.log(data);
+          let returnRating = Array(5)
+            .fill()
+            .map((_, index) =>
+              index + 1 > rating
+                ? EMPTY_STAR(index * 22 + 65, 35)
+                : STAR(index * 22 + 65, 35)
+            );
+
+          return returnRating;
+        },
         img_0: "Avatar",
       },
       menu: {
-        pdf: {
+        export_pdf: {
           text: "Export PDF",
+          icon: OrgChart.icon.pdf(20, 20, "#42526E"),
+          onClick: pdf,
         },
-        png: {
+        export_png: {
           text: "Export PNG",
+          icon: OrgChart.icon.png(20, 20, "#42526E"),
+          onClick: png,
         },
-        svg: {
+        export_svg: {
           text: "Export SVG",
+          icon: OrgChart.icon.svg(20, 20, "#42526E"),
+          onClick: svg,
         },
-        csv: {
+        export_csv: {
           text: "Export CSV",
+          icon: OrgChart.icon.csv(20, 20, "#42526E"),
+          onClick: csv,
         },
       },
     });
@@ -250,9 +322,9 @@ class Chart extends Component {
     this.chart = chart;
   }
 
-  componentDidUpdate(props){
-    if(this.props.nodes !== props.nodes) {
-      console.log("NODES UPDATED AHHAHAHAHAHAH",this.chart.draw );
+  componentDidUpdate(props) {
+    if (this.props.nodes !== props.nodes) {
+      console.log("NODES UPDATED AHHAHAHAHAHAH", this.chart.draw);
     }
   }
   render() {
