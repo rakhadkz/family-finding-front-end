@@ -78,6 +78,7 @@ export const UsersPage = (props) => {
   const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
   const [search, setSearch] = useState(query.get("search") || "");
   const head = usersTableColumns(user?.role === "super_admin");
+  
   const organization =
     user && user?.user_organizations
       ? user?.user_organizations[0]?.organization

@@ -100,8 +100,8 @@ export const childrenTableColumns = (isUser = true) => [
     key: "status",
     content: <p align="center">Status</p>,
     width: 10,
-  }
-]
+  },
+];
 
 export const actionItemsTableColumns = [
   {

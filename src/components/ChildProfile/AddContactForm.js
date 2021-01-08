@@ -8,7 +8,6 @@ import { Box, Form, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
 
 export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
-  console.log("VVs",initialValues);
   const { register, handleSubmit, control, errors, watch } = useForm({
     defaultValues: initialValues,
   });
@@ -21,14 +20,19 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
     console.log(data);
     const { state, relationship, relationship_other, ...rest } = data;
 
-    onSubmit({
-      ...rest,
-      state: state.value,
-      relationship:
+    let submitData = rest;
+
+    if (state?.value) {
+      submitData.state = state.value;
+    }
+    if (relationship?.value) {
+      submitData.relationship =
         relationship.value === "Other"
           ? relationship_other
-          : relationship.value,
-    });
+          : relationship.value;
+    }
+
+    onSubmit(submitData);
   };
 
   return (
@@ -55,16 +59,25 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             <TextInput
               className="input"
               name={"last_name"}
-              register={register({ required: true })}
+              register={register({ required: false })}
               control={control}
               error={errors.last_name}
               label="Last name"
+            />
+            <SelectInput
+              name={"relationship"}
+              register={{ required: false }}
+              control={control}
+              options={relationshipOptions}
+              error={errors.relationship}
+              label="Relationship"
+              placeholder="Relationship"
             />
             <TextInput
               className="input"
               name={"email"}
               register={register({
-                required: true,
+                required: false,
                 pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
               })}
               control={control}
@@ -74,7 +87,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             <TextInput
               name={"phone"}
               register={register({
-                required: true,
+                required: false,
               })}
               control={control}
               error={errors.phone}
@@ -84,7 +97,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             <TextInput
               className="input"
               name={"address"}
-              register={register({ required: true })}
+              register={register({ required: false })}
               control={control}
               error={errors.address}
               label="Address"
@@ -99,44 +112,37 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             />
             <TextInput
               name={"city"}
-              register={register({ required: true })}
+              register={register({ required: false })}
               control={control}
               error={errors.city}
               label="City"
             />
             <SelectInput
               name={"state"}
-              register={{ required: true }}
+              register={{ required: false }}
               control={control}
               options={states.map((state) => ({ label: state, value: state }))}
               error={errors.state}
               label="State"
               placeholder="Choose State"
             />
-            <TextInput
-              name={"zip"}
-              register={register({ required: true })}
-              control={control}
-              error={errors.zip}
-              label="Zip"
-            />
+
             <DatepickerInput
               name={"birthday"}
-              register={{ required: true }}
+              register={{ required: false }}
               control={control}
               error={errors.birthday}
               label="Birthday"
               placeholder="Select birthday"
             />
-            <SelectInput
-              name={"relationship"}
-              register={{ required: false }}
+            <TextInput
+              name={"zip"}
+              register={register({ required: false })}
               control={control}
-              options={relationshipOptions}
-              error={errors.relationship}
-              label="Relationship"
-              placeholder="Relationship"
+              error={errors.zip}
+              label="Zip"
             />
+
             {relationship?.value === "Other" ? (
               <TextInput
                 className="input"

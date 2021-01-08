@@ -8,6 +8,7 @@ import Screen from "@atlaskit/icon/glyph/screen";
 import SearchIcon from "@atlaskit/icon/glyph/search";
 import SettingsIcon from "@atlaskit/icon/glyph/settings";
 import Signout from "@atlaskit/icon/glyph/sign-out";
+import Select from "@atlaskit/select";
 import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/auth/authContext";
@@ -85,7 +86,9 @@ const SIDEBAR_ITEMS = [
 ];
 
 const SidebarInner = () => {
-  const { logout } = useAuth();
+  const { logout, user, setOrganization } = useAuth();
+
+  console.log("USER", user);
 
   return (
     <Box
@@ -101,6 +104,32 @@ const SidebarInner = () => {
             <Logo />
           </Spacing>
         </Box>
+        <Spacing m={{ l: "15px", b: "15px", t: "15px" }}>
+          {user?.user_organizations &&
+            (user.user_organizations[0] ? (
+              <Select
+                onChange={({ value }) => setOrganization(value)}
+                className="single-select"
+                value={
+                  user.activeOrganization
+                    ? {
+                        value: user?.activeOrganization,
+                        label: user?.activeOrganization?.organization?.name,
+                      }
+                    : {
+                      value: user?.user_organizations[0],
+                      label: user?.user_organizations[0]?.organization?.name,
+                    }
+                }
+                classNamePrefix="react-select"
+                options={user?.user_organizations.map((userOrganizations) => ({
+                  value: userOrganizations,
+                  label: userOrganizations?.organization?.name,
+                }))}
+              />
+            ) : null)}
+        </Spacing>
+
         {SIDEBAR_ITEMS.map((item) => (
           <GroupAccess {...item}>
             <SidebarMenuItem key={item.to}>

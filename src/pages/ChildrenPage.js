@@ -38,7 +38,7 @@ export const ChildrenPage = (props) => {
   }, [currentPage, search]);
 
   useEffect(() => {
-    setCurrentPage(1);
+    search.length > 0 && setCurrentPage(1);
   }, [search]);
 
   const assignUser = (child) => {
