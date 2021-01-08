@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Form, Box, StyledTextError } from "../ui/atoms";
-import { MentionInput } from "../ui/molecules";
+import { Form, Box } from "../../../ui/atoms";
 import { useForm } from "react-hook-form";
 import { FormSection } from "@atlaskit/form";
-import { fetchUsersRequest } from "../../api/user";
-import { getLocalStorageUser } from "../../context/auth/authProvider";
+import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 import Button from "@atlaskit/button";
-import ButtonGroup from "@atlaskit/button/button-group";
 import styled from "styled-components";
-import { Controller } from "react-hook-form";
-import { formErrors } from "../../helpers/formErrors";
-import draftToHtml from "draftjs-to-html";
-import { EditorState, RichUtils, convertToRaw } from "draft-js";
-import { WysiwygEditor } from "../WYSIWYG";
+import { WysiwygEditor } from "../../../WYSIWYG";
+import { useHistory } from "react-router-dom";
+
 export const CommentsForm = ({
   onSubmit,
   id,
@@ -34,33 +29,7 @@ export const CommentsForm = ({
     mode: "onChange",
   });
 
-  const getMentionedUsers = (text) => {
-    let res = [];
-    for (let i = 0; i < text.length; i++) {
-      if (text[i] === "@" && (i === 0 || text[i - 1] === " ")) {
-        // if find mentions
-        let j,
-          s = 0;
-        for (j = 1; j + i < text.length && s !== 1; j++) {
-          // find last index of mention
-          if (text[i + j] === " ") s++;
-        }
-        let name = text.slice(i + 1, i + j - 1);
-        console.log(name);
-        console.log(mentions);
-        // let users = user.user_organizations[0].organization.users
-        // for(let k=0;k<users.length;k++){
-        //   console.log(users[k])
-        //   if( users[k].first_name === name){
-        //     res.push(users[k].id);
-        //     console.log(users[k]);
-        //     break;
-        //   }
-        // }
-      }
-    }
-    return res;
-  };
+  const history = useHistory();
   const [text, setText] = useState("");
   const [styles, setStyles] = useState("");
   const [rawData, setRawData] = useState("");
@@ -72,16 +41,16 @@ export const CommentsForm = ({
         mentionedUsers.push(rawData.entityMap[key].data.mention.id);
       }
     }
-    console.log(text);
-    console.log(mentionedUsers);
-    console.log({
-      comment: {
-        body: text,
-        in_reply_to: inReply,
-        child_id: id,
-        mentions: mentionedUsers,
-      },
-    });
+    // console.log(text);
+    // console.log(mentionedUsers);
+    // console.log({
+    //   comment: {
+    //     body: text,
+    //     in_reply_to: inReply,
+    //     child_id: id,
+    //     mentions: mentionedUsers,
+    //   },
+    // });
 
     onSubmit({
       comment: {
@@ -92,6 +61,9 @@ export const CommentsForm = ({
       },
     })
       .then((items) => {
+        // history.go(0);
+        // setValue("");
+        setUpd(upd + 1);
         increaseShouldUpdate(shouldUpdate + 1);
       })
       .finally(() => {
@@ -99,14 +71,15 @@ export const CommentsForm = ({
       });
   };
 
-  console.log(text, rawData);
+  const [upd, setUpd] = useState(1);
+  // console.log(text, rawData);
 
   return (
     <Form w="100%" onSubmit={onSubmitHandle} noValidate>
       <FormSection>
         <WysiwygEditor
-          name="comment"
           mentions={mentions}
+          upd={upd}
           onChange={(tex, raw) => {
             setText(tex);
             setRawData(raw);

@@ -5,11 +5,11 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import MentionWysiwygEditor from "./MentionWysiwygEditor";
 
 export const WysiwygEditor = (props) => {
-  const { mentions, onChange } = props;
+  const { mentions, onChange, upd } = props;
 
   return (
     <StyledBox w="100%">
-      <MentionWysiwygEditor mentions={mentions} onChange={onChange} />
+      <MentionWysiwygEditor upd={upd} mentions={mentions} onChange={onChange} />
     </StyledBox>
   );
 };
