@@ -7,7 +7,7 @@ import { contactsTableColumns } from "../../content/columns.data";
 import { Connections } from "./tabs/Connections/Connections";
 import { Spacing } from "../ui/atoms";
 import { Table } from "../ui/common/Table";
-import { CommentsTab } from "./CommentsTab";
+import { CommentsTab } from "./tabs/Comments/CommentsTab";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
@@ -92,6 +92,11 @@ export const ChildTabs = (
   };
 
   return firstName && lastName ? (
-    <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />
+    <Tabs
+      isContentPersisted
+      onSelect={selectTab}
+      selected={tabs[current]}
+      tabs={tabs}
+    />
   ) : null;
 };

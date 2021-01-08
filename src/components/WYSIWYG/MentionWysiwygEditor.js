@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { EditorState, RichUtils, convertToRaw } from "draft-js";
+import React, { Component, useState, useEffect, useRef } from "react";
+import { EditorState, RichUtils, convertToRaw, convertFromRaw } from "draft-js";
 import Editor from "draft-js-plugins-editor";
 import Toolbar from "./Toolbar";
 import addLinkPlugin from "./LinkPlugin";
@@ -55,53 +55,46 @@ const Entry = (props) => {
   );
 };
 
-export default class CustomMentionEditor extends Component {
-  constructor(props) {
-    super(props);
+const MentionWysiwygEditor = (props) => {
+  const mentionPlugin = createMentionPlugin({
+    mentions: props.mentions,
+    entityMutability: "IMMUTABLE",
+    theme: mentionsStyles,
+    positionSuggestions,
+    mentionPrefix: "@",
+    supportWhitespace: true,
+  });
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [suggestions, setSuggestions] = useState([]);
+  let editor = useRef(null);
 
-    this.mentionPlugin = createMentionPlugin({
-      mentions: props.mentions,
-      entityMutability: "IMMUTABLE",
-      theme: mentionsStyles,
-      positionSuggestions,
-      mentionPrefix: "@",
-      supportWhitespace: true,
-    });
-  }
+  useEffect(() => {
+    setEditorState(EditorState.createEmpty());
+  }, [props.upd]);
 
-  state = {
-    editorState: EditorState.createEmpty(),
-    suggestions: [],
-  };
-
-  onChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
-    this.props.onChange(
+  const onChange = (editorState) => {
+    setEditorState(editorState);
+    props.onChange(
       stateToHTML(editorState.getCurrentContent()),
       convertToRaw(editorState.getCurrentContent())
     );
   };
 
-  onSearchChange = ({ value }) => {
+  const onSearchChange = ({ value }) => {
     if (value) {
-      this.setState({
-        suggestions: defaultSuggestionsFilter(value, this.props.mentions),
-      });
+      setSuggestions(defaultSuggestionsFilter(value, this.props.mentions));
     }
   };
 
-  focus = () => {
-    this.editor.focus();
+  const focus = () => {
+    editor.focus();
   };
 
-  onAddLink = () => {
-    const editorState = this.state.editorState;
+  const onAddLink = () => {
     const selection = editorState.getSelection();
     const link = window.prompt("Paste the link");
     if (!link) {
-      this.onChange(RichUtils.toggleLink(editorState, selection, null));
+      onChange(RichUtils.toggleLink(editorState, selection, null));
       return "handled";
     }
     const content = editorState.getCurrentContent();
@@ -114,17 +107,14 @@ export default class CustomMentionEditor extends Component {
       "create-entity"
     );
     const entityKey = contentWithEntity.getLastCreatedEntityKey();
-    this.onChange(RichUtils.toggleLink(newEditorState, selection, entityKey));
+    onChange(RichUtils.toggleLink(newEditorState, selection, entityKey));
     return "handled";
   };
 
-  handleKeyCommand = (command) => {
-    const newState = RichUtils.handleKeyCommand(
-      this.state.editorState,
-      command
-    );
+  const handleKeyCommand = (command) => {
+    const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
-      this.onChange(newState);
+      onChange(newState);
       console.log("handled");
       return "handled";
     }
@@ -132,116 +122,104 @@ export default class CustomMentionEditor extends Component {
     return "not-handled";
   };
 
-  onTab(e) {
+  const onTab = (e) => {
     const maxDepth = 4;
-    this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
-  }
-  onFontSizeClick = (fontSize) => {
+    onChange(RichUtils.onTab(e, editorState, maxDepth));
+  };
+
+  const onFontSizeClick = (fontSize) => {
     console.log(fontSize);
-    this.onChange(
-      RichUtils.toggleBlockType(this.state.editorState, "header-three")
-    );
+    onChange(RichUtils.toggleBlockType(editorState, "header-three"));
   };
 
-  onOrderedPointsClick = () => {
-    this.onChange(
-      RichUtils.toggleBlockType(this.state.editorState, "ordered-list-item")
-    );
+  const onOrderedPointsClick = () => {
+    onChange(RichUtils.toggleBlockType(editorState, "ordered-list-item"));
   };
 
-  onBulletPointsClick = () => {
-    this.onChange(
-      RichUtils.toggleBlockType(this.state.editorState, "unordered-list-item")
-    );
+  const onBulletPointsClick = () => {
+    onChange(RichUtils.toggleBlockType(editorState, "unordered-list-item"));
   };
 
-  onUnderlineClick = () => {
-    this.onChange(
-      RichUtils.toggleInlineStyle(this.state.editorState, "UNDERLINE")
-    );
+  const onUnderlineClick = () => {
+    onChange(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"));
   };
 
-  onBoldClick = () => {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "BOLD"));
+  const onBoldClick = () => {
+    onChange(RichUtils.toggleInlineStyle(editorState, "BOLD"));
   };
 
-  onItalicClick = () => {
-    this.onChange(
-      RichUtils.toggleInlineStyle(this.state.editorState, "ITALIC")
-    );
+  const onItalicClick = () => {
+    onChange(RichUtils.toggleInlineStyle(editorState, "ITALIC"));
   };
 
-  onStrikeThroughClick = () => {
-    this.onChange(
-      RichUtils.toggleInlineStyle(this.state.editorState, "STRIKETHROUGH")
-    );
+  const onStrikeThroughClick = () => {
+    onChange(RichUtils.toggleInlineStyle(editorState, "STRIKETHROUGH"));
   };
 
-  toggleBlockType(blockType) {
-    this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
-  }
+  const toggleBlockType = (blockType) => {
+    onChange(RichUtils.toggleBlockType(editorState, blockType));
+  };
 
-  onEditorStateChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
+  const onEditorStateChange = (editorState) => {
+    setEditorState(editorState);
 
     console.log("PROPS ==> ", this.props);
-    return this.props.onChange(
+    return props.onChange(
       draftToHtml(convertToRaw(editorState.getCurrentContent()))
     );
   };
 
-  render() {
-    const { MentionSuggestions } = this.mentionPlugin;
-    const plugins = [this.mentionPlugin, addLinkPlugin];
-    const theme = this.mentionPlugin;
-    console.log(convertToRaw(this.state.editorState.getCurrentContent()));
-    const selection = this.state.editorState.getSelection();
-    const blockType = this.state.editorState
-      .getCurrentContent()
-      .getBlockForKey(selection.getStartKey())
-      .getType();
-    return (
-      <EditorContainer>
-        <Toolbar
-          blockType={blockType}
-          onUnderlineClick={this.onUnderlineClick}
-          onBoldClick={this.onBoldClick}
-          onItalicClick={this.onItalicClick}
-          onStrikeThroughClick={this.onStrikeThroughClick}
-          onAddLink={this.onAddLink}
-          onBulletPointsClick={this.onBulletPointsClick}
-          onOrderedPointsClick={this.onOrderedPointsClick}
-          onFontSizeClick={this.onFontSizeClick}
-          toggleBlockType={this.toggleBlockType}
+  const { MentionSuggestions } = mentionPlugin;
+  const plugins = [mentionPlugin, addLinkPlugin];
+  const theme = mentionPlugin;
+  console.log(convertToRaw(editorState.getCurrentContent()));
+  const selection = editorState.getSelection();
+  const blockType = editorState
+    .getCurrentContent()
+    .getBlockForKey(selection.getStartKey())
+    .getType();
+
+  return (
+    <EditorContainer>
+      <Toolbar
+        blockType={blockType}
+        onUnderlineClick={onUnderlineClick}
+        onBoldClick={onBoldClick}
+        onItalicClick={onItalicClick}
+        onStrikeThroughClick={onStrikeThroughClick}
+        onAddLink={onAddLink}
+        onBulletPointsClick={onBulletPointsClick}
+        onOrderedPointsClick={onOrderedPointsClick}
+        onFontSizeClick={onFontSizeClick}
+        toggleBlockType={toggleBlockType}
+      />
+      <Editors onClick={focus}>
+        <Editor
+          editorState={editorState}
+          // onEditorStateChange={this.onEditorStateChange}
+          onChange={onChange}
+          handleKeyCommand={handleKeyCommand}
+          plugins={plugins}
+          ref={(element) => {
+            editor = element;
+          }}
+          name="comment"
+          control={props.control}
+          error={""}
+          reset={props.reset}
         />
-        <Editors onClick={this.focus}>
-          <Editor
-            editorState={this.state.editorState}
-            // onEditorStateChange={this.onEditorStateChange}
-            onChange={this.onChange}
-            handleKeyCommand={this.handleKeyCommand}
-            plugins={plugins}
-            ref={(element) => {
-              this.editor = element;
-            }}
-            name="comment"
-            control={this.props.control}
-            error={""}
-            reset={this.props.reset}
-          />
-          <MentionSuggestions
-            onSearchChange={this.onSearchChange}
-            suggestions={this.state.suggestions}
-            entryComponent={Entry}
-            className={theme.mentionSuggestions}
-          />
-        </Editors>
-      </EditorContainer>
-    );
-  }
-}
+        <MentionSuggestions
+          onSearchChange={onSearchChange}
+          suggestions={suggestions}
+          entryComponent={Entry}
+          className={theme.mentionSuggestions}
+        />
+      </Editors>
+    </EditorContainer>
+  );
+};
+
+export default MentionWysiwygEditor;
 
 const EditorContainer = styled.div`
   padding: 0em 1em 1em 1em;
