@@ -1,36 +1,32 @@
 import Avatar from "@atlaskit/avatar";
 import { Box } from "../components/ui/atoms";
 import { FitScore } from "../components/ui/molecules";
-import Toggle from "@atlaskit/toggle";
-import { Radio } from "@atlaskit/radio";
-import { Label } from "../components/ui/atoms";
 import { Switch } from "@chakra-ui/react";
-import {
-  createContactRequest,
-  createTableChildContactRequest,
-  updateChildContactRequestConnections,
-} from "../api/childContact";
+import { updateChildContactRequestConnections } from "../api/childContact";
 import { useState } from "react";
 
-const connectionsTableData = (data, setIsLoading) => {
+const connectionsTableData = (data, setIsLoading, setContacts) => {
   return data.map(function (item, index) {
-    console.log(item);
-
     const onSubmitHandle = async () => {
       setIsLoading(true);
       updateChildContactRequestConnections(
         {
           child_contact: {
-            potential_match: false,
+            potential_match: !item.potential_match,
           },
         },
         item.id
       )
-        .then((items) => {})
+        .then((items) => {
+          console.log("something");
+          data[index].potential_match = !item.potential_match;
+          setContacts(data);
+        })
         .finally(() => {
           setIsLoading(false);
         });
     };
+
     return {
       key: index,
       cells: [
@@ -82,7 +78,7 @@ const connectionsTableData = (data, setIsLoading) => {
               }}
             >
               <Switch
-                id="sdfsd"
+                id="potential_match"
                 isChecked={item.potential_match}
                 onChange={onSubmitHandle}
               />

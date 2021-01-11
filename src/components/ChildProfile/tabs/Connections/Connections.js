@@ -54,34 +54,9 @@ const columns = [
 
 export const Connections = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { contacts } = props;
+  const { contacts, setContacts } = props;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   let { id } = useParams();
-  const {
-    register,
-    handleSubmit,
-    control,
-    errors,
-    reset,
-    formState: { isSubmitSuccessful },
-  } = useForm({});
-
-  // const onSubmitHandle = async () => {
-  //   setIsLoading(true);
-  //   updateChildContactRequestConnections(
-  //     {
-  //       child_contact: {
-  //         potential_match: true,
-  //         family_fit_score: 3,
-  //       },
-  //     }
-  //     // item.id
-  //   )
-  //     .then((items) => {})
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // };
 
   const onAddContact = async (data) => {
     await createContactRequest(data)
@@ -183,21 +158,15 @@ export const Connections = (props) => {
         hasActions={false}
       />
 
-      <Form w="100%" onSubmit={() => {}} noValidate>
-        <FormSection>
-          <TableWrapper>
-            <DynamicTable
-              control={control}
-              register={register}
-              head={{ cells: columns }}
-              loadingSpinnerSize="large"
-              isLoading={isLoading}
-              rows={connectionsTableData(contacts, setIsLoading)}
-              isFixedSize
-            />
-          </TableWrapper>
-        </FormSection>
-      </Form>
+      <TableWrapper>
+        <DynamicTable
+          head={{ cells: columns }}
+          loadingSpinnerSize="large"
+          isLoading={isLoading}
+          rows={connectionsTableData(contacts, setIsLoading, setContacts)}
+          isFixedSize
+        />
+      </TableWrapper>
     </Spacing>
   );
 };
