@@ -12,43 +12,9 @@ import ChevronDownIcon from "@atlaskit/icon/glyph/chevron-down";
 import LinkIcon from "@atlaskit/icon/glyph/link";
 import Button from "@atlaskit/button";
 import styled from "styled-components";
-import Select from "@atlaskit/select";
-import CustomSelect from "./CustomSelectNotStyled";
-
-const HEADER_TYPES = [
-  { id: 1, name: "(None)", style: "unstyled" },
-  { id: 2, name: "H1", style: "header-one" },
-  { id: 3, name: "H2", style: "header-two" },
-  { id: 4, name: "H3", style: "header-three" },
-  { id: 5, name: "H4", style: "header-four" },
-  { id: 6, name: "H5", style: "header-five" },
-  { id: 7, name: "H6", style: "header-six" },
-];
-
-class FontSizeSelect extends React.Component {
-  onToggle = (event) => {
-    let value = event.target.value;
-    this.props.onToggle(value);
-  };
-
-  render() {
-    return (
-      <StyledSelect
-        onChange={this.onToggle}
-        defaultText={
-          <Button appearance="subtle">
-            <MediaServicesTextIcon style={{ width: "80%", height: "30px" }} />
-          </Button>
-        }
-        optionsList={HEADER_TYPES}
-      />
-    );
-  }
-}
 
 const Toolbar = (props) => {
   const {
-    blockType,
     onUnderlineClick,
     onBoldClick,
     onItalicClick,
@@ -61,75 +27,76 @@ const Toolbar = (props) => {
   } = props;
 
   return (
-    <div style={{ display: "inline" }}>
-      {/* <FontSizeSelect 
-        headerOptions={HEADER_TYPES}
-        active={blockType}
-        onToggle={toggleBlockType}
-      /> */}
-
-      <Button id="font-size" appearance="subtle" onMouseDown={onFontSizeClick}>
-        <EditorTextStyleIcon />
-      </Button>
-
+    <div style={{ display: "flex" }}>
       <Divider />
 
       <StyledBytton
         id="ordered-list-item"
         appearance="subtle"
         onMouseDown={onOrderedPointsClick}
-      >
-        <EditorNumberListIcon />
-      </StyledBytton>
+        iconBefore={<EditorNumberListIcon />}
+      />
 
       <Button
         appearance="subtle"
         id="unordered-list-item"
         onMouseDown={onBulletPointsClick}
-      >
-        <EditorBulletListIcon />
-      </Button>
+        iconBefore={<EditorBulletListIcon />}
+      />
 
       <Divider />
 
-      <Button appearance="subtle" id="underline" onMouseDown={onUnderlineClick}>
-        <EditorUnderlineIcon />
-      </Button>
+      <StyledBytton
+        appearance="subtle"
+        id="underline"
+        onMouseDown={onUnderlineClick}
+        iconBefore={<EditorUnderlineIcon />}
+      />
 
-      <Button appearance="subtle" id="bold" onMouseDown={onBoldClick}>
-        <EditorBoldIcon />
-      </Button>
+      <StyledBytton
+        appearance="subtle"
+        id="bold"
+        onMouseDown={onBoldClick}
+        iconBefore={<EditorBoldIcon />}
+      />
 
-      <Button appearance="subtle" id="italic" onMouseDown={onItalicClick}>
-        <EditorItalicIcon />
-      </Button>
+      <StyledBytton
+        appearance="subtle"
+        id="italic"
+        onMouseDown={onItalicClick}
+        iconBefore={<EditorItalicIcon />}
+      />
 
-      <Button appearance="subtle" onMouseDown={onStrikeThroughClick}>
-        <EditorStrikethroughIcon />
-      </Button>
+      <Button
+        appearance="subtle"
+        onMouseDown={onStrikeThroughClick}
+        iconBefore={<EditorStrikethroughIcon />}
+      />
 
       <Divider />
 
-      <Button id="link_url" appearance="subtle" onMouseDown={onAddLink}>
-        <EditorLinkIcon /> {/*<LinkIcon />*/}
-      </Button>
+      <Button
+        id="link_url"
+        appearance="subtle"
+        onMouseDown={onAddLink}
+        iconBefore={<EditorLinkIcon />}
+      />
     </div>
   );
 };
 
-const StyledSelect = styled(CustomSelect)`
-  width: 2em;
-`;
 const StyledBytton = styled(Button)`
-  height: 2em;
-  width: 10px;
+  padding: 0px;
+  .css-1tg8auj-ButtonBase {
+    background: rgb(37, 56, 88);
+  }
 `;
 const Divider = styled.span`
   background: rgb(235, 236, 240);
   width: 1px;
   height: 24px;
   display: inline-block;
-  margin: 0px 8px;
+  margin: 0px 20px;
 `;
 
 export default Toolbar;

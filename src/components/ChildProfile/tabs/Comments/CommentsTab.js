@@ -5,29 +5,10 @@ import { fetchComments } from "../../../../context/children/childProvider";
 import { Box, Spacing } from "../../../ui/atoms";
 import { Comments } from "./Comments";
 import { CommentsForm } from "./CommentsForm";
-import { useAuth } from "../../../../context/auth/authContext";
-import { fetchUsersRequest } from "../../../../api/user";
-
+import { MentionsProvider } from "./mentions-context";
 export const CommentsTab = ({ childId, childComments, setChild }) => {
-  const { user } = useAuth();
-  const [mentions, setMentions] = useState();
   const [comments, setComments] = useState(childComments);
   const [shouldUpdate, increaseShouldUpdate] = useState(0);
-
-  useEffect(() => {
-    user &&
-      fetchUsersRequest().then((response) =>
-        setMentions(
-          response.map((user) => ({
-            name: `${user.first_name} ${user.last_name}`,
-            title: "Staff of Penn State Orphanage",
-            avatar:
-              "https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png",
-            id: user.id,
-          }))
-        )
-      );
-  }, [user]);
 
   useEffect(() => {
     fetchComments(childId).then((items) => {
@@ -38,39 +19,39 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
   }, [childId, shouldUpdate]);
 
   return (
-    <Spacing m={{ t: "22px" }}>
-      <Box d="flex">
-        <Avatar
-          appearance="circle"
-          src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
-          size="large"
-        />
-        <Spacing m={{ l: "17px", t: "-22px" }}>
-          <CommentsForm
-            shouldUpdate={shouldUpdate}
-            increaseShouldUpdate={increaseShouldUpdate}
-            id={childId}
-            inReply={0}
-            onSubmit={postCommentRequest}
-            mentions={mentions}
-          />
-        </Spacing>
-      </Box>
+    <MentionsProvider>
       <Spacing m={{ t: "22px" }}>
-        {comments &&
-          comments
-            .filter((comment) => !comment.in_reply_to)
-            .sort((a, b) => a.created_at - b.created_at)
-            .map((comment) => (
-              <Comments
-                id={childId}
-                data={comment}
-                mentions={mentions}
-                shouldUpdate={shouldUpdate}
-                increaseShouldUpdate={increaseShouldUpdate}
-              />
-            ))}
+        <Box d="flex">
+          <Avatar
+            appearance="circle"
+            src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
+            size="large"
+          />
+          <Spacing m={{ l: "17px", t: "-22px" }}>
+            <CommentsForm
+              shouldUpdate={shouldUpdate}
+              increaseShouldUpdate={increaseShouldUpdate}
+              id={childId}
+              inReply={0}
+              onSubmit={postCommentRequest}
+            />
+          </Spacing>
+        </Box>
+        <Spacing m={{ t: "22px" }}>
+          {comments &&
+            comments
+              .filter((comment) => !comment.in_reply_to)
+              .sort((a, b) => a.created_at - b.created_at)
+              .map((comment) => (
+                <Comments
+                  id={childId}
+                  data={comment}
+                  shouldUpdate={shouldUpdate}
+                  increaseShouldUpdate={increaseShouldUpdate}
+                />
+              ))}
+        </Spacing>
       </Spacing>
-    </Spacing>
+    </MentionsProvider>
   );
 };

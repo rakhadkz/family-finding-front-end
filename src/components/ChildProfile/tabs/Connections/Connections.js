@@ -18,6 +18,7 @@ import { ModalDialog } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
 import { useForm } from "react-hook-form";
 import { FormSection } from "@atlaskit/form";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const columns = [
   {
@@ -131,43 +132,48 @@ export const Connections = (props) => {
   };
 
   return (
-    <Spacing m={{ t: "25px" }}>
-      <Spacing m={{ b: "20px" }}>
-        <Box d="flex" justify="space-between">
-          <Title size={"16px"}>Connections List</Title>
-          <Button appearance="warning" onClick={() => setIsAddModalOpen(true)}>
-            Add Connection
-          </Button>
-        </Box>
-      </Spacing>
-      <ModalDialog
-        isOpen={isAddModalOpen}
-        setIsOpen={setIsAddModalOpen}
-        heading="Add Connection"
-        appearance={null}
-        body={
-          <AddContactForm
-            onSubmit={async (data) => {
-              console.log("DATA", data);
-              await onAddContact(data).finally(props.refreshContacts);
-              console.log("FETCHING");
-            }}
-            onCancel={() => setIsAddModalOpen(false)}
-          />
-        }
-        hasActions={false}
-      />
-
-      <TableWrapper>
-        <DynamicTable
-          head={{ cells: columns }}
-          loadingSpinnerSize="large"
-          isLoading={isLoading}
-          rows={connectionsTableData(contacts, setIsLoading, setContacts)}
-          isFixedSize
+    <ChakraProvider>
+      <Spacing m={{ t: "25px" }}>
+        <Spacing m={{ b: "20px" }}>
+          <Box d="flex" justify="space-between">
+            <Title size={"16px"}>Connections List</Title>
+            <Button
+              appearance="warning"
+              onClick={() => setIsAddModalOpen(true)}
+            >
+              Add Connection
+            </Button>
+          </Box>
+        </Spacing>
+        <ModalDialog
+          isOpen={isAddModalOpen}
+          setIsOpen={setIsAddModalOpen}
+          heading="Add Connection"
+          appearance={null}
+          body={
+            <AddContactForm
+              onSubmit={async (data) => {
+                console.log("DATA", data);
+                await onAddContact(data).finally(props.refreshContacts);
+                console.log("FETCHING");
+              }}
+              onCancel={() => setIsAddModalOpen(false)}
+            />
+          }
+          hasActions={false}
         />
-      </TableWrapper>
-    </Spacing>
+
+        <TableWrapper>
+          <DynamicTable
+            head={{ cells: columns }}
+            loadingSpinnerSize="large"
+            isLoading={isLoading}
+            rows={connectionsTableData(contacts, setIsLoading, setContacts)}
+            isFixedSize
+          />
+        </TableWrapper>
+      </Spacing>
+    </ChakraProvider>
   );
 };
 

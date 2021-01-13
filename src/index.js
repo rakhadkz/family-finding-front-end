@@ -2,24 +2,21 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { ChakraProvider } from "@chakra-ui/react";
 import { AuthProvider } from "./context/auth/authContext";
 import { OrganizationProvider } from "./context/organization/organizationContext";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-  <ChakraProvider>
-    <React.StrictMode>
-      <BrowserRouter>
-        <AuthProvider>
-          <OrganizationProvider>
-            <App />
-          </OrganizationProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </React.StrictMode>
-  </ChakraProvider>,
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <OrganizationProvider>
+          <App />
+        </OrganizationProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
   document.getElementById("root")
 );
 
