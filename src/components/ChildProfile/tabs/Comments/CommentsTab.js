@@ -11,6 +11,7 @@ import { MentionsProvider } from "./mentions-context";
 import styled from "styled-components";
 
 export const CommentsTab = ({ childId, childComments, setChild }) => {
+  const { user } = useAuth();
   const [comments, setComments] = useState(childComments);
   const [shouldUpdate, increaseShouldUpdate] = useState(0);
   const [show, handleShow] = useState(false);
