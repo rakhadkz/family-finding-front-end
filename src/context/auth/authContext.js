@@ -6,7 +6,6 @@ export const AuthContext = React.createContext();
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
   const [isSignedIn, setSignedIn] = useState(true);
-  const [organization, setOrganization] = useState();
 
   useEffect(() => {
     isAuthorized();
@@ -25,12 +24,24 @@ export const AuthProvider = (props) => {
       auth
         .fetchMe()
         .then(
-          (user) =>
-            user &&
-            setUser({
-              ...user,
-              role: user?.user_organizations[0]?.role || user.role,
-            })
+          (user) => {
+            if (user){
+              var selectedOrganization = null
+              user.user_organizations.map(item => {
+                if (item.organization_id === user.organization_id && 
+                  item.role === user.role){
+                    selectedOrganization = {
+                      value: item,
+                      label: item.organization.name
+                    }
+                  }
+              })
+              setUser({
+                ...user,
+                selectedOrganization: selectedOrganization
+              })
+            }
+          }
         ),
     []
   );
@@ -38,16 +49,6 @@ export const AuthProvider = (props) => {
   useEffect(() => {
     if (isSignedIn) fetchMe();
   }, []);
-
-  useEffect(() => {
-    if (organization) {
-      setUser({
-        ...user,
-        role: organization.role,
-        activeOrganization: organization,
-      });
-    }
-  }, [organization]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const isAuthorized = () => {
@@ -62,7 +63,7 @@ export const AuthProvider = (props) => {
     }
   };
 
-  const login = React.useCallback((form) => auth.login(form).then(setUser), []);
+  const login = React.useCallback((form   ) => auth.login(form).then(setUser), []);
 
   const sign = React.useCallback((form) => auth.signup(form), []);
 
@@ -91,8 +92,6 @@ export const AuthProvider = (props) => {
       newPassword,
       fetchMe,
       setUser,
-      organization,
-      setOrganization,
     }),
     [
       user,

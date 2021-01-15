@@ -1,8 +1,8 @@
-import Avatar from "@atlaskit/avatar";
 import { TooltipPrimitive } from "@atlaskit/tooltip";
 import React from "react";
 import styled from "styled-components";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
+import { Avatar } from "../ui/molecules/Avatar";
 
 export const RelativeTooltip = ({ relative }) => {
   return (
@@ -10,9 +10,8 @@ export const RelativeTooltip = ({ relative }) => {
       <Rectangle>
         <Box d="flex" align="flex-start">
           <Avatar
-            appearance="circle"
-            src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
-            size="xlarge"
+            name="Bekzat Makhanbet"
+            size="large"
           />
           <Spacing m={{ l: "17px" }}>
             <StyledLabel>Brother</StyledLabel>

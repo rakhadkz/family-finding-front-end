@@ -5,10 +5,8 @@ import { useHistory } from "react-router-dom";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
 import { createChildUserRequest, updateChildUserRequest } from "../api/children";
 import { Box, Spacing, Title } from "../components/ui/atoms";
-import { Sidebar } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
-import { SidebarTemplate } from "../components/ui/templates";
 import { childTableData } from "../content/child.data";
 import { childrenTableColumns } from "../content/columns.data";
 import { getLocalStorageUser } from "../context/auth/authProvider";
@@ -27,6 +25,7 @@ export const ChildrenPage = (props) => {
   const head = childrenTableColumns(user?.role === "user");
 
   useEffect(() => {
+    console.log("User in Children Page", user)
     history.push(updateQueryParams(currentPage, search));
     setTablePending(true);
     const timer = setTimeout(
@@ -65,7 +64,6 @@ export const ChildrenPage = (props) => {
           "title": "User Assign",
           "description": `${user.first_name} ${user.last_name} has requested access for ${child.full_name}`,
           "child_id": child.id,
-          "organization_id": user.organization_id,
           "related_user_id": user.id,
           "action_type": "access_request"
         }
@@ -91,7 +89,7 @@ export const ChildrenPage = (props) => {
   }
 
   return (
-    <SidebarTemplate sidebar={<Sidebar />}>
+    <>
       <Title>Children</Title>
       <Spacing m={{ t: "23px" }}>
         <Box d="flex" justify="space-between">
@@ -118,6 +116,6 @@ export const ChildrenPage = (props) => {
           head={head}
         />
       </Spacing>
-    </SidebarTemplate>
+    </>
   );
 };

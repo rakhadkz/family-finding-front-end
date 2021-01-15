@@ -12,8 +12,7 @@ import {
   RelativesList
 } from "../components/ChildProfile";
 import { Box, Spacing, Title } from "../components/ui/atoms";
-import { ModalDialog, Sidebar } from "../components/ui/common";
-import { SidebarTemplate } from "../components/ui/templates";
+import { ModalDialog } from "../components/ui/common";
 import { CHILDREN } from "../helpers";
 import Select from "@atlaskit/select";
 import '@atlaskit/css-reset'
@@ -76,16 +75,27 @@ export const ChildProfilePage = (props) => {
       .finally(() => setPending(false));
   };
 
-  const onSubmitUsers = () => {
+  const onSubmitUsers = async() => {
     !assignedUsers && setValidationState("error")
     setButtonPending(true)
-    createChildUserRequest({
+    await createChildUserRequest({
       "user_child": {
         "users": assignedUsers.map(item => ({
           "user_id": item.value,
           "child_id": child.id,
           "date_approved": new Date(),
           "date_denied": null
+        }))
+      }
+    })
+    await createActionItemRequest({
+      "action_item": {
+        "items": assignedUsers.map(item => ({
+          "title": "Access granted",
+          "description": `You have been assigned to a child`,
+          "child_id": child.id,
+          "user_id": item.value,
+          "action_type": "access_granted"
         }))
       }
     })
@@ -120,7 +130,6 @@ export const ChildProfilePage = (props) => {
         "title": "User Assign",
         "description": `${user.first_name} ${user.last_name} has requested access for ${child.first_name} ${child.last_name}`,
         "child_id": id,
-        "organization_id": user.organization_id,
         "related_user_id": user.id,
         "action_type": "access_request"
       }
@@ -128,7 +137,7 @@ export const ChildProfilePage = (props) => {
   }
 
   return (
-    <SidebarTemplate sidebar={<Sidebar />}>
+    <>
       {pending ? (
         <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
             <Spinner size="large"/>
@@ -224,6 +233,6 @@ export const ChildProfilePage = (props) => {
         )
       )
       }
-    </SidebarTemplate>
+    </>
   );
 };

@@ -1,10 +1,10 @@
-import Avatar from "@atlaskit/avatar";
 import { Box } from "../components/ui/atoms";
 import { FitScore } from "../components/ui/molecules";
 import Toggle from "@atlaskit/toggle";
 import { Radio } from "@atlaskit/radio";
 import { Label } from "../components/ui/atoms";
 import { Switch } from "@chakra-ui/react";
+import { Avatar } from "../components/ui/molecules/Avatar";
 
 const connectionsTableData = (data) => {
   return data.map(function (item, index) {
@@ -15,7 +15,7 @@ const connectionsTableData = (data) => {
           key: "full_name",
           content: (
             <Box d="flex" align="center">
-              <Avatar appearance="circle" src={item.avatar} size="medium" />
+              <Avatar name={`${item?.contact?.first_name} ${item?.contact?.last_name}`} size="medium" />
               <a href="" style={{ marginLeft: "8px" }}>
                 {`${item?.contact?.first_name || ""} ${
                   item?.contact?.last_name || ""

@@ -1,5 +1,4 @@
 import { Box } from "../components/ui/atoms";
-import Avatar from "@atlaskit/avatar";
 import CrossIcon from "@atlaskit/icon/glyph/cross";
 import Button from "@atlaskit/button";
 import { useState } from "react";
@@ -9,8 +8,9 @@ import { approveChildUserRequest, denyChildUserRequest } from "../api/children";
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import { createActionItemRequest } from "../api/actionItems";
+import { Avatar } from "../components/ui/molecules/Avatar";
 
-const actionItemTableData = (data, setRefresh, setTablePending) => {
+const actionItemTableData = (data, setRefresh, setTablePending, history) => {
   console.log(data)
   return data.map(function (item, index) {
     return {
@@ -29,13 +29,12 @@ const actionItemTableData = (data, setRefresh, setTablePending) => {
           content: (
             <Box d="flex" align="center">
               <Avatar
-                appearance="circle"
-                // src={/*item.child.avatar*/}
+                name={item.child.first_name + " " + item.child.last_name}
                 size="medium"
               />
-              <a href={`children/${item.child.id}#comments`} style={{ marginLeft: "8px" }}>
+              <Button appearance="link" onClick={() => history.push(`children/${item.child.id}`)}>
                 {item.child.first_name + " " + item.child.last_name}
-              </a>
+              </Button>
             </Box>
           ),
         } : {          
@@ -44,14 +43,16 @@ const actionItemTableData = (data, setRefresh, setTablePending) => {
         },
         {
           key: "resolve",
-          content: <Action 
-                    type={item.action_type} 
-                    id={item.id} 
-                    setRefresh={setRefresh} 
-                    user_id={item.related_user_id} 
-                    child_id={item.child_id}
-                    setPending={setTablePending}
-                  />,
+          content: <div align="center">
+                    <Action 
+                      type={item.action_type} 
+                      id={item.id} 
+                      setRefresh={setRefresh} 
+                      user_id={item.related_user_id} 
+                      child_id={item.child_id}
+                      setPending={setTablePending}
+                    />
+                  </div>,
         },
       ],
     };

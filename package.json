@@ -44,6 +44,7 @@
     "moment": "^2.29.1",
     "orgchart": "^2.1.10",
     "react": "^17.0.1",
+    "react-avatar": "^3.9.7",
     "react-date-picker": "^8.0.5",
     "react-dom": "^17.0.1",
     "react-draft-wysiwyg": "^1.14.5",

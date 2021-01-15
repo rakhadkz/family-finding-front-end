@@ -1,7 +1,7 @@
-import Avatar from "@atlaskit/avatar";
 import Button from "@atlaskit/button";
 import { Box } from "../components/ui/atoms";
 import Lozenge from '@atlaskit/lozenge';
+import { Avatar } from "../components/ui/molecules/Avatar";
 
 const childTableData = (data, history, assignUser, isUser = true) =>
   data.map((item, index) => ({
@@ -11,7 +11,7 @@ const childTableData = (data, history, assignUser, isUser = true) =>
         key: "full_name",
         content: (
           <Box d="flex" align="center">
-            <Avatar appearance="circle" src={item.avatar} size="medium" />
+            <Avatar name={item.full_name} size="medium" ratio={0.4}/>
             <Button
               style={{ marginLeft: "8px" }}
               onClick={() => history.push("/children/" + item.id)}

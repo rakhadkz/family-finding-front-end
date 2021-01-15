@@ -22,7 +22,7 @@ const childAttachmentTableData = (data, setTrigger, setPending) => {
           content: (
             <Box d="flex" align="center">
               <AttachmentIcon type={attachment.file_type}/>
-              <a href={attachment.file_url} target="_blank" style={{ marginLeft: "16px" }}>{`${attachment.file_name}.${attachment.file_format || ''}`}</a>
+              <Button href={attachment.file_url} target="_blank" appearance="link" >{`${attachment.file_name}.${attachment.file_format || ''}`}</Button>
             </Box>
           ),
         },

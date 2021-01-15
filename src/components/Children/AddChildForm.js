@@ -14,8 +14,12 @@ export const AddChildForm = ({ onSubmit }) => {
   const [pending, setPending] = useState(false);
   const onSubmitHandle = (data) => {
     setPending(true);
-    data.permanency_goal = data.permanency_goal.value;
-    onSubmit(data)
+    onSubmit({
+      ...data, 
+      gender: data.gender?.value || null, 
+      race: data.race?.value || null,
+      permanency_goal: data.permanency_goal.value
+    })
       .then(() => {
         toast.success("Child successfully created!", {
           position: "top-center",
@@ -37,21 +41,21 @@ export const AddChildForm = ({ onSubmit }) => {
         <Spacing m={{ t: "18px", b: "18px" }}>
           <Box d="flex" w="100%">
             <TextInput
-              name={"first_name"}
+              name="first_name"
               register={register({ required: true })}
               control={control}
               error={errors.first_name}
               label="First name"
             />
             <TextInput
-              name={"last_name"}
+              name="last_name"
               register={register({ required: true })}
               control={control}
               error={errors.last_name}
               label="Last name"
             />
             <DatepickerInput
-              name={"birthday"}
+              name="birthday"
               register={{ required: true }}
               control={control}
               error={errors.birthday}
@@ -63,7 +67,7 @@ export const AddChildForm = ({ onSubmit }) => {
                 value: "return_to_parent",
                 label: "Return to Parent(s) (Reunification)",
               }}
-              name={"permanency_goal"}
+              name="permanency_goal"
               ref={register({ required: true })}
               control={control}
               error={errors.permanency_goal}
@@ -74,7 +78,10 @@ export const AddChildForm = ({ onSubmit }) => {
                   value: "return_to_parent",
                   label: "Return to Parent(s) (Reunification)",
                 },
-                { value: "adoption", label: "Adoption" },
+                { 
+                  value: "adoption", 
+                  label: "Adoption" 
+                },
                 {
                   value: "permanent_legal_custody",
                   label: "Permanent Legal Custody (PLC)",
@@ -87,6 +94,50 @@ export const AddChildForm = ({ onSubmit }) => {
                   value: "appla",
                   label: "Another Planned Permanent Living Arrangement (APPLA)",
                 },
+              ]}
+            />
+          </Box>
+          <Box d="flex" w="100%" mt="18px">
+          <SelectInput
+              name="gender"
+              control={control}
+              error={errors.gender}
+              label="Gender"
+              options={[
+                { value: "male", label: "Male" },
+                { value: "female", label: "Female" },
+              ]}
+            />
+            <SelectInput
+              name="race"
+              control={control}
+              error={errors.race}
+              label="Race"
+              options={[
+                {
+                  value: "american_indian_or_alaska_native",
+                  label: "American Indian or Alaska Native",
+                },
+                { 
+                  value: "asian", 
+                  label: "Asian" 
+                },
+                {
+                  value: "black_or_african_american",
+                  label: "Black or African American",
+                },
+                {
+                  value: "hispanic_or_latino",
+                  label: "Hispanic or Latino",
+                },
+                {
+                  value: "native_hawaiian_or_other_pacific_islander",
+                  label: "Native Hawaiian or Other Pacific Islander",
+                },
+                {
+                  value: "white",
+                  label: "White",
+                }
               ]}
             />
           </Box>
