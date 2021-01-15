@@ -3,13 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { fetchChildrenRequest } from "../../api/children";
 import { constructTree } from "../../content/childContact.tree.data";
-import { childContactsTableData } from "../../content/childContacts.data";
-import { contactsTableColumns } from "../../content/columns.data";
-import { Connections } from "./tabs/Connections/Connections";
-import { Spacing } from "../ui/atoms";
-import { Table } from "../ui/common/Table";
-import { CommentsTab } from "./tabs/Comments/CommentsTab";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
+import { CommentsTab } from "./tabs/Comments/CommentsTab";
+import { Connections } from "./tabs/Connections/Connections";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
 export const ChildTabs = (
@@ -31,8 +27,16 @@ export const ChildTabs = (
       content: (
         <Connections
           contacts={contacts}
-          setContacts={setContacts}
+          initialContacts={contacts}
+          treeContacts={constructTree({
+            contacts: family_tree,
+            firstName,
+            lastName,
+          })}
           childId={id}
+          firstName={firstName}
+          lastName={lastName}
+          setContacts={setContacts}
           refreshContacts={setTrigger}
         />
       ),
@@ -40,7 +44,7 @@ export const ChildTabs = (
     {
       label: "Family Tree",
       content: (
-        <div>
+        // <div>
           <FamilyTreePage
             childId={id}
             firstName={firstName}
@@ -53,13 +57,13 @@ export const ChildTabs = (
             })}
             refreshContacts={setTrigger}
           />
-          <Spacing m={{ t: "20px" }}>
-            <Table
-              items={childContactsTableData(contacts)}
-              head={contactsTableColumns}
-            />
-          </Spacing>
-        </div>
+        //   <Spacing m={{ t: "20px" }}>
+        //     <Table
+        //       items={childContactsTableData(contacts)}
+        //       head={contactsTableColumns}
+        //     />
+        //   </Spacing>
+        // </div>
       ),
     },
     { label: "Family Search" },

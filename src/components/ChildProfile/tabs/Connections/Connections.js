@@ -1,24 +1,20 @@
-import DynamicTable from "@atlaskit/dynamic-table";
-import styled from "styled-components";
-import { connectionsTableData } from "../../../../content/connections.data";
-import { Switch } from "@chakra-ui/switch";
 import Button from "@atlaskit/button";
+import DynamicTable from "@atlaskit/dynamic-table";
+import { ChakraProvider } from "@chakra-ui/react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import styled from "styled-components";
 import {
   createContactRequest,
-  createTableChildContactRequest,
-  updateChildContactRequestConnections,
+  createTableChildContactRequest
 } from "../../../../api/childContact";
+import { connectionsTableData } from "../../../../content/connections.data";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
-import { Box, Spacing, Title, Form } from "../../../ui/atoms";
+import { Box, Spacing, Title } from "../../../ui/atoms";
 import { ModalDialog } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
-import { useForm } from "react-hook-form";
-import { FormSection } from "@atlaskit/form";
-import { ChakraProvider } from "@chakra-ui/react";
 
 const columns = [
   {
@@ -86,7 +82,7 @@ export const Connections = (props) => {
                   },
                 });
               } else if (parent) {
-                let parentNode = props.contacts.find((item) => {
+                let parentNode = props.treeContacts.find((item) => {
                   console.log(item);
                   return item.Relationship === parent;
                 });
