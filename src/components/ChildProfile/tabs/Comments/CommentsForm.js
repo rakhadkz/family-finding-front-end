@@ -78,7 +78,7 @@ export const CommentsForm = ({
               />
               <StyledButtonGroup>
                 <Button type="submit" appearance="primary">
-                  Send
+                  Comment
                 </Button>
 
                 <Button
