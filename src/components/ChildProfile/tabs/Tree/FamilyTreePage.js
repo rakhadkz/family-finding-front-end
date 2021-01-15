@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import {
   createContactRequest,
-  createTableChildContactRequest
+  createTableChildContactRequest,
 } from "../../../../api/childContact";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
@@ -86,8 +86,8 @@ export const FamilyTreePage = (props) => {
             });
           })
           .finally(() => {
-            setIsAddModalOpen(false)
-            props.refreshContacts(prev => !prev)
+            setIsAddModalOpen(false);
+            props.refreshContacts((prev) => !prev);
           });
       })
       .finally(() => setIsAddModalOpen(false));
@@ -126,7 +126,9 @@ export const FamilyTreePage = (props) => {
           <AddContactForm
             onSubmit={async (data) => {
               console.log("DATA", data);
-              await onAddContact(data).finally(() => props.refreshContacts(prev => !prev));
+              await onAddContact(data).finally(() =>
+                props.refreshContacts((prev) => !prev)
+              );
               console.log("FETCHING");
             }}
             onCancel={() => setIsAddModalOpen(false)}
