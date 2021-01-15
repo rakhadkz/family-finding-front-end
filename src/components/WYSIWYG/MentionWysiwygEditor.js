@@ -35,9 +35,15 @@ const positionSuggestions = ({ state, props }) => {
 };
 
 const MentionWysiwygEditor = (props) => {
+  const editorRef = useRef(null);
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+
+  useEffect(() => {
+    editorRef.current && editorRef.current.focus();
+  }, []);
+
   const { mentions } = useMentions();
   const [suggestions, setSuggestions] = useState([]);
   const [{ plugins, Toolbar, MentionSuggestions }] = useState(() => {
@@ -61,8 +67,6 @@ const MentionWysiwygEditor = (props) => {
       MentionSuggestions,
     };
   });
-
-  const editorRef = useRef(null);
 
   const onSearchChange = ({ value }) => {
     console.log(value, mentions, suggestions);
