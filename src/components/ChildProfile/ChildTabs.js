@@ -33,6 +33,7 @@ export const ChildTabs = (
           contacts={contacts}
           setContacts={setContacts}
           childId={id}
+          refreshContacts={setTrigger}
         />
       ),
     },

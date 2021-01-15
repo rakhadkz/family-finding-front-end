@@ -126,7 +126,10 @@ export const Connections = (props) => {
               progress: undefined,
             });
           })
-          .finally(() => setIsAddModalOpen(false));
+          .finally(() => {
+            props.refreshContacts((prev) => !prev);
+            setIsAddModalOpen(false);
+          });
       })
       .finally(() => setIsAddModalOpen(false));
   };
