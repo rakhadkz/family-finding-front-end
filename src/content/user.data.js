@@ -12,7 +12,7 @@ const userTableData = (data, user, setIsOpen, setCurrentUser, history = null) =>
       !isArray ? (
         full_name
       ) : (
-        <Button onClick={() => history.push("/users/" + item.id)} appearance="link" spacing="none">
+        <Button onClick={() => history.push((user?.role === 'super_admin' ? '/users/' : '/organization_users/') + item.id)} appearance="link" spacing="none">
           {full_name}
         </Button>
       ),

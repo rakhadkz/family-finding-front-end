@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Spacing, Title } from "../components/ui/atoms";
-import { Sidebar } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
-import { SidebarTemplate } from "../components/ui/templates";
 import { actionItemTableData } from "../content/actionItem.data";
 import { actionItemsTableColumns } from "../content/columns.data";
 import { fetchActionItems } from "../context/actionItems/actionItemProvider";
@@ -24,14 +22,14 @@ export const ActionItemsPage = (props) => {
         if(response) {
           const items = response.data;
           setTotalPage(response.meta?.num_pages);
-          setItems(actionItemTableData(items, setRefresh, setTablePending));
+          setItems(actionItemTableData(items, setRefresh, setTablePending, history));
         }
       })
       .finally(() => setTablePending(false));
   }, [refresh, currentPage]);
   
   return (
-    <SidebarTemplate sidebar={<Sidebar />}>
+    <>
       <Title>Action Items</Title>
       <Spacing m={{ t: "29px" }}>
         <Table
@@ -43,6 +41,6 @@ export const ActionItemsPage = (props) => {
           pending={tablePending}
         />
       </Spacing>
-    </SidebarTemplate>
+    </>
   );
 };

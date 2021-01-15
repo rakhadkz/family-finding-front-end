@@ -1,14 +1,15 @@
-import Avatar from "@atlaskit/avatar";
 import Badge from "@atlaskit/badge";
 import React from "react";
 import styled from "styled-components";
 import { getLocalStorageUser } from "../../../context/auth/authProvider";
+import { Avatar } from "../molecules/Avatar";
 
 export const SidebarUser = () => {
   const user = getLocalStorageUser();
   return (
+    user && (
     <SidebarUserContainer>
-      <Avatar appearance="circle" src={user?.avatar} size="large" />
+      <Avatar name={`${user.first_name} ${user.last_name}`}/>
       <UserBadgeContainer>
         <Badge appearance="primary">{user?.badge}</Badge>
       </UserBadgeContainer>
@@ -16,6 +17,7 @@ export const SidebarUser = () => {
         {user?.first_name} {user?.last_name}
       </UserNameText>
     </SidebarUserContainer>
+    )
   );
 };
 

@@ -8,7 +8,7 @@ function LoginPage() {
 
   return (
     <LoginContainer>
-      <LoginForm onSubmit={login} />
+      <LoginForm onSubmit={login}/>
     </LoginContainer>
   );
 }

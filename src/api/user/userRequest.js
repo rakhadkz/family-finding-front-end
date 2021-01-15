@@ -33,3 +33,11 @@ export const deleteOrganizationUserRequest = async (id) => {
     method: "DELETE",
   });
 };
+
+export const updateUserRequest = (id, data) => {
+  return request({
+    endpoint: `admin/users/${id}`,
+    method: "PUT",
+    data
+  });
+}

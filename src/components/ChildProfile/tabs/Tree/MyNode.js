@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./my-node.css";
 import styled from "styled-components";
 import { Box } from "../../../ui/atoms";
-import Avatar from "@atlaskit/avatar";
+import { Avatar } from "../../../ui/molecules/Avatar";
 const propTypes = {
   nodeData: PropTypes.object.isRequired,
 };
@@ -22,9 +22,7 @@ const MyNode = ({ nodeData }) => {
     <Card className="myChart">
       <Box d="flex" align="center">
         <Avatar
-          appearance="circle"
-          src={"https://cdn.themag.uz/2019/05/350x350-ava-MAN.jpg"}
-          size="large"
+          name={nodeData.name}
         />
         <div className="content">
           <span className="name">{nodeData.name}</span>

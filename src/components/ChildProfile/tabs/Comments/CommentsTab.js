@@ -1,10 +1,12 @@
-import Avatar from "@atlaskit/avatar";
 import React, { useEffect, useState } from "react";
 import { postCommentRequest } from "../../../../api/comments";
 import { fetchComments } from "../../../../context/children/childProvider";
 import { Box, Spacing } from "../../../ui/atoms";
 import { Comments } from "./Comments";
 import { CommentsForm } from "./CommentsForm";
+import { useAuth } from "../../../../context/auth/authContext";
+import { fetchUsersRequest } from "../../../../api/user";
+import { Avatar } from "../../../ui/molecules/Avatar";
 import { MentionsProvider } from "./mentions-context";
 import styled from "styled-components";
 
@@ -55,9 +57,7 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
         </Spacing>
         <Footer d="flex" show={show} isExpanded={isExpanded} blocks={blocks}>
           <Avatar
-            appearance="circle"
-            src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
-            size="large"
+            name={`${user.first_name} ${user.last_name}`}
           />
           <Spacing m={{ l: "17px", t: "-22px" }}>
             <CommentsForm

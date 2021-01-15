@@ -1,4 +1,3 @@
-import Avatar from "@atlaskit/avatar";
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Box, Spacing, Title } from "../../../ui/atoms";
@@ -6,6 +5,7 @@ import Button from "@atlaskit/button";
 import { CommentsForm } from "./CommentsForm";
 import { useClickOutside } from "../../../../hooks/index";
 import { postCommentRequest } from "../../../../api/comments";
+import { Avatar } from "../../../ui/molecules/Avatar";
 
 export const Comments = ({ data, shouldUpdate, increaseShouldUpdate, id }) => {
   const [showInput, setShowInput] = useState(false);
@@ -59,11 +59,7 @@ export const Comments = ({ data, shouldUpdate, increaseShouldUpdate, id }) => {
   return (
     <Spacing m={{ t: "17px" }}>
       <Box d="flex">
-        <Avatar
-          appearance="circle"
-          src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
-          size="large"
-        />
+        <Avatar name={`${data.user.first_name} ${data.user.last_name}`}/>
         <Spacing m={{ l: "7px" }}>
           <Title size="14px">{`${data.user.first_name} ${data.user.last_name}`}</Title>
           <Text dangerouslySetInnerHTML={{ __html: body }}></Text>

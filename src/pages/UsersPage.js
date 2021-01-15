@@ -3,10 +3,9 @@ import PersonIcon from "@atlaskit/icon/glyph/person";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Spacing, Title } from "../components/ui/atoms";
-import { ModalDialog, Sidebar } from "../components/ui/common";
+import { ModalDialog } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
-import { SidebarTemplate } from "../components/ui/templates";
 import { UserBreadcrumbs } from "../components/Users/UserBreadcrumbs";
 import { usersTableColumns } from "../content/columns.data";
 import { userTableData } from "../content/user.data";
@@ -99,7 +98,7 @@ export const UsersPage = (props) => {
       () =>
         fetchUsers({
           id: id,
-          view: "extended",
+          view: "table",
           search: search,
           page: currentPage,
           meta: true,
@@ -111,8 +110,8 @@ export const UsersPage = (props) => {
                 setUsers(
                   userTableData(data, user, setIsOpen, setCurrentUser)
                 );
-                setName(`${data.first_name} ${data.last_name}`) &&
-                  setEmail(data.email);
+                setName(`${data.first_name} ${data.last_name}`)
+                setEmail(data.email);
               } else {
                 const items = response.data;
                 setTotalPage(response.meta.num_pages);
@@ -129,7 +128,7 @@ export const UsersPage = (props) => {
   }, [id, refresh, currentPage, search]);
 
   return (
-    <SidebarTemplate sidebar={<Sidebar />}>
+    <>
       <Title>{user?.role !== "super_admin" && organization?.name} Users</Title>
       {id ? (
         <ConcreteUser name={name} email={email} />
@@ -155,6 +154,6 @@ export const UsersPage = (props) => {
         body="This user will no longer have access to your organization"
         appearance="danger"
       />
-    </SidebarTemplate>
+    </>
   );
 };

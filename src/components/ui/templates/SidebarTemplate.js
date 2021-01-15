@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
+import { localStorageKey } from "../../../utils/requestHandler";
 import { Box } from "../atoms";
 
 export const SidebarTemplate = ({ children, sidebar }) => {
   return (
+    window.localStorage.getItem(localStorageKey) ? 
     <Box d="flex">
       <SidebarContainer>{sidebar}</SidebarContainer>
       <ContentContainer>{children}</ContentContainer>
-    </Box>
+    </Box> : children
   );
 };
 

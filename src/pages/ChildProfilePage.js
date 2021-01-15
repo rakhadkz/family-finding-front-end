@@ -12,8 +12,7 @@ import {
   RelativesList,
 } from "../components/ChildProfile";
 import { Box, Spacing, Title } from "../components/ui/atoms";
-import { ModalDialog, Sidebar } from "../components/ui/common";
-import { SidebarTemplate } from "../components/ui/templates";
+import { ModalDialog } from "../components/ui/common";
 import { CHILDREN } from "../helpers";
 import Select from "@atlaskit/select";
 import "@atlaskit/css-reset";
@@ -77,25 +76,36 @@ export const ChildProfilePage = (props) => {
       .finally(() => setPending(false));
   };
 
-  const onSubmitUsers = () => {
-    !assignedUsers && setValidationState("error");
-    setButtonPending(true);
-    createChildUserRequest({
-      user_child: {
-        users: assignedUsers.map((item) => ({
-          user_id: item.value,
-          child_id: child.id,
-          date_approved: new Date(),
-          date_denied: null,
-        })),
-      },
+  const onSubmitUsers = async() => {
+    !assignedUsers && setValidationState("error")
+    setButtonPending(true)
+    await createChildUserRequest({
+      "user_child": {
+        "users": assignedUsers.map(item => ({
+          "user_id": item.value,
+          "child_id": child.id,
+          "date_approved": new Date(),
+          "date_denied": null
+        }))
+      }
     })
-      .then(() => fetchChildUsers())
-      .finally(() => {
-        setButtonPending(false);
-        setIsOpen(false);
-      });
-  };
+    await createActionItemRequest({
+      "action_item": {
+        "items": assignedUsers.map(item => ({
+          "title": "Access granted",
+          "description": `You have been assigned to a child`,
+          "child_id": child.id,
+          "user_id": item.value,
+          "action_type": "access_granted"
+        }))
+      }
+    })
+    .then(() => fetchChildUsers())
+    .finally(() => {
+      setButtonPending(false)
+      setIsOpen(false)
+    })
+  }
 
   const openModal = () => {
     setAssignedUsers(null);
@@ -107,31 +117,30 @@ export const ChildProfilePage = (props) => {
   ));
 
   const assignUser = () => {
-    user?.role === "user" &&
-      createChildUserRequest({
-        user_child: {
-          users: [
-            {
-              user_id: user.id,
-              child_id: id,
-            },
-          ],
-        },
-      }) &&
-      createActionItemRequest({
-        action_item: {
-          title: "User Assign",
-          description: `${user.first_name} ${user.last_name} has requested access for ${child.first_name} ${child.last_name}`,
-          child_id: id,
-          organization_id: user.organization_id,
-          related_user_id: user.id,
-          action_type: "access_request",
-        },
-      }).then(() => history.goBack());
-  };
+    user?.role === "user"
+    && createChildUserRequest({
+      "user_child": {
+        "users": [
+          {
+            "user_id": user.id,
+            "child_id": id
+          }
+        ]
+      }
+    })
+    && createActionItemRequest({
+      "action_item": {
+        "title": "User Assign",
+        "description": `${user.first_name} ${user.last_name} has requested access for ${child.first_name} ${child.last_name}`,
+        "child_id": id,
+        "related_user_id": user.id,
+        "action_type": "access_request"
+      }
+    }).then(() => history.goBack())
+  }
 
   return (
-    <SidebarTemplate sidebar={<Sidebar />}>
+    <>
       {pending ? (
         <div
           style={{
@@ -256,7 +265,8 @@ export const ChildProfilePage = (props) => {
             </Button>
           </Box>
         </div>
-      )}
-    </SidebarTemplate>
+        )
+      }
+    </>
   );
 };

@@ -1,4 +1,3 @@
-import Avatar from "@atlaskit/avatar";
 import React, { useEffect, useState } from "react";
 import { postCommentRequest } from "../../api/comments";
 import { fetchComments } from "../../context/children/childProvider";
@@ -7,6 +6,7 @@ import { Comments } from "./Comments";
 import { CommentsForm } from "./CommentsForm";
 import { useAuth } from "../../context/auth/authContext";
 import { fetchUsersRequest } from "../../api/user";
+import { Avatar } from "../ui/molecules/Avatar";
 
 export const CommentsTab = ({ childId, setChild }) => {
   const [comments, setComments] = useState([]);
@@ -41,11 +41,7 @@ export const CommentsTab = ({ childId, setChild }) => {
   return (
     <Spacing m={{ t: "22px" }}>
       <Box d="flex">
-        <Avatar
-          appearance="circle"
-          src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
-          size="large"
-        />
+        <Avatar name={`${user.first_name} ${user.last_name}`}/>
         <Spacing m={{ l: "17px", t: "-22px" }}>
           <CommentsForm
             shouldUpdate={shouldUpdate}

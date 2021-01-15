@@ -4,10 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { OrganizationBreadcrumbs } from "../components/Organizations";
 import { Box, Spacing, Title } from "../components/ui/atoms";
-import { Sidebar } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
-import { SidebarTemplate } from "../components/ui/templates";
 import { organizationsTableColumns } from "../content/columns.data";
 import { organizationTableData } from "../content/organization.data";
 import { fetchOrganizations } from "../context/organization/organizationProvider";
@@ -86,7 +84,7 @@ export const OrganizationsPage = (props) => {
   }, [search]);
 
   return (
-    <SidebarTemplate sidebar={<Sidebar />}>
+    <>
       <Title>Organizations</Title>
       {id ? (
         <ConcreteOrganization name={name} />
@@ -107,6 +105,6 @@ export const OrganizationsPage = (props) => {
           setCurrentPage={setCurrentPage}
         />
       </Spacing>
-    </SidebarTemplate>
+    </>
   );
 };
