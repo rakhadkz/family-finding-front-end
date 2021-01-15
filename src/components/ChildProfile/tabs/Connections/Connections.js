@@ -1,15 +1,15 @@
-import DynamicTable from "@atlaskit/dynamic-table";
-import styled from "styled-components";
-import { connectionsTableData } from "../../../../content/connections.data";
-import { Switch } from "@chakra-ui/switch";
 import Button from "@atlaskit/button";
+import DynamicTable from "@atlaskit/dynamic-table";
+import { ChakraProvider } from "@chakra-ui/react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import styled from "styled-components";
 import {
   createContactRequest,
-  createTableChildContactRequest,
+  createTableChildContactRequest
 } from "../../../../api/childContact";
+import { connectionsTableData } from "../../../../content/connections.data";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
 import { Box, Spacing, Title } from "../../../ui/atoms";
@@ -50,7 +50,8 @@ const columns = [
 ];
 
 export const Connections = (props) => {
-  const { contacts } = props;
+  const [isLoading, setIsLoading] = useState(false);
+  const { contacts, setContacts } = props;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   let { id } = useParams();
 
@@ -81,7 +82,7 @@ export const Connections = (props) => {
                   },
                 });
               } else if (parent) {
-                let parentNode = props.contacts.find((item) => {
+                let parentNode = props.treeContacts.find((item) => {
                   console.log(item);
                   return item.Relationship === parent;
                 });
@@ -121,47 +122,57 @@ export const Connections = (props) => {
               progress: undefined,
             });
           })
-          .finally(() => setIsAddModalOpen(false));
+          .finally(() => {
+            props.refreshContacts((prev) => !prev);
+            setIsAddModalOpen(false);
+          });
       })
       .finally(() => setIsAddModalOpen(false));
   };
+
   return (
-    <Spacing m={{ t: "25px" }}>
-      <Spacing m={{ b: "20px" }}>
-        <Box d="flex" justify="space-between">
-          <Title size={"16px"}>Connections List</Title>
-          <Button appearance="warning" onClick={() => setIsAddModalOpen(true)}>
-            Add Connections
-          </Button>
-        </Box>
-      </Spacing>
-      <ModalDialog
-        isOpen={isAddModalOpen}
-        setIsOpen={setIsAddModalOpen}
-        heading="Add Connection"
-        appearance={null}
-        body={
-          <AddContactForm
-            onSubmit={async (data) => {
-              console.log("DATA", data);
-              await onAddContact(data).finally(props.refreshContacts);
-              console.log("FETCHING");
-            }}
-            onCancel={() => setIsAddModalOpen(false)}
-          />
-        }
-        hasActions={false}
-      />
-      <TableWrapper>
-        <DynamicTable
-          head={{ cells: columns }}
-          loadingSpinnerSize="large"
-          isLoading={false}
-          rows={connectionsTableData(contacts)}
-          isFixedSize
+    <ChakraProvider>
+      <Spacing m={{ t: "25px" }}>
+        <Spacing m={{ b: "20px" }}>
+          <Box d="flex" justify="space-between">
+            <Title size={"16px"}>Connections List</Title>
+            <Button
+              appearance="warning"
+              onClick={() => setIsAddModalOpen(true)}
+            >
+              Add Connection
+            </Button>
+          </Box>
+        </Spacing>
+        <ModalDialog
+          isOpen={isAddModalOpen}
+          setIsOpen={setIsAddModalOpen}
+          heading="Add Connection"
+          appearance={null}
+          body={
+            <AddContactForm
+              onSubmit={async (data) => {
+                console.log("DATA", data);
+                await onAddContact(data).finally(props.refreshContacts);
+                console.log("FETCHING");
+              }}
+              onCancel={() => setIsAddModalOpen(false)}
+            />
+          }
+          hasActions={false}
         />
-      </TableWrapper>
-    </Spacing>
+
+        <TableWrapper>
+          <DynamicTable
+            head={{ cells: columns }}
+            loadingSpinnerSize="large"
+            isLoading={isLoading}
+            rows={connectionsTableData(contacts, setIsLoading, setContacts)}
+            isFixedSize
+          />
+        </TableWrapper>
+      </Spacing>
+    </ChakraProvider>
   );
 };
 

@@ -3,12 +3,13 @@ import {
   createChildContactRequest,
   fetchContactsRequest,
   removeChildContactRequest,
-  updateChildContactRequest
+  updateChildContactRequest,
+  updateChildContactRequestConnections,
 } from "../../api/childContact";
 import {
   createChildRequest,
-
-  fetchChildComments, fetchChildrenRequest
+  fetchChildComments,
+  fetchChildrenRequest,
 } from "../../api/children";
 
 const fetchChildren = (params = null) => {
@@ -121,6 +122,25 @@ const updateChildContact = (data, contactId) => {
   });
 };
 
+const updateChildContactConnections = (data, contactId) => {
+  console.log("HELLLO", data);
+  const errorStatuses = {
+    500: "Error on Server !",
+  };
+
+  return updateChildContactRequestConnections(data, contactId).catch((err) => {
+    toast.error(errorStatuses[err.status], {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  });
+};
+
 const removeChildContact = (contactId) => {
   const errorStatuses = {
     500: "Error on Server !",
@@ -144,6 +164,7 @@ export {
   createChild,
   createChildContact,
   updateChildContact,
+  updateChildContactConnections,
   removeChildContact,
   fetchContacts,
   fetchComments,

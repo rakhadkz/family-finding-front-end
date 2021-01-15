@@ -304,7 +304,7 @@ class Chart extends Component {
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT63VcFex7-_JFQOKCju4WMQHp3xHIxlBZUJA&usqp=CAU",
       });
       chart.removeNode(node.id);
-      refreshContacts(prev => !prev);
+      refreshContacts((prev) => !prev);
     });
 
     chart.on("remove", function (sender, nodeId, newIds) {
@@ -330,7 +330,11 @@ class Chart extends Component {
   render() {
     return (
       <>
-        <div id="tree" style={{ height: 400 }} ref={this.divRef}></div>
+        <div
+          id="tree"
+          style={{ height: "93vh", borderBottom: "1px solid #ccc" }}
+          ref={this.divRef}
+        ></div>
         <EditNodeForm initialContacts={this.props.initialContacts} />
       </>
     );

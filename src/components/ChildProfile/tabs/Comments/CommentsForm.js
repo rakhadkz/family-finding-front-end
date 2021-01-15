@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Form, Box } from "../../../ui/atoms";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { Form, Box, Spacing } from "../../../ui/atoms";
 import { FormSection } from "@atlaskit/form";
-import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 import Button from "@atlaskit/button";
-import styled from "styled-components";
 import { WysiwygEditor } from "../../../WYSIWYG";
-import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+import { useMentions } from "./mentions-context";
+import { TextInput } from "../../../ui/molecules";
 
 export const CommentsForm = ({
   onSubmit,
@@ -15,20 +14,12 @@ export const CommentsForm = ({
   shouldUpdate,
   increaseShouldUpdate,
   setShowInput,
-  mentions,
+  isExpanded,
+  collapseEditor,
+  expandEditor,
+  setBlocks,
 }) => {
-  const user = getLocalStorageUser();
-  const {
-    register,
-    handleSubmit,
-    control,
-    errors,
-    reset,
-    formState: { isSubmitSuccessful },
-  } = useForm({
-    mode: "onChange",
-  });
-
+  const [upd, setUpd] = useState(1);
   const [text, setText] = useState("");
   const [htmlText, setHtmlText] = useState("");
   const [rawData, setRawData] = useState("");
@@ -70,33 +61,40 @@ export const CommentsForm = ({
       });
   };
 
-  const [upd, setUpd] = useState(1);
-  // console.log(text, rawData);
-
   return (
     <Form w="100%" onSubmit={onSubmitHandle} noValidate>
       <FormSection>
-        <WysiwygEditor
-          mentions={mentions}
-          upd={upd}
-          onChange={(tex, raw, html) => {
-            setText(tex);
-            setRawData(raw);
-            setHtmlText(html);
-          }}
-        />
-        <StyledButtonGroup>
-          <Button type="submit" appearance="primary">
-            Send
-          </Button>
-           
-          <Button
-            appearance="subtle"
-            onClick={() => setShowInput && setShowInput(false)}
-          >
-            Cancel
-          </Button>
-        </StyledButtonGroup>
+        {isExpanded ? (
+          <>
+            <Spacing m={{ l: "-17px" }}>
+              <WysiwygEditor
+                upd={upd}
+                onChange={(tex, raw, html) => {
+                  setText(tex);
+                  setRawData(raw);
+                  setHtmlText(html);
+                }}
+                setBlocks={setBlocks}
+              />
+              <StyledButtonGroup>
+                <Button type="submit" appearance="primary">
+                  Comment
+                </Button>
+
+                <Button
+                  appearance="subtle"
+                  onClick={() =>
+                    collapseEditor() && setShowInput && setShowInput(false)
+                  }
+                >
+                  Cancel
+                </Button>
+              </StyledButtonGroup>
+            </Spacing>
+          </>
+        ) : (
+          <TextInput onClick={expandEditor} placeholder="Add a comment..." />
+        )}
       </FormSection>
     </Form>
   );

@@ -31,13 +31,20 @@ export const updateChildContactRequest = (data, contactId) => {
   });
 };
 
+export const updateChildContactRequestConnections = (data, contactId) => {
+  return request({
+    endpoint: `child_contacts/${contactId}`,
+    data,
+    method: "PUT",
+  });
+};
+
 export const removeChildContactRequest = (contactId) => {
   return request({
     endpoint: `child_tree_contacts/${contactId}`,
     method: "DELETE",
   });
 };
-
 
 export const createContactRequest = (data) => {
   return request({

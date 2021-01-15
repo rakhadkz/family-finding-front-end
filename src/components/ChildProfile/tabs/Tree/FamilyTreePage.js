@@ -1,4 +1,3 @@
-import Button from "@atlaskit/button";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -9,7 +8,7 @@ import {
 } from "../../../../api/childContact";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
-import { Box, Spacing, Title } from "../../../ui/atoms";
+import { Spacing } from "../../../ui/atoms";
 import { ModalDialog } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
 import OrgChart from "./mychart";
@@ -86,8 +85,8 @@ export const FamilyTreePage = (props) => {
             });
           })
           .finally(() => {
-            setIsAddModalOpen(false)
-            props.refreshContacts(prev => !prev)
+            setIsAddModalOpen(false);
+            props.refreshContacts((prev) => !prev);
           });
       })
       .finally(() => setIsAddModalOpen(false));
@@ -109,14 +108,14 @@ export const FamilyTreePage = (props) => {
           refreshContacts={props.refreshContacts}
         />
       </Spacing>
-      <Spacing m={{ b: "20px" }}>
+      {/* <Spacing m={{ b: "20px" }}>
         <Box d="flex" justify="space-between">
           <Title size={"16px"}>Contact List</Title>
           <Button appearance="warning" onClick={() => setIsAddModalOpen(true)}>
             Add Contact
           </Button>
         </Box>
-      </Spacing>
+      </Spacing> */}
       <ModalDialog
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
@@ -126,7 +125,9 @@ export const FamilyTreePage = (props) => {
           <AddContactForm
             onSubmit={async (data) => {
               console.log("DATA", data);
-              await onAddContact(data).finally(() => props.refreshContacts(prev => !prev));
+              await onAddContact(data).finally(() =>
+                props.refreshContacts((prev) => !prev)
+              );
               console.log("FETCHING");
             }}
             onCancel={() => setIsAddModalOpen(false)}

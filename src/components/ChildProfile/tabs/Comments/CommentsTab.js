@@ -7,27 +7,28 @@ import { CommentsForm } from "./CommentsForm";
 import { useAuth } from "../../../../context/auth/authContext";
 import { fetchUsersRequest } from "../../../../api/user";
 import { Avatar } from "../../../ui/molecules/Avatar";
+import { MentionsProvider } from "./mentions-context";
+import styled from "styled-components";
 
 export const CommentsTab = ({ childId, childComments, setChild }) => {
-  const { user } = useAuth();
-  const [mentions, setMentions] = useState();
   const [comments, setComments] = useState(childComments);
   const [shouldUpdate, increaseShouldUpdate] = useState(0);
+  const [show, handleShow] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const expandEditor = () => setIsExpanded(true);
+  const collapseEditor = () => setIsExpanded(false);
+  const [blocks, setBlocks] = useState(1);
 
   useEffect(() => {
-    user &&
-      fetchUsersRequest().then((response) =>
-        setMentions(
-          response.map((user) => ({
-            name: `${user.first_name} ${user.last_name}`,
-            title: "Staff of Penn State Orphanage",
-            avatar:
-              "https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png",
-            id: user.id,
-          }))
-        )
-      );
-  }, [user]);
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 100) {
+        handleShow(true);
+      } //else handleShow(false);
+      return () => {
+        window.removeEventListener("scroll");
+      };
+    });
+  }, []);
 
   useEffect(() => {
     fetchComments(childId).then((items) => {
@@ -38,37 +39,60 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
   }, [childId, shouldUpdate]);
 
   return (
-    <Spacing m={{ t: "22px" }}>
-      <Box d="flex">
-        <Avatar
-          name={`${user.first_name} ${user.last_name}`}
-        />
-        <Spacing m={{ l: "17px", t: "-22px" }}>
-          <CommentsForm
-            shouldUpdate={shouldUpdate}
-            increaseShouldUpdate={increaseShouldUpdate}
-            id={childId}
-            inReply={0}
-            onSubmit={postCommentRequest}
-            mentions={mentions}
-          />
+    <MentionsProvider>
+      <Spacing m={{ b: "22px" }}>
+        <Spacing m={{ b: "22px" }}>
+          {comments &&
+            comments
+              .filter((comment) => !comment.in_reply_to)
+              .sort((a, b) => a.created_at - b.created_at)
+              .map((comment) => (
+                <Comments
+                  id={childId}
+                  data={comment}
+                  shouldUpdate={shouldUpdate}
+                  increaseShouldUpdate={increaseShouldUpdate}
+                />
+              ))}
         </Spacing>
-      </Box>
-      <Spacing m={{ t: "22px" }}>
-        {comments &&
-          comments
-            .filter((comment) => !comment.in_reply_to)
-            .sort((a, b) => a.created_at - b.created_at)
-            .map((comment) => (
-              <Comments
-                id={childId}
-                data={comment}
-                mentions={mentions}
-                shouldUpdate={shouldUpdate}
-                increaseShouldUpdate={increaseShouldUpdate}
-              />
-            ))}
+        <Footer d="flex" show={show} isExpanded={isExpanded} blocks={blocks}>
+          <Avatar
+            name={`${user.first_name} ${user.last_name}`}
+          />
+          <Spacing m={{ l: "17px", t: "-22px" }}>
+            <CommentsForm
+              setBlocks={setBlocks}
+              isExpanded={isExpanded}
+              collapseEditor={collapseEditor}
+              expandEditor={expandEditor}
+              shouldUpdate={shouldUpdate}
+              increaseShouldUpdate={increaseShouldUpdate}
+              id={childId}
+              inReply={0}
+              onSubmit={postCommentRequest}
+            />
+          </Spacing>
+        </Footer>
       </Spacing>
-    </Spacing>
+    </MentionsProvider>
   );
 };
+//margin-bottom:50px;
+
+const Footer = styled(Box)`
+  ${(props) =>
+    props.show &&
+    `
+  position: fixed;
+  height:${
+    props.show && props.isExpanded ? (200 * props.blocks).toString() : "50"
+  }px;
+  width: 100%;
+  border: solid;
+  border-radius: 5px;
+  border-color: white;
+  background-color: white;
+  bottom: 0px;
+  margin-bottom: 0px;
+  `}
+`;

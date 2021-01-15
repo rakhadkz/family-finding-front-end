@@ -3,75 +3,77 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { fetchChildrenRequest } from "../../api/children";
 import { constructTree } from "../../content/childContact.tree.data";
-import { childContactsTableData } from "../../content/childContacts.data";
-import { contactsTableColumns } from "../../content/columns.data";
-import { Connections } from "./tabs/Connections/Connections";
-import { Spacing } from "../ui/atoms";
-import { Table } from "../ui/common/Table";
-import { CommentsTab } from "./tabs/Comments/CommentsTab";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
+import { CommentsTab } from "./tabs/Comments/CommentsTab";
+import { Connections } from "./tabs/Connections/Connections";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
 export const ChildTabs = (
-  {
-    id,
-    first_name: firstName,
-    last_name: lastName,
-    family_tree = [],
-  },
+  { id, first_name: firstName, last_name: lastName, family_tree = [] },
   setChild
 ) => {
-
-  const [ contacts, setContacts ] = useState([]);
-  const [ trigger, setTrigger ] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [trigger, setTrigger] = useState(false);
 
   useEffect(() => {
-    fetchChildrenRequest({id: id, view: "contacts"}).then((data) => setContacts(data.contacts))
-  }, [trigger])
+    fetchChildrenRequest({ id: id, view: "contacts" }).then((data) =>
+      setContacts(data.contacts)
+    );
+  }, [trigger]);
 
   const tabs = [
     {
+      label: "Connections",
+      content: (
+        <Connections
+          contacts={contacts}
+          initialContacts={contacts}
+          treeContacts={constructTree({
+            contacts: family_tree,
+            firstName,
+            lastName,
+          })}
+          childId={id}
+          firstName={firstName}
+          lastName={lastName}
+          setContacts={setContacts}
+          refreshContacts={setTrigger}
+        />
+      ),
+    },
+    {
       label: "Family Tree",
       content: (
-        <div>
-          <FamilyTreePage
-            childId={id}
-            firstName={firstName}
-            lastName={lastName}
-            initialContacts={contacts}
-            contacts={constructTree({
-              contacts: family_tree,
-              firstName,
-              lastName,
-            })}
-            refreshContacts={setTrigger}
-          />
-          <Spacing m={{ t: "20px" }}>
-            <Table
-              items={childContactsTableData(contacts)}
-              head={contactsTableColumns}
-            />
-          </Spacing>
-        </div>
+        // <div>
+        <FamilyTreePage
+          childId={id}
+          firstName={firstName}
+          lastName={lastName}
+          initialContacts={contacts}
+          contacts={constructTree({
+            contacts: family_tree,
+            firstName,
+            lastName,
+          })}
+          refreshContacts={setTrigger}
+        />
+        //   <Spacing m={{ t: "20px" }}>
+        //     <Table
+        //       items={childContactsTableData(contacts)}
+        //       head={contactsTableColumns}
+        //     />
+        //   </Spacing>
+        // </div>
       ),
     },
     { label: "Family Search" },
     {
       label: "Comments",
-      content: (
-        <CommentsTab
-          childId={id}
-          setChild={setChild}
-        />
-      ),
+      content: <CommentsTab childId={id} setChild={setChild} />,
     },
     {
       label: "Attachments",
       content: <AttachmentsPage child_id={id} />,
-    },
-    {
-      label: "Connections",
-      content: <Connections contacts={contacts} childId={id} />,
     },
   ];
   const location = useLocation();

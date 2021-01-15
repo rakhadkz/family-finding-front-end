@@ -7,13 +7,7 @@ import { useClickOutside } from "../../../../hooks/index";
 import { postCommentRequest } from "../../../../api/comments";
 import { Avatar } from "../../../ui/molecules/Avatar";
 
-export const Comments = ({
-  data,
-  shouldUpdate,
-  increaseShouldUpdate,
-  id,
-  mentions,
-}) => {
+export const Comments = ({ data, shouldUpdate, increaseShouldUpdate, id }) => {
   const [showInput, setShowInput] = useState(false);
   const [body, setBody] = useState(null);
   const replyRef = useRef();
@@ -22,40 +16,43 @@ export const Comments = ({
     let comment = data.html_body ? data.html_body : data.body;
     let ij = [];
     for (let i = 0; i < comment.length; i++) {
-      // iterate through comment body
-      if (comment[i] === "@" && (i === 0 || comment[i - 1] === " ")) {
-        // if find mentions
+      if (
+        (i === 0 && comment[i] === "@") ||
+        (comment[i] === "@" && comment[i - 1] === " ") ||
+        (comment[i] === "@" && comment[i - 1] === ">")
+      ) {
         let j,
           s = 0;
         for (j = 1; j + i < comment.length && s !== 2; j++) {
           // find last index of mention
-          if (comment[i + j] === " ") s++;
+          if (comment[i + j] === " " || comment[i + j + 1] === "&") s++;
         }
+        ij.push([i, i + j]);
       }
     }
     let res = [];
     let last = 0;
     if (ij.length > 0) {
       for (let i = 0; i < ij.length; i++) {
+        // for mention highlight
         res.push(comment.substring(last, ij[i][0]));
-        res.push(`<span style="
+        res.push(`<a style="
         cursor:pointer;
         color:#0052CC;
         text-decoration:none;
         font:14px Helvetica;
-        span:hover {text-decoration:underline;};
+        a:hover {text-decoration:underline;};
         ">
           ${comment.substring(ij[i][0], ij[i][1])}
-        </span>`);
-        // res.push(<MentionedUser>{comment.substring(ij[i][0], ij[i][1])}</MentionedUser>);
+        </a>`);
         last = ij[i][1];
       }
+      let end = comment.substring(last);
       comment = "";
       res.forEach((item) => (comment += item));
-      // comment = res;
+      comment += end;
     }
-    // comment = comment.join()
-    // console.log("THIS IS COMMENT", comment);
+    console.log(comment);
     setBody(comment);
   }, []);
 
@@ -75,7 +72,6 @@ export const Comments = ({
                 inReply={data.id}
                 onSubmit={postCommentRequest}
                 setShowInput={setShowInput}
-                mentions={mentions}
               />
             </Spacing>
           ) : (
@@ -103,16 +99,6 @@ export const Comments = ({
     </Spacing>
   );
 };
-
-const MentionedUser = styled.span`
-  cursor: pointer;
-  color: #0052cc;
-  text-decoration: none;
-  font: 14px Helvetica;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
 
 const ButtonContentWrapper = styled.div`
   display: flex;
