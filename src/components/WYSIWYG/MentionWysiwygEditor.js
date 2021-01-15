@@ -40,9 +40,9 @@ const MentionWysiwygEditor = (props) => {
     EditorState.createEmpty()
   );
 
-  useEffect(() => {
-    editorRef.current && editorRef.current.focus();
-  }, []);
+  // useEffect(() => {
+  //   editorRef.current && editorRef.current.focus();
+  // }, []);
 
   const { mentions } = useMentions();
   const [suggestions, setSuggestions] = useState([]);
