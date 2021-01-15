@@ -1,7 +1,6 @@
 import { getToken } from "../context/auth/authProvider";
 
-// export const authURL = `${process.env.REACT_APP_API_BASE_URL}`;
-export const authURL = `http://localhost:3000/api/v1`;
+export const authURL = `${process.env.REACT_APP_API_BASE_URL}`;
 
 export const request = ({ endpoint, data, method, meta = false }) => {
   const token = getToken();
