@@ -45,18 +45,18 @@ export const ChildTabs = (
       label: "Family Tree",
       content: (
         // <div>
-          <FamilyTreePage
-            childId={id}
-            firstName={firstName}
-            lastName={lastName}
-            initialContacts={contacts}
-            contacts={constructTree({
-              contacts: family_tree,
-              firstName,
-              lastName,
-            })}
-            refreshContacts={setTrigger}
-          />
+        <FamilyTreePage
+          childId={id}
+          firstName={firstName}
+          lastName={lastName}
+          initialContacts={contacts}
+          contacts={constructTree({
+            contacts: family_tree,
+            firstName,
+            lastName,
+          })}
+          refreshContacts={setTrigger}
+        />
         //   <Spacing m={{ t: "20px" }}>
         //     <Table
         //       items={childContactsTableData(contacts)}

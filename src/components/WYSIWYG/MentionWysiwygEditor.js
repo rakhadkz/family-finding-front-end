@@ -76,6 +76,10 @@ const MentionWysiwygEditor = (props) => {
   //   setEditorState(EditorState.createEmpty());
   // }, [props.upd]);
 
+  useEffect(() => {
+    props.setBlocks(convertToRaw(editorState.getCurrentContent()).block);
+  }, [convertToRaw(editorState.getCurrentContent()).blocks]);
+
   const onChange = (editorState) => {
     setEditorState(editorState);
     props.onChange(

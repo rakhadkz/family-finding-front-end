@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Form, Box } from "../../../ui/atoms";
+import React, { useState, useEffect } from "react";
+import { Form, Box, Spacing } from "../../../ui/atoms";
 import { FormSection } from "@atlaskit/form";
 import Button from "@atlaskit/button";
 import { WysiwygEditor } from "../../../WYSIWYG";
 import styled from "styled-components";
 import { useMentions } from "./mentions-context";
+import { TextInput } from "../../../ui/molecules";
 
 export const CommentsForm = ({
   onSubmit,
@@ -13,6 +14,10 @@ export const CommentsForm = ({
   shouldUpdate,
   increaseShouldUpdate,
   setShowInput,
+  isExpanded,
+  collapseEditor,
+  expandEditor,
+  setBlocks,
 }) => {
   const [upd, setUpd] = useState(1);
   const [text, setText] = useState("");
@@ -59,26 +64,37 @@ export const CommentsForm = ({
   return (
     <Form w="100%" onSubmit={onSubmitHandle} noValidate>
       <FormSection>
-        <WysiwygEditor
-          upd={upd}
-          onChange={(tex, raw, html) => {
-            setText(tex);
-            setRawData(raw);
-            setHtmlText(html);
-          }}
-        />
-        <StyledButtonGroup>
-          <Button type="submit" appearance="primary">
-            Send
-          </Button>
+        {isExpanded ? (
+          <>
+            <Spacing m={{ l: "-17px" }}>
+              <WysiwygEditor
+                upd={upd}
+                onChange={(tex, raw, html) => {
+                  setText(tex);
+                  setRawData(raw);
+                  setHtmlText(html);
+                }}
+                setBlocks={setBlocks}
+              />
+              <StyledButtonGroup>
+                <Button type="submit" appearance="primary">
+                  Send
+                </Button>
 
-          <Button
-            appearance="subtle"
-            onClick={() => setShowInput && setShowInput(false)}
-          >
-            Cancel
-          </Button>
-        </StyledButtonGroup>
+                <Button
+                  appearance="subtle"
+                  onClick={() =>
+                    collapseEditor() && setShowInput && setShowInput(false)
+                  }
+                >
+                  Cancel
+                </Button>
+              </StyledButtonGroup>
+            </Spacing>
+          </>
+        ) : (
+          <TextInput onClick={expandEditor} placeholder="Add a comment..." />
+        )}
       </FormSection>
     </Form>
   );

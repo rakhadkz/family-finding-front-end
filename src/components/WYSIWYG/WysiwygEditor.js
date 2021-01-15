@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Box } from "../ui/atoms";
 import MentionWysiwygEditor from "./MentionWysiwygEditor";
-
 export const WysiwygEditor = (props) => {
-  const { onChange, upd, onSubmitHandle } = props;
-
+  const { onChange, upd, setBlocks } = props;
   return (
     <StyledBox w="100%">
-      <MentionWysiwygEditor upd={upd} onChange={onChange} />
+      <MentionWysiwygEditor
+        setBlocks={setBlocks}
+        upd={upd}
+        onChange={onChange}
+      />
     </StyledBox>
   );
 };
