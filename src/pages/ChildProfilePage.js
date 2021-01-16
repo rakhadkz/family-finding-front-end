@@ -1,5 +1,5 @@
 import AvatarGroup from "@atlaskit/avatar-group";
-import Button from "@atlaskit/button";
+import Button, { LoadingButton } from "@atlaskit/button";
 import EmailIcon from "@atlaskit/icon/glyph/email";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
 import MobileIcon from "@atlaskit/icon/glyph/mobile";
@@ -117,6 +117,7 @@ export const ChildProfilePage = (props) => {
   ));
 
   const assignUser = () => {
+    setPending(true)
     user?.role === "user"
     && createChildUserRequest({
       "user_child": {
@@ -136,7 +137,7 @@ export const ChildProfilePage = (props) => {
         "related_user_id": user.id,
         "action_type": "access_request"
       }
-    }).then(() => history.goBack())
+    }).then(() => history.goBack()).finally(() => setPending(false))
   }
 
   return (
@@ -254,7 +255,10 @@ export const ChildProfilePage = (props) => {
           </h4>
           <Box>
             {!child.request_pending ? (
-              <Button onClick={() => assignUser()} appearance="primary">
+              <Button 
+                onClick={() => assignUser()}
+                appearance="primary"
+              >
                 Request access
               </Button>
             ) : (
