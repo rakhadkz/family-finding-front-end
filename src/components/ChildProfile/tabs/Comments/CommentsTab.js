@@ -58,7 +58,7 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
         </Spacing>
         <Footer d="flex" show={show} isExpanded={isExpanded} blocks={blocks}>
           <Avatar
-            name={`${user.first_name} ${user.last_name}`}
+            name={`${user?.first_name} ${user?.last_name}`}
           />
           <Spacing m={{ l: "17px", t: "-22px" }}>
             <CommentsForm
