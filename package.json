@@ -30,7 +30,6 @@
     "@chakra-ui/system": "^1.1.2",
     "@dabeng/react-orgchart": "^1.0.0",
     "@draft-js-plugins/editor": "^4.0.0",
-    "@draft-js-plugins/static-toolbar": "^4.0.0",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
     "@testing-library/jest-dom": "^5.11.4",

@@ -56,7 +56,7 @@ export const Comments = ({ data, shouldUpdate, increaseShouldUpdate, id }) => {
       res.forEach((item) => (comment += item));
       comment += end;
     }
-    console.log(comment);
+    // console.log(comment);
     setBody(comment);
   }, []);
 

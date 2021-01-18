@@ -4,13 +4,12 @@ import Editor from "@draft-js-plugins/editor";
 import createMentionPlugin, {
   defaultSuggestionsFilter,
 } from "draft-js-mention-plugin";
-import createToolbarPlugin from "@draft-js-plugins/static-toolbar";
 import { stateToHTML } from "draft-js-export-html";
 import mentionsStyles from "./mentionsStyles.css";
 import MentionEntry from "./MentionEntry";
 import Toolbars from "./Toolbar";
 import "draft-js/dist/Draft.css";
-import { useMentions } from "../ChildProfile/tabs/Comments/mentions-context";
+import { MentionsContext } from "../ChildProfile/tabs/Comments/mentions-context";
 import styled from "styled-components";
 import Immutable from "immutable";
 import Button from "@atlaskit/button";
@@ -34,60 +33,127 @@ const positionSuggestions = ({ state, props }) => {
   };
 };
 
-const MentionWysiwygEditor = (props) => {
-  const editorRef = useRef(null);
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  );
+class MentionWysiwygEditor extends React.Component {
+  static contextType = MentionsContext;
 
-  const { mentions } = useMentions();
-  const [suggestions, setSuggestions] = useState([]);
-  const [{ plugins, Toolbar, MentionSuggestions }] = useState(() => {
-    console.log("MENTIONS ======>>>>>", mentions);
-
-    const mentionPlugin = createMentionPlugin({
-      mentions: mentions,
+  constructor(props) {
+    super(props);
+    this.state = {
+      editorState: EditorState.createEmpty(),
+      suggestions: [],
+    };
+    this.editorRef = React.createRef();
+    this.mentions = [];
+    this.mentionPlugin = createMentionPlugin({
+      mentions: this.mentions,
       entityMutability: "IMMUTABLE",
       theme: mentionsStyles,
       positionSuggestions,
       mentionPrefix: "@",
       supportWhitespace: true,
     });
-    const toolbarPlugin = createToolbarPlugin();
-    const { Toolbar } = toolbarPlugin;
-    const { MentionSuggestions } = mentionPlugin;
-    const plugins = [toolbarPlugin, mentionPlugin];
-    return {
-      plugins,
-      Toolbar,
-      MentionSuggestions,
-    };
-  });
+    this.blockTypeButtons = [
+      {
+        value: "H1",
+        block: "header-one",
+      },
 
-  const onSearchChange = ({ value }) => {
-    console.log(value, mentions, suggestions);
+      {
+        value: "H2",
+        block: "header-two",
+      },
+
+      {
+        value: "H3",
+        block: "header-three",
+      },
+
+      {
+        value: "Blockquote",
+        block: "blockquote",
+      },
+    ];
+
+    this.blockRenderMap = Immutable.Map({
+      "header-two": {
+        element: "h2",
+      },
+      "header-one": {
+        element: "h1",
+      },
+      "header-three": {
+        element: "h3",
+      },
+      "header-four": {
+        element: "h4",
+      },
+    });
+  }
+
+  onSearchChange = ({ value }) => {
     if (value) {
-      setSuggestions(defaultSuggestionsFilter(value, mentions));
+      this.setState({
+        suggestions: defaultSuggestionsFilter(value, this.context.mentions),
+      });
     }
   };
 
-  // THIS CODE BREAKS MENTIONS!
-  // useEffect(() => {
-  //   setEditorState(EditorState.createEmpty());
-  // }, [props.upd]);
+  componentDidMount() {
+    this.editorRef.current && this.editorRef.current.focus();
+  }
 
-  // useEffect(() => {
-  //   editorRef.current && editorRef.current.focus();
-  // }, []);
+  componentDidUpdate() {
+    console.log(
+      convertToRaw(this.state.editorState.getCurrentContent()).blocks
+    );
+    this.props.setBlocks &&
+      this.props.setBlocks(
+        convertToRaw(this.state.editorState.getCurrentContent()).blocks
+      );
+  }
 
-  useEffect(() => {
-    props.setBlocks &&
-      props.setBlocks(convertToRaw(editorState.getCurrentContent()).block);
-  }, [convertToRaw(editorState.getCurrentContent()).blocks]);
+  componentDidUpdate(prevProps) {
+    if (this.props.upd !== prevProps.upd) {
+      this.setState({ editorState: EditorState.createEmpty() });
+    }
+  }
 
-  const onChange = (editorState) => {
-    setEditorState(editorState);
-    props.onChange(
+  onChange = (editorState) => {
+    let len = convertToRaw(editorState.getCurrentContent()).blocks.length;
+    if (
+      convertToRaw(this.state.editorState.getCurrentContent()).blocks.length !==
+      convertToRaw(editorState.getCurrentContent()).blocks.length
+    ) {
+      this.props.setBlocks &&
+        this.props.setBlocks(
+          convertToRaw(editorState.getCurrentContent()).blocks.length
+        );
+    } else if (
+      convertToRaw(this.state.editorState.getCurrentContent()).blocks[len - 1]
+        .type === "unstyled" &&
+      (convertToRaw(editorState.getCurrentContent()).blocks[len - 1].type ===
+        "ordered-list-item" ||
+        convertToRaw(editorState.getCurrentContent()).blocks[len - 1].type ===
+          "unordered-list-item")
+    ) {
+      this.props.setBlocks &&
+        this.props.setBlocks(
+          convertToRaw(editorState.getCurrentContent()).blocks.length + 1
+        );
+    } else if (
+      convertToRaw(this.state.editorState.getCurrentContent()).blocks[len - 1]
+        .type !== "unstyled" &&
+      convertToRaw(editorState.getCurrentContent()).blocks[len - 1].type ===
+        "unstyled"
+    ) {
+      this.props.setBlocks &&
+        this.props.setBlocks(
+          convertToRaw(this.state.editorState.getCurrentContent()).blocks
+            .length - 1
+        );
+    }
+    this.setState({ editorState: editorState });
+    this.props.onChange(
       convertToRaw(editorState.getCurrentContent())
         .blocks.map((block) => (!block.text.trim() && "\n") || block.text)
         .join("\n"),
@@ -96,15 +162,16 @@ const MentionWysiwygEditor = (props) => {
     );
   };
 
-  const focus = () => {
+  focus = () => {
     this.editor.focus();
   };
 
-  const onAddLink = () => {
+  onAddLink = () => {
+    const { editorState } = this.state;
     const selection = editorState.getSelection();
     const link = window.prompt("Paste the link");
     if (!link) {
-      onChange(RichUtils.toggleLink(editorState, selection, null));
+      this.onChange(RichUtils.toggleLink(editorState, selection, null));
       return "handled";
     }
     const content = editorState.getCurrentContent();
@@ -117,14 +184,17 @@ const MentionWysiwygEditor = (props) => {
       "create-entity"
     );
     const entityKey = contentWithEntity.getLastCreatedEntityKey();
-    onChange(RichUtils.toggleLink(newEditorState, selection, entityKey));
+    this.onChange(RichUtils.toggleLink(newEditorState, selection, entityKey));
     return "handled";
   };
 
-  const handleKeyCommand = (command) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command);
+  handleKeyCommand = (command) => {
+    const newState = RichUtils.handleKeyCommand(
+      this.state.editorState,
+      command
+    );
     if (newState) {
-      onChange(newState);
+      this.onChange(newState);
       console.log("handled");
       return "handled";
     }
@@ -132,60 +202,70 @@ const MentionWysiwygEditor = (props) => {
     return "not-handled";
   };
 
-  const onTab = (e) => {
+  onTab = (e) => {
     const maxDepth = 4;
-    onChange(RichUtils.onTab(e, editorState, maxDepth));
+    this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
   };
 
-  const onFontSizeClick = (fontSize) => {
+  onFontSizeClick = (fontSize) => {
     console.log(fontSize);
-    onChange(RichUtils.toggleBlockType(editorState, "header-one"));
+    this.onChange(
+      RichUtils.toggleBlockType(this.state.editorState, "header-one")
+    );
   };
 
-  const onOrderedPointsClick = () => {
-    onChange(RichUtils.toggleBlockType(editorState, "ordered-list-item"));
+  onOrderedPointsClick = () => {
+    this.onChange(
+      RichUtils.toggleBlockType(this.state.editorState, "ordered-list-item")
+    );
   };
 
-  const onBulletPointsClick = () => {
-    onChange(RichUtils.toggleBlockType(editorState, "unordered-list-item"));
+  onBulletPointsClick = () => {
+    this.onChange(
+      RichUtils.toggleBlockType(this.state.editorState, "unordered-list-item")
+    );
   };
 
-  const onUnderlineClick = () => {
-    onChange(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"));
+  onUnderlineClick = () => {
+    this.onChange(
+      RichUtils.toggleInlineStyle(this.state.editorState, "UNDERLINE")
+    );
   };
 
-  const onBoldClick = () => {
-    onChange(RichUtils.toggleInlineStyle(editorState, "BOLD"));
+  onBoldClick = () => {
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "BOLD"));
   };
 
-  const onItalicClick = () => {
-    onChange(RichUtils.toggleInlineStyle(editorState, "ITALIC"));
+  onItalicClick = () => {
+    this.onChange(
+      RichUtils.toggleInlineStyle(this.state.editorState, "ITALIC")
+    );
   };
 
-  const onStrikeThroughClick = () => {
-    onChange(RichUtils.toggleInlineStyle(editorState, "STRIKETHROUGH"));
+  onStrikeThroughClick = () => {
+    this.onChange(
+      RichUtils.toggleInlineStyle(this.state.editorState, "STRIKETHROUGH")
+    );
   };
 
-  const toggleBlockType = (blockType) => {
-    onChange(RichUtils.toggleBlockType(editorState, blockType));
+  toggleBlockType = (blockType) => {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
   };
 
-  const toggleBlockType2 = (event) => {
+  toggleBlockType2 = (event) => {
     event.preventDefault();
 
     let block = event.currentTarget.getAttribute("data-block");
-    onChange(RichUtils.toggleBlockType(editorState, block));
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, block));
   };
 
-  console.log(convertToRaw(editorState.getCurrentContent()));
-
-  const renderBlockButton = (value, block) => {
+  renderBlockButton = (value, block) => {
     return (
       <Button
         key={block}
         value={value}
         data-block={block}
-        onMouseDown={toggleBlockType2}
+        onMouseDown={this.toggleBlockType2}
         appearance="subtle"
         iconBefore={value === "Blockquote" ? <QuoteIcon size="small" /> : null}
         style={{ color: "#42526E", fontWeight: "600" }}
@@ -194,83 +274,58 @@ const MentionWysiwygEditor = (props) => {
       </Button>
     );
   };
-  const blockTypeButtons = [
-    {
-      value: "H1",
-      block: "header-one",
-    },
 
-    {
-      value: "H2",
-      block: "header-two",
-    },
-
-    {
-      value: "H3",
-      block: "header-three",
-    },
-
-    {
-      value: "Blockquote",
-      block: "blockquote",
-    },
-  ];
-  const blockRenderMap = Immutable.Map({
-    "header-two": {
-      element: "h2",
-    },
-    "header-one": {
-      element: "h1",
-    },
-    "header-three": {
-      element: "h3",
-    },
-    "header-four": {
-      element: "h4",
-    },
-  });
-
-  return (
-    <EditorContainer>
-      <Editors onClick={() => editorRef.current && editorRef.current.focus()}>
-        <div
-          style={{ display: "flex", marginBottom: "1em", marginLeft: "-1em" }}
+  render() {
+    const { MentionSuggestions } = this.mentionPlugin;
+    const plugins = [this.mentionPlugin];
+    console.log(convertToRaw(this.state.editorState.getCurrentContent()));
+    console.log(this.context);
+    return (
+      <EditorContainer>
+        <Editors
+          onClick={() =>
+            this.editorRef.current && this.editorRef.current.focus()
+          }
         >
-          <div className="block-style-options">
-            {blockTypeButtons.map((button) => {
-              return renderBlockButton(button.value, button.block);
-            })}
+          <div
+            style={{ display: "flex", marginBottom: "1em", marginLeft: "-1em" }}
+          >
+            <div className="block-style-options">
+              {this.blockTypeButtons.map((button) => {
+                return this.renderBlockButton(button.value, button.block);
+              })}
+            </div>
+            <Toolbars
+              onUnderlineClick={this.onUnderlineClick}
+              onBoldClick={this.onBoldClick}
+              onItalicClick={this.onItalicClick}
+              onStrikeThroughClick={this.onStrikeThroughClick}
+              onAddLink={this.onAddLink}
+              onBulletPointsClick={this.onBulletPointsClick}
+              onOrderedPointsClick={this.onOrderedPointsClick}
+              onFontSizeClick={this.onFontSizeClick}
+              toggleBlockType={this.toggleBlockType}
+            />
           </div>
-          <Toolbars
-            onUnderlineClick={onUnderlineClick}
-            onBoldClick={onBoldClick}
-            onItalicClick={onItalicClick}
-            onStrikeThroughClick={onStrikeThroughClick}
-            onAddLink={onAddLink}
-            onBulletPointsClick={onBulletPointsClick}
-            onOrderedPointsClick={onOrderedPointsClick}
-            onFontSizeClick={onFontSizeClick}
-            toggleBlockType={toggleBlockType}
+          <Editor
+            editorState={this.state.editorState}
+            onChange={this.onChange}
+            plugins={plugins}
+            handleKeyCommand={this.handleKeyCommand}
+            ref={(editor) => (this.editorRef.current = editor)}
+            blockRenderMap={this.blockRenderMap}
           />
-        </div>
-        <Editor
-          editorState={editorState}
-          onChange={onChange}
-          plugins={plugins}
-          handleKeyCommand={handleKeyCommand}
-          ref={(editor) => (editorRef.current = editor)}
-          blockRenderMap={blockRenderMap}
-        />
-        <MentionSuggestions
-          onSearchChange={onSearchChange}
-          suggestions={suggestions}
-          entryComponent={MentionEntry}
-          className={mentionsStyles.mentionSuggestions}
-        />
-      </Editors>
-    </EditorContainer>
-  );
-};
+          <MentionSuggestions
+            onSearchChange={this.onSearchChange}
+            suggestions={this.state.suggestions}
+            entryComponent={MentionEntry}
+            className={mentionsStyles.mentionSuggestions}
+          />
+        </Editors>
+      </EditorContainer>
+    );
+  }
+}
 export default MentionWysiwygEditor;
 
 const EditorContainer = styled.div`
