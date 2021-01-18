@@ -10,7 +10,11 @@ import { Avatar } from "../../../ui/molecules/Avatar";
 export const Comments = ({ data, shouldUpdate, increaseShouldUpdate, id }) => {
   const [showInput, setShowInput] = useState(false);
   const [body, setBody] = useState(null);
-  const replyRef = useRef();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const expandEditor = () => setIsExpanded(true);
+  const collapseEditor = () => {
+    setShowInput(false) && setIsExpanded(false);
+  };
 
   useEffect(() => {
     let comment = data.html_body ? data.html_body : data.body;
@@ -59,24 +63,35 @@ export const Comments = ({ data, shouldUpdate, increaseShouldUpdate, id }) => {
   return (
     <Spacing m={{ t: "17px" }}>
       <Box d="flex">
-        <Avatar name={`${data.user.first_name} ${data.user.last_name}`}/>
+        <Avatar name={`${data.user.first_name} ${data.user.last_name}`} />
         <Spacing m={{ l: "7px" }}>
           <Title size="14px">{`${data.user.first_name} ${data.user.last_name}`}</Title>
           <Text dangerouslySetInnerHTML={{ __html: body }}></Text>
           {showInput ? (
-            <Spacing ref={replyRef} m={{ t: "-22px" }}>
-              <CommentsForm
-                shouldUpdate={shouldUpdate}
-                increaseShouldUpdate={increaseShouldUpdate}
-                id={id}
-                inReply={data.id}
-                onSubmit={postCommentRequest}
-                setShowInput={setShowInput}
-              />
-            </Spacing>
+            <>
+              <Spacing m={{ t: "17px" }}>
+                <Box d="flex">
+                  <Avatar
+                    name={`${data.user.first_name} ${data.user.last_name}`}
+                  />
+                  <Spacing m={{ t: "-22px", l: "17px" }}>
+                    <CommentsForm
+                      shouldUpdate={shouldUpdate}
+                      increaseShouldUpdate={increaseShouldUpdate}
+                      id={id}
+                      inReply={data.id}
+                      onSubmit={postCommentRequest}
+                      setShowInput={setShowInput}
+                      isExpanded={isExpanded}
+                      collapseEditor={collapseEditor}
+                      expandEditor={expandEditor}
+                    />
+                  </Spacing>
+                </Box>
+              </Spacing>
+            </>
           ) : (
             <Button
-              ref={replyRef}
               appearance="link"
               onClick={() => {
                 setShowInput(true);

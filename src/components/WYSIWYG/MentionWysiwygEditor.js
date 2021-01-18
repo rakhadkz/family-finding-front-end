@@ -40,10 +40,6 @@ const MentionWysiwygEditor = (props) => {
     EditorState.createEmpty()
   );
 
-  // useEffect(() => {
-  //   editorRef.current && editorRef.current.focus();
-  // }, []);
-
   const { mentions } = useMentions();
   const [suggestions, setSuggestions] = useState([]);
   const [{ plugins, Toolbar, MentionSuggestions }] = useState(() => {
@@ -80,8 +76,13 @@ const MentionWysiwygEditor = (props) => {
   //   setEditorState(EditorState.createEmpty());
   // }, [props.upd]);
 
+  // useEffect(() => {
+  //   editorRef.current && editorRef.current.focus();
+  // }, []);
+
   useEffect(() => {
-    props.setBlocks(convertToRaw(editorState.getCurrentContent()).block);
+    props.setBlocks &&
+      props.setBlocks(convertToRaw(editorState.getCurrentContent()).block);
   }, [convertToRaw(editorState.getCurrentContent()).blocks]);
 
   const onChange = (editorState) => {
