@@ -26,6 +26,29 @@ export const organizationsTableColumns = [
   },
 ];
 
+export const communicationTemplatesTableColumns = [
+  {
+    key: "name",
+    content: "Name",
+    width: 25,
+  },
+  {
+    key: "template_type",
+    content: "Type",
+    width: 33,
+  },
+  {
+    key: "updated_at",
+    content: "Last Edited Date",
+    width: 15,
+  },
+  {
+    key: "actions",
+    content: "Actions",
+    width: 10,
+  },
+];
+
 export const usersTableColumns = (isSuperAdmin = false) => {
   const columns1 = [
     {

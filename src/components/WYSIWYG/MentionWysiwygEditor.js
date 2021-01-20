@@ -1,20 +1,21 @@
-import React, { Component, useState, useEffect, useRef } from "react";
-import { EditorState, RichUtils, convertToRaw, convertFromRaw } from "draft-js";
-import Editor from "@draft-js-plugins/editor";
-import createMentionPlugin, {
-  defaultSuggestionsFilter,
-} from "draft-js-mention-plugin";
-import createToolbarPlugin from "@draft-js-plugins/static-toolbar";
-import { stateToHTML } from "draft-js-export-html";
-import mentionsStyles from "./mentionsStyles.css";
-import MentionEntry from "./MentionEntry";
-import Toolbars from "./Toolbar";
-import "draft-js/dist/Draft.css";
-import { useMentions } from "../ChildProfile/tabs/Comments/mentions-context";
-import styled from "styled-components";
-import Immutable from "immutable";
 import Button from "@atlaskit/button";
 import QuoteIcon from "@atlaskit/icon/glyph/quote";
+import Editor from "@draft-js-plugins/editor";
+import createToolbarPlugin from "@draft-js-plugins/static-toolbar";
+import { convertToRaw, EditorState, RichUtils } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
+import { stateFromHTML } from "draft-js-import-html";
+import createMentionPlugin, {
+  defaultSuggestionsFilter
+} from "draft-js-mention-plugin";
+import "draft-js/dist/Draft.css";
+import Immutable from "immutable";
+import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
+import { useMentions } from "../ChildProfile/tabs/Comments/mentions-context";
+import MentionEntry from "./MentionEntry";
+import mentionsStyles from "./mentionsStyles.css";
+import Toolbars from "./Toolbar";
 
 const positionSuggestions = ({ state, props }) => {
   let transform;
@@ -36,8 +37,9 @@ const positionSuggestions = ({ state, props }) => {
 
 const MentionWysiwygEditor = (props) => {
   const editorRef = useRef(null);
+  const { defaultValue = "", withMention = true } = props;
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
+    EditorState.createWithContent(stateFromHTML(defaultValue))
   );
 
   const { mentions } = useMentions();
@@ -261,12 +263,14 @@ const MentionWysiwygEditor = (props) => {
           ref={(editor) => (editorRef.current = editor)}
           blockRenderMap={blockRenderMap}
         />
-        <MentionSuggestions
-          onSearchChange={onSearchChange}
-          suggestions={suggestions}
-          entryComponent={MentionEntry}
-          className={mentionsStyles.mentionSuggestions}
-        />
+        {withMention && (
+          <MentionSuggestions
+            onSearchChange={onSearchChange}
+            suggestions={suggestions}
+            entryComponent={MentionEntry}
+            className={mentionsStyles.mentionSuggestions}
+          />
+        )}
       </Editors>
     </EditorContainer>
   );

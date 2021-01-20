@@ -36,7 +36,7 @@ export const MentionsProvider = (props) => {
 export const useMentions = () => {
   const context = React.useContext(MentionsContext);
   if (context === undefined) {
-    throw new Error(`useMentions must be used within a MentionsProvider`);
+    return { mentions: [] };
   }
   return context;
 };
