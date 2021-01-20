@@ -1,5 +1,4 @@
 import Button from "@atlaskit/button";
-import { FormSection } from "@atlaskit/form";
 import SearchIcon from "@atlaskit/icon/glyph/search";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -21,7 +20,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
   const [organizations, setOrganizations] = useState([]);
   const [organization, setOrganization] = useState(null);
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, prepend, remove } = useFieldArray({
     control,
     name: "user_organizations",
   });
@@ -44,7 +43,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
       (item, index) =>
         item.organization.value === data.organization.value && remove(index)
     );
-    append({
+    prepend({
       organization: {
         label: data.organization?.label,
         value: data.organization?.value,
@@ -102,8 +101,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
         onSubmit={handleSubmit(onAddOrganizationHandle)}
         noValidate
       >
-        <FormSection>
-          <Spacing>
+        <Spacing m={{t: "8px"}}>
             <Box align="flex-end" d="flex">
               <SelectInput
                 className="input"
@@ -135,7 +133,6 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
               </Button>
             </Box>
           </Spacing>
-        </FormSection>
       </Form>
       <Spacing m={{ t: "33px" }}>
         <TableWrapper>

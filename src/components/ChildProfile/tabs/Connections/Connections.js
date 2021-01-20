@@ -4,7 +4,6 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import styled from "styled-components";
 import {
   createContactRequest,
   createTableChildContactRequest
@@ -13,7 +12,7 @@ import { connectionsTableData } from "../../../../content/connections.data";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
 import { Box, Spacing, Title } from "../../../ui/atoms";
-import { ModalDialog } from "../../../ui/common";
+import { ModalDialog, TableWrapper } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
 
 const columns = [
@@ -175,7 +174,3 @@ export const Connections = (props) => {
     </ChakraProvider>
   );
 };
-
-const TableWrapper = styled.div`
-  width: 100%;
-`;

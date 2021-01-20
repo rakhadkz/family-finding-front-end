@@ -28,7 +28,7 @@ const AllOrganizations = ({ history, search, setSearch }) => {
             iconBefore={<OfficeBuilding />}
             onClick={() => history.push("/organizations-add")}
           >
-            Add organization
+            Add Organization
           </Button>
         </Box>
       </Spacing>
