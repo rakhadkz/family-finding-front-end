@@ -12,15 +12,6 @@ import {
   ADD,
   CHILDREN,
   COMMUNICATION_TEMPLATES,
-
-
-
-
-
-
-
-
-
   CONTINUOUS_SEARCH, FORGOT_PASSWORD,
   LOGIN,
   NEW_PASSWORD,
@@ -29,33 +20,15 @@ import {
   REPORTS,
   SEARCHVECTOR,
   SETTINGS,
-  USERS
+  USERS,
 } from "./helpers/routes";
 import {
   ActionItemsPage,
   AddChildPage,
-
-
-
-
-
-
-
-
-
-
-
   AddCommunicationTemplatePage, AddOrganizationPage,
   AddUserPage,
   ChildrenPage,
   CommunicationTemplatesPage,
-
-
-
-
-
-
-
   ContinuousSearchPage, NewPassword,
   OrganizationsPage,
   ReportsPage,
@@ -88,13 +61,6 @@ function App() {
   return (
     <>
       <SidebarTemplate sidebar={<Sidebar />}>
-        <GroupAccess atLeast="manager" exact="admin">
-          <PrivateRoute
-            exact
-            path={`/${CONTINUOUS_SEARCH}`}
-            component={ContinuousSearchPage}
-          />
-        </GroupAccess>
         <GroupAccess atLeast="manager" exact="admin">
           <PrivateRoute
             exact
@@ -201,11 +167,12 @@ function App() {
             )
           }
         />
-        <Route path={`/${LOGIN}`} component={() => user ? <Redirect to='/'/> : <LoginPage />}/>
-        <Route path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
-        <Route path={`/${NEW_PASSWORD}`} component={NewPassword} />
+        <Route exact path={`/${LOGIN}`} component={() => user ? <Redirect to='/'/> : <LoginPage />}/>
+        <Route exact path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
+        <Route exact path={`/${NEW_PASSWORD}`} component={NewPassword} />
         <ToastContainer />
       </SidebarTemplate>
+      
     </>
   );
 }

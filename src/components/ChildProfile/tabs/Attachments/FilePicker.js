@@ -1,18 +1,17 @@
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
 import { Spacing } from '../../../ui/atoms'
+import { DropzoneLayout, DropzonePreview, DropzoneSubmitButton } from '../../../ui/molecules'
 import { uploadRequest } from '../../../../api/cloudinary';
 import { createAttachmentRequest, createChildAttachmentRequest } from '../../../../api/attachments/attachmentRequest';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
-export default function FilePicker({ user_id, child_id, setIsOpen, setTrigger }){
+export default function FilePicker({ user_id, child_id, setIsOpen, setTrigger, setClosable }){
   const handleChangeStatus = ({ meta, file }, status) => { console.log(status, meta, file) }
-  const history = useHistory();
   const [ pending, setPending ] = useState(false);
   const handleSubmit = (files, allFiles) => {
     setPending(true);
-    allFiles.forEach(async(f) => {
+    allFiles.forEach(async(f, index) => {
       const { 
         resource_type, 
         original_filename, 
@@ -43,20 +42,27 @@ export default function FilePicker({ user_id, child_id, setIsOpen, setTrigger })
           "attachment_id": id
         }
       });
-      setPending(false);
-      setIsOpen(false);
-      setTrigger(prev => !prev);
+      if (index === allFiles.length - 1){
+        setPending(false);
+        setIsOpen(false);
+        setTrigger(prev => !prev);
+      }
     })
   }
 
   return (
     <Spacing m={{t: "30px", b: "30px"}}>
       <Dropzone
+        PreviewComponent={DropzonePreview}
+        LayoutComponent={(e) => <DropzoneLayout {...e} setIsOpen={setIsOpen} setClosable={setClosable}/>}
         onChangeStatus={handleChangeStatus}
         onSubmit={handleSubmit}
         accept="image/*,audio/*,video/*,application/*"
         submitButtonDisabled={pending}
+        submitButtonContent="Upload"
+        SubmitButtonComponent={DropzoneSubmitButton}
       />
     </Spacing> 
   )
 }
+

@@ -5,11 +5,10 @@ import OfficeBuilding from "@atlaskit/icon/glyph/office-building";
 import People from "@atlaskit/icon/glyph/people";
 import QueuesIcon from "@atlaskit/icon/glyph/queues";
 import Screen from "@atlaskit/icon/glyph/screen";
-import SearchIcon from "@atlaskit/icon/glyph/search";
 import SettingsIcon from "@atlaskit/icon/glyph/settings";
 import Signout from "@atlaskit/icon/glyph/sign-out";
 import Select from "@atlaskit/select";
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { updateUserRequest } from "../../../api/user/userRequest";
 import { useAuth } from "../../../context/auth/authContext";
@@ -35,12 +34,6 @@ const SIDEBAR_ITEMS = [
     to: "/children",
     title: "Children",
     icon: () => <EmojiSymbolsIcon />,
-    atLeast: "user",
-  },
-  {
-    to: "/continuous-search",
-    title: "Continuous Searches",
-    icon: () => <SearchIcon />,
     atLeast: "user",
   },
   {
@@ -139,7 +132,7 @@ const SidebarInner = () => {
           <Link
             onClick={() => {
               logout();
-
+              history.push('/')
             }}
           >
             <Signout />

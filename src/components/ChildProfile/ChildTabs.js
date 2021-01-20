@@ -44,7 +44,6 @@ export const ChildTabs = (
     {
       label: "Family Tree",
       content: (
-        // <div>
         <FamilyTreePage
           childId={id}
           firstName={firstName}
@@ -57,13 +56,6 @@ export const ChildTabs = (
           })}
           refreshContacts={setTrigger}
         />
-        //   <Spacing m={{ t: "20px" }}>
-        //     <Table
-        //       items={childContactsTableData(contacts)}
-        //       head={contactsTableColumns}
-        //     />
-        //   </Spacing>
-        // </div>
       ),
     },
     { label: "Family Search" },
