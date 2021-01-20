@@ -11,7 +11,8 @@ export const TableWrapper = styled.div`
     }
 
     td {
-      padding: 10px 0px;
+      padding-top: 10px;
+      padding-bottom: 10px;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;

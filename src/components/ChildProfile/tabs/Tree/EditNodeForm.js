@@ -62,6 +62,7 @@ export const EditNodeForm = ({ initialContacts }) => {
         </Box>
         <FormSection>
           <SelectInput
+            menuPlacement="top"
             name={"contact"}
             id="contact"
             register={{ required: true }}
@@ -70,6 +71,7 @@ export const EditNodeForm = ({ initialContacts }) => {
             options={contacts}
           />
           <SelectInput
+            menuPlacement="top"
             name={"relationship"}
             id="relationship"
             register={{ required: true }}

@@ -30,14 +30,11 @@ export const CommunicationTemplateForm = React.forwardRef(
 
     const onSubmitHandle = (data) => {
       setPending(true);
-      console.log("PIZDECCC");
-      console.log(data, text, htmlText, rawData);
       const requestData = {
-        ...data,
+        name: data.name,
         template_type: data.template_type.value,
         content: htmlText,
       };
-
       onSubmit({ communication_template: requestData })
         .then(() => {
           toast.success(

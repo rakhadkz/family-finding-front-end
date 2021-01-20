@@ -72,7 +72,7 @@ const fetchCells = (name, email, phone, organization = null, role, action) => {
     },
     {
       key: "actions",
-      content: action,
+      content: <p align="center">{action}</p>,
     },
   ];
   return cells1.concat(cells2);

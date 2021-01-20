@@ -26,7 +26,7 @@ const CommunicationTemplatesBar = ({ history, search, setSearch }) => (
           appearance="warning"
           onClick={() => history.push("/communications-templates-add")}
         >
-          Add template
+          Add Template
         </Button>
       </Box>
     </Spacing>

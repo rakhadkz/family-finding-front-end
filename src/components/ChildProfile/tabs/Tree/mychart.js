@@ -49,12 +49,12 @@ class Chart extends Component {
           const { contact, relationship, relationship_other } = JSON.parse(
             localStorage.getItem("selectValue")
           );
-          var node = chart.get(that.nodeId);
-          node.Name = contact.label;
+          var node = chart.get(that?.nodeId);
+          node.Name = contact?.label;
           node.Relationship =
-            relationship.value === "Other"
+            relationship?.value === "Other"
               ? relationship_other
-              : relationship.value;
+              : relationship?.value;
 
           updateChildContact(
             {
@@ -78,8 +78,8 @@ class Chart extends Component {
       this.editForm.style.display = "block";
       var node = chart.get(nodeId);
       console.log("NODE ", node, this.contactInput);
-      this.titleInput.value = node.Relationship;
-      this.contactInput.defaultInputValue = node.Name;
+      this.titleInput.value = node?.Relationship;
+      this.contactInput.defaultInputValue = node?.Name;
     };
 
     editForm.prototype.hide = function (showldUpdateTheNode) {

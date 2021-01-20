@@ -35,11 +35,11 @@ const connectionsTableData = (data, setIsLoading, setContacts) => {
           content: (
             <Box d="flex" align="center">
               <Avatar name={`${item?.contact?.first_name} ${item?.contact?.last_name}`} size="medium" />
-              <a href="" style={{ marginLeft: "8px" }}>
+              <span style={{ marginLeft: "8px" }}>
                 {`${item?.contact?.first_name || ""} ${
                   item?.contact?.last_name || ""
                 }`}
-              </a>
+              </span>
             </Box>
           ),
         },

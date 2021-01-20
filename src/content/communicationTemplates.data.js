@@ -25,7 +25,7 @@ const communicationTemplatesData = (
       },
       {
         key: "updated_at",
-        content: moment(item?.updated_at).format("YYYY-MM-DD"),
+        content: moment(item?.updated_at).format("MMMM d, yyyy"),
       },
       {
         key: "actions",
