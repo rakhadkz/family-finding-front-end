@@ -13,20 +13,20 @@ export const Table = ({
 }) => {
   return (
     <div>
-      {totalPage && (
-        <Box d="flex" justify="center" mb="6px">
-          <Pagination selectedIndex={currentPage - 1} pages={pagesArray(totalPage)} onChange={(e, page) => setCurrentPage(page)}/>
-        </Box>
-      )}
       <TableWrapper>
         <DynamicTable
           isLoading={pending}
           head={{ cells: head }}
           rows={items}
-          emptyView="No content"
+          emptyView="Not Found"
           isFixedSize
         />
       </TableWrapper>
+      {totalPage && totalPage > 1 && (
+        <Box d="flex" justify="center" mt="6px">
+          <Pagination selectedIndex={currentPage - 1} pages={pagesArray(totalPage)} onChange={(e, page) => setCurrentPage(page)}/>
+        </Box>
+      )}
     </div>
   );
 };

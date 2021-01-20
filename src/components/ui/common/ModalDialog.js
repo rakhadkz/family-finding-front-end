@@ -11,7 +11,9 @@ export function ModalDialog({
   appearance = null,
   hasActions = true,
   width = "medium",
-  isLoading = false
+  isLoading = false,
+  shouldCloseOnOverlayClick = true,
+  shouldCloseOnEscapePress = true
 }) {
   const close = () => setIsOpen(false);
   return (
@@ -27,6 +29,8 @@ export function ModalDialog({
             onClose={close}
             heading={heading}
             appearance={null}
+            shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
+            shouldCloseOnEscapePress={shouldCloseOnEscapePress}
           >
             {body}
           </Modal>

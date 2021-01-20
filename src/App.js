@@ -36,8 +36,7 @@ import {
   ResetPassword,
   SearchVectorsPage,
   SettingsPage,
-  UsersPage,
-  ContinuousSearchPage,
+  UsersPage
 } from "./pages";
 import { ChildProfilePage } from "./pages/ChildProfilePage";
 import LoginPage from "./pages/Login";
@@ -63,13 +62,6 @@ function App() {
   return (
     <>
       <SidebarTemplate sidebar={<Sidebar />}>
-        <GroupAccess atLeast="manager" exact="admin">
-          <PrivateRoute
-            exact
-            path={`/${CONTINUOUS_SEARCH}`}
-            component={ContinuousSearchPage}
-          />
-        </GroupAccess>
         <GroupAccess atLeast="manager" exact="admin">
           <PrivateRoute
             exact
@@ -173,11 +165,12 @@ function App() {
             )
           }
         />
-        <Route path={`/${LOGIN}`} component={() => user ? <Redirect to='/'/> : <LoginPage />}/>
-        <Route path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
-        <Route path={`/${NEW_PASSWORD}`} component={NewPassword} />
+        <Route exact path={`/${LOGIN}`} component={() => user ? <Redirect to='/'/> : <LoginPage />}/>
+        <Route exact path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
+        <Route exact path={`/${NEW_PASSWORD}`} component={NewPassword} />
         <ToastContainer />
       </SidebarTemplate>
+      
     </>
   );
 }

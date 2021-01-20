@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
 import { createChildUserRequest, updateChildUserRequest } from "../api/children";
+import { GroupAccess } from "../components/common/GroupAccess";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Table } from "../components/ui/common/Table";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
@@ -97,13 +98,15 @@ export const ChildrenPage = (props) => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Button
-            iconBefore={<EmojiAddIcon />}
-            appearance="warning"
-            onClick={() => history.push("/children-add")}
-          >
-            Add child
-          </Button>
+          <GroupAccess exact="admin">
+            <Button
+              iconBefore={<EmojiAddIcon />}
+              appearance="warning"
+              onClick={() => history.push("/children-add")}
+            >
+              Add Child
+            </Button>
+          </GroupAccess>
         </Box>
       </Spacing>
       <Spacing m={{ t: "20px" }}>

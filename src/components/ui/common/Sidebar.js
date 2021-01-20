@@ -38,12 +38,6 @@ const SIDEBAR_ITEMS = [
     atLeast: "user",
   },
   {
-    to: "/continuous-search",
-    title: "Continuous Searches",
-    icon: () => <SearchIcon />,
-    atLeast: "user",
-  },
-  {
     to: "/reports",
     title: "Reports",
     icon: () => <QueuesIcon />,
@@ -139,7 +133,7 @@ const SidebarInner = () => {
           <Link
             onClick={() => {
               logout();
-
+              history.push('/')
             }}
           >
             <Signout />

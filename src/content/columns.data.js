@@ -130,7 +130,7 @@ export const attachmentsTableColumns = [
   {
     key: "file_name",
     content: "File Name",
-    width: 51,
+    width: 40,
   },
   {
     key: "size",
@@ -149,8 +149,8 @@ export const attachmentsTableColumns = [
   },
   {
     key: "action",
-    content: "Action",
-    width: 5,
+    content: <p align="center">Action</p>,
+    width: 15,
   },
 ];
 

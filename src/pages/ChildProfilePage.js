@@ -177,7 +177,7 @@ export const ChildProfilePage = (props) => {
                     <ModalDialog
                       isOpen={isOpen}
                       setIsOpen={setIsOpen}
-                      heading="Assign a user"
+                      heading="Assign a User"
                       positiveLabel="Assign"
                       onClick={() => onSubmitUsers()}
                       width="small"
