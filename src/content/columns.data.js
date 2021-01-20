@@ -45,7 +45,7 @@ export const communicationTemplatesTableColumns = [
   {
     key: "actions",
     content: <p align="center">Actions</p>,
-    width: 10,
+    width: 15,
   },
 ];
 
