@@ -30,41 +30,43 @@ const communicationTemplatesData = (
       {
         key: "actions",
         content: (
-          <GroupAccess atLeast="admin" exact="super_admin">
-            <ButtonGroup>
-              <Button
-                onClick={() => {
-                  setIsOpenEdit(true);
-                  setCurrentTemplate({
-                    ...item,
-                    template_type: TEMPLATE_TYPES.find(
-                      (type) => type.label === item.template_type
-                    ),
-                  });
-                  console.log("WSSSSSS", {
-                    ...item,
-                    template_type: TEMPLATE_TYPES.find(
-                      (type) => type.label === item.template_type
-                    ),
-                  });
-                }}
-                height="32px"
-                width="32px"
-              >
-                <EditIcon size="small" />
-              </Button>
-              <Button
-                onClick={() => {
-                  setIsOpen(true);
-                  setCurrentId(item.id);
-                }}
-                height="32px"
-                width="32px"
-              >
-                <CrossIcon size="small" />
-              </Button>
-            </ButtonGroup>
-          </GroupAccess>
+          <div align="center">
+            <GroupAccess atLeast="admin" exact="super_admin">
+              <ButtonGroup>
+                <Button
+                  onClick={() => {
+                    setIsOpenEdit(true);
+                    setCurrentTemplate({
+                      ...item,
+                      template_type: TEMPLATE_TYPES.find(
+                        (type) => type.label === item.template_type
+                      ),
+                    });
+                    console.log("WSSSSSS", {
+                      ...item,
+                      template_type: TEMPLATE_TYPES.find(
+                        (type) => type.label === item.template_type
+                      ),
+                    });
+                  }}
+                  height="32px"
+                  width="32px"
+                >
+                  <EditIcon size="small" />
+                </Button>
+                <Button
+                  onClick={() => {
+                    setIsOpen(true);
+                    setCurrentId(item.id);
+                  }}
+                  height="32px"
+                  width="32px"
+                >
+                  <CrossIcon size="small" />
+                </Button>
+              </ButtonGroup>
+            </GroupAccess>
+          </div>
         ),
       },
     ],
