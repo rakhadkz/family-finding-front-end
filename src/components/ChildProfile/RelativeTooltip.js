@@ -5,21 +5,21 @@ import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 
 export const RelativeTooltip = ({ relative }) => {
+  console.log(relative);
   return (
     <CustomTooltip>
       <Rectangle>
         <Box d="flex" align="flex-start">
-          <Avatar
-            name="Bekzat Makhanbet"
-            size="large"
-          />
+          <Avatar name="Bekzat Makhanbet" size="large" />
           <Spacing m={{ l: "17px" }}>
-            <StyledLabel>Brother</StyledLabel>
-            <Title>Bekzat Makhanbet</Title>
-            <Text>650-496-0528</Text>
-            <Text>8ahmed.emad6@dankq.com</Text>
+            <StyledLabel>{relative?.relationship}</StyledLabel>
+            <Title>
+              {relative?.first_name} {relative?.last_name}
+            </Title>
+            <Text>{relative?.phone}</Text>
+            <Text>{relative?.email}</Text>
             <Spacing m={{ t: "16px" }}>
-              <Text>326 Thunder Road, LUNING, Nevada, 89420</Text>
+              <Text>{relative?.address}</Text>
             </Spacing>
           </Spacing>
         </Box>
