@@ -31,7 +31,7 @@ export const LoginForm = ({ onSubmit }) => {
       <FormSection>
         <TextInput
           name={"email"}
-          register={register({ required: true, minLength: 5 })}
+          register={register({ required: true, minLength: 4 })}
           control={control}
           error={errors.email}
           label="Email"

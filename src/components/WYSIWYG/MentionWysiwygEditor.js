@@ -1,19 +1,20 @@
-import React, { Component, useState, useEffect, useRef } from "react";
-import { EditorState, RichUtils, convertToRaw, convertFromRaw } from "draft-js";
-import Editor from "@draft-js-plugins/editor";
-import createMentionPlugin, {
-  defaultSuggestionsFilter,
-} from "draft-js-mention-plugin";
-import { stateToHTML } from "draft-js-export-html";
-import mentionsStyles from "./mentionsStyles.css";
-import MentionEntry from "./MentionEntry";
-import Toolbars from "./Toolbar";
-import "draft-js/dist/Draft.css";
-import { MentionsContext } from "../ChildProfile/tabs/Comments/mentions-context";
-import styled from "styled-components";
-import Immutable from "immutable";
 import Button from "@atlaskit/button";
 import QuoteIcon from "@atlaskit/icon/glyph/quote";
+import Editor from "@draft-js-plugins/editor";
+import { convertToRaw, EditorState, RichUtils } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
+import { stateFromHTML } from "draft-js-import-html";
+import createMentionPlugin, {
+  defaultSuggestionsFilter
+} from "draft-js-mention-plugin";
+import "draft-js/dist/Draft.css";
+import Immutable from "immutable";
+import React from "react";
+import styled from "styled-components";
+import { MentionsContext } from "../ChildProfile/tabs/Comments/mentions-context";
+import MentionEntry from "./MentionEntry";
+import mentionsStyles from "./mentionsStyles.css";
+import Toolbars from "./Toolbar";
 
 const positionSuggestions = ({ state, props }) => {
   let transform;
@@ -38,9 +39,11 @@ class MentionWysiwygEditor extends React.Component {
 
   constructor(props) {
     super(props);
+    const { defaultValue = "", withMention = true } = props;
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState: EditorState.createWithContent(stateFromHTML(defaultValue)),
       suggestions: [],
+      withMention,
     };
     this.editorRef = React.createRef();
     this.mentions = [];
@@ -100,9 +103,9 @@ class MentionWysiwygEditor extends React.Component {
 
   componentDidMount() {
     this.editorRef.current && this.editorRef.current.focus();
-  }
-  componentDidMount() {
-    this.mentions = this.context.mentions;
+    if (this.state.withMention) {
+      this.mentions = this.context.mentions;
+    }
   }
 
   componentDidUpdate() {
@@ -318,12 +321,14 @@ class MentionWysiwygEditor extends React.Component {
             ref={(editor) => (this.editorRef.current = editor)}
             blockRenderMap={this.blockRenderMap}
           />
-          <MentionSuggestions
-            onSearchChange={this.onSearchChange}
-            suggestions={this.state.suggestions}
-            entryComponent={MentionEntry}
-            className={mentionsStyles.mentionSuggestions}
-          />
+          {this.state.withMention && (
+            <MentionSuggestions
+              onSearchChange={this.onSearchChange}
+              suggestions={this.state.suggestions}
+              entryComponent={MentionEntry}
+              className={mentionsStyles.mentionSuggestions}
+            />
+          )}
         </Editors>
       </EditorContainer>
     );

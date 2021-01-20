@@ -1,5 +1,6 @@
 export * from "./ActionItemsPage";
 export * from "./AddChildPage";
+export * from "./AddCommunicationTemplatePage";
 export * from "./AddOrganizationPage";
 export * from "./AddUserPage";
 export * from "./ChildrenPage";
