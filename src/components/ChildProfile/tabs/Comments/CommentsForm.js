@@ -83,9 +83,10 @@ export const CommentsForm = ({
 
                 <Button
                   appearance="subtle"
-                  onClick={() =>
-                    collapseEditor() && setShowInput && setShowInput(false)
-                  }
+                  onClick={() => {
+                    collapseEditor();
+                    setShowInput && setShowInput(false);
+                  }}
                 >
                   Cancel
                 </Button>
@@ -93,7 +94,11 @@ export const CommentsForm = ({
             </Spacing>
           </>
         ) : (
-          <TextInput onClick={expandEditor} placeholder="Add a comment..." />
+          <TextInput
+            width={400}
+            onClick={expandEditor}
+            placeholder="Add a comment..."
+          />
         )}
       </FormSection>
     </Form>
