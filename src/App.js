@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Route, useHistory } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GroupAccess } from "./components/common";
@@ -21,7 +21,6 @@ import {
   SEARCHVECTOR,
   SETTINGS,
   USERS,
-  CONTINUOUS_SEARCH,
 } from "./helpers/routes";
 import {
   ActionItemsPage,

@@ -1,5 +1,5 @@
 import AvatarGroup from "@atlaskit/avatar-group";
-import Button, { LoadingButton } from "@atlaskit/button";
+import Button from "@atlaskit/button";
 import EmailIcon from "@atlaskit/icon/glyph/email";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
 import MobileIcon from "@atlaskit/icon/glyph/mobile";

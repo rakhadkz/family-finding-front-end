@@ -1,5 +1,4 @@
 import Button from "@atlaskit/button";
-import { FormSection } from "@atlaskit/form";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
