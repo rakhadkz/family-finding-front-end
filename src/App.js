@@ -12,7 +12,7 @@ import {
   ADD,
   CHILDREN,
   COMMUNICATION_TEMPLATES,
-  FORGOT_PASSWORD,
+  CONTINUOUS_SEARCH, FORGOT_PASSWORD,
   LOGIN,
   NEW_PASSWORD,
   ORGANIZATIONS,
@@ -25,11 +25,11 @@ import {
 import {
   ActionItemsPage,
   AddChildPage,
-  AddOrganizationPage,
+  AddCommunicationTemplatePage, AddOrganizationPage,
   AddUserPage,
   ChildrenPage,
   CommunicationTemplatesPage,
-  NewPassword,
+  ContinuousSearchPage, NewPassword,
   OrganizationsPage,
   ReportsPage,
   ResetPassword,
@@ -77,6 +77,9 @@ function App() {
             path={`/${COMMUNICATION_TEMPLATES}`}
             component={CommunicationTemplatesPage}
           />
+        </GroupAccess>
+        <GroupAccess atLeast="admin" exact="super_admin">
+          <PrivateRoute exact path={`/${COMMUNICATION_TEMPLATES}-${ADD}`} component={AddCommunicationTemplatePage} />
         </GroupAccess>
         <GroupAccess atLeast="manager" exact="admin">
           <PrivateRoute exact path={`/${REPORTS}`} component={ReportsPage} />

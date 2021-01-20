@@ -42,6 +42,7 @@ export const SelectInput = (props) => {
             name={name}
             inputId={id}
             options={options}
+            defaultValue={defaultValue}
             value={myValue}
             onChange={(value) => {
               props.onChange(value);
