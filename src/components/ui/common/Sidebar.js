@@ -107,7 +107,7 @@ const SidebarInner = () => {
         </Box>
         <Spacing m={{ l: "15px", b: "15px", t: "15px" }}>
           <Select
-            onChange={({ value }) => setCurrentOrganization(value)}
+            onChange={({ value }) => value.organization_id !== user.organization_id && setCurrentOrganization(value)}
             value={user?.selectedOrganization}
             className="single-select"
             classNamePrefix="react-select"

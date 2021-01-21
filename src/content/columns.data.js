@@ -163,7 +163,7 @@ export const attachmentsTableColumns = [
   {
     key: "author",
     content: "Author",
-    width: 15,
+    width: 20,
   },
   {
     key: "date",
