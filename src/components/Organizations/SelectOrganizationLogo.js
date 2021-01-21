@@ -62,7 +62,7 @@ const ButtonContentWrapper = styled.div`
   font-size: 14px;
 `;
 
-const InvisibleFileInput = styled.input`
+export const InvisibleFileInput = styled.input`
   opacity: 0;
   width: 100px;
   position: absolute;

@@ -1,10 +1,9 @@
 import Button from "@atlaskit/button";
-import { FormSection } from "@atlaskit/form";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { states } from "../../content/states.data";
-import { Box, Form, Spacing } from "../ui/atoms";
+import { Box, FieldContainer, Form } from "../ui/atoms";
 import { SelectInput, TextInput } from "../ui/molecules";
 import { SelectOrganizationLogo } from "./SelectOrganizationLogo";
 
@@ -24,79 +23,100 @@ export const AddOrganizationForm = ({ onSubmit }) => {
   };
 
   return (
-    <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
-      <FormSection>
-        <Box d="flex" w="100%">
+    <Form w="100%" justify="center" direction="row" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
+      <Box w="450px">
+        <FieldContainer>
           <TextInput
+            width="100%"
             name={"name"}
             register={register({ required: true })}
             control={control}
             error={errors.name}
             label="Name"
           />
+        </FieldContainer>
+        <FieldContainer>
           <TextInput
+            width="100%"
             name={"phone"}
             register={register({ required: true })}
             control={control}
             error={errors.phone}
             label="Phone"
           />
+        </FieldContainer>
+        <FieldContainer>
           <TextInput
+            width="100%"
             name={"website"}
             register={register({ required: true })}
             control={control}
             error={errors.website}
             label="Website"
           />
+        </FieldContainer>
+        <FieldContainer>
+          <TextInput
+            width="100%"
+            name={"address"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.address}
+            label="Address"
+          />
+        </FieldContainer>
+        <FieldContainer>
+          <TextInput
+            width="100%"
+            name={"city"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.city}
+            label="City"
+          />
+        </FieldContainer>
+        <FieldContainer>
+          <SelectInput
+            menuPlacement="top"
+            width="100%"
+            name={"state"}
+            register={{ required: true }}
+            control={control}
+            options={states.map((state) => ({ label: state, value: state }))}
+            error={errors.state}
+            label="State"
+            placeholder="Choose State"
+          />
+        </FieldContainer>
+        <FieldContainer>
+          <TextInput
+            width="100%"
+            name={"zip"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.zip}
+            label="Zip"
+          />
+        </FieldContainer>
+        <FieldContainer>
+          <SelectOrganizationLogo
+            width="100%"
+            control={control}
+            setLogoUrl={setLogoUrl}
+            setPending={setPending}
+          />
+        </FieldContainer>
+        <Box mt="16px">
+          <Button
+            width="100%"
+            isDisabled={pending}
+            type="submit"
+            appearance="primary"
+          >
+            Add New Organization
+          </Button>
         </Box>
-        <Spacing m={{ t: "18px" }}>
-          <Box d="flex" w="100%">
-            <TextInput
-              name={"address"}
-              register={register({ required: true })}
-              control={control}
-              error={errors.address}
-              label="Address"
-            />
-            <TextInput
-              name={"city"}
-              register={register({ required: true })}
-              control={control}
-              error={errors.city}
-              label="City"
-            />
-            <SelectInput
-              name={"state"}
-              register={{ required: true }}
-              control={control}
-              options={states.map((state) => ({ label: state, value: state }))}
-              error={errors.state}
-              label="State"
-              placeholder="Choose State"
-            />
-            <TextInput
-              name={"zip"}
-              register={register({ required: true })}
-              control={control}
-              error={errors.zip}
-              label="Zip"
-            />
-          </Box>
-        </Spacing>
-        <SelectOrganizationLogo
-          control={control}
-          setLogoUrl={setLogoUrl}
-          setPending={setPending}
-        />
-      </FormSection>
-      <Button
-        style={{ position: "absolute", top: 80, right: 40 }}
-        isDisabled={pending}
-        type="submit"
-        appearance="primary"
-      >
-        Save
-      </Button>
+      </Box>
     </Form>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Route, useHistory } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GroupAccess } from "./components/common";
@@ -12,7 +12,7 @@ import {
   ADD,
   CHILDREN,
   COMMUNICATION_TEMPLATES,
-  FORGOT_PASSWORD,
+  CONTINUOUS_SEARCH, FORGOT_PASSWORD,
   LOGIN,
   NEW_PASSWORD,
   ORGANIZATIONS,
@@ -21,23 +21,21 @@ import {
   SEARCHVECTOR,
   SETTINGS,
   USERS,
-  CONTINUOUS_SEARCH,
 } from "./helpers/routes";
 import {
   ActionItemsPage,
   AddChildPage,
-  AddOrganizationPage,
+  AddCommunicationTemplatePage, AddOrganizationPage,
   AddUserPage,
   ChildrenPage,
   CommunicationTemplatesPage,
-  NewPassword,
+  ContinuousSearchPage, NewPassword,
   OrganizationsPage,
   ReportsPage,
   ResetPassword,
   SearchVectorsPage,
   SettingsPage,
-  UsersPage,
-  ContinuousSearchPage,
+  UsersPage
 } from "./pages";
 import { ChildProfilePage } from "./pages/ChildProfilePage";
 import LoginPage from "./pages/Login";
@@ -66,13 +64,6 @@ function App() {
         <GroupAccess atLeast="manager" exact="admin">
           <PrivateRoute
             exact
-            path={`/${CONTINUOUS_SEARCH}`}
-            component={ContinuousSearchPage}
-          />
-        </GroupAccess>
-        <GroupAccess atLeast="manager" exact="admin">
-          <PrivateRoute
-            exact
             path={`/${SEARCHVECTOR}`}
             component={SearchVectorsPage}
           />
@@ -86,6 +77,9 @@ function App() {
             path={`/${COMMUNICATION_TEMPLATES}`}
             component={CommunicationTemplatesPage}
           />
+        </GroupAccess>
+        <GroupAccess atLeast="admin" exact="super_admin">
+          <PrivateRoute exact path={`/${COMMUNICATION_TEMPLATES}-${ADD}`} component={AddCommunicationTemplatePage} />
         </GroupAccess>
         <GroupAccess atLeast="manager" exact="admin">
           <PrivateRoute exact path={`/${REPORTS}`} component={ReportsPage} />
@@ -173,11 +167,12 @@ function App() {
             )
           }
         />
-        <Route path={`/${LOGIN}`} component={() => user ? <Redirect to='/'/> : <LoginPage />}/>
-        <Route path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
-        <Route path={`/${NEW_PASSWORD}`} component={NewPassword} />
+        <Route exact path={`/${LOGIN}`} component={() => user ? <Redirect to='/'/> : <LoginPage />}/>
+        <Route exact path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
+        <Route exact path={`/${NEW_PASSWORD}`} component={NewPassword} />
         <ToastContainer />
       </SidebarTemplate>
+      
     </>
   );
 }

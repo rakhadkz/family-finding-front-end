@@ -15,27 +15,27 @@ export const ChildInformation = memo(({ child }) => {
             <Title size="18px">{child.first_name ? `${child.first_name} ${child.last_name}` : ""}</Title>
           </Spacing>
         </Box>
-        <Spacing>
+        <Spacing m={{l: "8px", r: "8px"}}>
           <StyledLabel>Birth date</StyledLabel>
           <Text>{moment(child.birthday).format('MMMM d, yyyy')}</Text>
         </Spacing>
-        <Spacing>
+        <Spacing m={{l: "8px", r: "8px"}}>
           <StyledLabel>Gender</StyledLabel>
           <Text>{child.gender}</Text>
         </Spacing>
-        <Spacing>
+        <Spacing m={{l: "8px", r: "8px"}}>
           <StyledLabel>Race</StyledLabel>
           <Text>{child.race}</Text>
         </Spacing>
-        <Spacing>
+        <Spacing m={{l: "8px", r: "8px"}}>
           <StyledLabel>Permanency goal</StyledLabel>
           <Text>{child.permanency_goal}</Text>
         </Spacing>
-        <Spacing>
+        <Spacing m={{l: "8px", r: "8px"}}>
           <StyledLabel>System status</StyledLabel>
           <Text>{child.system_status}</Text>
         </Spacing>
-        <Spacing>
+        <Spacing m={{l: "8px", r: "8px"}}>
           <StyledLabel>Matches</StyledLabel>
           <Text>1</Text>
         </Spacing>

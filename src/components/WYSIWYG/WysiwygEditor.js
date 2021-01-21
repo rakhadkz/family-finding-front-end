@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Box } from "../ui/atoms";
 import MentionWysiwygEditor from "./MentionWysiwygEditor";
+
 export const WysiwygEditor = (props) => {
-  const { onChange, upd, setBlocks } = props;
+  const { onChange, upd, setBlocks, defaultValue = "" } = props;
   return (
     <StyledBox w="100%">
       <MentionWysiwygEditor
         setBlocks={setBlocks}
         upd={upd}
+        defaultValue={defaultValue}
         onChange={onChange}
+        {...props}
       />
     </StyledBox>
   );

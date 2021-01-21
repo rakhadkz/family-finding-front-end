@@ -41,6 +41,7 @@ const childAttachmentTableData = (data, setTrigger, setPending) => {
         isRemovable(attachment.user_id) && {
           key: "action",
           content: (
+          <div align="center">
             <Button
               onClick={async() => {
                 setPending(true)
@@ -54,6 +55,7 @@ const childAttachmentTableData = (data, setTrigger, setPending) => {
             >
               <CrossIcon size="small" />
             </Button>
+          </div>
           ),
         }
       ],

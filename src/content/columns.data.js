@@ -7,7 +7,7 @@ export const organizationsTableColumns = [
   {
     key: "address",
     content: "Address",
-    width: 33,
+    width: 30,
   },
   {
     key: "city",
@@ -22,7 +22,30 @@ export const organizationsTableColumns = [
   {
     key: "zip",
     content: "Zip",
-    width: 8,
+    width: 10,
+  },
+];
+
+export const communicationTemplatesTableColumns = [
+  {
+    key: "name",
+    content: "Name",
+    width: 25,
+  },
+  {
+    key: "template_type",
+    content: "Type",
+    width: 33,
+  },
+  {
+    key: "updated_at",
+    content: "Last Edited Date",
+    width: 15,
+  },
+  {
+    key: "actions",
+    content: <p align="center">Actions</p>,
+    width: 15,
   },
 ];
 
@@ -58,7 +81,7 @@ export const usersTableColumns = (isSuperAdmin = false) => {
     },
     {
       key: "actions",
-      content: "Actions",
+      content: <p align="center">Actions</p>,
       width: 10,
     },
   ];
@@ -73,7 +96,7 @@ export const childrenTableColumns = (isUser = true) => [
   },
   {
     key: "permanency_goal",
-    content: <p align="left">Permanency Goal</p>,
+    content: "Permanency Goal",
     width: 20,
   },
   {
@@ -158,7 +181,7 @@ export const attachmentsTableColumns = [
   {
     key: "file_name",
     content: "File Name",
-    width: 51,
+    width: 40,
   },
   {
     key: "size",
@@ -177,8 +200,8 @@ export const attachmentsTableColumns = [
   },
   {
     key: "action",
-    content: "Action",
-    width: 5,
+    content: <p align="center">Action</p>,
+    width: 15,
   },
 ];
 

@@ -5,5 +5,6 @@ export const Form = styled.form`
   width: ${prop("w", "300px")};
   max-width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: ${prop("justify", "unset")};
+  flex-direction: ${prop("direction", "column")};
 `;

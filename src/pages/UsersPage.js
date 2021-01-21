@@ -28,7 +28,7 @@ const AllUsers = ({ history, search, setSearch }) => (
           iconBefore={<PersonIcon />}
           onClick={() => history.push("/users-add")}
         >
-          Add user
+          Add User
         </Button>
       </Box>
     </Spacing>

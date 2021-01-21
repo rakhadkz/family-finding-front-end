@@ -23,6 +23,7 @@ export const SelectInput = (props) => {
     defaultValue = null,
     myValue,
     myOnChange,
+    menuPlacement = "bottom"
   } = props;
 
   return (
@@ -36,10 +37,12 @@ export const SelectInput = (props) => {
         defaultValue={defaultValue}
         render={(props) => (
           <Select
+            menuPlacement={menuPlacement}
             control={control}
             name={name}
             inputId={id}
             options={options}
+            defaultValue={defaultValue}
             value={myValue}
             onChange={(value) => {
               props.onChange(value);
