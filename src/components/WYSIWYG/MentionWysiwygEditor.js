@@ -101,8 +101,11 @@ class MentionWysiwygEditor extends React.Component {
     }
   };
 
+  // componentDidMount() {
+  //   this.editorRef.current && this.editorRef.current.focus();
+  // }
+
   componentDidMount() {
-    this.editorRef.current && this.editorRef.current.focus();
     if (this.state.withMention) {
       this.mentions = this.context.mentions;
     }
