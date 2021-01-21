@@ -58,12 +58,12 @@ export const SearchVectorsPage = (props) => {
     })
       .then((response) => {
         if (response) {
-          setTotalPage(response.meta.num_pages);
+          setTotalPage(response?.meta?.num_pages);
           console.log(response);
-          console.log(response.data);
+          console.log(response?.data);
           setSearchVector(
             searchVectorTableData(
-              response.data,
+              response?.data,
               history,
               setIsOpen,
               setCurrentSV
