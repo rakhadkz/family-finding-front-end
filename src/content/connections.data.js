@@ -4,6 +4,7 @@ import { Switch } from "@chakra-ui/react";
 import { Avatar } from "../components/ui/molecules/Avatar";
 import { updateChildContactRequestConnections } from "../api/childContact";
 import { useState } from "react";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const connectionsTableData = (data, setIsLoading, setContacts) => {
   return data.map(function (item, index) {
@@ -70,19 +71,21 @@ const connectionsTableData = (data, setIsLoading, setContacts) => {
         {
           key: "potential_match",
           content: (
-            <Box
-              d="flex"
-              style={{
-                marginTop: "10px",
-                marginLeft: "30px",
-              }}
-            >
-              <Switch
-                id="potential_match"
-                isChecked={item.potential_match}
-                onChange={onSubmitHandle}
-              />
-            </Box>
+            <ChakraProvider>
+              <Box
+                d="flex"
+                style={{
+                  marginTop: "10px",
+                  marginLeft: "30px",
+                }}
+              >
+                <Switch
+                  id="potential_match"
+                  isChecked={item.potential_match}
+                  onChange={onSubmitHandle}
+                />
+              </Box>
+            </ChakraProvider>
           ),
         },
       ],
