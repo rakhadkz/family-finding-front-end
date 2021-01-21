@@ -100,8 +100,36 @@ export const childrenTableColumns = (isUser = true) => [
     key: "status",
     content: <p align="center">Status</p>,
     width: 16,
-  }
-]
+  },
+];
+
+export const searchVectorsTableColumns = [
+  {
+    key: "name",
+    content: "Name",
+    width: 15,
+  },
+  {
+    key: "description",
+    content: "Description",
+    width: 25,
+  },
+  {
+    key: "in_continuous_search",
+    content: "In Continuous Search",
+    width: 15,
+  },
+  {
+    key: "priority",
+    content: "Priority",
+    width: 15,
+  },
+  {
+    key: "Delete",
+    content: <p align="center">Delete</p>,
+    width: 15,
+  },
+];
 
 export const actionItemsTableColumns = [
   {

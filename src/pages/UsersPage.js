@@ -77,7 +77,7 @@ export const UsersPage = (props) => {
   const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
   const [search, setSearch] = useState(query.get("search") || "");
   const head = usersTableColumns(user?.role === "super_admin");
-  
+
   const organization =
     user && user?.user_organizations
       ? user?.user_organizations[0]?.organization
@@ -88,7 +88,9 @@ export const UsersPage = (props) => {
     deleteUser(id).finally(() => {
       setRefresh(false);
       setIsOpen(false);
-      history.push("../users");
+      user?.role === "super_admin"
+        ? history.push("../users")
+        : history.push("../organization_users");
     });
   };
 
@@ -107,10 +109,8 @@ export const UsersPage = (props) => {
             if (response) {
               if (id) {
                 const data = response.data;
-                setUsers(
-                  userTableData(data, user, setIsOpen, setCurrentUser)
-                );
-                setName(`${data.first_name} ${data.last_name}`)
+                setUsers(userTableData(data, user, setIsOpen, setCurrentUser));
+                setName(`${data.first_name} ${data.last_name}`);
                 setEmail(data.email);
               } else {
                 const items = response.data;

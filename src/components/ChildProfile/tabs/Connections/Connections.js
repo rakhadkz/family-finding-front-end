@@ -1,13 +1,12 @@
 import Button from "@atlaskit/button";
 import DynamicTable from "@atlaskit/dynamic-table";
-import { ChakraProvider } from "@chakra-ui/react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import {
   createContactRequest,
-  createTableChildContactRequest
+  createTableChildContactRequest,
 } from "../../../../api/childContact";
 import { connectionsTableData } from "../../../../content/connections.data";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
@@ -131,7 +130,7 @@ export const Connections = (props) => {
   };
 
   return (
-    <ChakraProvider>
+    <>
       <Spacing m={{ t: "25px" }}>
         <Spacing m={{ b: "20px" }}>
           <Box d="flex" justify="space-between">
@@ -172,7 +171,7 @@ export const Connections = (props) => {
           />
         </TableWrapper>
       </Spacing>
-    </ChakraProvider>
+    </>
   );
 };
 
