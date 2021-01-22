@@ -125,7 +125,6 @@ export const CommunicationTemplatesPage = (props) => {
           formRef.current.dispatchEvent(
             new Event("submit", { cancelable: true, bubbles: true })
           );
-          setIsOpenEdit(false);
         }}
         positiveLabel="Update"
         body={
@@ -133,7 +132,9 @@ export const CommunicationTemplatesPage = (props) => {
             ref={formRef}
             onSubmit={updateCommunicationTemplateRequest(currentTemplate?.id)}
             initialValues={currentTemplate}
+            refresh={refresh}
             setRefresh={setRefresh}
+            setIsOpenEdit={setIsOpenEdit}
             isUpdate={true}
           />
         }

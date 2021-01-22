@@ -16,7 +16,7 @@ export const TEMPLATE_TYPES = [
 ];
 
 export const CommunicationTemplateForm = React.forwardRef(
-  ({ onSubmit, isUpdate = false, initialValues = {}, setRefresh }, ref) => {
+  ({ onSubmit, isUpdate = false, initialValues = {}, setRefresh,setIsOpenEdit, refresh }, ref) => {
     const history = useHistory();
     const { register, handleSubmit, control, errors } = useForm({
       defaultValues: initialValues,
@@ -51,7 +51,8 @@ export const CommunicationTemplateForm = React.forwardRef(
           );
           if (isUpdate) {
             history.push("../communications-templates");
-            setRefresh(true)
+            setRefresh(!refresh)
+            setIsOpenEdit(false)
           } else {
             history.goBack();
           }
