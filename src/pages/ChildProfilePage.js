@@ -76,36 +76,36 @@ export const ChildProfilePage = (props) => {
       .finally(() => setPending(false));
   };
 
-  const onSubmitUsers = async() => {
-    !assignedUsers && setValidationState("error")
-    setButtonPending(true)
+  const onSubmitUsers = async () => {
+    !assignedUsers && setValidationState("error");
+    setButtonPending(true);
     await createChildUserRequest({
-      "user_child": {
-        "users": assignedUsers.map(item => ({
-          "user_id": item.value,
-          "child_id": child.id,
-          "date_approved": new Date(),
-          "date_denied": null
-        }))
-      }
-    })
+      user_child: {
+        users: assignedUsers.map((item) => ({
+          user_id: item.value,
+          child_id: child.id,
+          date_approved: new Date(),
+          date_denied: null,
+        })),
+      },
+    });
     await createActionItemRequest({
-      "action_item": {
-        "items": assignedUsers.map(item => ({
-          "title": "Access granted",
-          "description": `You have been assigned to a child`,
-          "child_id": child.id,
-          "user_id": item.value,
-          "action_type": "access_granted"
-        }))
-      }
+      action_item: {
+        items: assignedUsers.map((item) => ({
+          title: "Access granted",
+          description: `You have been assigned to a child`,
+          child_id: child.id,
+          user_id: item.value,
+          action_type: "access_granted",
+        })),
+      },
     })
-    .then(() => fetchChildUsers())
-    .finally(() => {
-      setButtonPending(false)
-      setIsOpen(false)
-    })
-  }
+      .then(() => fetchChildUsers())
+      .finally(() => {
+        setButtonPending(false);
+        setIsOpen(false);
+      });
+  };
 
   const openModal = () => {
     setAssignedUsers(null);
@@ -117,28 +117,30 @@ export const ChildProfilePage = (props) => {
   ));
 
   const assignUser = () => {
-    setPending(true)
-    user?.role === "user"
-    && createChildUserRequest({
-      "user_child": {
-        "users": [
-          {
-            "user_id": user.id,
-            "child_id": id
-          }
-        ]
-      }
-    })
-    && createActionItemRequest({
-      "action_item": {
-        "title": "User Assign",
-        "description": `${user.first_name} ${user.last_name} has requested access for ${child.first_name} ${child.last_name}`,
-        "child_id": id,
-        "related_user_id": user.id,
-        "action_type": "access_request"
-      }
-    }).then(() => history.goBack()).finally(() => setPending(false))
-  }
+    setPending(true);
+    user?.role === "user" &&
+      createChildUserRequest({
+        user_child: {
+          users: [
+            {
+              user_id: user.id,
+              child_id: id,
+            },
+          ],
+        },
+      }) &&
+      createActionItemRequest({
+        action_item: {
+          title: "User Assign",
+          description: `${user.first_name} ${user.last_name} has requested access for ${child.first_name} ${child.last_name}`,
+          child_id: id,
+          related_user_id: user.id,
+          action_type: "access_request",
+        },
+      })
+        .then(() => history.goBack())
+        .finally(() => setPending(false));
+  };
 
   return (
     <>
@@ -250,27 +252,37 @@ export const ChildProfilePage = (props) => {
             height: "100vh",
           }}
         >
-          <h4 style={{ marginBottom: "10px" }}>
-            You do not have access to view this child's profile
-          </h4>
-          <Box>
-            {!child.request_pending ? (
-              <Button 
-                onClick={() => assignUser()}
-                appearance="primary"
-              >
-                Request access
+          {child.first_name ? (
+            <>
+              <h4 style={{ marginBottom: "10px" }}>
+                You do not have access to view this child's profile
+              </h4>
+              <Box>
+                {!child.request_pending ? (
+                  <Button onClick={() => assignUser()} appearance="primary">
+                    Request access
+                  </Button>
+                ) : (
+                  <Button isDisabled>Request pending</Button>
+                )}
+                <Button
+                  onClick={() => history.goBack()}
+                  appearance="subtle-link"
+                >
+                  Go back
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <>
+              <h4 style={{ marginBottom: "10px" }}>Child Not Found</h4>
+              <Button onClick={() => history.goBack()} appearance="subtle-link">
+                Go back
               </Button>
-            ) : (
-              <Button isDisabled>Request pending</Button>
-            )}
-            <Button onClick={() => history.goBack()} appearance="subtle-link">
-              Go back
-            </Button>
-          </Box>
+            </>
+          )}
         </div>
-        )
-      }
+      )}
     </>
   );
 };
