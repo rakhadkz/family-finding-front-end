@@ -1,4 +1,5 @@
 import PdfDocument24Icon from "@atlaskit/icon-file-type/glyph/pdf-document/24";
+import Generic24Icon from '@atlaskit/icon-file-type/glyph/generic/24';
 import PowerpointPresentation24Icon from "@atlaskit/icon-file-type/glyph/powerpoint-presentation/24";
 import WordDocument24Icon from "@atlaskit/icon-file-type/glyph/word-document/24";
 import ExcelSpreadsheet24Icon from "@atlaskit/icon-file-type/glyph/excel-spreadsheet/24";
@@ -21,7 +22,7 @@ const childAttachmentTableData = (data, setTrigger, setPending) => {
           key: "file_name",
           content: (
             <Box d="flex" align="center">
-              <AttachmentIcon type={attachment.file_type}/>
+              <AttachmentIcon file_format={attachment.file_format}/>
               <Button href={attachment.file_url} target="_blank" appearance="link" >{`${attachment.file_name}.${attachment.file_format || ''}`}</Button>
             </Box>
           ),
@@ -69,20 +70,29 @@ const isRemovable = (user_id) => {
   return (user.id === user_id || user.role === "manager" || user.role === "admin")
 }
 
-const AttachmentIcon = ({type}) => {
-  switch (type) {
+const AttachmentIcon = ({file_format}) => {
+  switch (file_format) {
     case "ppt":
+    case "pptx":
       return <PowerpointPresentation24Icon />;
-    case "doc" || "docx":
+    case "doc":
+    case "docx":
       return <WordDocument24Icon />;
-    case "xlsx" || "xlsm" || "xlsb" || "xls":
+    case "xlsx":
+    case "xlsm":
+    case "xlsb":
+    case "xls":
       return <ExcelSpreadsheet24Icon />;
-    case "image":
-      return <Image24Icon/>
-    case "video":
-      return <Video24Icon/>
+    case "png":
+    case "jpeg":
+    case "jpg":
+      return <Image24Icon />
+    case "mp4":
+      return <Video24Icon />
+    case "pdf":
+      return <PdfDocument24Icon />
     default:
-      return <PdfDocument24Icon />;
+      return <Generic24Icon />;
   }
 };
 
