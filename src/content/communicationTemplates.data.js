@@ -4,6 +4,7 @@ import EditIcon from "@atlaskit/icon/glyph/edit";
 import moment from "moment";
 import { GroupAccess } from "../components/common";
 import { TEMPLATE_TYPES } from "../components/CommunicationTemplate";
+import { humanReadableDateFormat } from "./date";
 
 const communicationTemplatesData = (
   data,
@@ -25,7 +26,7 @@ const communicationTemplatesData = (
       },
       {
         key: "updated_at",
-        content: moment(item?.updated_at).format("MMMM d, yyyy"),
+        content: moment(item?.updated_at).format(humanReadableDateFormat),
       },
       {
         key: "actions",

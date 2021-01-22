@@ -1,6 +1,7 @@
 import moment from "moment";
 import React, { memo } from "react";
 import styled from "styled-components";
+import { humanReadableDateFormat } from "../../content/date";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 
@@ -17,7 +18,7 @@ export const ChildInformation = memo(({ child }) => {
         </Box>
         <Spacing m={{l: "8px", r: "8px"}}>
           <StyledLabel>Birth date</StyledLabel>
-          <Text>{moment(child.birthday).format('MMMM d, yyyy')}</Text>
+          <Text>{moment(child.birthday).format(humanReadableDateFormat)}</Text>
         </Spacing>
         <Spacing m={{l: "8px", r: "8px"}}>
           <StyledLabel>Gender</StyledLabel>
