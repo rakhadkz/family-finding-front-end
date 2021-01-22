@@ -137,19 +137,19 @@ export const searchVectorsTableColumns = [
     content: "Description",
     width: 25,
   },
-  {
-    key: "in_continuous_search",
-    content: "In Continuous Search",
-    width: 15,
-  },
+  // {
+  //   key: "in_continuous_search",
+  //   content: "In Continuous Search",
+  //   width: 15,
+  // },
   {
     key: "priority",
     content: "Priority",
     width: 15,
   },
   {
-    key: "Delete",
-    content: <p align="center">Delete</p>,
+    key: "Actions",
+    content: <p align="center">Actions</p>,
     width: 15,
   },
 ];

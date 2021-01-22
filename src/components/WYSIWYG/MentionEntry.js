@@ -17,7 +17,7 @@ const Entry = (props) => {
     <StyledEntry isFocused={isFocused}>
       <StyledEntryContainer>
         <StyledLeft>
-          <StyledAvatar name={mention.name} />
+          <StyledAvatar size="small" name={mention.name} />
         </StyledLeft>
 
         <StyledRight>
@@ -63,9 +63,9 @@ const StyledLeft = styled.div`
 `;
 const StyledAvatar = styled(Avatar)`
   display: block;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  // border-radius: 50%;
 `;
 
 export default Entry;
