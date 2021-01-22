@@ -1,4 +1,3 @@
-import Badge from "@atlaskit/badge";
 import React from "react";
 import styled from "styled-components";
 import { getLocalStorageUser } from "../../../context/auth/authProvider";
@@ -10,9 +9,6 @@ export const SidebarUser = () => {
     user && (
     <SidebarUserContainer>
       <Avatar name={`${user.first_name} ${user.last_name}`}/>
-      <UserBadgeContainer>
-        <Badge appearance="primary">{user?.badge}</Badge>
-      </UserBadgeContainer>
       <UserNameText>
         {user?.first_name} {user?.last_name}
       </UserNameText>
@@ -35,10 +31,4 @@ const UserNameText = styled.div`
   display: flex;
   align-items: center;
   margin-left: 9px;
-`;
-
-const UserBadgeContainer = styled.div`
-  position: absolute;
-  left: 55px;
-  margin-top: -15px;
 `;
