@@ -1,7 +1,7 @@
 import moment from "moment";
 import React, { memo } from "react";
 import styled from "styled-components";
-import { humanReadableDateFormat } from "../../content/date";
+import { humanReadableDateFormat } from "../../content/date.format";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 
