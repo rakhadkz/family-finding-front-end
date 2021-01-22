@@ -13,8 +13,10 @@ export const MentionsProvider = (props) => {
       console.log(response);
       setMentions(
         response.map((user) => ({
-          name: `${user.first_name} ${user.last_name}`,
-          title: "Staff of Penn State Orphanage",
+          name: `${
+            user.first_name[0].toUpperCase() + user.first_name.substring(1)
+          } ${user.last_name[0].toUpperCase() + user.last_name.substring(1)}`,
+          // title: "Staff of Penn State Orphanage",
           id: user.id,
         }))
       );

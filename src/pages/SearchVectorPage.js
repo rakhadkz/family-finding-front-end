@@ -17,6 +17,7 @@ import {
   fetchSearchVectors,
   postSearchVector,
   deleteSearchVector,
+  updateSearchVector,
 } from "../context/searchVectors/SearchVectorsProvider";
 import { updateQueryParams } from "./OrganizationsPage";
 import { AddSearchVectorForm } from "../components/SearchVector/";
@@ -36,6 +37,7 @@ export const SearchVectorsPage = (props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [currentSV, setCurrentSV] = useState(-1);
+  const [isEdit, setEdit] = useState(false);
 
   useEffect(() => {
     console.log("User in Children Page", user);
@@ -66,7 +68,9 @@ export const SearchVectorsPage = (props) => {
               response?.data,
               history,
               setIsOpen,
-              setCurrentSV
+              setCurrentSV,
+              setIsAddModalOpen,
+              setEdit
             )
           );
         }
@@ -104,14 +108,18 @@ export const SearchVectorsPage = (props) => {
       <ModalDialog
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
-        heading="Add Search Vector"
+        heading={isEdit ? "Edit Search Vector" : "Add Search Vector"}
         appearance={null}
         body={
           <AddSearchVectorForm
             onSubmit={postSearchVector}
+            something={updateSearchVector}
             fetch={fetch}
             onCancel={() => setIsAddModalOpen(false)}
             organization_id={user.organization_id}
+            currSv={currentSV}
+            sv={searchVector}
+            isEdit={isEdit}
           />
         }
         hasActions={false}

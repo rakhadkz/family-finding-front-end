@@ -1,38 +1,45 @@
 import AvatarGroup from "@atlaskit/avatar-group";
 import Button from "@atlaskit/button";
+import "@atlaskit/css-reset";
 import EmailIcon from "@atlaskit/icon/glyph/email";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
 import MobileIcon from "@atlaskit/icon/glyph/mobile";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
-import React, { memo, useEffect, useState } from "react";
-import {
-  ChildInformation,
-  ChildTabs,
-  RelativesList,
-} from "../components/ChildProfile";
-import { Box, Spacing, Title } from "../components/ui/atoms";
-import { ModalDialog } from "../components/ui/common";
-import { CHILDREN } from "../helpers";
 import Select from "@atlaskit/select";
-import "@atlaskit/css-reset";
+import Spinner from "@atlaskit/spinner";
+import { Text } from "@chakra-ui/react";
+import React, { memo, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
 import {
   createChildUserRequest,
   fetchChildrenRequest,
-  fetchChildUsersRequest,
+  fetchChildUsersRequest
 } from "../api/children";
+import { fetchCommunicationTemplateRequest } from "../api/communicationTemplates";
+import {
+  ChildInformation,
+  ChildTabs,
+  RelativesList
+} from "../components/ChildProfile";
+import { Box, Label, Spacing, Title } from "../components/ui/atoms";
+import { ModalDialog } from "../components/ui/common";
 import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
 import { getLocalStorageUser } from "../context/auth/authProvider";
-import Spinner from "@atlaskit/spinner";
-import { useHistory } from "react-router-dom";
-import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
+import { CHILDREN } from "../helpers";
 
 export const ChildProfilePage = (props) => {
   const id = props.match.params.id;
   const user = getLocalStorageUser();
   const [child, setChild] = useState({});
   const [users, setUsers] = useState({});
+  const [templates, setTemplates] = useState([]);
+  const [templateType, setTemplateType] = useState("");
+  const [templateHtml, setTemplateHtml] = useState("");
+  const [filteredTemplates, setFilteredTemplates] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [assignedUsers, setAssignedUsers] = useState(null);
   const [validationState, setValidationState] = useState("default");
   const [buttonPending, setButtonPending] = useState(false);
@@ -42,8 +49,21 @@ export const ChildProfilePage = (props) => {
 
   useEffect(() => {
     fetchChildProfile();
+    fetchTemplates();
     (user.role === "admin" || user.role === "manager") && fetchChildUsers();
   }, []);
+
+  useEffect(() => {
+    setTemplateHtml('')
+    setFilteredTemplates(
+      templates
+        .filter((item) => item.template_type === templateType)
+        .map((item) => ({
+          value: item.content,
+          label: `${item.name} - ${item.template_type}`,
+        }))
+    );
+  }, [templateType]);
 
   const fetchChildUsers = async () => {
     await fetchChildUsersRequest({ id: id }).then(
@@ -62,6 +82,12 @@ export const ChildProfilePage = (props) => {
           })),
         })
     );
+  };
+
+  const fetchTemplates = async () => {
+    await fetchCommunicationTemplateRequest().then((data) => {
+      setTemplates(data);
+    });
   };
 
   const fetchChildProfile = () => {
@@ -225,19 +251,75 @@ export const ChildProfilePage = (props) => {
           </Spacing>
           <Spacing m={{ t: "16px" }}>
             <Box d="flex">
-              <Button iconBefore={<EmailIcon />} isSelected>
+              <Button
+                onClick={() => {
+                  setTemplateType("Letter");
+                  setIsTemplateOpen(true);
+                }}
+                iconBefore={<EmailIcon />}
+                isSelected
+              >
                 Generate Letter
               </Button>
               <Spacing m="0px 10px">
-                <Button iconBefore={<MentionIcon />} isSelected>
+                <Button
+                  onClick={() => {
+                    setTemplateType("Email");
+                    setIsTemplateOpen(true);
+                  }}
+                  iconBefore={<MentionIcon />}
+                  isSelected
+                >
                   Send Email
                 </Button>
               </Spacing>
-              <Button iconBefore={<MobileIcon />} isSelected>
-                PlaceCall
+              <Button
+                onClick={() => {
+                  setTemplateType("SMS");
+                  setIsTemplateOpen(true);
+                }}
+                iconBefore={<MobileIcon />}
+                isSelected
+              >
+                Send SMS Text
               </Button>
             </Box>
           </Spacing>
+          <ModalDialog
+            isOpen={isTemplateOpen}
+            setIsOpen={setIsTemplateOpen}
+            heading="Choose Template"
+            positiveLabel="Send"
+            width="small"
+            body={
+              <div>
+                <Select
+                  className="select"
+                  classNamePrefix="react-select"
+                  menuPortalTarget={document.body}
+                  value={assignedUsers}
+                  validationState={validationState}
+                  onChange={(e) => {
+                    console.log("EEE", e);
+                    setTemplateHtml(e.value);
+                    setValidationState("default");
+                  }}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  }}
+                  options={filteredTemplates}
+                  placeholder="Choose Template"
+                />
+                <Spacing style={{ marginBottom: -15, marginTop: 10 }}>
+                  <Label>Template Text</Label>
+                </Spacing>
+                <Text
+                  style={{ paddingLeft: 10, paddingRight: 10 }}
+                  dangerouslySetInnerHTML={{ __html: templateHtml }}
+                ></Text>
+              </div>
+            }
+          />
           <Spacing m={{ t: "40px" }}>
             {<ChildTabs user={user} {...child} />}
           </Spacing>
