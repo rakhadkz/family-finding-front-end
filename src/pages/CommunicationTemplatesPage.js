@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import {
   deleteCommunicationTemplateRequest,
   fetchCommunicationTemplateRequest,
-  updateCommunicationTemplateRequest
+  updateCommunicationTemplateRequest,
 } from "../api/communicationTemplates";
 import { CommunicationTemplateForm } from "../components/CommunicationTemplate";
 import { Box, Spacing, Title } from "../components/ui/atoms";
@@ -14,6 +14,7 @@ import { Table } from "../components/ui/common/Table";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { communicationTemplatesTableColumns } from "../content/columns.data";
 import { communicationTemplatesData } from "../content/communicationTemplates.data";
+import MentionIcon from "@atlaskit/icon/glyph/mention";
 
 const CommunicationTemplatesBar = ({ history, search, setSearch }) => (
   <>
@@ -23,8 +24,9 @@ const CommunicationTemplatesBar = ({ history, search, setSearch }) => (
           <SearchBar value={search} />
         </Box>
         <Button
-          appearance="warning"
+          appearance="primary"
           onClick={() => history.push("/communications-templates-add")}
+          iconBefore={<MentionIcon />}
         >
           Add Template
         </Button>
