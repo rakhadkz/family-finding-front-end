@@ -1,6 +1,6 @@
 import { formatBytes, formatDuration } from "react-dropzone-uploader"
 import CrossIcon from "@atlaskit/icon/glyph/cross";
-import Button from "@atlaskit/button";
+import Button, { LoadingButton } from "@atlaskit/button";
 import { Box } from "../atoms";
 
 export const DropzoneSubmitButton = (props) => {
@@ -13,9 +13,9 @@ export const DropzoneSubmitButton = (props) => {
     onSubmit(files.filter(f => ['headers_received', 'done'].includes(f.meta.status)))
   }
   return (
-    <Button appearance="primary" isDisabled={disabled || _disabled} onClick={handleSubmit} className={buttonClassName}>
+    <LoadingButton appearance="primary" isLoading={disabled || _disabled} onClick={handleSubmit} className={buttonClassName}>
       {content}
-    </Button>
+    </LoadingButton>
   )
 }
 

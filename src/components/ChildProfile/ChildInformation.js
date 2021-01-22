@@ -1,42 +1,51 @@
+import Button from "@atlaskit/button";
 import moment from "moment";
 import React, { memo } from "react";
 import styled from "styled-components";
 import { humanReadableDateFormat } from "../../content/date.format";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
+import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
 
 export const ChildInformation = memo(({ child }) => {
   return (
     <Rectangle>
+      <Box d="flex" mb="16px">
+        <Avatar name={`${child.first_name} ${child.last_name}`} />
+        <Spacing m={{ l: "17px" }}>
+          <StyledLabel>Full name</StyledLabel>
+          <Box d="flex" align="center">
+            <Title size="18px" style={{ marginRight: "5px" }}>
+              {child.first_name ? `${child.first_name} ${child.last_name}` : ""}
+            </Title>
+            <Button spacing="none" appearance="link">
+              <EditorEditIcon size="medium" />
+            </Button>
+          </Box>
+        </Spacing>
+      </Box>
       <Box d="flex" justify="space-between">
-        <Box d="flex">
-          <Avatar name={`${child.first_name} ${child.last_name}`}/>
-          <Spacing m={{ l: "17px" }}>
-            <StyledLabel>Full name</StyledLabel>
-            <Title size="18px">{child.first_name ? `${child.first_name} ${child.last_name}` : ""}</Title>
-          </Spacing>
-        </Box>
-        <Spacing m={{l: "8px", r: "8px"}}>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>Birth date</StyledLabel>
           <Text>{moment(child.birthday).format(humanReadableDateFormat)}</Text>
         </Spacing>
-        <Spacing m={{l: "8px", r: "8px"}}>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>Gender</StyledLabel>
           <Text>{child.gender}</Text>
         </Spacing>
-        <Spacing m={{l: "8px", r: "8px"}}>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>Race</StyledLabel>
           <Text>{child.race}</Text>
         </Spacing>
-        <Spacing m={{l: "8px", r: "8px"}}>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>Permanency goal</StyledLabel>
           <Text>{child.permanency_goal}</Text>
         </Spacing>
-        <Spacing m={{l: "8px", r: "8px"}}>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>System status</StyledLabel>
           <Text>{child.system_status}</Text>
         </Spacing>
-        <Spacing m={{l: "8px", r: "8px"}}>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>Matches</StyledLabel>
           <Text>1</Text>
         </Spacing>
