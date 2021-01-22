@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { Avatar } from "../ui/molecules/Avatar";
+
 const Entry = (props) => {
   const {
     mention,
@@ -9,11 +11,13 @@ const Entry = (props) => {
     ...parentProps
   } = props;
 
+  console.log(props);
+
   return (
     <StyledEntry isFocused={isFocused}>
       <StyledEntryContainer>
         <StyledLeft>
-          <StyledAvatar src={mention.avatar} role="presentation" />
+          <StyledAvatar name={mention.name} />
         </StyledLeft>
 
         <StyledRight>
@@ -57,7 +61,7 @@ const StyledLeft = styled.div`
   display: table-cell;
   vertical-align: middle;
 `;
-const StyledAvatar = styled.img`
+const StyledAvatar = styled(Avatar)`
   display: block;
   width: 30px;
   height: 30px;
