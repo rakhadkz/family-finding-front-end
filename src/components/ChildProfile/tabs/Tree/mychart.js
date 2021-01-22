@@ -88,9 +88,9 @@ class Chart extends Component {
 
     OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
     OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
-    OrgChart.templates.myTemplate.size = [180, 40];
+    OrgChart.templates.myTemplate.size = [220, 60];
     OrgChart.templates.myTemplate.node =
-      '<rect class="yellow-node" x="0" y="0" height="60" width="180" fill="#039BE5" stroke-width="0" stroke="#aeaeae" rx="20" ry="20"></rect>';
+      '<rect class="yellow-node" x="0" y="0" height="60" width="220" fill="#CCEFFF" stroke-width="0" stroke="#aeaeae" rx="30" ry="30"></rect>';
 
     OrgChart.templates.myTemplate.ripple = {
       radius: 1,
@@ -126,17 +126,17 @@ class Chart extends Component {
       OrgChart.templates.myTemplate
     );
     OrgChart.templates.yellow.node =
-      '<rect class="yellow-node" x="0" y="0" height="40" width="180" fill="#CEE9E9" stroke-width="0" stroke="#aeaeae" rx="20" ry="20"></rect>';
+      '<rect class="yellow-node" x="0" y="0" height="60" width="220" fill="#CEE9E9" stroke-width="0" stroke="#aeaeae" rx="30" ry="30"></rect>';
     OrgChart.templates.yellow.field_0 =
-      '<text width="150" class="field_0" style="font-size: 14px;" fill="#172B4D" x="48" y="15" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_0" style="font-size: 14px;" fill="#172B4D" x="68" y="15" text-anchor="start">{val}</text>';
     OrgChart.templates.yellow.field_1 =
-      '<text width="150" class="field_1" style="font-size: 12px;" fill="#6B778C" x="48" y="33" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_1" style="font-size: 12px;" fill="#6B778C" x="68" y="33" text-anchor="start">{val}</text>';
 
     OrgChart.templates.yellow.img_0 =
-      '<clipPath id="ulaImg">' +
-      '<circle cx="20" cy="20" r="20"></circle>' +
+      '<clipPath id="ulaImg2">' +
+      '<circle cx="30" cy="30" r="30"></circle>' +
       "</clipPath>" +
-      '<image preserveAspectRatio="xMidYMid slice" clip-path="url(#ulaImg)" xlink:href="{val}" x="0" y="0" width="40" height="40">' +
+      '<image preserveAspectRatio="xMidYMid slice" clip-path="url(#ulaImg2)" xlink:href="{val}" x="0" y="0" width="60" height="60">' +
       "</image>";
 
     OrgChart.templates.green.img_0 =

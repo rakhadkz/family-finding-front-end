@@ -5,12 +5,12 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   createContactRequest,
-  createTableChildContactRequest,
+  createTableChildContactRequest
 } from "../../../../api/childContact";
 import { connectionsTableData } from "../../../../content/connections.data";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
-import { Box, Spacing, Title } from "../../../ui/atoms";
+import { Box, Spacing } from "../../../ui/atoms";
 import { ModalDialog, TableWrapper } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
 
@@ -132,8 +132,7 @@ export const Connections = (props) => {
     <>
       <Spacing m={{ t: "25px" }}>
         <Spacing m={{ b: "20px" }}>
-          <Box d="flex" justify="space-between">
-            <Title size={"16px"}>Connections List</Title>
+          <Box d="flex" justify="flex-end">
             <Button
               appearance="warning"
               onClick={() => setIsAddModalOpen(true)}
