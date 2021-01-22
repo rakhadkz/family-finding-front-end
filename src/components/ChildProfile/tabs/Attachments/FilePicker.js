@@ -1,10 +1,11 @@
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
-import { Spacing } from '../../../ui/atoms'
+import { Box, Spacing } from '../../../ui/atoms'
 import { DropzoneLayout, DropzonePreview, DropzoneSubmitButton } from '../../../ui/molecules'
 import { uploadRequest } from '../../../../api/cloudinary';
 import { createAttachmentRequest, createChildAttachmentRequest } from '../../../../api/attachments/attachmentRequest';
 import { useState } from 'react';
+import Folder48Icon from '@atlaskit/icon-file-type/glyph/folder/48';
 
 export default function FilePicker({ user_id, child_id, setIsOpen, setTrigger, setClosable }){
   const handleChangeStatus = ({ meta, file }, status) => { console.log(status, meta, file) }
@@ -53,6 +54,12 @@ export default function FilePicker({ user_id, child_id, setIsOpen, setTrigger, s
   return (
     <Spacing m={{t: "30px", b: "30px"}}>
       <Dropzone
+        inputContent={
+        <Box d="flex" direction="column" align="center">
+          <Folder48Icon size="xlarge"/>
+          <span style={{fontSize: "15px"}}>Drag Files or Click to Browse</span>
+        </Box>
+        }
         PreviewComponent={DropzonePreview}
         LayoutComponent={(e) => <DropzoneLayout {...e} setIsOpen={setIsOpen} setClosable={setClosable}/>}
         onChangeStatus={handleChangeStatus}

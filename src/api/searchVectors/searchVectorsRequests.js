@@ -31,3 +31,11 @@ export const deleteSearchVectorRequest = (data) => {
     method: "DELETE",
   });
 };
+
+export const updateSearchVectorRequest = (params) => {
+  return request({
+    endpoint: `admin/search_vectors/${params.id}`,
+    method: "PUT",
+    data: params.data,
+  });
+};

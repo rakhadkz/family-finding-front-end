@@ -3,6 +3,7 @@ import {
   fetchSearchVectorsRequest,
   postSearchVectorRequest,
   deleteSearchVectorRequest,
+  updateSearchVectorRequest,
 } from "../../api/searchVectors";
 
 const fetchSearchVectors = (params = null) => {
@@ -59,4 +60,27 @@ const deleteSearchVector = (params) => {
   });
 };
 
-export { fetchSearchVectors, postSearchVector, deleteSearchVector };
+const updateSearchVector = (params) => {
+  const errorStatuses = {
+    500: "Error on Server!",
+  };
+
+  return updateSearchVectorRequest(params).catch((err) => {
+    toast.error(errorStatuses[err.status], {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  });
+};
+
+export {
+  fetchSearchVectors,
+  postSearchVector,
+  deleteSearchVector,
+  updateSearchVector,
+};

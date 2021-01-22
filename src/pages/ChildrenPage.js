@@ -62,7 +62,7 @@ export const ChildrenPage = (props) => {
       })
       await createActionItemRequest({
         "action_item": {
-          "title": "User Assign",
+          "title": "Child Permission Request",
           "description": `${user.first_name} ${user.last_name} has requested access for ${child.full_name}`,
           "child_id": child.id,
           "related_user_id": user.id,

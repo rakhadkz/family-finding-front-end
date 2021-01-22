@@ -157,7 +157,7 @@ export const ChildProfilePage = (props) => {
       }) &&
       createActionItemRequest({
         action_item: {
-          title: "User Assign",
+          title: "Child Permission Request",
           description: `${user.first_name} ${user.last_name} has requested access for ${child.first_name} ${child.last_name}`,
           child_id: id,
           related_user_id: user.id,
