@@ -15,8 +15,6 @@ export const MentionsProvider = (props) => {
         response.map((user) => ({
           name: `${user.first_name} ${user.last_name}`,
           title: "Staff of Penn State Orphanage",
-          avatar:
-            "https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png",
           id: user.id,
         }))
       );
