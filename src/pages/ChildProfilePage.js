@@ -28,6 +28,8 @@ import { ModalDialog } from "../components/ui/common";
 import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
 import { getLocalStorageUser } from "../context/auth/authProvider";
 import { CHILDREN } from "../helpers";
+import { AddChildForm } from "../components/Children";
+import { updateChild } from "../context/children/childProvider";
 
 export const ChildProfilePage = (props) => {
   const id = props.match.params.id;
@@ -45,6 +47,7 @@ export const ChildProfilePage = (props) => {
   const [buttonPending, setButtonPending] = useState(false);
   const [hasAccess, setAccess] = useState(false);
   const [pending, setPending] = useState(true);
+  const [ isOpenEdit, setIsOpenEdit ] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -183,6 +186,19 @@ export const ChildProfilePage = (props) => {
         </div>
       ) : hasAccess ? (
         <>
+          <ModalDialog
+            isOpen={isOpenEdit}
+            setIsOpen={setIsOpenEdit}
+            width="medium"
+            hasActions={false}
+            shouldCloseOnEscapePress={false}
+            shouldCloseOnOverlayClick={false}
+            body={
+              <div style={{padding: "30px"}}>
+                <AddChildForm onSubmit={updateChild} setIsOpenEdit={setIsOpenEdit} child={child} fetch={fetchChildProfile}/>
+              </div>
+            }
+          />                                                                                                                                                                         
           <Box d="flex" justify="space-between">
             <Title>{`${child.first_name} ${child.last_name}`}</Title>
             {user?.role !== "user" && (
@@ -244,7 +260,7 @@ export const ChildProfilePage = (props) => {
             />
           </Spacing>
           <Spacing m={{ t: "22px" }}>
-            <ChildInformation child={child} />
+            <ChildInformation child={child} setIsOpenEdit={setIsOpenEdit}/>
           </Spacing>
           <Spacing m={{ t: "22px" }}>
             <RelativesList relatives={child.contacts || []} />

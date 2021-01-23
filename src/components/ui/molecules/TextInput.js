@@ -20,11 +20,17 @@ export const TextInput = (props) => {
     label = null,
     value,
     className,
+    ml,
+    mr,
+    mt,
+    mb,
+    marginX = "0px",
+    marginY = "8px",
     ...rest
   } = props;
 
   return (
-    <Box w={`${width}px`} mr="35px">
+    <Box w={`${width}px`} mt={mt || marginY} mb={mb || marginY} ml={ml || marginX} mr={mr || marginX}>
       {label && <Label htmlFor={name}>{label}</Label>}
       <StyledTextField
         itemID={id}

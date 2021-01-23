@@ -4,7 +4,7 @@ import EditIcon from "@atlaskit/icon/glyph/edit";
 import moment from "moment";
 import { GroupAccess } from "../components/common";
 import { TEMPLATE_TYPES } from "../components/CommunicationTemplate";
-import { humanReadableDateFormat } from "./date.format";
+import { humanReadableDateFormat } from "./date";
 
 const communicationTemplatesData = (
   data,

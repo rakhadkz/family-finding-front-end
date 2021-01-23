@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Box, FieldContainer, Form } from "../ui/atoms";
+import { Box, Form } from "../ui/atoms";
 import { TextInput } from "../ui/molecules";
 import { AddOrganizationForm } from "./AddOrganizationForm";
 
@@ -42,55 +42,47 @@ export const AddUserForm = ({ onSubmit }) => {
     <Box>
       <Box d="flex" justify="space-evenly" mt="16px">
         <Form w="400px" d="flex" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
-          <FieldContainer>
-            <TextInput
-              width="100%"
-              className="input"
-              name={"first_name"}
-              register={register({ required: true })}
-              control={control}
-              error={errors.first_name}
-              label="First name"
-            />
-          </FieldContainer>
-          <FieldContainer>
-            <TextInput
-              width="100%"
-              className="input"
-              name={"last_name"}
-              register={register({ required: true })}
-              control={control}
-              error={errors.last_name}
-              label="Last name"
-            />
-          </FieldContainer>
-          <FieldContainer>
-            <TextInput
-              width="100%"
-              className="input"
-              name={"email"}
-              register={register({
-                required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-              })}
-              control={control}
-              error={errors.email}
-              label="Email"
-            />
-          </FieldContainer>
-          <FieldContainer>
-            <TextInput
-              width="100%"
-              name={"phone"}
-              register={register({
-                required: true,
-              })}
-              control={control}
-              error={errors.phone}
-              label="Phone"
-              type={"phone"}
-            />
-          </FieldContainer>
+          <TextInput
+            width="100%"
+            className="input"
+            name={"first_name"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.first_name}
+            label="First name"
+          />
+          <TextInput
+            width="100%"
+            className="input"
+            name={"last_name"}
+            register={register({ required: true })}
+            control={control}
+            error={errors.last_name}
+            label="Last name"
+          />
+          <TextInput
+            width="100%"
+            className="input"
+            name={"email"}
+            register={register({
+              required: true,
+              pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+            })}
+            control={control}
+            error={errors.email}
+            label="Email"
+          />
+          <TextInput
+            width="100%"
+            name={"phone"}
+            register={register({
+              required: true,
+            })}
+            control={control}
+            error={errors.phone}
+            label="Phone"
+            type={"phone"}
+          />
           <Box mt="16px">
             <Button
               isDisabled={pending}

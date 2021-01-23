@@ -104,6 +104,7 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
         <Spacing m={{t: "8px"}}>
             <Box align="flex-end" d="flex">
               <SelectInput
+                marginY="0px"
                 className="input"
                 name="organization"
                 elemAfterInput={<SearchIcon />}
@@ -117,6 +118,8 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
                 placeholder="Choose organization"
               />
               <SelectInput
+                marginY="0px"
+                marginX="8px"
                 className="input"
                 name="role"
                 label="Role"

@@ -17,9 +17,12 @@ export const DatepickerInput = (props) => {
     elemAfterInput = null,
     width = 240,
     label = null,
+    marginX = "0px",
+    marginY = "8px",
+    value
   } = props;
   return (
-    <StyledBox w={`${width}px`} mr="35px">
+    <StyledBox w={`${width}px`} mt={marginY} mb={marginY} ml={marginX} mr={marginX}>
       {label && <StyledLabel htmlFor={name}>{label}</StyledLabel>}
       <Controller
         format={"dd/MM/yyyy"}
@@ -27,6 +30,7 @@ export const DatepickerInput = (props) => {
         ref={register}
         rules={register}
         name={name}
+        value={value}
         as={StyledDatePicker}
         width={width}
         elemAfterInput={elemAfterInput}

@@ -2,12 +2,12 @@ import Button from "@atlaskit/button";
 import moment from "moment";
 import React, { memo } from "react";
 import styled from "styled-components";
-import { humanReadableDateFormat } from "../../content/date.format";
+import { humanReadableDateFormat } from "../../content/date";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
 
-export const ChildInformation = memo(({ child }) => {
+export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
   return (
     <Rectangle>
       <Box d="flex" mb="16px">
@@ -18,7 +18,7 @@ export const ChildInformation = memo(({ child }) => {
             <Title size="18px" style={{ marginRight: "5px" }}>
               {child.first_name ? `${child.first_name} ${child.last_name}` : ""}
             </Title>
-            <Button spacing="none" appearance="link">
+            <Button spacing="none" appearance="link" onClick={() => setIsOpenEdit(true)}>
               <EditorEditIcon size="medium" />
             </Button>
           </Box>
