@@ -1,23 +1,43 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Box, Spacing, Title } from "../../../ui/atoms";
-import Button from "@atlaskit/button";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import { CommentsForm } from "./CommentsForm";
 import { useClickOutside } from "../../../../hooks/index";
-import { postCommentRequest } from "../../../../api/comments";
+import {
+  postCommentRequest,
+  updateCommentRequest,
+  deleteCommentRequest,
+} from "../../../../api/comments";
 import { Avatar } from "../../../ui/molecules/Avatar";
+import { useAuth } from "../../../../context/auth/authContext";
+import { ModalDialog } from "../../../ui/common";
 
-export const Comments = ({ data, shouldUpdate, increaseShouldUpdate, id }) => {
+export const Comments = ({
+  data,
+  shouldUpdate,
+  increaseShouldUpdate,
+  id,
+  fetch,
+}) => {
   const [showInput, setShowInput] = useState(false);
+  const [commentData, setCommentData] = useState(
+    data.html_body ? data.html_body : data.body
+  );
   const [body, setBody] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [initialValue, setInitialValue] = useState("");
+  const { user } = useAuth();
   const expandEditor = () => setIsExpanded(true);
   const collapseEditor = () => {
     setShowInput(false) && setIsExpanded(false);
   };
 
+  // console.log(data);
   useEffect(() => {
-    let comment = data.html_body ? data.html_body : data.body;
+    let comment = commentData;
     let ij = [];
     for (let i = 0; i < comment.length; i++) {
       if (
@@ -58,7 +78,18 @@ export const Comments = ({ data, shouldUpdate, increaseShouldUpdate, id }) => {
     }
     // console.log(comment);
     setBody(comment);
-  }, []);
+  }, [edit]);
+
+  const onDelete = () => {
+    deleteCommentRequest({ commentId: data.id })
+      .then((res) => {
+        // console.log(res);
+      })
+      .finally(() => {
+        setModalOpen(false);
+        fetch();
+      });
+  };
 
   return (
     <Spacing m={{ t: "17px" }}>
@@ -66,49 +97,113 @@ export const Comments = ({ data, shouldUpdate, increaseShouldUpdate, id }) => {
         <Avatar name={`${data.user.first_name} ${data.user.last_name}`} />
         <Spacing m={{ l: "7px" }}>
           <Title size="14px">{`${data.user.first_name} ${data.user.last_name}`}</Title>
-          <Text dangerouslySetInnerHTML={{ __html: body }}></Text>
-          {showInput ? (
-            <>
-              <Spacing m={{ t: "17px" }}>
-                <Box d="flex">
-                  <Avatar
-                    name={`${data.user.first_name} ${data.user.last_name}`}
-                  />
-                  <Spacing m={{ t: "-22px", l: "17px" }}>
-                    <CommentsForm
-                      shouldUpdate={shouldUpdate}
-                      increaseShouldUpdate={increaseShouldUpdate}
-                      id={id}
-                      inReply={data.id}
-                      onSubmit={postCommentRequest}
-                      setShowInput={setShowInput}
-                      isExpanded={isExpanded}
-                      collapseEditor={collapseEditor}
-                      expandEditor={expandEditor}
-                    />
-                  </Spacing>
-                </Box>
-              </Spacing>
-            </>
+          {edit ? (
+            <Spacing m={{ t: "-22px", l: "17px" }}>
+              <CommentsForm
+                shouldUpdate={shouldUpdate}
+                increaseShouldUpdate={increaseShouldUpdate}
+                id={id}
+                inReply={data.in_reply_to?.id}
+                onSubmit={updateCommentRequest}
+                setShowInput={setShowInput}
+                isExpanded={isExpanded}
+                collapseEditor={collapseEditor}
+                expandEditor={expandEditor}
+                initialValue={initialValue}
+                setEdit={setEdit}
+                userId={data.user.id}
+                commentId={data.id}
+                key={data.id}
+                setCommentData={setCommentData}
+              />
+            </Spacing>
           ) : (
-            <Button
-              appearance="link"
-              onClick={() => {
-                setShowInput(true);
-              }}
-              style={{ padding: "0px" }}
-            >
-              <ButtonContentWrapper>Reply</ButtonContentWrapper>
-            </Button>
+            <>
+              <Text dangerouslySetInnerHTML={{ __html: body }}></Text>
+              {showInput ? (
+                <>
+                  <Spacing m={{ t: "17px" }}>
+                    <Box d="flex">
+                      <Avatar
+                        name={`${data.user.first_name} ${data.user.last_name}`}
+                      />
+                      <Spacing m={{ t: "-22px", l: "17px" }}>
+                        <CommentsForm
+                          shouldUpdate={shouldUpdate}
+                          increaseShouldUpdate={increaseShouldUpdate}
+                          id={id}
+                          inReply={data.id}
+                          onSubmit={postCommentRequest}
+                          setShowInput={setShowInput}
+                          isExpanded={isExpanded}
+                          collapseEditor={collapseEditor}
+                          expandEditor={expandEditor}
+                          initialValue={initialValue}
+                          key={data.id}
+                          setEdit={setEdit}
+                        />
+                      </Spacing>
+                    </Box>
+                  </Spacing>
+                </>
+              ) : (
+                <ButtonGroup>
+                  <Button
+                    appearance="link"
+                    onClick={() => {
+                      setShowInput(true);
+                    }}
+                    style={{ padding: "0px" }}
+                  >
+                    <ButtonContentWrapper>Reply</ButtonContentWrapper>
+                  </Button>{" "}
+                  <Button
+                    appearance="link"
+                    onClick={() => {
+                      setEdit(true);
+                      setInitialValue(body);
+                      setIsExpanded(true);
+                    }}
+                    style={{ padding: "0px" }}
+                    isDisabled={data.user.id !== user.id}
+                  >
+                    <ButtonContentWrapper>Edit</ButtonContentWrapper>
+                  </Button>{" "}
+                  <Button
+                    appearance="link"
+                    onClick={() => {
+                      setModalOpen(true);
+                    }}
+                    style={{ padding: "0px" }}
+                    isDisabled={data.user.id !== user.id}
+                  >
+                    <ButtonContentWrapper>Delete</ButtonContentWrapper>
+                  </Button>
+                </ButtonGroup>
+              )}
+            </>
           )}
-          {data.replies.map((reply) => (
+
+          {data.replies.map((reply, index) => (
             <Comments
               data={reply}
               shouldUpdate={shouldUpdate}
               increaseShouldUpdate={increaseShouldUpdate}
               id={id}
+              fetch={fetch}
+              key={data.id}
             />
           ))}
+
+          <ModalDialog
+            isOpen={modalOpen}
+            setIsOpen={setModalOpen}
+            onClick={onDelete}
+            positiveLabel="Delete"
+            heading="Are you sure you want to remove this comment?"
+            body="You will no longer have access to this comment's content"
+            appearance="danger"
+          />
         </Spacing>
       </Box>
     </Spacing>
