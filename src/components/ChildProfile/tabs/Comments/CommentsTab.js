@@ -21,13 +21,30 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
 
   const executeScroll = () =>
     myRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-  console.log(comments, show, comments?.length);
+  // console.log(comments, show, comments?.length);
 
   const expandEditor = () => setIsExpanded(true);
   const collapseEditor = () => {
     setIsExpanded(false);
     handleShow(false);
     setBlocks(1);
+  };
+
+  const fetch = () => {
+    fetchComments(childId).then((items) => {
+      // console.log(items.comments);
+      if (items) {
+        setComments(
+          items.comments
+            .filter((comment) => !comment.in_reply_to)
+            .sort(
+              (a, b) =>
+                new Date(a.created_at).getTime() -
+                new Date(b.created_at).getTime()
+            )
+        );
+      }
+    });
   };
 
   useEffect(() => {
@@ -44,11 +61,7 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
   }, []);
 
   useEffect(() => {
-    fetchComments(childId).then((items) => {
-      if (items) {
-        setComments(items.comments);
-      }
-    });
+    fetch();
   }, [childId, shouldUpdate]);
 
   useEffect(() => {
@@ -61,43 +74,40 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
   }, [comments]);
 
   return (
-    <MentionsProvider>
-      <Spacing
-        m={{ b: isExpanded ? `${(140 + 20 * blocks).toString()}px` : "50px" }}
-      >
-        <Spacing m={{ b: "22px" }}>
-          {comments &&
-            comments
-              .filter((comment) => !comment.in_reply_to)
-              .sort((a, b) => a.created_at - b.created_at)
-              .map((comment) => (
-                <Comments
-                  id={childId}
-                  data={comment}
-                  shouldUpdate={shouldUpdate}
-                  increaseShouldUpdate={increaseShouldUpdate}
-                />
-              ))}
-        </Spacing>
-        <span ref={myRef} />
-        <Footer d="flex" show={show} isExpanded={isExpanded} blocks={blocks}>
-          <Avatar name={`${user?.first_name} ${user?.last_name}`} />
-          <Spacing m={{ l: "17px", t: "-22px" }}>
-            <CommentsForm
-              setBlocks={setBlocks}
-              isExpanded={isExpanded}
-              collapseEditor={collapseEditor}
-              expandEditor={expandEditor}
+    <Spacing
+      m={{ b: isExpanded ? `${(140 + 20 * blocks).toString()}px` : "50px" }}
+    >
+      <Spacing m={{ b: "22px" }}>
+        {comments &&
+          comments.map((comment, index) => (
+            <Comments
+              id={childId}
+              data={comment}
               shouldUpdate={shouldUpdate}
               increaseShouldUpdate={increaseShouldUpdate}
-              id={childId}
-              inReply={0}
-              onSubmit={postCommentRequest}
+              key={comment.id}
+              fetch={fetch}
             />
-          </Spacing>
-        </Footer>
+          ))}
       </Spacing>
-    </MentionsProvider>
+      <span ref={myRef} />
+      <Footer d="flex" show={show} isExpanded={isExpanded} blocks={blocks}>
+        <Avatar name={`${user?.first_name} ${user?.last_name}`} />
+        <Spacing m={{ l: "17px", t: "-22px" }}>
+          <CommentsForm
+            setBlocks={setBlocks}
+            isExpanded={isExpanded}
+            collapseEditor={collapseEditor}
+            expandEditor={expandEditor}
+            shouldUpdate={shouldUpdate}
+            increaseShouldUpdate={increaseShouldUpdate}
+            id={childId}
+            inReply={0}
+            onSubmit={postCommentRequest}
+          />
+        </Spacing>
+      </Footer>
+    </Spacing>
   );
 };
 
