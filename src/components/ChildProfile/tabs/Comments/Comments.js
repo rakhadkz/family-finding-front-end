@@ -115,6 +115,7 @@ export const Comments = ({
                 commentId={data.id}
                 key={data.id}
                 setCommentData={setCommentData}
+                edit={edit}
               />
             </Spacing>
           ) : (
