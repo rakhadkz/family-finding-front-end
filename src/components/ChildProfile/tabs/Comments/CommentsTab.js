@@ -13,10 +13,12 @@ import styled from "styled-components";
 export const CommentsTab = ({ childId, childComments, setChild }) => {
   const { user } = useAuth();
   const [comments, setComments] = useState(childComments);
+  const [allComments, setAllComments] = useState(childComments);
   const [shouldUpdate, increaseShouldUpdate] = useState(0);
   const [show, handleShow] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [blocks, setBlocks] = useState(1);
+  const [suggestions, setSuggestions] = useState(0);
   const myRef = useRef(null);
 
   const executeScroll = () =>
@@ -43,6 +45,13 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
                 new Date(b.created_at).getTime()
             )
         );
+        setAllComments(
+          items.comments.sort(
+            (a, b) =>
+              new Date(a.created_at).getTime() -
+              new Date(b.created_at).getTime()
+          )
+        );
       }
     });
   };
@@ -65,17 +74,25 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
   }, [childId, shouldUpdate]);
 
   useEffect(() => {
-    if (show) executeScroll();
+    if (show) {
+      executeScroll();
+    }
   }, [isExpanded, blocks]);
 
   useEffect(() => {
-    if (show && comments[comments.length - 1].in_reply_to === null)
+    if (show && allComments[allComments.length - 1].in_reply_to === null) {
       executeScroll();
+    }
   }, [comments]);
 
+  console.log(suggestions);
   return (
     <Spacing
-      m={{ b: isExpanded ? `${(140 + 20 * blocks).toString()}px` : "50px" }}
+      m={{
+        b: isExpanded
+          ? `${(140 + 25 * blocks + 35 * suggestions).toString()}px`
+          : "50px",
+      }}
     >
       <Spacing m={{ b: "22px" }}>
         {comments &&
@@ -91,7 +108,13 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
           ))}
       </Spacing>
       <span ref={myRef} />
-      <Footer d="flex" show={show} isExpanded={isExpanded} blocks={blocks}>
+      <Footer
+        d="flex"
+        show={show}
+        isExpanded={isExpanded}
+        blocks={blocks}
+        suggestions={suggestions}
+      >
         <Avatar name={`${user?.first_name} ${user?.last_name}`} />
         <Spacing m={{ l: "17px", t: "-22px" }}>
           <CommentsForm
@@ -104,6 +127,7 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
             id={childId}
             inReply={0}
             onSubmit={postCommentRequest}
+            setSuggestions={setSuggestions}
           />
         </Spacing>
       </Footer>
@@ -118,7 +142,9 @@ const Footer = styled(Box)`
     transition: 0.5s;
   position: fixed;
   height:${
-    props.show && props.isExpanded ? (170 + 20 * props.blocks).toString() : "50"
+    props.show && props.isExpanded
+      ? (170 + 25 * props.blocks + 35 * props.suggestions).toString()
+      : "50"
   }px;
   width: 100%;
   border: hidden;

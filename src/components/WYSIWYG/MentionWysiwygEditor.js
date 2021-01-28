@@ -5,7 +5,7 @@ import { convertToRaw, EditorState, RichUtils } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { stateFromHTML } from "draft-js-import-html";
 import createMentionPlugin, {
-  defaultSuggestionsFilter
+  defaultSuggestionsFilter,
 } from "draft-js-mention-plugin";
 import "draft-js/dist/Draft.css";
 import Immutable from "immutable";
@@ -98,6 +98,10 @@ class MentionWysiwygEditor extends React.Component {
       this.setState({
         suggestions: defaultSuggestionsFilter(value, this.context.mentions),
       });
+      this.props.setSuggestions &&
+        this.props.setSuggestions(
+          defaultSuggestionsFilter(value, this.context.mentions).length
+        );
     }
   };
 
@@ -128,7 +132,9 @@ class MentionWysiwygEditor extends React.Component {
   }
 
   onChange = (editorState) => {
-    let len = convertToRaw(editorState.getCurrentContent()).blocks.length;
+    let len = convertToRaw(this.state.editorState.getCurrentContent()).blocks
+      .length;
+    let newLen = convertToRaw(editorState.getCurrentContent()).blocks.length;
     if (
       convertToRaw(this.state.editorState.getCurrentContent()).blocks.length !==
       convertToRaw(editorState.getCurrentContent()).blocks.length
@@ -284,6 +290,16 @@ class MentionWysiwygEditor extends React.Component {
     );
   };
 
+  suspendSuggestions = (event) => {
+    if (this.props.setSuggestions !== undefined) {
+      if (event.which == 13 || event.keyCode == 13) {
+        this.props.setSuggestions(0);
+        return false;
+      }
+      return true;
+    }
+  };
+
   render() {
     const { MentionSuggestions } = this.mentionPlugin;
     const plugins = [this.mentionPlugin];
@@ -295,6 +311,7 @@ class MentionWysiwygEditor extends React.Component {
           onClick={() =>
             this.editorRef.current && this.editorRef.current.focus()
           }
+          onKeyDown={(e) => this.suspendSuggestions(e)}
         >
           <div
             style={{ display: "flex", marginBottom: "1em", marginLeft: "-1em" }}
@@ -328,7 +345,12 @@ class MentionWysiwygEditor extends React.Component {
             <MentionSuggestions
               onSearchChange={this.onSearchChange}
               suggestions={this.state.suggestions}
-              entryComponent={MentionEntry}
+              entryComponent={(props) => (
+                <MentionEntry
+                  {...props}
+                  setSuggestions={this.props.setSuggestions}
+                />
+              )}
               className={mentionsStyles.mentionSuggestions}
             />
           )}

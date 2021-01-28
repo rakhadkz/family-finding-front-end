@@ -20,10 +20,12 @@ export const CommentsForm = ({
   expandEditor,
   setBlocks,
   initialValue,
+  edit,
   setEdit,
   userId,
   commentId,
   setCommentData,
+  setSuggestions,
 }) => {
   const [upd, setUpd] = useState(1);
   const [text, setText] = useState("");
@@ -66,7 +68,7 @@ export const CommentsForm = ({
       })
       .finally(() => {
         setShowInput && setShowInput(false);
-        if (setEdit !== undefined) {
+        if (edit) {
           setCommentData(htmlText);
           setEdit(false);
         }
@@ -89,6 +91,7 @@ export const CommentsForm = ({
                   }}
                   setBlocks={setBlocks}
                   defaultValue={initialValue}
+                  setSuggestions={setSuggestions}
                 />
                 <StyledButtonGroup>
                   <Button type="submit" appearance="primary">
