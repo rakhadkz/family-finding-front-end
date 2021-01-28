@@ -16,6 +16,7 @@ const Entry = (props) => {
 
   return (
     <StyledEntry
+      {...parentProps} // this should be first prop
       isFocused={isFocused}
       onMouseDown={(e) => {
         props.onMouseDown(e);
@@ -25,7 +26,6 @@ const Entry = (props) => {
         props.onMouseUp(e);
         setSuggestions && setSuggestions(0);
       }}
-      {...parentProps}
     >
       <StyledEntryContainer>
         <StyledLeft>
