@@ -6,6 +6,7 @@ import { humanReadableDateFormat } from "../../content/date";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
+import { GroupAccess } from "../common";
 
 export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
   return (
@@ -18,9 +19,11 @@ export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
             <Title size="18px" style={{ marginRight: "5px" }}>
               {child.first_name ? `${child.first_name} ${child.last_name}` : ""}
             </Title>
-            <Button spacing="none" appearance="link" onClick={() => setIsOpenEdit(true)}>
-              <EditorEditIcon size="medium" />
-            </Button>
+            <GroupAccess atLeast="manager" exact="admin">
+              <Button spacing="none" appearance="link" onClick={() => setIsOpenEdit(true)}>
+                <EditorEditIcon size="medium" />
+              </Button>
+            </GroupAccess>
           </Box>
         </Spacing>
       </Box>

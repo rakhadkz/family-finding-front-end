@@ -1,6 +1,6 @@
 import Button from "@atlaskit/button";
 import PersonIcon from "@atlaskit/icon/glyph/person";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog } from "../components/ui/common";
@@ -12,6 +12,7 @@ import { userTableData } from "../content/user.data";
 import { getLocalStorageUser, reset } from "../context/auth/authProvider";
 import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
+import userReducer, { initialState, ACTIONS } from "../reducers/user.reducer";
 
 const AllUsers = ({ history, search, setSearch }) => (
   <>
@@ -35,15 +36,17 @@ const AllUsers = ({ history, search, setSearch }) => (
   </>
 );
 
-const ConcreteUser = ({ name, email }) => {
+const ConcreteUser = ({ state }) => {
   const history = useHistory();
-  const [pending, setPending] = useState(false);
+  const [ pending, setPending ] = useState(false);
+  const name = state.users[0]?.cells[0].content
+  const email = state.users[0]?.cells[1].content
 
   return (
     <>
       <Spacing m={{ t: "23px" }}>
         <Box d="flex" justify="space-between" align-items="flex-start">
-          <UserBreadcrumbs text={name} />
+          <UserBreadcrumbs text={name || ""} />
           <Button
             isDisabled={pending}
             appearance="danger"
@@ -62,76 +65,58 @@ const ConcreteUser = ({ name, email }) => {
   );
 };
 export const UsersPage = (props) => {
-  const history = useHistory();
   const query = new URLSearchParams(props.location.search);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [users, setUsers] = useState([]);
   const user = getLocalStorageUser();
-  const [refresh, setRefresh] = useState(false);
-  const [id, setId] = useState(props.match.params.id);
-  const [currentUser, setCurrentUser] = useState(-1);
-  const [tablePending, setTablePending] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-  const [totalPage, setTotalPage] = useState(null);
-  const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
-  const [search, setSearch] = useState(query.get("search") || "");
   const head = usersTableColumns(user?.role === "super_admin");
-
-  const organization =
-    user && user?.user_organizations
-      ? user?.user_organizations[0]?.organization
-      : { users: [], name: "" };
+  const id = props.match.params.id;
+  const history = useHistory();
+  
+  const [ currentUser, setCurrentUser ] = useState(-1);
+  const [ isOpen, setIsOpen ] = useState(false);
+  const [ totalPage, setTotalPage ] = useState(null);
+  const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
+  const [ search, setSearch ] = useState(query.get("search") || "");
+  const [ state, dispatch ] = useReducer(userReducer, initialState)
 
   const onDelete = (id) => {
-    setRefresh(true);
     deleteUser(id).finally(() => {
-      setRefresh(false);
       setIsOpen(false);
-      user?.role === "super_admin"
-        ? history.push("../users")
-        : history.push("../organization_users");
+      fetchUsersFunc();
     });
   };
 
   useEffect(() => {
-    setTablePending(true);
-    const timer = setTimeout(
-      () =>
-        fetchUsers({
-          id: id,
-          view: "table",
-          search: search,
-          page: currentPage,
-          meta: true,
-        })
-          .then((response) => {
-            if (response) {
-              if (id) {
-                const data = response.data;
-                setUsers(userTableData(data, user, setIsOpen, setCurrentUser));
-                setName(`${data.first_name} ${data.last_name}`);
-                setEmail(data.email);
-              } else {
-                const items = response.data;
-                setTotalPage(response.meta.num_pages);
-                setUsers(
-                  userTableData(items, user, setIsOpen, setCurrentUser, history)
-                );
-              }
-            }
-          })
-          .finally(() => setTablePending(false)),
-      search.length === 0 ? 0 : 1000
-    );
+    dispatch({ type: ACTIONS.FETCH_USERS_REQUEST })
+    const timer = setTimeout(fetchUsersFunc, search.length === 0 ? 0 : 1000);
     return () => clearTimeout(timer);
-  }, [id, refresh, currentPage, search]);
+  }, [id, currentPage, search]);
+
+  const fetchUsersFunc = () => {
+    fetchUsers({
+      id: id,
+      view: "table",
+      search: search,
+      page: currentPage,
+      meta: true,
+    }).then(response => {
+      if (response) {
+        let payload = []
+        if (id) {
+          payload = userTableData(response.data, user, setIsOpen, setCurrentUser)
+        } else {
+          setTotalPage(response.meta.num_pages);
+          payload = userTableData(response.data, user, setIsOpen, setCurrentUser, history)
+        }
+        dispatch({ type: ACTIONS.FETCH_USERS_SUCCESS, payload: payload})
+      }
+    }).catch(e => dispatch({ type: ACTIONS.FETCH_USERS_FAILURE, payload: e.message }))
+  }
 
   return (
     <>
-      <Title>{user?.role !== "super_admin" && organization?.name} Users</Title>
+      <Title>{user?.role !== "super_admin" && user.organization?.name} Users</Title>
       {id ? (
-        <ConcreteUser name={name} email={email} />
+        <ConcreteUser state={state}/>
       ) : (
         <AllUsers history={history} search={search} setSearch={setSearch} />
       )}
@@ -140,8 +125,8 @@ export const UsersPage = (props) => {
           totalPage={!id && totalPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-          items={users}
-          pending={tablePending}
+          items={state.users}
+          pending={state.loading}
           head={head}
         />
       </Spacing>

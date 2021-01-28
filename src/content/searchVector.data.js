@@ -37,7 +37,7 @@ const searchVectorTableData = (
       // },
       {
         key: "priority",
-        content: <p align="left">{`${Math.floor(Math.random() * 6)}`}</p>,
+        content: <p align="center">{`${Math.floor(Math.random() * 6)}`}</p>,
       },
       {
         key: "Actions",

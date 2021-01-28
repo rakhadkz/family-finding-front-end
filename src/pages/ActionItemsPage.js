@@ -1,32 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Spacing, Title } from "../components/ui/atoms";
 import { Table } from "../components/ui/common/Table";
 import { actionItemTableData } from "../content/actionItem.data";
 import { actionItemsTableColumns } from "../content/columns.data";
 import { fetchActionItems } from "../context/actionItems/actionItemProvider";
+import actionItemsReducer, { ACTIONS, initialState } from "../reducers/actionItems.reducer";
 
 export const ActionItemsPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   const history = useHistory();
-  const [ items, setItems ] = useState([]);
+  
   const [ tablePending, setTablePending ] = useState(true);
   const [ totalPage, setTotalPage ] = useState(null);
-  const [ refresh, setRefresh ] = useState(false);
   const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
+  const [ state, dispatch ] = useReducer(actionItemsReducer, initialState)
 
   useEffect(() => {
     history.push(`?page=${currentPage}`);
-    fetchActionItems({ page: currentPage, meta: true })
-      .then((response) => {
-        if(response) {
-          const items = response.data;
-          setTotalPage(response.meta?.num_pages);
-          setItems(actionItemTableData(items, setRefresh, setTablePending, history));
-        }
-      })
-      .finally(() => setTablePending(false));
-  }, [refresh, currentPage]);
+    fetchActionItemsFunc();
+  }, [currentPage]);
+
+  const fetchActionItemsFunc = () => {
+    fetchActionItems({
+      page: currentPage, 
+      meta: true 
+    }).then(response => {
+      if(response) {
+        setTotalPage(response.meta?.num_pages);
+        dispatch({ 
+          type: ACTIONS.FETCH_ACTION_ITEMS_SUCCESS, 
+          payload: actionItemTableData(response.data, fetchActionItemsFunc, setTablePending, history)
+        })
+        setTablePending(false)
+      }
+    }).catch(e => dispatch({ type: ACTIONS.FETCH_ACTION_ITEMS_FAILURE, payload: e.message }));
+  }
   
   return (
     <>
@@ -36,7 +45,7 @@ export const ActionItemsPage = (props) => {
           totalPage={totalPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-          items={items}
+          items={state.actionItems}
           head={actionItemsTableColumns}
           pending={tablePending}
         />

@@ -144,7 +144,7 @@ export const searchVectorsTableColumns = [
   // },
   {
     key: "priority",
-    content: "Priority",
+    content: <p align="center">Priority</p>,
     width: 15,
   },
   {

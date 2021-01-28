@@ -1,4 +1,6 @@
-export const NotFound = () => {
+import Spinner from "@atlaskit/spinner";
+
+export const Preloader = () => {
   return (
     <div
       style={{
@@ -9,7 +11,7 @@ export const NotFound = () => {
         width: "100%"
       }}
     >
-      <h4>Page not found :(</h4>
+      <Spinner size="large" />
     </div>
   )
 }

@@ -10,7 +10,7 @@ import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import { createActionItemRequest } from "../api/actionItems";
 import { Avatar } from "../components/ui/molecules/Avatar";
 
-const actionItemTableData = (data, setRefresh, setTablePending, history) => {
+const actionItemTableData = (data, fetch, setTablePending, history) => {
   console.log(data)
   return data.map(function (item, index) {
     return {
@@ -47,7 +47,7 @@ const actionItemTableData = (data, setRefresh, setTablePending, history) => {
                     <Action 
                       type={item.action_type} 
                       id={item.id} 
-                      setRefresh={setRefresh} 
+                      fetch={fetch} 
                       user_id={item.related_user_id} 
                       child_id={item.child_id}
                       setPending={setTablePending}
@@ -59,10 +59,10 @@ const actionItemTableData = (data, setRefresh, setTablePending, history) => {
   });
 };
 
-const Action = ({type, id, setRefresh, user_id, child_id, setPending}) => {
+const Action = ({type, id, fetch, user_id, child_id, setPending}) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const onDelete = (id) => {
-    deleteActionItem(id).then(() => setRefresh(prev => !prev)).finally(() => setIsOpen(false));
+    deleteActionItem(id).then(() => fetch()).finally(() => setIsOpen(false));
   };
 
   const onApprove = async(id, user_id, child_id) => {
@@ -77,7 +77,7 @@ const Action = ({type, id, setRefresh, user_id, child_id, setPending}) => {
         "user_id": user_id,
         "action_type": "access_granted"
       }
-    }).then(() => setRefresh(prev => !prev)).finally(() => setPending(false));
+    }).then(() => fetch()).catch(() => setPending(false));
   }
 
   const onDeny = async (id, user_id, child_id) => {
@@ -92,7 +92,7 @@ const Action = ({type, id, setRefresh, user_id, child_id, setPending}) => {
         "user_id": user_id,
         "action_type": "access_denied"
       }
-    }).then(() => setRefresh(prev => !prev)).finally(() => setPending(false));
+    }).then(() => fetch()).catch(() => setPending(false));
   }
   switch(type) {
     case "mention":

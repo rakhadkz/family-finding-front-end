@@ -1,6 +1,6 @@
 import Button from "@atlaskit/button";
 import OfficeBuilding from "@atlaskit/icon/glyph/office-building";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { OrganizationBreadcrumbs } from "../components/Organizations";
 import { Box, Spacing, Title } from "../components/ui/atoms";
@@ -9,6 +9,7 @@ import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { organizationsTableColumns } from "../content/columns.data";
 import { organizationTableData } from "../content/organization.data";
 import { fetchOrganizations } from "../context/organization/organizationProvider";
+import organizationReducer, { ACTIONS, initialState } from "../reducers/organization.recuder";
 
 export const updateQueryParams = (currentPage, search) => {
   return `?page=${currentPage}${search ? `&search=${search}` : ``}`;
@@ -45,37 +46,19 @@ const ConcreteOrganization = ({ name }) => (
 );
 
 export const OrganizationsPage = (props) => {
-  const history = useHistory();
-  const [id, setId] = useState(props.match.params.id);
-  const [name, setName] = useState("");
-  const [organizations, setOrganizations] = useState([]);
-  const [totalPage, setTotalPage] = useState(null);
-  const [tablePending, setTablePending] = useState(true);
   const query = new URLSearchParams(props.location.search);
-  const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
-  const [search, setSearch] = useState(query.get("search") || "");
+  const id = props.match.params.id;
+  const history = useHistory();
+  
+  const [ totalPage, setTotalPage ] = useState(null);
+  const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
+  const [ search, setSearch ] = useState(query.get("search") || "");
+  const [ state, dispatch ] = useReducer(organizationReducer, initialState)
+
   useEffect(() => {
     !id && history.push(updateQueryParams(currentPage, search));
-    setTablePending(true);
-    const timer = setTimeout(
-      () =>
-        fetchOrganizations({
-          id: id,
-          page: currentPage,
-          meta: true,
-          search: search,
-        })
-          .then((response) => {
-            if (response) {
-              const items = response.data;
-              !id && setTotalPage(response.meta.num_pages);
-              setName(items.name);
-              setOrganizations(organizationTableData(items, history));
-            }
-          })
-          .finally(() => setTablePending(false)),
-      search.length === 0 ? 0 : 1000
-    );
+    dispatch({ type: ACTIONS.FETCH_ORGANIZATION_REQUEST })
+    const timer = setTimeout(fetchOrganizationsFunc, search.length === 0 ? 0 : 1000);
     return () => clearTimeout(timer);
   }, [id, currentPage, search]);
 
@@ -83,11 +66,28 @@ export const OrganizationsPage = (props) => {
     search.length > 0 && setCurrentPage(1);
   }, [search]);
 
+  const fetchOrganizationsFunc = () => {
+    fetchOrganizations({
+      id: id,
+      page: currentPage,
+      meta: true,
+      search: search,
+    }).then(response => {
+      if (response) {
+        !id && setTotalPage(response.meta.num_pages);
+        dispatch({ 
+          type: ACTIONS.FETCH_ORGANIZATION_SUCCESS,
+          payload: organizationTableData(response.data, history)
+        })
+      }
+    }).catch(e => dispatch({ type: ACTIONS.FETCH_ORGANIZATION_FAILURE, payload: e.message}))
+  }
+
   return (
     <>
       <Title>Organizations</Title>
       {id ? (
-        <ConcreteOrganization name={name} />
+        <ConcreteOrganization name={state.organizations[0]?.cells[0].content || ""} />
       ) : (
         <AllOrganizations
           history={history}
@@ -99,8 +99,8 @@ export const OrganizationsPage = (props) => {
         <Table
           totalPage={!id && totalPage}
           currentPage={currentPage}
-          items={organizations}
-          pending={tablePending}
+          items={state.organizations}
+          pending={state.loading}
           head={organizationsTableColumns}
           setCurrentPage={setCurrentPage}
         />

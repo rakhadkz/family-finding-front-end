@@ -15,3 +15,5 @@ export const AddCommunicationTemplatePage = () => {
     </>
   );
 };
+
+export default AddCommunicationTemplatePage
