@@ -8,13 +8,25 @@ const Entry = (props) => {
     theme,
     searchValue, // eslint-disable-line no-unused-vars
     isFocused, // eslint-disable-line no-unused-vars
+    setSuggestions,
     ...parentProps
   } = props;
 
   console.log(props);
 
   return (
-    <StyledEntry isFocused={isFocused}>
+    <StyledEntry
+      {...parentProps} // this should be first prop
+      isFocused={isFocused}
+      onMouseDown={(e) => {
+        props.onMouseDown(e);
+        setSuggestions && setTimeout(() => setSuggestions(0), 500);
+      }}
+      onMouseUp={(e) => {
+        props.onMouseUp(e);
+        setSuggestions && setSuggestions(0);
+      }}
+    >
       <StyledEntryContainer>
         <StyledLeft>
           <StyledAvatar size="small" name={mention.name} />

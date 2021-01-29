@@ -4,7 +4,7 @@ import { Box } from "../ui/atoms";
 import MentionWysiwygEditor from "./MentionWysiwygEditor";
 
 export const WysiwygEditor = (props) => {
-  const { onChange, upd, setBlocks, defaultValue = "" } = props;
+  const { onChange, upd, setBlocks, setSuggestions, defaultValue = "" } = props;
   return (
     <StyledBox w="100%">
       <MentionWysiwygEditor
@@ -12,6 +12,7 @@ export const WysiwygEditor = (props) => {
         upd={upd}
         defaultValue={defaultValue}
         onChange={onChange}
+        setSuggestions={setSuggestions}
         {...props}
       />
     </StyledBox>
