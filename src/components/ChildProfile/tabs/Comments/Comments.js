@@ -12,6 +12,7 @@ import {
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { useAuth } from "../../../../context/auth/authContext";
 import { ModalDialog } from "../../../ui/common";
+import moment from "moment";
 
 export const Comments = ({
   data,
@@ -91,12 +92,33 @@ export const Comments = ({
       });
   };
 
+  const time = () => {
+    let duration = moment(data.created_at).fromNow();
+    if (
+      moment().subtract(31, "days").valueOf() >
+      moment(data.created_at).valueOf()
+    ) {
+      return `on ${moment(data.created_at).format("ll")}`;
+    } else {
+      return duration;
+    }
+  };
+
   return (
     <Spacing m={{ t: "17px" }}>
       <Box d="flex">
         <Avatar name={`${data.user.first_name} ${data.user.last_name}`} />
         <Spacing m={{ l: "7px" }}>
-          <Title size="14px">{`${data.user.first_name} ${data.user.last_name}`}</Title>
+          <Box d="flex">
+            <Title
+              size="14px"
+              style={{ marginRight: "5px" }}
+            >{`${data.user.first_name} ${data.user.last_name}`}</Title>
+            <Text
+              style={{ color: "#586069", lineHeight: "24px" }}
+              size="14px"
+            >{`commented ${time()}`}</Text>
+          </Box>
           {edit ? (
             <Spacing m={{ t: "-22px", l: "17px" }}>
               <CommentsForm
