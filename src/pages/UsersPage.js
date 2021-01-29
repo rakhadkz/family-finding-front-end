@@ -2,6 +2,7 @@ import Button from "@atlaskit/button";
 import PersonIcon from "@atlaskit/icon/glyph/person";
 import React, { useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
+import Can from "../accessControl/Can";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog } from "../components/ui/common";
 import { Table } from "../components/ui/common/Table";
@@ -13,6 +14,7 @@ import { getLocalStorageUser, reset } from "../context/auth/authProvider";
 import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
 import userReducer, { initialState, ACTIONS } from "../reducers/user.reducer";
+import { ACTIONS as PERFORM_ACTION } from "../accessControl/actions";
 
 const AllUsers = ({ history, search, setSearch }) => (
   <>
@@ -24,13 +26,18 @@ const AllUsers = ({ history, search, setSearch }) => (
             onChange={(e) => setSearch(e.target.value)}
           />
         </Box>
-        <Button
-          appearance="primary"
-          iconBefore={<PersonIcon />}
-          onClick={() => history.push("/users-add")}
-        >
-          Add User
-        </Button>
+        <Can
+          perform={`${USERS}:${PERFORM_ACTION.ADD}`}
+          yes={() => (
+            <Button
+              appearance="primary"
+              iconBefore={<PersonIcon />}
+              onClick={() => history.push("/users-add")}
+            >
+              Add User
+            </Button>
+          )}
+        />
       </Box>
     </Spacing>
   </>
@@ -67,7 +74,7 @@ const ConcreteUser = ({ state }) => {
 export const UsersPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   const user = getLocalStorageUser();
-  const head = usersTableColumns(user?.role === "super_admin");
+  const head = usersTableColumns(user?.role);
   const id = props.match.params.id;
   const history = useHistory();
   

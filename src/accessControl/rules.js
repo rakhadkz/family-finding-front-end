@@ -4,11 +4,12 @@ import { ACTIONS } from "./actions";
 const rules = {
   user: {
     static: [
-      `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`,
-      `${ORGANIZATION_USERS}1:${ACTIONS.VISIT}`,
       `${ACTION_ITEMS}:${ACTIONS.VISIT}`,
       `${CHILDREN}:${ACTIONS.VISIT}`,
       `${CHILDREN}:${ACTIONS.VISIT_ONE}`,
+      `${SETTINGS}:${ACTIONS.VISIT}`,
+      `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`,
+      `${ORGANIZATION_USERS}:${ACTIONS.VISIT_ONE}`,
     ],
     dynamic: {
       "attachments:REMOVE": ({ userId, authorId }) => {
