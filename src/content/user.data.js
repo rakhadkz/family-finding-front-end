@@ -9,7 +9,7 @@ import { role_label } from "./sample.data";
 const userTableData = (data, user, setIsOpen, setCurrentUser, history = null) => {
   const isArray = Array.isArray(data);
   data = isArray ? data : (data = [data]);
-  const { organization_id } = getLocalStorageUser();
+  const { organization_id, role } = getLocalStorageUser();
   return data.map((item, index) => {
     var full_name = item?.first_name + " " + item?.last_name;
     const cells = fetchCells(
@@ -27,7 +27,7 @@ const userTableData = (data, user, setIsOpen, setCurrentUser, history = null) =>
             <p>{item.organization?.name}</p>
           ))
         : null,
-      item.user_organizations?.map((item) => item.organization_id === organization_id && <p>{role_label(item.role)}</p>),
+      item.user_organizations?.map((item) => role !== "super_admin" ? item.organization_id === organization_id && <p>{role_label(item.role)}</p> : <p>{role_label(item.role)}</p>),
       <Can 
           perform={`${USERS}:${ACTIONS.REMOVE}`}
           yes={() => (
