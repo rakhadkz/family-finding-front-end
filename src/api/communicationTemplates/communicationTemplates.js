@@ -8,6 +8,14 @@ export const createCommunicationTemplateRequest = (data) => {
   });
 };
 
+export const sendCommunicationTemplateToUserRequest = (data) => {
+  return request({
+    endpoint: "communication_templates/send_message_to_contact",
+    method: "POST",
+    data,
+  });
+};
+
 export const fetchCommunicationTemplateRequest = () => {
   return request({
     endpoint: "communication_templates",

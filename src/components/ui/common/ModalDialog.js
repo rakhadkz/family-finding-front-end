@@ -12,6 +12,7 @@ export function ModalDialog({
   hasActions = true,
   width = "medium",
   isLoading = false,
+  isDisabled = false,
   shouldCloseOnOverlayClick = true,
   shouldCloseOnEscapePress = true
 }) {
@@ -23,7 +24,7 @@ export function ModalDialog({
           <Modal
             width={width}
             actions={hasActions && [
-              { text: positiveLabel, onClick: onClick, isLoading: isLoading },
+              { text: positiveLabel, onClick: onClick, isLoading, isDisabled },
               { text: negativeLabel, onClick: close },
             ]}
             onClose={close}

@@ -40,12 +40,13 @@ export const EditNodeForm = ({ initialContacts }) => {
         id="editForm"
         style={{
           display: "none",
-          left: "45%",
-          marginTop: -200,
-          position: "absolute",
+          left: "60%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          position: "fixed",
           backgroundColor: "white",
           border: "1px solid grey",
-          borderRadius:10,
+          borderRadius: 10,
           zIndex: 10000,
           padding: 10,
         }}

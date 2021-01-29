@@ -11,13 +11,17 @@ import Spinner from "@atlaskit/spinner";
 import { Text } from "@chakra-ui/react";
 import React, { memo, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
 import {
   createChildUserRequest,
   fetchChildrenRequest,
   fetchChildUsersRequest
 } from "../api/children";
-import { fetchCommunicationTemplateRequest } from "../api/communicationTemplates";
+import {
+  fetchCommunicationTemplateRequest,
+  sendCommunicationTemplateToUserRequest
+} from "../api/communicationTemplates";
 import {
   ChildInformation,
   ChildTabs,
@@ -36,7 +40,9 @@ export const ChildProfilePage = (props) => {
   const [users, setUsers] = useState({});
   const [templates, setTemplates] = useState([]);
   const [templateType, setTemplateType] = useState("");
+  const [templatePending, setTemplatePending] = useState(false);
   const [templateHtml, setTemplateHtml] = useState("");
+  const [templateUser, setTemplateUser] = useState();
   const [filteredTemplates, setFilteredTemplates] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
@@ -54,7 +60,7 @@ export const ChildProfilePage = (props) => {
   }, []);
 
   useEffect(() => {
-    setTemplateHtml('')
+    setTemplateHtml("");
     setFilteredTemplates(
       templates
         .filter((item) => item.template_type === templateType)
@@ -90,8 +96,48 @@ export const ChildProfilePage = (props) => {
     });
   };
 
-  const fetchChildProfile = () => {
-    fetchChildrenRequest({ id: id, view: "extended" })
+  const sendTemplateToUser = async () => {
+    const body = {
+      email: templateUser?.contact?.email,
+      content: templateHtml,
+      template_type: templateType,
+      phone: templateUser?.contact?.phone,
+    };
+    console.log(body);
+    setTemplatePending(true);
+    await sendCommunicationTemplateToUserRequest({ template_send: body })
+      .then(() =>
+        toast.success("Successfully sent!", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      )
+      .catch(() =>
+        toast.error("Happened error!", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      )
+      .finally(() => {
+        setTemplatePending(false);
+        setIsTemplateOpen(false);
+        setTemplateHtml("");
+        setTemplateUser();
+      });
+  };
+
+  const fetchChildProfile = async () => {
+    await fetchChildrenRequest({ id: id, view: "extended" })
       .then((item) => {
         if (item) {
           item.id ? setAccess(true) : setAccess(false);
@@ -288,17 +334,35 @@ export const ChildProfilePage = (props) => {
           <ModalDialog
             isOpen={isTemplateOpen}
             setIsOpen={setIsTemplateOpen}
+            onClick={sendTemplateToUser}
             heading="Choose Template"
             positiveLabel="Send"
+            isLoading={templatePending}
             width="small"
+            isDisabled={!templateUser || templateHtml === ""}
             body={
               <div>
+                <Spacing m="10px 0px">
+                  <Select
+                    className="select"
+                    classNamePrefix="react-select"
+                    menuPortalTarget={document.body}
+                    onChange={({ value }) => setTemplateUser(value)}
+                    validationState={validationState}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                    options={child?.contacts.map((item) => ({
+                      label: `${item?.contact?.first_name} ${item?.contact?.last_name}`,
+                      value: item,
+                    }))}
+                    placeholder="Choose contact"
+                  />
+                </Spacing>
                 <Select
                   className="select"
                   classNamePrefix="react-select"
                   menuPortalTarget={document.body}
-                  value={assignedUsers}
-                  validationState={validationState}
                   onChange={(e) => {
                     console.log("EEE", e);
                     setTemplateHtml(e.value);
@@ -310,7 +374,8 @@ export const ChildProfilePage = (props) => {
                   options={filteredTemplates}
                   placeholder="Choose Template"
                 />
-                <Spacing style={{ marginBottom: -15, marginTop: 10 }}>
+
+                <Spacing style={{ marginTop: 15, marginBottom: 15 }}>
                   <Label>Template Text</Label>
                 </Spacing>
                 <Text
@@ -321,7 +386,13 @@ export const ChildProfilePage = (props) => {
             }
           />
           <Spacing m={{ t: "40px" }}>
-            {<ChildTabs user={user} {...child} />}
+            {
+              <ChildTabs
+                user={user}
+                fetchChildProfile={fetchChildProfile}
+                {...child}
+              />
+            }
           </Spacing>
         </>
       ) : (
