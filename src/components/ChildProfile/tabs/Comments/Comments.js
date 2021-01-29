@@ -17,7 +17,7 @@ export const Comments = ({
   data,
   shouldUpdate,
   increaseShouldUpdate,
-  id,
+  childId,
   fetch,
 }) => {
   const [showInput, setShowInput] = useState(false);
@@ -102,7 +102,7 @@ export const Comments = ({
               <CommentsForm
                 shouldUpdate={shouldUpdate}
                 increaseShouldUpdate={increaseShouldUpdate}
-                id={id}
+                childid={childId}
                 inReply={data.in_reply_to?.id}
                 onSubmit={updateCommentRequest}
                 setShowInput={setShowInput}
@@ -132,7 +132,7 @@ export const Comments = ({
                         <CommentsForm
                           shouldUpdate={shouldUpdate}
                           increaseShouldUpdate={increaseShouldUpdate}
-                          id={id}
+                          childId={childId}
                           inReply={data.id}
                           onSubmit={postCommentRequest}
                           setShowInput={setShowInput}
@@ -185,14 +185,14 @@ export const Comments = ({
             </>
           )}
 
-          {data.replies.map((reply, index) => (
+          {data.replies.map((reply) => (
             <Comments
+              childId={childId}
+              fetch={fetch}
+              key={data.id}
               data={reply}
               shouldUpdate={shouldUpdate}
               increaseShouldUpdate={increaseShouldUpdate}
-              id={id}
-              fetch={fetch}
-              key={data.id}
             />
           ))}
 
