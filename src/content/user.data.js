@@ -1,6 +1,8 @@
 import Button from "@atlaskit/button";
 import CrossIcon from "@atlaskit/icon/glyph/cross";
-import { GroupAccess } from "../components/common";
+import { ACTIONS } from "../accessControl/actions";
+import Can from "../accessControl/Can";
+import { USERS } from "../helpers";
 import { role_label } from "./sample.data";
 
 const userTableData = (data, user, setIsOpen, setCurrentUser, history = null) => {
@@ -24,19 +26,22 @@ const userTableData = (data, user, setIsOpen, setCurrentUser, history = null) =>
           ))
         : null,
       item.user_organizations?.map((item) => <p>{role_label(item.role)}</p>),
-      <GroupAccess atLeast="admin" exact="super_admin">
-        <Button
-          isDisabled={user?.id === item.id}
-          onClick={() => {
-            setIsOpen(true);
-            setCurrentUser(item.id);
-          }}
-          height="32px"
-          width="32px"
-        >
-          <CrossIcon size="small" />
-        </Button>
-      </GroupAccess>
+      <Can 
+          perform={`${USERS}:${ACTIONS.REMOVE}`}
+          yes={() => (
+            <Button
+              isDisabled={user?.id === item.id}
+              onClick={() => {
+                setIsOpen(true);
+                setCurrentUser(item.id);
+              }}
+              height="32px"
+              width="32px"
+            >
+              <CrossIcon size="small" />
+            </Button>
+          )}
+      />
     );
     return {
       key: index,

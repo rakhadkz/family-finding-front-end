@@ -10,9 +10,11 @@ import Signout from "@atlaskit/icon/glyph/sign-out";
 import Select from "@atlaskit/select";
 import React, { memo } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { ACTIONS } from "../../../accessControl/actions";
+import Can from "../../../accessControl/Can";
 import { updateUserRequest } from "../../../api/user/userRequest";
 import { useAuth } from "../../../context/auth/authContext";
-import { GroupAccess } from "../../common";
+import { ACTION_ITEMS, CHILDREN, COMMUNICATION_TEMPLATES, ORGANIZATIONS, ORGANIZATION_USERS, REPORTS, SEARCHVECTOR, SETTINGS, USERS } from "../../../helpers";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
 
@@ -22,6 +24,7 @@ const SIDEBAR_ITEMS = [
     title: "Organizations",
     icon: () => <OfficeBuilding />,
     exact: "super_admin",
+    perform: `${ORGANIZATIONS}:${ACTIONS.VISIT}`
   },
 
   {
@@ -29,53 +32,62 @@ const SIDEBAR_ITEMS = [
     title: "Action Items",
     icon: () => <Screen />,
     atLeast: "user",
+    perform: `${ACTION_ITEMS}:${ACTIONS.VISIT}`
   },
   {
     to: "/children",
     title: "Children",
     icon: () => <EmojiSymbolsIcon />,
     atLeast: "user",
+    perform: `${CHILDREN}:${ACTIONS.VISIT}`
   },
   {
     to: "/reports",
     title: "Reports",
     icon: () => <QueuesIcon />,
     exact: "admin",
+    perform: `${REPORTS}:${ACTIONS.VISIT}`
   },
   {
     to: "/users",
     title: "Users",
     icon: () => <People />,
     exact: "super_admin",
+    perform: `${USERS}:${ACTIONS.VISIT}`
   },
   {
     to: "/organization_users",
     title: "Organization Users",
     icon: () => <People />,
     exact: "admin",
+    perform: `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`
   },
   {
     to: "/communications-templates",
     title: "Communications Templates",
     icon: () => <MentionIcon />,
     exact: "admin",
+    perform: `${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`
   },
   {
     to: "/settings",
     title: "Settings",
     icon: () => <SettingsIcon />,
     atLeast: "user",
+    perform: `${SETTINGS}:${ACTIONS.VISIT}`
   },
   {
     to: "/search-vectors",
     title: "Search Vectors",
     icon: () => <ChildIssuesIcon />,
     exact: "admin",
+    perform: `${SEARCHVECTOR}:${ACTIONS.VISIT}`
   },
   {
     to: "/reports",
     title: "Reports",
     icon: () => <QueuesIcon />,
+    perform: `${REPORTS}:${ACTIONS.VISIT}`
   },
 ];
 
@@ -119,14 +131,17 @@ const SidebarInner = () => {
         </Spacing>
 
         {SIDEBAR_ITEMS.map((item) => (
-          <GroupAccess {...item}>
-            <SidebarMenuItem key={item.to}>
-              <Link to={item.to}>
-                {item.icon()}
-                <Spacing m={{ l: "15px" }}>{item.title}</Spacing>
-              </Link>
-            </SidebarMenuItem>
-          </GroupAccess>
+          <Can 
+            perform={item.perform}
+            yes={() => (
+              <SidebarMenuItem key={item.to}>
+                <Link to={item.to}>
+                  {item.icon()}
+                  <Spacing m={{ l: "15px" }}>{item.title}</Spacing>
+                </Link>
+              </SidebarMenuItem>
+            )}
+          />
         ))}
         <SidebarMenuItem>
           <Link
