@@ -35,7 +35,6 @@ const rules = {
       `${SETTINGS}:${ACTIONS.VISIT}`,
       `${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`,
       `${REPORTS}:${ACTIONS.VISIT}`,
-      `${CHILDREN}:${ACTIONS.ADD}`,
     ],
   },
   admin: {

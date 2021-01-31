@@ -15,6 +15,7 @@ import { fetchChildren } from "../context/children/childProvider";
 import { CHILDREN } from "../helpers";
 import childrenReducer, { ACTIONS, initialState } from "../reducers/children.reducer";
 import { updateQueryParams } from "./OrganizationsPage";
+import { ACTIONS as PERFORMS } from '../accessControl/actions'
 
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
@@ -101,7 +102,7 @@ export const ChildrenPage = (props) => {
             onChange={(e) => setSearch(e.target.value)}
           />
           <Can 
-            perform={`${CHILDREN}:${ACTIONS.ADD}`}
+            perform={`${CHILDREN}:${PERFORMS.ADD}`}
             yes={() => (
               <Button
                 iconBefore={<EmojiAddIcon />}
