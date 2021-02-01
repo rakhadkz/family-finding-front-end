@@ -82,16 +82,18 @@ const SIDEBAR_ITEMS = [
 const SidebarInner = () => {
   const { logout, user, fetchMe } = useAuth();
   const history = useHistory();
-  const setCurrentOrganization = async(data) => {
+  const setCurrentOrganization = async (data) => {
+    console.log(data);
+    localStorage.setItem("organizationName", data?.organization?.name);
     await updateUserRequest(user.id, {
-      "user": {
-        "organization_id": data.organization_id,
-        "role": data.role
-      }
-    })
-    await fetchMe()
-    history.push('/')
-  }
+      user: {
+        organization_id: data.organization_id,
+        role: data.role,
+      },
+    });
+    await fetchMe();
+    history.push("/");
+  };
 
   return (
     <Box
@@ -103,11 +105,14 @@ const SidebarInner = () => {
     >
       <Box>
         <Box d="flex" align="center" justify="center" h="90px">
-          <Logo link={user?.selectedOrganization?.value.organization.logo}/>
+          <Logo link={user?.selectedOrganization?.value.organization.logo} />
         </Box>
         <Spacing m={{ l: "15px", b: "15px", t: "15px" }}>
           <Select
-            onChange={({ value }) => value.organization_id !== user.organization_id && setCurrentOrganization(value)}
+            onChange={({ value }) =>
+              value.organization_id !== user.organization_id &&
+              setCurrentOrganization(value)
+            }
             value={user?.selectedOrganization}
             className="single-select"
             classNamePrefix="react-select"
@@ -132,7 +137,7 @@ const SidebarInner = () => {
           <Link
             onClick={() => {
               logout();
-              history.push('/')
+              history.push("/");
             }}
           >
             <Signout />
