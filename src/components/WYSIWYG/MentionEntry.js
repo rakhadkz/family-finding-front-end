@@ -12,7 +12,7 @@ const Entry = (props) => {
     ...parentProps
   } = props;
 
-  console.log(props);
+  // console.log(props);
 
   return (
     <StyledEntry
