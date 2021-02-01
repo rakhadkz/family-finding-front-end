@@ -51,11 +51,30 @@ export const createChildRequest = (data) => {
   });
 };
 
+export const updateChildRequest = ({id, ...rest}) => {
+  return request({
+    endpoint: `children/${id}`,
+    method: "PUT",
+    data: {
+      child: {
+        ...rest
+      }
+    }
+  })
+}
+
 export const createChildUserRequest = (data) => {
   return request({
     endpoint: "user_children",
     method: "POST",
     data,
+  })
+}
+
+export const removeChildUserRequest = (id) => {
+  return request({
+    endpoint: `user_children/${id}`,
+    method: "DELETE"
   })
 }
 

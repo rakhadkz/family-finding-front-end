@@ -1,8 +1,14 @@
 import React from "react";
-import { Redirect, Route } from "react-router-dom";
+import {
+  Redirect,
+  Route,
+  BrowserRouter as Router,
+  Switch,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { GroupAccess } from "./components/common";
+import { ACTIONS } from "./accessControl/actions";
+import Can from "./accessControl/Can";
 import { Sidebar } from "./components/ui/common";
 import { SidebarTemplate } from "./components/ui/templates";
 import { initialRoutesByRoles } from "./content/initialRoutersByRoles.data";
@@ -12,7 +18,8 @@ import {
   ADD,
   CHILDREN,
   COMMUNICATION_TEMPLATES,
-  CONTINUOUS_SEARCH, FORGOT_PASSWORD,
+  CONTINUOUS_SEARCH,
+  FORGOT_PASSWORD,
   LOGIN,
   NEW_PASSWORD,
   ORGANIZATIONS,
@@ -24,30 +31,42 @@ import {
 } from "./helpers/routes";
 import {
   ActionItemsPage,
-  AddChildPage,
-  AddCommunicationTemplatePage, AddOrganizationPage,
-  AddUserPage,
-  ChildrenPage,
   CommunicationTemplatesPage,
-  ContinuousSearchPage, NewPassword,
+  ContinuousSearchPage,
+  NewPassword,
   OrganizationsPage,
   ReportsPage,
   ResetPassword,
   SearchVectorsPage,
   SettingsPage,
-  UsersPage
+  UsersPage,
+  NotFound,
+  Preloader,
+  ComponentWrapper,
+  ChildrenPage
 } from "./pages";
-import { ChildProfilePage } from "./pages/ChildProfilePage";
+import { AccessDenied } from "./pages/AccessDenied";
 import LoginPage from "./pages/Login";
 import { localStorageKey } from "./utils/requestHandler";
+const ChildProfilePage = React.lazy(() => import("./pages/ChildProfilePage"));
+const AddCommunicationTemplatePage = React.lazy(() => import('./pages/AddCommunicationTemplatePage'))
+const AddChildPage = React.lazy(() => import('./pages/AddChildPage'))
+const AddOrganizationPage = React.lazy(() => import('./pages/AddOrganizationPage'))
+const AddUserPage = React.lazy(() => import('./pages/AddUserPage'))
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateRoute = ({ perform, roles, component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
       render={(props) =>
         window.localStorage.getItem(localStorageKey) ? (
-          <Component {...props} />
+          <ComponentWrapper>
+            <Can 
+              perform={perform}
+              yes={() => <Component {...props}/>}
+              no={() => <AccessDenied/>}
+            />
+          </ComponentWrapper>
         ) : (
           <Redirect to="/login" />
         )
@@ -59,121 +78,164 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 function App() {
   const { user } = useAuth();
   return (
-    <>
-      <SidebarTemplate sidebar={<Sidebar />}>
-        <GroupAccess atLeast="manager" exact="admin">
+    <div style={{ display: "flex" }}>  
+      <Router>
+        <SidebarTemplate sidebar={<Sidebar />} />
+        <React.Suspense fallback={(<Preloader />)}>
+        <Switch>
           <PrivateRoute
             exact
+            path={`/`}
+            component={() =>
+              user ? (
+                <Redirect to={`/${initialRoutesByRoles[user.role]}`} />
+              ) : (
+                <Preloader />
+              )
+            }
+          />
+          <Route
+            exact
+            path={`/${LOGIN}`}
+            component={() => (user ? <Redirect to="/" /> : <LoginPage />)}
+          />
+          <Route
+            exact
+            path={`/${FORGOT_PASSWORD}`}
+            component={ResetPassword}
+          />
+          <Route exact path={`/${NEW_PASSWORD}`} component={NewPassword} />
+          <PrivateRoute
+            exact
+            perform={`${SEARCHVECTOR}:${ACTIONS.VISIT}`}
+            roles={["a", "m"]}
             path={`/${SEARCHVECTOR}`}
             component={SearchVectorsPage}
           />
-        </GroupAccess>
-        <GroupAccess atLeast="manager" exact="admin">
-          <PrivateRoute exact path={`/${SETTINGS}`} component={SettingsPage} />
-        </GroupAccess>
-        <GroupAccess atLeast="manager" exact="admin">
           <PrivateRoute
             exact
+            perform={`${SETTINGS}:${ACTIONS.VISIT}`}
+            roles={["a", "m"]}
+            path={`/${SETTINGS}`}
+            component={SettingsPage}
+          />
+          <PrivateRoute
+            exact
+            perform={`${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`}
+            roles={["a", "m"]}
             path={`/${COMMUNICATION_TEMPLATES}`}
             component={CommunicationTemplatesPage}
           />
-        </GroupAccess>
-        <GroupAccess atLeast="admin" exact="super_admin">
-          <PrivateRoute exact path={`/${COMMUNICATION_TEMPLATES}-${ADD}`} component={AddCommunicationTemplatePage} />
-        </GroupAccess>
-        <GroupAccess atLeast="manager" exact="admin">
-          <PrivateRoute exact path={`/${REPORTS}`} component={ReportsPage} />
-        </GroupAccess>
-        <GroupAccess exact="super_admin">
           <PrivateRoute
             exact
+            perform={`${COMMUNICATION_TEMPLATES}:${ACTIONS.ADD}`}
+            roles={["a", "s"]}
+            path={`/${COMMUNICATION_TEMPLATES}-${ADD}`}
+            component={AddCommunicationTemplatePage}
+          />
+          <PrivateRoute
+            exact
+            perform={`${REPORTS}:${ACTIONS.VISIT}`}
+            roles={["a", "m"]}
+            path={`/${REPORTS}`}
+            component={ReportsPage}
+          />
+          <PrivateRoute
+            exact
+            perform={`${USERS}:${ACTIONS.VISIT}`}
+            roles={["s"]}
             path={`/${USERS}`}
-            component={(props) => <UsersPage isOrganization={false} {...props} />}
+            component={(props) => (
+              <UsersPage isOrganization={false} {...props} />
+            )}
           />
-        </GroupAccess>
-        <GroupAccess atLeast="manager" exact="super_admin">
           <PrivateRoute
             exact
+            perform={`${ORGANIZATION_USERS}:${ACTIONS.VISIT}`}
+            roles={["s", "m", "a"]}
             path={`/${ORGANIZATION_USERS}`}
-            component={(props) => <UsersPage isOrganization={true} {...props} />}
+            component={(props) => (
+              <UsersPage isOrganization={true} {...props} />
+            )}
           />
-        </GroupAccess>
-        <GroupAccess atLeast="user" exact="admin">
           <PrivateRoute
             exact
+            perform={`${ORGANIZATION_USERS}:${ACTIONS.VISIT_ONE}`}
+            roles={["u", "m", "a"]}
             path={`/${ORGANIZATION_USERS}/:id`}
-            component={(props) => <UsersPage isOrganization={true} {...props} />}
+            component={(props) => (
+              <UsersPage isOrganization={true} {...props} />
+            )}
           />
-        </GroupAccess>
-        <GroupAccess exact="super_admin">
           <PrivateRoute
             exact
+            perform={`${ORGANIZATIONS}:${ACTIONS.VISIT}`}
+            roles={["s"]}
             path={`/${ORGANIZATIONS}`}
             component={OrganizationsPage}
           />
-        </GroupAccess>
-        <GroupAccess exact="super_admin">
           <PrivateRoute
             exact
+            perform={`${ORGANIZATIONS}:${ACTIONS.ADD}`}
+            roles={["s"]}
             path={`/${ORGANIZATIONS}-${ADD}`}
             component={AddOrganizationPage}
-          />  
-        </GroupAccess>
-        <GroupAccess atLeast="admin" exact="super_admin">
-          <PrivateRoute exact path={`/${USERS}-${ADD}`} component={AddUserPage} />
-        </GroupAccess>
-        <GroupAccess exact="super_admin">
-          <PrivateRoute exact path={`/${USERS}/:id`} component={UsersPage} />
-        </GroupAccess>
-        <GroupAccess atLeast="manager" exact="admin">
+          />
           <PrivateRoute
             exact
+            perform={`${USERS}:${ACTIONS.ADD}`}
+            roles={["s", "a"]}
+            path={`/${USERS}-${ADD}`}
+            component={AddUserPage}
+          />
+          <PrivateRoute
+            exact
+            perform={`${USERS}:${ACTIONS.VISIT_ONE}`}
+            roles={["s"]}
+            path={`/${USERS}/:id`}
+            component={UsersPage}
+          />
+          <PrivateRoute
+            exact
+            perform={`${CHILDREN}:${ACTIONS.ADD}`}
+            roles={["a", "m"]}
             path={`/${CHILDREN}-${ADD}`}
             component={AddChildPage}
           />
-        </GroupAccess>
-        <GroupAccess exact="super_admin">
           <PrivateRoute
             exact
+            perform={`${ORGANIZATIONS}:${ACTIONS.VISIT_ONE}`}
+            roles={["s"]}
             path={`/${ORGANIZATIONS}/:id`}
             component={OrganizationsPage}
           />
-        </GroupAccess>
-        <GroupAccess atLeast="user" exact="admin">
           <PrivateRoute
             exact
+            perform={`${ACTION_ITEMS}:${ACTIONS.VISIT}`}
+            roles={["a", "u", "m"]}
             path={`/${ACTION_ITEMS}`}
             component={ActionItemsPage}
           />
-        </GroupAccess>
-        <GroupAccess atLeast="user" exact="admin">
-          <PrivateRoute exact path={`/${CHILDREN}`} component={ChildrenPage} />
-        </GroupAccess>
-        <GroupAccess atLeast="user" exact="admin">
           <PrivateRoute
             exact
+            perform={`${CHILDREN}:${ACTIONS.VISIT}`}
+            roles={["a", "u", "m"]}
+            path={`/${CHILDREN}`}
+            component={ChildrenPage}
+          />
+          <PrivateRoute
+            exact
+            perform={`${CHILDREN}:${ACTIONS.VISIT_ONE}`}
+            roles={["a", "u", "m"]}
             path={`/${CHILDREN}/:id`}
             component={ChildProfilePage}
           />
-        </GroupAccess>
-        <PrivateRoute
-          exact
-          path={`/`}
-          component={() =>
-            user ? (
-              <Redirect to={`/${initialRoutesByRoles[user.role]}`} />
-            ) : (
-              <div>Loading</div>
-            )
-          }
-        />
-        <Route exact path={`/${LOGIN}`} component={() => user ? <Redirect to='/'/> : <LoginPage />}/>
-        <Route exact path={`/${FORGOT_PASSWORD}`} component={ResetPassword} />
-        <Route exact path={`/${NEW_PASSWORD}`} component={NewPassword} />
-        <ToastContainer />
-      </SidebarTemplate>
-      
-    </>
+          <PrivateRoute component={NotFound} />
+          <ToastContainer />
+        </Switch>
+        </React.Suspense>
+      </Router>
+    </div>
   );
 }
 

@@ -23,11 +23,13 @@ export const SelectInput = (props) => {
     defaultValue = null,
     myValue,
     myOnChange,
-    menuPlacement = "bottom"
+    menuPlacement = "bottom",
+    marginX = "0px",
+    marginY = "8px"
   } = props;
 
   return (
-    <Box w={`${width}px`} mr="35px">
+    <Box w={`${width}px`} mt={marginY} mb={marginY} ml={marginX} mr={marginX}>
       {label && <Label htmlFor={name}>{label}</Label>}
       <Controller
         name={name}

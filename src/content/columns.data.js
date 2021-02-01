@@ -49,7 +49,7 @@ export const communicationTemplatesTableColumns = [
   },
 ];
 
-export const usersTableColumns = (isSuperAdmin = false) => {
+export const usersTableColumns = (role = "user") => {
   const columns1 = [
     {
       key: "name",
@@ -59,15 +59,15 @@ export const usersTableColumns = (isSuperAdmin = false) => {
     {
       key: "email",
       content: "Email",
-      width: 25,
+      width: role === "user" ? 30 : 25,
     },
     {
       key: "phone",
       content: "Phone",
-      width: 15,
+      width: role === "user" ? 20 : 15
     },
   ];
-  if (isSuperAdmin)
+  if (role === "super_admin")
     columns1.push({
       key: "organization",
       content: "Organization",
@@ -79,12 +79,17 @@ export const usersTableColumns = (isSuperAdmin = false) => {
       content: "Role",
       width: 15,
     },
-    {
-      key: "actions",
-      content: <p align="center">Actions</p>,
-      width: 10,
-    },
   ];
+
+  if (role !== "user"){
+    columns2.push(
+      {
+        key: "actions",
+        content: <p align="center">Actions</p>,
+        width: 10,
+      },
+    )
+  }
   return columns1.concat(columns2);
 };
 
@@ -144,7 +149,7 @@ export const searchVectorsTableColumns = [
   // },
   {
     key: "priority",
-    content: "Priority",
+    content: <p align="center">Priority</p>,
     width: 15,
   },
   {

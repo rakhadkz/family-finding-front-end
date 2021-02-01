@@ -2,12 +2,15 @@ import Button from "@atlaskit/button";
 import moment from "moment";
 import React, { memo } from "react";
 import styled from "styled-components";
-import { humanReadableDateFormat } from "../../content/date.format";
+import { humanReadableDateFormat } from "../../content/date";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
+import Can from "../../accessControl/Can";
+import { CHILDREN } from "../../helpers";
+import { ACTIONS } from "../../accessControl/actions";
 
-export const ChildInformation = memo(({ child }) => {
+export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
   return (
     <Rectangle>
       <Box d="flex" mb="16px">
@@ -18,9 +21,14 @@ export const ChildInformation = memo(({ child }) => {
             <Title size="18px" style={{ marginRight: "5px" }}>
               {child.first_name ? `${child.first_name} ${child.last_name}` : ""}
             </Title>
-            <Button spacing="none" appearance="link">
-              <EditorEditIcon size="medium" />
-            </Button>
+            <Can
+              perform={`${CHILDREN}:${ACTIONS.EDIT}`}
+              yes={() => (
+                <Button spacing="none" appearance="link" onClick={() => setIsOpenEdit(true)}>
+                  <EditorEditIcon size="medium" />
+                </Button>
+              )}
+            />
           </Box>
         </Spacing>
       </Box>

@@ -2,9 +2,11 @@ import Button, { ButtonGroup } from "@atlaskit/button";
 import CrossIcon from "@atlaskit/icon/glyph/cross";
 import EditIcon from "@atlaskit/icon/glyph/edit";
 import moment from "moment";
-import { GroupAccess } from "../components/common";
+import { ACTIONS } from "../accessControl/actions";
+import Can from "../accessControl/Can";
 import { TEMPLATE_TYPES } from "../components/CommunicationTemplate";
-import { humanReadableDateFormat } from "./date.format";
+import { COMMUNICATION_TEMPLATES } from "../helpers";
+import { humanReadableDateFormat } from "./date";
 
 const communicationTemplatesData = (
   data,
@@ -32,41 +34,44 @@ const communicationTemplatesData = (
         key: "actions",
         content: (
           <div align="center">
-            <GroupAccess atLeast="admin" exact="super_admin">
-              <ButtonGroup>
-                <Button
-                  onClick={() => {
-                    setIsOpenEdit(true);
-                    setCurrentTemplate({
-                      ...item,
-                      template_type: TEMPLATE_TYPES.find(
-                        (type) => type.label === item.template_type
-                      ),
-                    });
-                    console.log("WSSSSSS", {
-                      ...item,
-                      template_type: TEMPLATE_TYPES.find(
-                        (type) => type.label === item.template_type
-                      ),
-                    });
-                  }}
-                  height="32px"
-                  width="32px"
-                >
-                  <EditIcon size="small" />
-                </Button>
-                <Button
-                  onClick={() => {
-                    setIsOpen(true);
-                    setCurrentId(item.id);
-                  }}
-                  height="32px"
-                  width="32px"
-                >
-                  <CrossIcon size="small" />
-                </Button>
-              </ButtonGroup>
-            </GroupAccess>
+            <Can
+              perform={`${COMMUNICATION_TEMPLATES}:${ACTIONS.EDIT}`}
+              yes={() => (
+                <ButtonGroup>
+                  <Button
+                    onClick={() => {
+                      setIsOpenEdit(true);
+                      setCurrentTemplate({
+                        ...item,
+                        template_type: TEMPLATE_TYPES.find(
+                          (type) => type.label === item.template_type
+                        ),
+                      });
+                      console.log("WSSSSSS", {
+                        ...item,
+                        template_type: TEMPLATE_TYPES.find(
+                          (type) => type.label === item.template_type
+                        ),
+                      });
+                    }}
+                    height="32px"
+                    width="32px"
+                  >
+                    <EditIcon size="small" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setIsOpen(true);
+                      setCurrentId(item.id);
+                    }}
+                    height="32px"
+                    width="32px"
+                  >
+                    <CrossIcon size="small" />
+                  </Button>
+                </ButtonGroup>
+              )}
+            />
           </div>
         ),
       },

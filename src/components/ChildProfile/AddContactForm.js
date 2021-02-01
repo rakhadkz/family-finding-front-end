@@ -1,5 +1,4 @@
 import Button from "@atlaskit/button";
-import { FormSection } from "@atlaskit/form";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { relationshipOptions } from "../../content/relationshipOptions.data";
@@ -39,15 +38,15 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
     <>
       <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
         <Spacing
-          m={{ b: "30px" }}
+          m={{ b: "15px" }}
           style={{
             display: "flex",
             flexWrap: "wrap",
-            rowGap: 20,
-            justifyContent: "flex-end",
+            justifyContent: "center",
           }}
         >
           <TextInput
+            marginX="8px"
             className="input"
             name={"first_name"}
             register={register({ required: true })}
@@ -56,6 +55,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             label="First name"
           />
           <TextInput
+            marginX="8px"
             className="input"
             name={"last_name"}
             register={register({ required: false })}
@@ -64,6 +64,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             label="Last name"
           />
           <SelectInput
+            marginX="8px"
             name={"relationship"}
             register={{ required: false }}
             control={control}
@@ -73,6 +74,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             placeholder="Relationship"
           />
           <TextInput
+            marginX="8px"
             className="input"
             name={"email"}
             register={register({
@@ -84,6 +86,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             label="Email"
           />
           <TextInput
+            marginX="8px"
             name={"phone"}
             register={register({
               required: false,
@@ -94,6 +97,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             type={"phone"}
           />
           <TextInput
+            marginX="8px"
             className="input"
             name={"address"}
             register={register({ required: false })}
@@ -102,6 +106,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             label="Address"
           />
           <TextInput
+            marginX="8px"
             className="input"
             name={"address_2"}
             register={register({ required: false })}
@@ -110,6 +115,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             label="Another Address"
           />
           <TextInput
+            marginX="8px"
             name={"city"}
             register={register({ required: false })}
             control={control}
@@ -117,6 +123,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             label="City"
           />
           <SelectInput
+            marginX="16px"
             menuPlacement="top"
             name={"state"}
             register={{ required: false }}
@@ -126,8 +133,9 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             label="State"
             placeholder="Choose State"
           />
-
+          
           <DatepickerInput
+            marginX="16px"
             name={"birthday"}
             register={{ required: false }}
             control={control}
@@ -136,6 +144,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             placeholder="Select birthday"
           />
           <TextInput
+            marginX="8px"
             name={"zip"}
             register={register({ required: false })}
             control={control}
@@ -145,6 +154,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
 
           {relationship?.value === "Other" ? (
             <TextInput
+              marginX="8px"
               className="input"
               name={"relationship_other"}
               register={register({ required: false })}
@@ -153,18 +163,17 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
               label="Relationship name"
             />
           ) : (
-            <div style={{ width: 275, height: 50 }} />
+            <div style={{ width: 256 }} />
           )}
-          <Spacing m={{ r: "30px" }}>
-            <Box d="flex">
-              <Button isDisabled={pending} type="submit" appearance="primary">
-                Save
-              </Button>
-              <Spacing m={{ l: "5px", r: "5px" }} />
-              <Button onClick={onCancel}>Cancel</Button>
-            </Box>
-          </Spacing>
+          
         </Spacing>
+        <Box d="flex" w="100%" justify="center" mb="20px">
+          <Button isDisabled={pending} type="submit" appearance="primary">
+            Save
+          </Button>
+          <Spacing m={{ l: "5px", r: "5px" }} />
+          <Button onClick={onCancel}>Cancel</Button>
+        </Box>
       </Form>
     </>
   );

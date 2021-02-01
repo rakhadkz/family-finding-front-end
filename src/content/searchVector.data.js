@@ -3,8 +3,10 @@ import { Box } from "../components/ui/atoms";
 import Lozenge from "@atlaskit/lozenge";
 import { Avatar } from "../components/ui/molecules/Avatar";
 import CrossIcon from "@atlaskit/icon/glyph/cross";
-import { GroupAccess } from "../components/common";
 import EditIcon from "@atlaskit/icon/glyph/edit";
+import Can from "../accessControl/Can";
+import { SEARCHVECTOR } from "../helpers";
+import { ACTIONS } from "../accessControl/actions";
 
 const searchVectorTableData = (
   data,
@@ -37,39 +39,42 @@ const searchVectorTableData = (
       // },
       {
         key: "priority",
-        content: <p align="left">{`${Math.floor(Math.random() * 6)}`}</p>,
+        content: <p align="center">{`${Math.floor(Math.random() * 6)}`}</p>,
       },
       {
         key: "Actions",
         content: (
           <div align="center">
-            <GroupAccess atLeast="admin" exact="super_admin">
-              <ButtonGroup>
-                <Button
-                  // isDisabled={user?.id === item.id}
-                  onClick={() => {
-                    setIsAddModalOpen(true);
-                    setCurrentSV(item.id);
-                    setEdit(true);
-                  }}
-                  height="32px"
-                  width="32px"
-                >
-                  <EditIcon size="small" />
-                </Button>
-                <Button
-                  // isDisabled={user?.id === item.id}
-                  onClick={() => {
-                    setIsOpen(true);
-                    setCurrentSV(item.id);
-                  }}
-                  height="32px"
-                  width="32px"
-                >
-                  <CrossIcon size="small" />
-                </Button>
-              </ButtonGroup>
-            </GroupAccess>
+            <Can 
+              perform={`${SEARCHVECTOR}:${ACTIONS.EDIT}`}
+              yes={() => (
+                <ButtonGroup>
+                  <Button
+                    // isDisabled={user?.id === item.id}
+                    onClick={() => {
+                      setIsAddModalOpen(true);
+                      setCurrentSV(item.id);
+                      setEdit(true);
+                    }}
+                    height="32px"
+                    width="32px"
+                  >
+                    <EditIcon size="small" />
+                  </Button>
+                  <Button
+                    // isDisabled={user?.id === item.id}
+                    onClick={() => {
+                      setIsOpen(true);
+                      setCurrentSV(item.id);
+                    }}
+                    height="32px"
+                    width="32px"
+                  >
+                    <CrossIcon size="small" />
+                  </Button>
+                </ButtonGroup>
+              )}
+            />
           </div>
         ),
       },

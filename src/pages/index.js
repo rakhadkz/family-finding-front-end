@@ -13,3 +13,6 @@ export * from "./ResetPassword";
 export * from "./SearchVectorPage";
 export * from "./SettingsPage";
 export * from "./UsersPage";
+export * from "./NotFound";
+export * from "./Preloader";
+export * from "./ComponentWrapper";

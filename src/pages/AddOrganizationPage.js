@@ -15,3 +15,5 @@ export const AddOrganizationPage = () => {
     </>
   );
 };
+
+export default AddOrganizationPage

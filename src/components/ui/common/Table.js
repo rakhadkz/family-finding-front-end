@@ -18,7 +18,7 @@ export const Table = ({
           isLoading={pending}
           head={{ cells: head }}
           rows={items}
-          emptyView="Not Found"
+          emptyView="Not found"
           isFixedSize
         />
       </TableWrapper>
