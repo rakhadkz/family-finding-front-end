@@ -6,10 +6,11 @@ import { WysiwygEditor } from "../../../WYSIWYG";
 import styled from "styled-components";
 import { useMentions } from "./mentions-context";
 import { TextInput } from "../../../ui/molecules";
+import { MentionsProvider } from "./mentions-context";
 
 export const CommentsForm = ({
   onSubmit,
-  id,
+  childId,
   inReply,
   shouldUpdate,
   increaseShouldUpdate,
@@ -18,6 +19,13 @@ export const CommentsForm = ({
   collapseEditor,
   expandEditor,
   setBlocks,
+  initialValue,
+  edit,
+  setEdit,
+  userId,
+  commentId,
+  setCommentData,
+  setSuggestions,
 }) => {
   const [upd, setUpd] = useState(1);
   const [text, setText] = useState("");
@@ -38,7 +46,7 @@ export const CommentsForm = ({
     //   comment: {
     //     body: text,
     //     in_reply_to: inReply,
-    //     child_id: id,
+    //     child_id: childId,
     //     mentions: mentionedUsers,
     //   },
     // });
@@ -48,9 +56,11 @@ export const CommentsForm = ({
         html_body: htmlText,
         body: text,
         in_reply_to: inReply,
-        child_id: id,
+        child_id: childId,
         mentions: mentionedUsers,
+        userId,
       },
+      commentId,
     })
       .then((items) => {
         setUpd(upd + 1);
@@ -58,50 +68,59 @@ export const CommentsForm = ({
       })
       .finally(() => {
         setShowInput && setShowInput(false);
+        if (edit) {
+          setCommentData(htmlText);
+          setEdit(false);
+        }
       });
   };
 
   return (
-    <Form w="100%" onSubmit={onSubmitHandle} noValidate>
-      <FormSection>
-        {isExpanded ? (
-          <>
-            <Spacing m={{ l: "-17px" }}>
-              <WysiwygEditor
-                upd={upd}
-                onChange={(tex, raw, html) => {
-                  setText(tex);
-                  setRawData(raw);
-                  setHtmlText(html);
-                }}
-                setBlocks={setBlocks}
-              />
-              <StyledButtonGroup>
-                <Button type="submit" appearance="primary">
-                  Comment
-                </Button>
-
-                <Button
-                  appearance="subtle"
-                  onClick={() => {
-                    collapseEditor();
-                    setShowInput && setShowInput(false);
+    <MentionsProvider>
+      <Form w="100%" onSubmit={onSubmitHandle} noValidate>
+        <FormSection>
+          {isExpanded ? (
+            <>
+              <Spacing m={{ l: "-17px" }}>
+                <WysiwygEditor
+                  upd={upd}
+                  onChange={(tex, raw, html) => {
+                    setText(tex);
+                    setRawData(raw);
+                    setHtmlText(html);
                   }}
-                >
-                  Cancel
-                </Button>
-              </StyledButtonGroup>
-            </Spacing>
-          </>
-        ) : (
-          <TextInput
-            width={400}
-            onClick={expandEditor}
-            placeholder="Add a comment..."
-          />
-        )}
-      </FormSection>
-    </Form>
+                  setBlocks={setBlocks}
+                  defaultValue={initialValue}
+                  setSuggestions={setSuggestions}
+                />
+                <StyledButtonGroup>
+                  <Button type="submit" appearance="primary">
+                    Comment
+                  </Button>
+
+                  <Button
+                    appearance="subtle"
+                    onClick={() => {
+                      collapseEditor();
+                      setShowInput && setShowInput(false);
+                      setEdit && setEdit(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </StyledButtonGroup>
+              </Spacing>
+            </>
+          ) : (
+            <TextInput
+              width={400}
+              onClick={expandEditor}
+              placeholder="Add a comment..."
+            />
+          )}
+        </FormSection>
+      </Form>
+    </MentionsProvider>
   );
 };
 

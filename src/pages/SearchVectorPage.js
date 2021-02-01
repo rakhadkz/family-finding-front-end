@@ -98,7 +98,7 @@ export const SearchVectorsPage = (props) => {
           />
           <Button
             iconBefore={<ChildIssuesIcon />}
-            appearance="warning"
+            appearance="primary"
             onClick={() => setIsAddModalOpen(true)}
           >
             Add Search Vector

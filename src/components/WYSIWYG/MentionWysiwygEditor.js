@@ -1,11 +1,12 @@
 import Button from "@atlaskit/button";
 import QuoteIcon from "@atlaskit/icon/glyph/quote";
 import Editor from "@draft-js-plugins/editor";
+import createEmojiPlugin from "@draft-js-plugins/emoji";
 import { convertToRaw, EditorState, RichUtils } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { stateFromHTML } from "draft-js-import-html";
 import createMentionPlugin, {
-  defaultSuggestionsFilter
+  defaultSuggestionsFilter,
 } from "draft-js-mention-plugin";
 import "draft-js/dist/Draft.css";
 import Immutable from "immutable";
@@ -15,6 +16,8 @@ import { MentionsContext } from "../ChildProfile/tabs/Comments/mentions-context"
 import MentionEntry from "./MentionEntry";
 import mentionsStyles from "./mentionsStyles.css";
 import Toolbars from "./Toolbar";
+import "@draft-js-plugins/emoji/lib/plugin.css";
+import position from "./position";
 
 const positionSuggestions = ({ state, props }) => {
   let transform;
@@ -34,6 +37,26 @@ const positionSuggestions = ({ state, props }) => {
   };
 };
 
+const positionSuggestionsEmoji = ({ state, props }) => {
+  let transform;
+  let transition;
+
+  if (state.isActive & (props.suggestions.size > 0)) {
+    transform = "scaleY(1) translateY(-100%)";
+    transition = "all 0.25s cubic-bezier(.3,1.2,.2,1)";
+  } else if (state.isActive) {
+    transform = "scaleY(0) translateY(-100%)";
+    transition = "all 0.25s cubic-bezier(.3,1,.2,1)";
+  }
+
+  return {
+    display: "block",
+    transform: "scale(1) translateY(-100%)",
+    transformOrigin: "1em 0% 0px",
+    transition: "all 0.25s cubic-bezier(0.3, 1.2, 0.2, 1)",
+  };
+};
+
 class MentionWysiwygEditor extends React.Component {
   static contextType = MentionsContext;
 
@@ -45,6 +68,7 @@ class MentionWysiwygEditor extends React.Component {
       suggestions: [],
       withMention,
     };
+    this.myRef = React.createRef();
     this.editorRef = React.createRef();
     this.mentions = [];
     this.mentionPlugin = createMentionPlugin({
@@ -54,6 +78,10 @@ class MentionWysiwygEditor extends React.Component {
       positionSuggestions,
       mentionPrefix: "@",
       supportWhitespace: true,
+    });
+    this.emojiPlugin = createEmojiPlugin({
+      useNativeArt: true,
+      positionSuggestions: position,
     });
     this.blockTypeButtons = [
       {
@@ -98,6 +126,10 @@ class MentionWysiwygEditor extends React.Component {
       this.setState({
         suggestions: defaultSuggestionsFilter(value, this.context.mentions),
       });
+      this.props.setSuggestions &&
+        this.props.setSuggestions(
+          defaultSuggestionsFilter(value, this.context.mentions).length
+        );
     }
   };
 
@@ -128,7 +160,9 @@ class MentionWysiwygEditor extends React.Component {
   }
 
   onChange = (editorState) => {
-    let len = convertToRaw(editorState.getCurrentContent()).blocks.length;
+    let len = convertToRaw(this.state.editorState.getCurrentContent()).blocks
+      .length;
+    let newLen = convertToRaw(editorState.getCurrentContent()).blocks.length;
     if (
       convertToRaw(this.state.editorState.getCurrentContent()).blocks.length !==
       convertToRaw(editorState.getCurrentContent()).blocks.length
@@ -284,17 +318,31 @@ class MentionWysiwygEditor extends React.Component {
     );
   };
 
+  suspendSuggestions = (event) => {
+    if (this.props.setSuggestions !== undefined) {
+      if (event.which == 13 || event.keyCode == 13) {
+        this.props.setSuggestions(0);
+        return false;
+      }
+      return true;
+    }
+  };
+
   render() {
     const { MentionSuggestions } = this.mentionPlugin;
-    const plugins = [this.mentionPlugin];
-    console.log(convertToRaw(this.state.editorState.getCurrentContent()));
-    console.log(this.context);
+    const { EmojiSuggestions, EmojiSelect } = this.emojiPlugin;
+    const plugins = [this.mentionPlugin, this.emojiPlugin];
+    // console.log(convertToRaw(this.state.editorState.getCurrentContent()));
+    // console.log(this.context);
+    console.log(this.myRef);
     return (
       <EditorContainer>
         <Editors
-          onClick={() =>
-            this.editorRef.current && this.editorRef.current.focus()
-          }
+          onClick={() => {
+            this.editorRef.current && this.editorRef.current.focus();
+            this.props.setSuggestions && this.props.setSuggestions(0);
+          }}
+          onKeyDown={(e) => this.suspendSuggestions(e)}
         >
           <div
             style={{ display: "flex", marginBottom: "1em", marginLeft: "-1em" }}
@@ -315,6 +363,7 @@ class MentionWysiwygEditor extends React.Component {
               onFontSizeClick={this.onFontSizeClick}
               toggleBlockType={this.toggleBlockType}
             />
+            <EmojiSelect />
           </div>
           <Editor
             editorState={this.state.editorState}
@@ -324,11 +373,24 @@ class MentionWysiwygEditor extends React.Component {
             ref={(editor) => (this.editorRef.current = editor)}
             blockRenderMap={this.blockRenderMap}
           />
+          <EmojiSuggestions
+            onOpen={() => {
+              this.props.setSuggestions && this.props.setSuggestions(10);
+            }}
+            onClose={() =>
+              this.props.setSuggestions && this.props.setSuggestions(0)
+            }
+          />
           {this.state.withMention && (
             <MentionSuggestions
               onSearchChange={this.onSearchChange}
               suggestions={this.state.suggestions}
-              entryComponent={MentionEntry}
+              entryComponent={(props) => (
+                <MentionEntry
+                  {...props}
+                  setSuggestions={this.props.setSuggestions}
+                />
+              )}
               className={mentionsStyles.mentionSuggestions}
             />
           )}

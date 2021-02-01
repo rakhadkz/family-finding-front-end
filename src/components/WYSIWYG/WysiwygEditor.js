@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { Box } from "../ui/atoms";
 import MentionWysiwygEditor from "./MentionWysiwygEditor";
-
+import { useClickOutside } from "./../../hooks";
 export const WysiwygEditor = (props) => {
-  const { onChange, upd, setBlocks, defaultValue = "" } = props;
+  const { onChange, upd, setBlocks, setSuggestions, defaultValue = "" } = props;
+  const myRef = useRef(null);
+  useClickOutside([myRef], true, () => {
+    setSuggestions && setSuggestions(0);
+  });
   return (
-    <StyledBox w="100%">
+    <StyledBox w="100%" ref={myRef}>
       <MentionWysiwygEditor
         setBlocks={setBlocks}
         upd={upd}
         defaultValue={defaultValue}
         onChange={onChange}
+        setSuggestions={setSuggestions}
         {...props}
       />
     </StyledBox>

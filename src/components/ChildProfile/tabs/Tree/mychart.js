@@ -153,7 +153,7 @@ class Chart extends Component {
     OrgChart.templates.green.field_2 = `{val}`;
 
     OrgChart.templates.yellow.nodeMenuButton =
-      '<g style="cursor:pointer;" transform="matrix(1,0,0,1,170,13)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="2" fill="#ffffff"></circle><circle cx="0" cy="6" r="2" fill="#ffffff"></circle><circle cx="0" cy="12" r="2" fill="#ffffff"></circle></g>';
+      '<g style="cursor:pointer;" transform="matrix(1,0,0,1,205,23)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="2" fill="#ffffff"></circle><circle cx="0" cy="6" r="2" fill="#ffffff"></circle><circle cx="0" cy="12" r="2" fill="#ffffff"></circle></g>';
     OrgChart.templates.green.nodeMenuButton =
       '<g style="cursor:pointer;" transform="matrix(1,0,0,1,205,23)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="2" fill="#ffffff"></circle><circle cx="0" cy="6" r="2" fill="#ffffff"></circle><circle cx="0" cy="12" r="2" fill="#ffffff"></circle></g>';
 
@@ -238,9 +238,7 @@ class Chart extends Component {
         field_0: "Name",
         field_1: "Relationship",
         field_2: function (sender, node) {
-          var data = sender.get(node.id);
           const rating = Math.floor(Math.random() * Math.floor(5));
-          console.log(data);
           let returnRating = Array(5)
             .fill()
             .map((_, index) =>
@@ -296,6 +294,7 @@ class Chart extends Component {
       const res = await createChildContact({
         child_tree_contact: { child_id: childId, parent_id: node.pid },
       });
+      chart.removeNode(node.id);
       chart.addNode({
         ...res,
         pid: res.parent_id,
@@ -303,8 +302,8 @@ class Chart extends Component {
         Avatar:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT63VcFex7-_JFQOKCju4WMQHp3xHIxlBZUJA&usqp=CAU",
       });
-      chart.removeNode(node.id);
-      refreshContacts((prev) => !prev);
+      await refreshContacts();
+      setTimeout(() => chart.draw(OrgChart.action.update), 2000);
     });
 
     chart.on("remove", function (sender, nodeId, newIds) {
@@ -323,8 +322,8 @@ class Chart extends Component {
   }
 
   componentDidUpdate(props) {
-    if (this.props.nodes !== props.nodes) {
-      console.log("NODES UPDATED AHHAHAHAHAHAH", this.chart.draw);
+    if (this.props.nodes?.length !== props.nodes?.length) {
+      console.log("NODES UPDATED AHHAHAHAHAHAH", this.props.nodes);
     }
   }
   render() {

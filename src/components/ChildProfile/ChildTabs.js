@@ -9,16 +9,27 @@ import { Connections } from "./tabs/Connections/Connections";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
 export const ChildTabs = (
-  { id, first_name: firstName, last_name: lastName, family_tree = [] },
+  {
+    id,
+    fetchChildProfile,
+    first_name: firstName,
+    last_name: lastName,
+    family_tree = [],
+  },
   setChild
 ) => {
   const [contacts, setContacts] = useState([]);
   const [trigger, setTrigger] = useState(false);
 
-  useEffect(() => {
-    fetchChildrenRequest({ id: id, view: "contacts" }).then((data) =>
+  const fetchChildren = async () => {
+    await fetchChildProfile();
+    await fetchChildrenRequest({ id: id, view: "contacts" }).then((data) =>
       setContacts(data.contacts)
     );
+  };
+
+  useEffect(() => {
+    fetchChildren();
   }, [trigger]);
 
   const tabs = [
@@ -54,7 +65,7 @@ export const ChildTabs = (
             firstName,
             lastName,
           })}
-          refreshContacts={setTrigger}
+          refreshContacts={fetchChildProfile}
         />
       ),
     },
