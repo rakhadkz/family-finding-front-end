@@ -83,7 +83,7 @@ export const AddChildForm = ({ onSubmit, child, setIsOpenEdit, fetch }) => {
       ...data,
       gender: data.gender?.value || null,
       race: data.race?.value || null,
-      permanency_goal: data.permanency_goal.value,
+      permanency_goal: data.permanency_goal?.value || null,
     })
       .then(() => {
         toast.success(child ? "Child successfully updated" : "Child successfully created!", {

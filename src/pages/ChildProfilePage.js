@@ -375,7 +375,7 @@ export default function ChildProfilePage(props){
                     styles={{
                       menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                     }}
-                    options={child?.contacts.map((item) => ({
+                    options={state.child?.contacts.map((item) => ({
                       label: `${item?.contact?.first_name} ${item?.contact?.last_name}`,
                       value: item,
                     }))}
