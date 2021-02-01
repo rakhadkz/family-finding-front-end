@@ -12,12 +12,13 @@ import {
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { useAuth } from "../../../../context/auth/authContext";
 import { ModalDialog } from "../../../ui/common";
+import moment from "moment";
 
 export const Comments = ({
   data,
   shouldUpdate,
   increaseShouldUpdate,
-  id,
+  childId,
   fetch,
 }) => {
   const [showInput, setShowInput] = useState(false);
@@ -91,18 +92,39 @@ export const Comments = ({
       });
   };
 
+  const time = () => {
+    let duration = moment(data.created_at).fromNow();
+    if (
+      moment().subtract(31, "days").valueOf() >
+      moment(data.created_at).valueOf()
+    ) {
+      return `on ${moment(data.created_at).format("ll")}`;
+    } else {
+      return duration;
+    }
+  };
+
   return (
     <Spacing m={{ t: "17px" }}>
       <Box d="flex">
         <Avatar name={`${data.user.first_name} ${data.user.last_name}`} />
         <Spacing m={{ l: "7px" }}>
-          <Title size="14px">{`${data.user.first_name} ${data.user.last_name}`}</Title>
+          <Box d="flex">
+            <Title
+              size="14px"
+              style={{ marginRight: "5px" }}
+            >{`${data.user.first_name} ${data.user.last_name}`}</Title>
+            <Text
+              style={{ color: "#586069", lineHeight: "24px" }}
+              size="14px"
+            >{`commented ${time()}`}</Text>
+          </Box>
           {edit ? (
             <Spacing m={{ t: "-22px", l: "17px" }}>
               <CommentsForm
                 shouldUpdate={shouldUpdate}
                 increaseShouldUpdate={increaseShouldUpdate}
-                id={id}
+                childid={childId}
                 inReply={data.in_reply_to?.id}
                 onSubmit={updateCommentRequest}
                 setShowInput={setShowInput}
@@ -132,7 +154,7 @@ export const Comments = ({
                         <CommentsForm
                           shouldUpdate={shouldUpdate}
                           increaseShouldUpdate={increaseShouldUpdate}
-                          id={id}
+                          childId={childId}
                           inReply={data.id}
                           onSubmit={postCommentRequest}
                           setShowInput={setShowInput}
@@ -185,14 +207,14 @@ export const Comments = ({
             </>
           )}
 
-          {data.replies.map((reply, index) => (
+          {data.replies.map((reply) => (
             <Comments
+              childId={childId}
+              fetch={fetch}
+              key={data.id}
               data={reply}
               shouldUpdate={shouldUpdate}
               increaseShouldUpdate={increaseShouldUpdate}
-              id={id}
-              fetch={fetch}
-              key={data.id}
             />
           ))}
 

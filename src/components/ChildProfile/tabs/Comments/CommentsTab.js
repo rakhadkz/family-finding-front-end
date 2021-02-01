@@ -5,10 +5,23 @@ import { Box, Spacing } from "../../../ui/atoms";
 import { Comments } from "./Comments";
 import { CommentsForm } from "./CommentsForm";
 import { useAuth } from "../../../../context/auth/authContext";
-import { fetchUsersRequest } from "../../../../api/user";
 import { Avatar } from "../../../ui/molecules/Avatar";
-import { MentionsProvider } from "./mentions-context";
 import styled from "styled-components";
+import Spinner from "@atlaskit/spinner";
+
+const StyledSpinner = () => (
+  <Box
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      margin: "50px",
+      width: "100vh",
+    }}
+  >
+    <Spinner size="large" />
+  </Box>
+);
 
 export const CommentsTab = ({ childId, childComments, setChild }) => {
   const { user } = useAuth();
@@ -80,12 +93,15 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
   }, [isExpanded, blocks]);
 
   useEffect(() => {
-    if (show && allComments[allComments.length - 1].in_reply_to === null) {
+    if (
+      show &&
+      allComments &&
+      allComments[allComments.length - 1].in_reply_to === null
+    ) {
       executeScroll();
     }
-  }, [comments]);
+  }, [comments, allComments]);
 
-  console.log(suggestions);
   return (
     <Spacing
       m={{
@@ -94,21 +110,25 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
           : "50px",
       }}
     >
-      <Spacing m={{ b: "22px" }}>
-        {comments &&
-          comments.map((comment, index) => (
-            <Comments
-              id={childId}
-              data={comment}
-              shouldUpdate={shouldUpdate}
-              increaseShouldUpdate={increaseShouldUpdate}
-              key={comment.id}
-              fetch={fetch}
-            />
-          ))}
-      </Spacing>
+      {comments ? (
+        <Spacing m={{ b: "22px" }}>
+          {comments &&
+            comments.map((comment, index) => (
+              <Comments
+                childId={childId}
+                data={comment}
+                key={comment.id}
+                fetch={fetch}
+                shouldUpdate={shouldUpdate}
+                increaseShouldUpdate={increaseShouldUpdate}
+              />
+            ))}
+        </Spacing>
+      ) : (
+        <StyledSpinner />
+      )}
       <span ref={myRef} />
-      <Footer
+      <FormFooter
         d="flex"
         show={show}
         isExpanded={isExpanded}
@@ -118,24 +138,24 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
         <Avatar name={`${user?.first_name} ${user?.last_name}`} />
         <Spacing m={{ l: "17px", t: "-22px" }}>
           <CommentsForm
+            childId={childId}
+            inReply={0}
             setBlocks={setBlocks}
             isExpanded={isExpanded}
             collapseEditor={collapseEditor}
             expandEditor={expandEditor}
             shouldUpdate={shouldUpdate}
             increaseShouldUpdate={increaseShouldUpdate}
-            id={childId}
-            inReply={0}
             onSubmit={postCommentRequest}
             setSuggestions={setSuggestions}
           />
         </Spacing>
-      </Footer>
+      </FormFooter>
     </Spacing>
   );
 };
 
-const Footer = styled(Box)`
+const FormFooter = styled(Box)`
   ${(props) =>
     props.show &&
     `

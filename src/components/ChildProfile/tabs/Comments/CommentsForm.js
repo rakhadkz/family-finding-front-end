@@ -10,7 +10,7 @@ import { MentionsProvider } from "./mentions-context";
 
 export const CommentsForm = ({
   onSubmit,
-  id,
+  childId,
   inReply,
   shouldUpdate,
   increaseShouldUpdate,
@@ -46,7 +46,7 @@ export const CommentsForm = ({
     //   comment: {
     //     body: text,
     //     in_reply_to: inReply,
-    //     child_id: id,
+    //     child_id: childId,
     //     mentions: mentionedUsers,
     //   },
     // });
@@ -56,7 +56,7 @@ export const CommentsForm = ({
         html_body: htmlText,
         body: text,
         in_reply_to: inReply,
-        child_id: id,
+        child_id: childId,
         mentions: mentionedUsers,
         userId,
       },
