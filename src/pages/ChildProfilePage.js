@@ -46,6 +46,7 @@ export default function ChildProfilePage(props){
   const [templateType, setTemplateType] = useState("");
   const [templatePending, setTemplatePending] = useState(false);
   const [templateHtml, setTemplateHtml] = useState("");
+  const [templatePreview, setTemplatePreview] = useState("");
   const [templateUser, setTemplateUser] = useState();
   const [filteredTemplates, setFilteredTemplates] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -67,6 +68,7 @@ export default function ChildProfilePage(props){
 
   useEffect(() => {
     setTemplateHtml("");
+    setTemplatePreview("");
     setFilteredTemplates(
       templates
         .filter((item) => item.template_type === templateType)
@@ -89,7 +91,21 @@ export default function ChildProfilePage(props){
             }
           })
     ).catch((e) => dispatch({ type: ACTIONS.FETCH_CHILD_USERS_FAILURE, payload: e.message}));
-  };
+  }
+  
+  useEffect(() => {
+    const text = templateHtml
+      .replaceAll("{{child_name}}", `${child?.first_name} ${child?.last_name}`)
+      .replaceAll(
+        "{{contact_name}}",
+        `${templateUser?.contact?.first_name} ${templateUser?.contact?.last_name}`
+      )
+      .replaceAll(
+        "{{orgranization_name}}",
+        localStorage.getItem("organizationName")
+      );
+    setTemplatePreview(text);
+  }, [templateHtml, templateUser, child]);
 
   const fetchTemplates = () => {
     fetchCommunicationTemplateRequest().then((data) => {
@@ -108,13 +124,15 @@ export default function ChildProfilePage(props){
   }
 
   const sendTemplateToUser = async () => {
+    let content = templatePreview;
     const body = {
       email: templateUser?.contact?.email,
-      content: templateHtml,
+      content: content,
       template_type: templateType,
       phone: templateUser?.contact?.phone,
     };
     console.log(body);
+
     setTemplatePending(true);
     await sendCommunicationTemplateToUserRequest({ template_send: body })
       .then(() =>
@@ -361,7 +379,6 @@ export default function ChildProfilePage(props){
             heading="Choose Template"
             positiveLabel="Send"
             isLoading={templatePending}
-            width="small"
             isDisabled={!templateUser || templateHtml === ""}
             body={
               <div>
@@ -387,8 +404,12 @@ export default function ChildProfilePage(props){
                   classNamePrefix="react-select"
                   menuPortalTarget={document.body}
                   onChange={(e) => {
-                    console.log("EEE", e);
-                    setTemplateHtml(e.value);
+                    console.log("EEE", e, child);
+                    setTemplateHtml(
+                      templateType === "SMS"
+                        ? e.value.replace(/<(?:.|\n)*?>/gm, "")
+                        : e.value
+                    );
                     setValidationState("default");
                   }}
                   styles={{
@@ -399,12 +420,31 @@ export default function ChildProfilePage(props){
                 />
 
                 <Spacing style={{ marginTop: 15, marginBottom: 15 }}>
-                  <Label>Template Text</Label>
+                  <Label>Template Preview</Label>
                 </Spacing>
                 <Text
                   style={{ paddingLeft: 10, paddingRight: 10 }}
-                  dangerouslySetInnerHTML={{ __html: templateHtml }}
-                ></Text>
+                  dangerouslySetInnerHTML={{ __html: templatePreview }}
+                />
+                {/* <Spacing m={{ t: "20px" }}>
+                  {dynamicVariables.map((variable) => {
+                    const inputName = variable.substring(
+                      2,
+                      variable.length - 2
+                    );
+                    return (
+                      <TextInput
+                        className="input"
+                        width={350}
+                        name={inputName}
+                        register={register({ required: false })}
+                        control={control}
+                        error={errors[inputName]}
+                        label={inputName}
+                      />
+                    );
+                  })}
+                </Spacing> */}
               </div>
             }
           />
