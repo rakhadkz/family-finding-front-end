@@ -43,16 +43,16 @@ import {
   NotFound,
   Preloader,
   ComponentWrapper,
-  ChildrenPage
+  ChildrenPage,
+  ChildProfilePage,
+  AddCommunicationTemplatePage,
+  AddChildPage,
+  AddOrganizationPage,
+  AddUserPage
 } from "./pages";
 import { AccessDenied } from "./pages/AccessDenied";
 import LoginPage from "./pages/Login";
 import { localStorageKey } from "./utils/requestHandler";
-const ChildProfilePage = React.lazy(() => import("./pages/ChildProfilePage"));
-const AddCommunicationTemplatePage = React.lazy(() => import('./pages/AddCommunicationTemplatePage'))
-const AddChildPage = React.lazy(() => import('./pages/AddChildPage'))
-const AddOrganizationPage = React.lazy(() => import('./pages/AddOrganizationPage'))
-const AddUserPage = React.lazy(() => import('./pages/AddUserPage'))
 
 const PrivateRoute = ({ perform, roles, component: Component, ...rest }) => {
   return (

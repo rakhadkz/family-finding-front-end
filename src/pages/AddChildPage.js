@@ -30,5 +30,3 @@ export const AddChildPage = () => {
     </>
   );
 };
-
-export default AddChildPage

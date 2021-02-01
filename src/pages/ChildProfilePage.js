@@ -39,7 +39,7 @@ import TagGroup from '@atlaskit/tag-group';
 import childReducer, { ACTIONS, initialState } from "../reducers/child.reducer";
 import { Preloader } from "./Preloader";
 
-export default function ChildProfilePage(props){
+export function ChildProfilePage(props){
   const id = props.match.params.id;
   const user = getLocalStorageUser();
   const [templates, setTemplates] = useState([]);
