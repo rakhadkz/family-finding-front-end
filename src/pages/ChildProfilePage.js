@@ -95,7 +95,7 @@ export default function ChildProfilePage(props){
   
   useEffect(() => {
     const text = templateHtml
-      .replaceAll("{{child_name}}", `${child?.first_name} ${child?.last_name}`)
+      .replaceAll("{{child_name}}", `${state.child?.first_name} ${state.child?.last_name}`)
       .replaceAll(
         "{{contact_name}}",
         `${templateUser?.contact?.first_name} ${templateUser?.contact?.last_name}`
@@ -105,7 +105,7 @@ export default function ChildProfilePage(props){
         localStorage.getItem("organizationName")
       );
     setTemplatePreview(text);
-  }, [templateHtml, templateUser, child]);
+  }, [templateHtml, templateUser, state.child]);
 
   const fetchTemplates = () => {
     fetchCommunicationTemplateRequest().then((data) => {
@@ -404,7 +404,7 @@ export default function ChildProfilePage(props){
                   classNamePrefix="react-select"
                   menuPortalTarget={document.body}
                   onChange={(e) => {
-                    console.log("EEE", e, child);
+                    console.log("EEE", e, state.child);
                     setTemplateHtml(
                       templateType === "SMS"
                         ? e.value.replace(/<(?:.|\n)*?>/gm, "")
