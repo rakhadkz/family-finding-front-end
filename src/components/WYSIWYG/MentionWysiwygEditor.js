@@ -334,7 +334,8 @@ class MentionWysiwygEditor extends React.Component {
     const plugins = [this.mentionPlugin, this.emojiPlugin];
     // console.log(convertToRaw(this.state.editorState.getCurrentContent()));
     // console.log(this.context);
-    console.log(this.myRef);
+    // console.log(this.editorRef.current?.editor);
+    // this.refs.
     return (
       <EditorContainer>
         <Editors
@@ -363,7 +364,17 @@ class MentionWysiwygEditor extends React.Component {
               onFontSizeClick={this.onFontSizeClick}
               toggleBlockType={this.toggleBlockType}
             />
-            <EmojiSelect />
+            <EmojiSelect
+              onOpen={() => {
+                console.log("ONOPEN ON EMOJI!");
+                this.props.setSuggestions && this.props.setSuggestions(10);
+              }}
+              onClose={() => {
+                console.log("ONCLOSE ON EMOJI!");
+
+                this.props.setSuggestions && this.props.setSuggestions(0);
+              }}
+            />
           </div>
           <Editor
             editorState={this.state.editorState}
@@ -375,11 +386,17 @@ class MentionWysiwygEditor extends React.Component {
           />
           <EmojiSuggestions
             onOpen={() => {
+              console.log("ONOPEN ON EMOJI!");
               this.props.setSuggestions && this.props.setSuggestions(10);
             }}
-            onClose={() =>
-              this.props.setSuggestions && this.props.setSuggestions(0)
-            }
+            onClose={() => {
+              console.log("ONCLOSE ON EMOJI!");
+
+              this.props.setSuggestions && this.props.setSuggestions(0);
+            }}
+            onSearchChange={() => {
+              console.log("sds");
+            }}
           />
           {this.state.withMention && (
             <MentionSuggestions
@@ -387,11 +404,18 @@ class MentionWysiwygEditor extends React.Component {
               suggestions={this.state.suggestions}
               entryComponent={(props) => (
                 <MentionEntry
+                  ref={this.myRef}
                   {...props}
                   setSuggestions={this.props.setSuggestions}
                 />
               )}
               className={mentionsStyles.mentionSuggestions}
+              onOpen={() => {
+                console.log("suka!OPEN");
+              }}
+              onClose={() => {
+                console.log("ONCLOSE WORKS IN MENTIONSUGGESTIONS");
+              }}
             />
           )}
         </Editors>
