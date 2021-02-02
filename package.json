@@ -41,7 +41,6 @@
     "draft-js-export-html": "^1.4.1",
     "draft-js-import-html": "^1.4.1",
     "draft-js-mention-plugin": "^3.1.5",
-    "draft-js-plugins-editor": "^3.0.0",
     "draftjs-to-html": "^0.9.1",
     "framer-motion": "^3.1.4",
     "immutable": "^4.0.0-rc.12",
