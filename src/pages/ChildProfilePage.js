@@ -16,16 +16,16 @@ import {
   createChildUserRequest,
   fetchChildrenRequest,
   fetchChildUsersRequest,
-  removeChildUserRequest
+  removeChildUserRequest,
 } from "../api/children";
 import {
   fetchCommunicationTemplateRequest,
-  sendCommunicationTemplateToUserRequest
+  sendCommunicationTemplateToUserRequest,
 } from "../api/communicationTemplates";
 import {
   ChildInformation,
   ChildTabs,
-  RelativesList
+  RelativesList,
 } from "../components/ChildProfile";
 import { Box, Label, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog } from "../components/ui/common";
@@ -34,12 +34,14 @@ import { getLocalStorageUser } from "../context/auth/authProvider";
 import { CHILDREN } from "../helpers";
 import { AddChildForm } from "../components/Children";
 import { updateChild } from "../context/children/childProvider";
-import Tag from '@atlaskit/tag';
-import TagGroup from '@atlaskit/tag-group';
+import Tag from "@atlaskit/tag";
+import TagGroup from "@atlaskit/tag-group";
 import childReducer, { ACTIONS, initialState } from "../reducers/child.reducer";
 import { Preloader } from "./Preloader";
 
-export function ChildProfilePage(props){
+export const ChildContext = React.createContext();
+
+export function ChildProfilePage(props) {
   const id = props.match.params.id;
   const user = getLocalStorageUser();
   const [templates, setTemplates] = useState([]);
@@ -54,13 +56,13 @@ export function ChildProfilePage(props){
   const [assignedUsers, setAssignedUsers] = useState(null);
   const [validationState, setValidationState] = useState("default");
   const [buttonPending, setButtonPending] = useState(false);
-  const [ isOpenEdit, setIsOpenEdit ] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
   const history = useHistory();
 
-  const [state, dispatch] = useReducer(childReducer, initialState)
+  const [state, dispatch] = useReducer(childReducer, initialState);
 
   useEffect(() => {
-    dispatch({ type: ACTIONS.FETCH_CHILD_REQUEST })
+    dispatch({ type: ACTIONS.FETCH_CHILD_REQUEST });
     fetchChildProfile();
     fetchTemplates();
     (user.role === "admin" || user.role === "manager") && fetchChildUsers();
@@ -80,22 +82,32 @@ export function ChildProfilePage(props){
   }, [templateType]);
 
   const fetchChildUsers = () => {
-    fetchChildUsersRequest({ id: id }).then(
-      (item) => 
-        item && dispatch(
-          { 
+    fetchChildUsersRequest({ id: id })
+      .then(
+        (item) =>
+          item &&
+          dispatch({
             type: ACTIONS.FETCH_CHILD_USERS_SUCCESS,
             payload: {
               child_users: item.child_users,
-              not_child_users: item.not_child_users
-            }
+              not_child_users: item.not_child_users,
+            },
           })
-    ).catch((e) => dispatch({ type: ACTIONS.FETCH_CHILD_USERS_FAILURE, payload: e.message}));
-  }
-  
+      )
+      .catch((e) =>
+        dispatch({
+          type: ACTIONS.FETCH_CHILD_USERS_FAILURE,
+          payload: e.message,
+        })
+      );
+  };
+
   useEffect(() => {
     const text = templateHtml
-      .replaceAll("{{child_name}}", `${state.child?.first_name} ${state.child?.last_name}`)
+      .replaceAll(
+        "{{child_name}}",
+        `${state.child?.first_name} ${state.child?.last_name}`
+      )
       .replaceAll(
         "{{contact_name}}",
         `${templateUser?.contact?.first_name} ${templateUser?.contact?.last_name}`
@@ -113,15 +125,16 @@ export function ChildProfilePage(props){
     });
   };
 
-  const fetchChildProfile = () => {
+  const fetchChildProfile = async () => {
     fetchChildrenRequest({ id: id, view: "extended" })
-      .then((item) => 
-        item && dispatch({ type: ACTIONS.FETCH_CHILD_SUCCESS, payload: item })
-      )
-      .catch((e) => 
-        dispatch({ type: ACTIONS.FETCH_CHILD_FAILURE, payload: e.message})  
+      .then((item) => {
+        item && dispatch({ type: ACTIONS.FETCH_CHILD_SUCCESS, payload: item });
+        console.log(item);
+      })
+      .catch((e) =>
+        dispatch({ type: ACTIONS.FETCH_CHILD_FAILURE, payload: e.message })
       );
-  }
+  };
 
   const sendTemplateToUser = async () => {
     let content = templatePreview;
@@ -168,35 +181,35 @@ export function ChildProfilePage(props){
   const onSubmitUsers = async () => {
     !assignedUsers && setValidationState("error");
     setButtonPending(true);
-    if (assignedUsers){
+    if (assignedUsers) {
       await createChildUserRequest({
-      user_child: {
-        users: assignedUsers.map((item) => ({
-          user_id: item.value,
-          child_id: state.child.id,
-          date_approved: new Date(),
-          date_denied: null,
-        })),
-      },
-    });
-    await createActionItemRequest({
-      action_item: {
-        items: assignedUsers.map((item) => ({
-          title: "Access granted",
-          description: `You have been assigned to a child`,
-          child_id: state.child.id,
-          user_id: item.value,
-          action_type: "access_granted",
-        })),
-      },
-    })
-      .then(() => fetchChildUsers())
-      .finally(() => {
-        setButtonPending(false);
-        setIsOpen(false);
+        user_child: {
+          users: assignedUsers.map((item) => ({
+            user_id: item.value,
+            child_id: state.child.id,
+            date_approved: new Date(),
+            date_denied: null,
+          })),
+        },
       });
-    }else{
-      setButtonPending(false)
+      await createActionItemRequest({
+        action_item: {
+          items: assignedUsers.map((item) => ({
+            title: "Access granted",
+            description: `You have been assigned to a child`,
+            child_id: state.child.id,
+            user_id: item.value,
+            action_type: "access_granted",
+          })),
+        },
+      })
+        .then(() => fetchChildUsers())
+        .finally(() => {
+          setButtonPending(false);
+          setIsOpen(false);
+        });
+    } else {
+      setButtonPending(false);
     }
   };
 
@@ -229,18 +242,19 @@ export function ChildProfilePage(props){
           related_user_id: user.id,
           action_type: "access_request",
         },
-      })
-        .then(() => history.goBack());
+      }).then(() => history.goBack());
   };
 
   const removeUser = (id) => {
-    removeChildUserRequest(id).then(async() => await fetchChildUsers()).catch(e => console.log(e))
-  }
-
+    removeChildUserRequest(id)
+      .then(async () => await fetchChildUsers())
+      .catch((e) => console.log(e));
+  };
+  console.log(state);
   return (
-    <>
+    <ChildContext.Provider value={{ state: state, dispatch: dispatch }}>
       {state.loading ? (
-        <Preloader/>
+        <Preloader />
       ) : state.hasAccess ? (
         <>
           <ModalDialog
@@ -251,8 +265,13 @@ export function ChildProfilePage(props){
             shouldCloseOnEscapePress={false}
             shouldCloseOnOverlayClick={false}
             body={
-              <div style={{padding: "30px"}}>
-                <AddChildForm onSubmit={updateChild} setIsOpenEdit={setIsOpenEdit} child={state.child} fetch={fetchChildProfile}/>
+              <div style={{ padding: "30px" }}>
+                <AddChildForm
+                  onSubmit={updateChild}
+                  setIsOpenEdit={setIsOpenEdit}
+                  child={state.child}
+                  fetch={fetchChildProfile}
+                />
               </div>
             }
           />
@@ -284,37 +303,37 @@ export function ChildProfilePage(props){
                       width="small"
                       isLoading={buttonPending}
                       body={
-                      <>
-                        <TagGroup>
-                          {state.child_users?.map(user => (
-                          <Tag 
-                            appearance="rounded" 
-                            text={user.name}
-                            onBeforeRemoveAction={() => {
-                              removeUser(user.id)
-                              return false;
+                        <>
+                          <TagGroup>
+                            {state.child_users?.map((user) => (
+                              <Tag
+                                appearance="rounded"
+                                text={user.name}
+                                onBeforeRemoveAction={() => {
+                                  removeUser(user.id);
+                                  return false;
+                                }}
+                              />
+                            ))}
+                          </TagGroup>
+                          <Select
+                            className="multi-select"
+                            classNamePrefix="react-select"
+                            isMulti
+                            menuPortalTarget={document.body}
+                            value={assignedUsers}
+                            validationState={validationState}
+                            onChange={(e) => {
+                              setAssignedUsers(e);
+                              setValidationState("default");
                             }}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
+                            options={state.not_child_users}
+                            placeholder="Choose a User(s)"
                           />
-                          ))}
-                        </TagGroup>
-                        <Select
-                          className="multi-select"
-                          classNamePrefix="react-select"
-                          isMulti
-                          menuPortalTarget={document.body}
-                          value={assignedUsers}
-                          validationState={validationState}
-                          onChange={(e) => {
-                            setAssignedUsers(e);
-                            setValidationState("default");
-                          }}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                          options={state.not_child_users}
-                          placeholder="Choose a User(s)"
-                        />
-                      </>
+                        </>
                       }
                     />
                   </Spacing>
@@ -331,7 +350,10 @@ export function ChildProfilePage(props){
             />
           </Spacing>
           <Spacing m={{ t: "22px" }}>
-            <ChildInformation child={state.child} setIsOpenEdit={setIsOpenEdit}/>
+            <ChildInformation
+              child={state.child}
+              setIsOpenEdit={setIsOpenEdit}
+            />
           </Spacing>
           <Spacing m={{ t: "22px" }}>
             <RelativesList relatives={state.child.contacts || []} />
@@ -392,7 +414,7 @@ export function ChildProfilePage(props){
                     styles={{
                       menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                     }}
-                    options={state.child?.contacts.map((item) => ({
+                    options={state.child?.contacts?.map((item) => ({
                       label: `${item?.contact?.first_name} ${item?.contact?.last_name}`,
                       value: item,
                     }))}
@@ -499,6 +521,6 @@ export function ChildProfilePage(props){
           )}
         </div>
       )}
-    </>
+    </ChildContext.Provider>
   );
-};
+}

@@ -5,7 +5,7 @@ import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 
 export const RelativeTooltip = ({ relative }) => {
-  console.log(relative);
+  // console.log(relative);
   return (
     <CustomTooltip>
       <Rectangle>

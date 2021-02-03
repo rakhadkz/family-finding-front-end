@@ -12,44 +12,31 @@ export const CommentsForm = ({
   onSubmit,
   childId,
   inReply,
-  shouldUpdate,
-  increaseShouldUpdate,
-  setShowInput,
+  setShowReply,
   isExpanded,
   collapseEditor,
   expandEditor,
   setBlocks,
   initialValue,
-  edit,
   setEdit,
   userId,
   commentId,
-  setCommentData,
   setSuggestions,
+  refresh,
 }) => {
   const [upd, setUpd] = useState(1);
   const [text, setText] = useState("");
   const [htmlText, setHtmlText] = useState("");
   const [rawData, setRawData] = useState("");
 
-  const onSubmitHandle = async () => {
+  const onSubmitHandle = async (e) => {
+    e.preventDefault();
     let mentionedUsers = [];
     for (let key in rawData.entityMap) {
       if (rawData.entityMap[key].type === "mention") {
         mentionedUsers.push(rawData.entityMap[key].data.mention.id);
       }
     }
-    // console.log("THIS IS TEXT", text);
-    // console.log("THIS IS RAWDATA", rawData);
-    // console.log(mentionedUsers);
-    // console.log({
-    //   comment: {
-    //     body: text,
-    //     in_reply_to: inReply,
-    //     child_id: childId,
-    //     mentions: mentionedUsers,
-    //   },
-    // });
 
     onSubmit({
       comment: {
@@ -64,14 +51,11 @@ export const CommentsForm = ({
     })
       .then((items) => {
         setUpd(upd + 1);
-        increaseShouldUpdate(shouldUpdate + 1);
+        console.log(items);
       })
       .finally(() => {
-        setShowInput && setShowInput(false);
-        if (edit) {
-          setCommentData(htmlText);
-          setEdit(false);
-        }
+        refresh();
+        setShowReply && setShowReply(false);
       });
   };
 
@@ -81,7 +65,7 @@ export const CommentsForm = ({
         <FormSection>
           {isExpanded ? (
             <>
-              <Spacing m={{ l: "-17px" }}>
+              <Spacing m={{ l: "-10px" }}>
                 <WysiwygEditor
                   upd={upd}
                   onChange={(tex, raw, html) => {
@@ -102,7 +86,7 @@ export const CommentsForm = ({
                     appearance="subtle"
                     onClick={() => {
                       collapseEditor();
-                      setShowInput && setShowInput(false);
+                      setShowReply && setShowReply(false);
                       setEdit && setEdit(false);
                     }}
                   >

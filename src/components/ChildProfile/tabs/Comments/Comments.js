@@ -14,18 +14,9 @@ import { useAuth } from "../../../../context/auth/authContext";
 import { ModalDialog } from "../../../ui/common";
 import moment from "moment";
 
-export const Comments = ({
-  data,
-  shouldUpdate,
-  increaseShouldUpdate,
-  childId,
-  fetch,
-}) => {
-  const [showInput, setShowInput] = useState(false);
-  const [commentData, setCommentData] = useState(
-    data.html_body ? data.html_body : data.body
-  );
-  const [body, setBody] = useState(null);
+export const Comments = ({ data, childId, refresh }) => {
+  const [showReply, setShowReply] = useState(false);
+  const [body, setBody] = useState(data.html_body ? data.html_body : data.body);
   const [isExpanded, setIsExpanded] = useState(false);
   const [edit, setEdit] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,12 +24,13 @@ export const Comments = ({
   const { user } = useAuth();
   const expandEditor = () => setIsExpanded(true);
   const collapseEditor = () => {
-    setShowInput(false) && setIsExpanded(false);
+    setShowReply(false);
+    setIsExpanded(false);
   };
 
   // console.log(data);
   useEffect(() => {
-    let comment = commentData;
+    let comment = body;
     let ij = [];
     for (let i = 0; i < comment.length; i++) {
       if (
@@ -83,12 +75,20 @@ export const Comments = ({
 
   const onDelete = () => {
     deleteCommentRequest({ commentId: data.id })
-      .then((res) => {
-        // console.log(res);
-      })
+      .then(() => {})
       .finally(() => {
         setModalOpen(false);
-        fetch();
+        refresh();
+      });
+  };
+
+  const onEdit = async (e) => {
+    updateCommentRequest(e)
+      .then((items) => {
+        setBody(items.html_body);
+      })
+      .finally(() => {
+        setEdit(!edit);
       });
   };
 
@@ -120,51 +120,51 @@ export const Comments = ({
             >{`commented ${time()}`}</Text>
           </Box>
           {edit ? (
-            <Spacing m={{ t: "-22px", l: "17px" }}>
+            <Spacing m={{ t: "-22px" }}>
               <CommentsForm
-                shouldUpdate={shouldUpdate}
-                increaseShouldUpdate={increaseShouldUpdate}
+                key={data.id}
                 childid={childId}
+                userId={data.user.id}
+                commentId={data.id}
+                initialValue={initialValue}
+                refresh={refresh}
+                setEdit={setEdit}
                 inReply={data.in_reply_to?.id}
-                onSubmit={updateCommentRequest}
-                setShowInput={setShowInput}
+                onSubmit={onEdit}
+                setShowReply={setShowReply}
                 isExpanded={isExpanded}
                 collapseEditor={collapseEditor}
                 expandEditor={expandEditor}
-                initialValue={initialValue}
-                setEdit={setEdit}
-                userId={data.user.id}
-                commentId={data.id}
-                key={data.id}
-                setCommentData={setCommentData}
-                edit={edit}
               />
             </Spacing>
           ) : (
             <>
               <Text dangerouslySetInnerHTML={{ __html: body }}></Text>
-              {showInput ? (
+              {showReply ? (
                 <>
                   <Spacing m={{ t: "17px" }}>
                     <Box d="flex">
-                      <Avatar
-                        name={`${data.user.first_name} ${data.user.last_name}`}
-                      />
-                      <Spacing m={{ t: "-22px", l: "17px" }}>
-                        <CommentsForm
-                          shouldUpdate={shouldUpdate}
-                          increaseShouldUpdate={increaseShouldUpdate}
-                          childId={childId}
-                          inReply={data.id}
-                          onSubmit={postCommentRequest}
-                          setShowInput={setShowInput}
-                          isExpanded={isExpanded}
-                          collapseEditor={collapseEditor}
-                          expandEditor={expandEditor}
-                          initialValue={initialValue}
-                          key={data.id}
-                          setEdit={setEdit}
-                        />
+                      <Avatar name={`${user.first_name} ${user.last_name}`} />
+                      <Spacing m={{ l: "10px" }}>
+                        <Title
+                          size="14px"
+                          style={{ marginRight: "5px" }}
+                        >{`${user.first_name} ${user.last_name}`}</Title>
+                        <Spacing m={{ t: "-22px" }}>
+                          <CommentsForm
+                            key={data.id}
+                            refresh={refresh}
+                            childId={childId}
+                            inReply={data.id}
+                            setEdit={setEdit}
+                            onSubmit={postCommentRequest}
+                            setShowReply={setShowReply}
+                            isExpanded={isExpanded}
+                            collapseEditor={collapseEditor}
+                            expandEditor={expandEditor}
+                            initialValue={initialValue}
+                          />
+                        </Spacing>
                       </Spacing>
                     </Box>
                   </Spacing>
@@ -173,9 +173,7 @@ export const Comments = ({
                 <ButtonGroup>
                   <Button
                     appearance="link"
-                    onClick={() => {
-                      setShowInput(true);
-                    }}
+                    onClick={() => setShowReply(true)}
                     style={{ padding: "0px" }}
                   >
                     <ButtonContentWrapper>Reply</ButtonContentWrapper>
@@ -188,15 +186,13 @@ export const Comments = ({
                       setIsExpanded(true);
                     }}
                     style={{ padding: "0px" }}
-                    isDisabled={data.user.id !== user.id}
+                    isDisabled={data.user.id !== user?.id}
                   >
                     <ButtonContentWrapper>Edit</ButtonContentWrapper>
                   </Button>{" "}
                   <Button
                     appearance="link"
-                    onClick={() => {
-                      setModalOpen(true);
-                    }}
+                    onClick={() => setModalOpen(true)}
                     style={{ padding: "0px" }}
                     isDisabled={data.user.id !== user.id}
                   >
@@ -210,11 +206,9 @@ export const Comments = ({
           {data.replies.map((reply) => (
             <Comments
               childId={childId}
-              fetch={fetch}
+              refresh={refresh}
               key={data.id}
               data={reply}
-              shouldUpdate={shouldUpdate}
-              increaseShouldUpdate={increaseShouldUpdate}
             />
           ))}
 

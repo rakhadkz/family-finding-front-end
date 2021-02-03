@@ -1,18 +1,19 @@
 import Button from "@atlaskit/button";
 import DynamicTable from "@atlaskit/dynamic-table";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   createContactRequest,
-  createTableChildContactRequest
+  createTableChildContactRequest,
 } from "../../../../api/childContact";
-import { connectionsTableData } from "../../../../content/connections.data";
+import { ConnectionsTableData } from "../../../../content/connections.data";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
 import { Box, Spacing } from "../../../ui/atoms";
 import { ModalDialog, TableWrapper } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
+import { ChildContext } from "../../../../pages/ChildProfilePage";
 
 const columns = [
   {
@@ -49,16 +50,16 @@ const columns = [
 
 export const Connections = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { contacts, setContacts } = props;
+  const { state, dispatch } = useContext(ChildContext);
+  const { id, contacts } = state.child;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  let { id } = useParams();
 
   const onAddContact = async (data) => {
     await createContactRequest(data)
       .then((data) => {
         console.log("RESULT", data);
         createTableChildContactRequest({
-          child_id: props.childId,
+          child_id: id,
           contact_id: data.id,
         })
           .then(async () => {
@@ -73,7 +74,7 @@ export const Connections = (props) => {
               ) {
                 await createChildContact({
                   child_tree_contact: {
-                    child_id: props.childId,
+                    child_id: id,
                     parent_id: 0,
                     contact_id: data.id,
                     relationship: data.relationship,
@@ -92,7 +93,7 @@ export const Connections = (props) => {
                   } else {
                     parentNode = await createChildContact({
                       child_tree_contact: {
-                        child_id: props.childId,
+                        child_id: id,
                         parent_id: 0,
                         relationship: parent,
                       },
@@ -102,7 +103,7 @@ export const Connections = (props) => {
 
                 await createChildContact({
                   child_tree_contact: {
-                    child_id: props.childId,
+                    child_id: id,
                     parent_id: parentNode.id,
                     contact_id: data.id,
                     relationship: data.relationship,
@@ -164,7 +165,7 @@ export const Connections = (props) => {
             head={{ cells: columns }}
             loadingSpinnerSize="large"
             isLoading={isLoading}
-            rows={connectionsTableData(contacts, setIsLoading, setContacts)}
+            rows={ConnectionsTableData(contacts, setIsLoading)}
             isFixedSize
           />
         </TableWrapper>

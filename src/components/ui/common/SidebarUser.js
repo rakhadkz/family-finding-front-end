@@ -7,12 +7,13 @@ export const SidebarUser = () => {
   const user = getLocalStorageUser();
   return (
     user && (
-    <SidebarUserContainer>
-      <Avatar name={`${user.first_name} ${user.last_name}`}/>
-      <UserNameText>
-        {user?.first_name} {user?.last_name}
-      </UserNameText>
-    </SidebarUserContainer>
+      <SidebarUserContainer>
+        <Avatar name={`${user.first_name} ${user.last_name}`} />
+        <UserNameText>
+          {user?.first_name[0].toUpperCase() + user?.first_name.substring(1)}{" "}
+          {user?.last_name[0].toUpperCase() + user?.last_name.substring(1)}
+        </UserNameText>
+      </SidebarUserContainer>
     )
   );
 };
