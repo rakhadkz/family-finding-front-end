@@ -36,8 +36,16 @@ import { AddChildForm } from "../components/Children";
 import { updateChild } from "../context/children/childProvider";
 import Tag from "@atlaskit/tag";
 import TagGroup from "@atlaskit/tag-group";
-import childReducer, { ACTIONS, initialState } from "../reducers/child.reducer";
 import { Preloader } from "./Preloader";
+import {
+  childProfileReducer,
+  fetchChildFailure,
+  fetchChildRequest,
+  fetchChildSuccess,
+  fetchChildUsersFailure,
+  fetchChildUsersSuccess,
+  initialState,
+} from "../reducers/childProfile";
 
 export const ChildContext = React.createContext();
 
@@ -59,10 +67,10 @@ export function ChildProfilePage(props) {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const history = useHistory();
 
-  const [state, dispatch] = useReducer(childReducer, initialState);
+  const [state, dispatch] = useReducer(childProfileReducer, initialState);
 
   useEffect(() => {
-    dispatch({ type: ACTIONS.FETCH_CHILD_REQUEST });
+    dispatch(fetchChildRequest());
     fetchChildProfile();
     fetchTemplates();
     (user.role === "admin" || user.role === "manager") && fetchChildUsers();
@@ -86,20 +94,14 @@ export function ChildProfilePage(props) {
       .then(
         (item) =>
           item &&
-          dispatch({
-            type: ACTIONS.FETCH_CHILD_USERS_SUCCESS,
-            payload: {
+          dispatch(
+            fetchChildUsersSuccess({
               child_users: item.child_users,
               not_child_users: item.not_child_users,
-            },
-          })
+            })
+          )
       )
-      .catch((e) =>
-        dispatch({
-          type: ACTIONS.FETCH_CHILD_USERS_FAILURE,
-          payload: e.message,
-        })
-      );
+      .catch((e) => dispatch(fetchChildUsersFailure(e.message)));
   };
 
   useEffect(() => {
@@ -127,13 +129,8 @@ export function ChildProfilePage(props) {
 
   const fetchChildProfile = async () => {
     fetchChildrenRequest({ id: id, view: "extended" })
-      .then((item) => {
-        item && dispatch({ type: ACTIONS.FETCH_CHILD_SUCCESS, payload: item });
-        console.log(item);
-      })
-      .catch((e) =>
-        dispatch({ type: ACTIONS.FETCH_CHILD_FAILURE, payload: e.message })
-      );
+      .then((item) => item && dispatch(fetchChildSuccess(item)))
+      .catch((e) => dispatch(fetchChildFailure(e.message)));
   };
 
   const sendTemplateToUser = async () => {

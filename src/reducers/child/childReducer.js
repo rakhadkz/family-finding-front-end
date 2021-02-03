@@ -1,8 +1,4 @@
-export const ACTIONS = {
-  FETCH_CHILDREN_REQUEST: 'fetch_children_request',
-  FETCH_CHILDREN_SUCCESS: 'fetch_children_success',
-  FETCH_CHILDREN_FAILURE: 'fetch_children_failure',
-}
+import { FETCH_CHILDREN_FAILURE, FETCH_CHILDREN_REQUEST, FETCH_CHILDREN_SUCCESS } from "./childActions"
 
 export const initialState = {
   loading: true,
@@ -10,21 +6,21 @@ export const initialState = {
   children: []
 }
 
-export default function childrenReducer(state, action){
+export const childReducer = (state, action) => {
   switch(action.type){
-    case ACTIONS.FETCH_CHILDREN_REQUEST:
+    case FETCH_CHILDREN_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
-    case ACTIONS.FETCH_CHILDREN_SUCCESS:
+    case FETCH_CHILDREN_SUCCESS:
       return {
         children: action.payload,
         loading: false,
         error: ''
       }
-    case ACTIONS.FETCH_CHILDREN_FAILURE:
+    case FETCH_CHILDREN_FAILURE:
       return {
         ...state,
         loading: false,

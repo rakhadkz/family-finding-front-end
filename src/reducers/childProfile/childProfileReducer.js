@@ -1,10 +1,10 @@
-export const ACTIONS = {
-  FETCH_CHILD_REQUEST: "fetch_child_request",
-  FETCH_CHILD_SUCCESS: "fetch_child_success",
-  FETCH_CHILD_FAILURE: "fetch_child_failure",
-  FETCH_CHILD_USERS_SUCCESS: "fetch_child_users_success",
-  FETCH_CHILD_USERS_FAILURE: "fetch_child_users_failure",
-};
+import {
+  FETCH_CHILD_FAILURE,
+  FETCH_CHILD_REQUEST,
+  FETCH_CHILD_SUCCESS,
+  FETCH_CHILD_USERS_FAILURE,
+  FETCH_CHILD_USERS_SUCCESS,
+} from "./childProfileActions";
 
 export const initialState = {
   loading: true,
@@ -15,17 +15,16 @@ export const initialState = {
   hasAccess: true,
 };
 
-export default function childReducer(state, action) {
+export const childProfileReducer = (state, action) => {
   switch (action.type) {
-    case ACTIONS.FETCH_CHILD_REQUEST:
+    case FETCH_CHILD_REQUEST:
       return {
         ...state,
         loading: true,
         error: "",
         hasAccess: false,
       };
-    case ACTIONS.FETCH_CHILD_SUCCESS:
-      console.log(action.payload.id);
+    case FETCH_CHILD_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -33,7 +32,7 @@ export default function childReducer(state, action) {
         child: action.payload,
         hasAccess: action.payload.id !== null,
       };
-    case ACTIONS.FETCH_CHILD_FAILURE:
+    case FETCH_CHILD_FAILURE:
       return {
         ...state,
         loading: false,
@@ -41,24 +40,15 @@ export default function childReducer(state, action) {
         child: {},
         hasAccess: false,
       };
-    case ACTIONS.FETCH_CHILD_USERS_SUCCESS:
+    case FETCH_CHILD_USERS_SUCCESS:
       return {
         ...state,
         loading: false,
         error: "",
-        child_users: action.payload.child_users.map(({ id, user }) => ({
-          email: user.email,
-          key: user.id,
-          name: `${user.first_name} ${user.last_name}`,
-          href: "#",
-          id: id,
-        })),
-        not_child_users: action.payload.not_child_users.map((user) => ({
-          label: `${user.first_name} ${user.last_name}`,
-          value: user.id,
-        })),
+        child_users: action.payload.child_users,
+        not_child_users: action.payload.not_child_users,
       };
-    case ACTIONS.FETCH_CHILD_USERS_FAILURE:
+    case FETCH_CHILD_USERS_FAILURE:
       return {
         ...state,
         loading: false,
@@ -78,4 +68,4 @@ export default function childReducer(state, action) {
     default:
       return state;
   }
-}
+};

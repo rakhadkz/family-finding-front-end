@@ -1,8 +1,4 @@
-export const ACTIONS = {
-  FETCH_ACTION_ITEMS_REQUEST: 'fetch_action_items_request',
-  FETCH_ACTION_ITEMS_SUCCESS: 'fetch_action_items_success',
-  FETCH_ACTION_ITEMS_FAILURE: 'fetch_action_items_failure',
-}
+import { FETCH_ACTION_ITEMS_REQUEST, FETCH_ACTION_ITEMS_SUCCESS, FETCH_ACTION_ITEMS_FAILURE } from "./actionItemActions"
 
 export const initialState = {
   loading: true,
@@ -10,21 +6,21 @@ export const initialState = {
   actionItems: []
 }
 
-export default function actionItemsReducer(state, action){
+export const actionItemReducer = (state, action) => {
   switch(action.type){
-    case ACTIONS.FETCH_ACTION_ITEMS_REQUEST:
+    case FETCH_ACTION_ITEMS_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
-    case ACTIONS.FETCH_ACTION_ITEMS_SUCCESS:
+    case FETCH_ACTION_ITEMS_SUCCESS:
       return {
         actionItems: action.payload,
         loading: false,
         error: ''
       }
-    case ACTIONS.FETCH_ACTION_ITEMS_FAILURE:
+    case FETCH_ACTION_ITEMS_FAILURE:
       return {
         ...state,
         loading: false,
