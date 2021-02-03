@@ -13,8 +13,8 @@ import { userTableData } from "../content/user.data";
 import { getLocalStorageUser, reset } from "../context/auth/authProvider";
 import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
-import userReducer, { initialState, ACTIONS } from "../reducers/user.reducer";
-import { ACTIONS as PERFORM_ACTION } from "../accessControl/actions";
+import { ACTIONS } from "../accessControl/actions";
+import { fetchUsersFailure, fetchUsersRequest, fetchUsersSuccess, userReducer, initialState } from "../reducers/user";
 
 const AllUsers = ({ history, search, setSearch }) => (
   <>
@@ -27,7 +27,7 @@ const AllUsers = ({ history, search, setSearch }) => (
           />
         </Box>
         <Can
-          perform={`${USERS}:${PERFORM_ACTION.ADD}`}
+          perform={`${USERS}:${ACTIONS.ADD}`}
           yes={() => (
             <Button
               appearance="primary"
@@ -83,6 +83,7 @@ export const UsersPage = (props) => {
   const [ totalPage, setTotalPage ] = useState(null);
   const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
   const [ search, setSearch ] = useState(query.get("search") || "");
+  //const [ state, dispatch ] = useReducer(userReducer, initialState)
   const [ state, dispatch ] = useReducer(userReducer, initialState)
 
   const onDelete = (id) => {
@@ -93,7 +94,7 @@ export const UsersPage = (props) => {
   };
 
   useEffect(() => {
-    dispatch({ type: ACTIONS.FETCH_USERS_REQUEST })
+    dispatch(fetchUsersRequest())
     const timer = setTimeout(fetchUsersFunc, search.length === 0 ? 0 : 1000);
     return () => clearTimeout(timer);
   }, [id, currentPage, search]);
@@ -114,9 +115,9 @@ export const UsersPage = (props) => {
           setTotalPage(response.meta.num_pages);
           payload = userTableData(response.data, user, setIsOpen, setCurrentUser, history)
         }
-        dispatch({ type: ACTIONS.FETCH_USERS_SUCCESS, payload: payload})
+        dispatch(fetchUsersSuccess(payload))
       }
-    }).catch(e => dispatch({ type: ACTIONS.FETCH_USERS_FAILURE, payload: e.message }))
+    }).catch(e => dispatch(fetchUsersFailure(e.message)))
   }
 
   return (

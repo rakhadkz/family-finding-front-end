@@ -1,8 +1,4 @@
-export const ACTIONS = {
-  FETCH_USERS_REQUEST: 'fetch_users_request',
-  FETCH_USERS_SUCCESS: 'fetch_users_success',
-  FETCH_USERS_FAILURE: 'fetch_users_failure',
-}
+import { FETCH_USERS_FAILURE, FETCH_USERS_REQUEST, FETCH_USERS_SUCCESS } from "./userActions"
 
 export const initialState = {
   loading: true,
@@ -10,23 +6,23 @@ export const initialState = {
   users: [],
 }
 
-export default function userReducer(state, action) {
+export const userReducer = (state = initialState, action) => {
   switch(action.type){
-    case ACTIONS.FETCH_USERS_REQUEST:
+    case FETCH_USERS_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
-    case ACTIONS.FETCH_USERS_SUCCESS:
+    case FETCH_USERS_SUCCESS:
       return {
         loading: false,
         error: '',
         users: action.payload
       }
-    case ACTIONS.FETCH_USERS_FAILURE:
+    case FETCH_USERS_FAILURE:
       return {
-        ...state,
+        users: [],
         loading: false,
         error: action.payload
       }

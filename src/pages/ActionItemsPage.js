@@ -5,7 +5,8 @@ import { Table } from "../components/ui/common/Table";
 import { actionItemTableData } from "../content/actionItem.data";
 import { actionItemsTableColumns } from "../content/columns.data";
 import { fetchActionItems } from "../context/actionItems/actionItemProvider";
-import actionItemsReducer, { ACTIONS, initialState } from "../reducers/actionItems.reducer";
+import { actionItemReducer, fetchActionItemsFailure, fetchActionItemsSuccess, initialState } from "../reducers/actionItem";
+
 
 export const ActionItemsPage = (props) => {
   const query = new URLSearchParams(props.location.search);
@@ -14,7 +15,7 @@ export const ActionItemsPage = (props) => {
   const [ tablePending, setTablePending ] = useState(true);
   const [ totalPage, setTotalPage ] = useState(null);
   const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
-  const [ state, dispatch ] = useReducer(actionItemsReducer, initialState)
+  const [ state, dispatch ] = useReducer(actionItemReducer, initialState)
 
   useEffect(() => {
     history.push(`?page=${currentPage}`);
@@ -28,13 +29,10 @@ export const ActionItemsPage = (props) => {
     }).then(response => {
       if(response) {
         setTotalPage(response.meta?.num_pages);
-        dispatch({ 
-          type: ACTIONS.FETCH_ACTION_ITEMS_SUCCESS, 
-          payload: actionItemTableData(response.data, fetchActionItemsFunc, setTablePending, history)
-        })
+        dispatch(fetchActionItemsSuccess(actionItemTableData(response.data, fetchActionItemsFunc, setTablePending, history)))
         setTablePending(false)
       }
-    }).catch(e => dispatch({ type: ACTIONS.FETCH_ACTION_ITEMS_FAILURE, payload: e.message }));
+    }).catch(e => dispatch(fetchActionItemsFailure(e.message)));
   }
   
   return (

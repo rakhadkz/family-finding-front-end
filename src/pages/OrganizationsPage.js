@@ -9,7 +9,7 @@ import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { organizationsTableColumns } from "../content/columns.data";
 import { organizationTableData } from "../content/organization.data";
 import { fetchOrganizations } from "../context/organization/organizationProvider";
-import organizationReducer, { ACTIONS, initialState } from "../reducers/organization.recuder";
+import { organizationReducer, initialState, fetchOrganizationsRequest, fetchOrganizationsSuccess, fetchOrganizationsFailure } from "../reducers/organization";
 
 export const updateQueryParams = (currentPage, search) => {
   return `?page=${currentPage}${search ? `&search=${search}` : ``}`;
@@ -57,7 +57,7 @@ export const OrganizationsPage = (props) => {
 
   useEffect(() => {
     !id && history.push(updateQueryParams(currentPage, search));
-    dispatch({ type: ACTIONS.FETCH_ORGANIZATION_REQUEST })
+    dispatch(fetchOrganizationsRequest())
     const timer = setTimeout(fetchOrganizationsFunc, search.length === 0 ? 0 : 1000);
     return () => clearTimeout(timer);
   }, [id, currentPage, search]);
@@ -75,12 +75,9 @@ export const OrganizationsPage = (props) => {
     }).then(response => {
       if (response) {
         !id && setTotalPage(response.meta.num_pages);
-        dispatch({ 
-          type: ACTIONS.FETCH_ORGANIZATION_SUCCESS,
-          payload: organizationTableData(response.data, history)
-        })
+        dispatch(fetchOrganizationsSuccess(organizationTableData(response.data, history)))
       }
-    }).catch(e => dispatch({ type: ACTIONS.FETCH_ORGANIZATION_FAILURE, payload: e.message}))
+    }).catch(e => dispatch(fetchOrganizationsFailure(e.message)))
   }
 
   return (

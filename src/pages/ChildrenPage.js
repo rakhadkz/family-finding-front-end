@@ -13,9 +13,9 @@ import { childrenTableColumns } from "../content/columns.data";
 import { getLocalStorageUser } from "../context/auth/authProvider";
 import { fetchChildren } from "../context/children/childProvider";
 import { CHILDREN } from "../helpers";
-import childrenReducer, { ACTIONS, initialState } from "../reducers/children.reducer";
 import { updateQueryParams } from "./OrganizationsPage";
 import { ACTIONS as PERFORMS } from '../accessControl/actions'
+import { childReducer, fetchChildrenFailure, fetchChildrenSuccess, initialState, fetchChildrenRequest } from "../reducers/child";
 
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
@@ -26,11 +26,11 @@ export const ChildrenPage = (props) => {
   const [ totalPage, setTotalPage ] = useState(null);
   const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
   const [ search, setSearch ] = useState(query.get("search") || "");
-  const [ state, dispatch ] = useReducer(childrenReducer, initialState);
+  const [ state, dispatch ] = useReducer(childReducer, initialState);
 
   useEffect(() => {
     history.push(updateQueryParams(currentPage, search));
-    dispatch({ type: ACTIONS.FETCH_CHILDREN_REQUEST })
+    dispatch(fetchChildrenRequest())
     const timer = setTimeout(fetchChildrenFunc, search?.length === 0 ? 0 : 1000);
     return () => clearTimeout(timer);
   }, [currentPage, search]);
@@ -41,7 +41,7 @@ export const ChildrenPage = (props) => {
 
   const assignUser = async(child, isRepeatedly = false) => {
     if (user?.role === "user"){
-      dispatch({ type: ACTIONS.FETCH_CHILDREN_REQUEST })
+      dispatch(fetchChildrenRequest())
       try{
         isRepeatedly ? await updateChildUserRequest({
           "user_child": {
@@ -70,7 +70,7 @@ export const ChildrenPage = (props) => {
         });
         fetchChildrenFunc();
       }catch(e){
-        dispatch({ type: ACTIONS.FETCH_CHILDREN_FAILURE, payload: e.message })
+        dispatch(fetchChildrenFailure(e.message))
       }
     }
   }
@@ -84,12 +84,9 @@ export const ChildrenPage = (props) => {
     }).then(response => {
       if (response){
         setTotalPage(response.meta.num_pages);
-        dispatch({ 
-          type: ACTIONS.FETCH_CHILDREN_SUCCESS, 
-          payload: childTableData(response.data, history, assignUser, user.role === "user")
-        })
+        dispatch(fetchChildrenSuccess(childTableData(response.data, history, assignUser, user.role === "user")))
       }
-    }).catch(e => dispatch({ type: ACTIONS.FETCH_CHILDREN_FAILURE, payload: e.message }));
+    }).catch(e => dispatch(fetchChildrenFailure(e.message)));
   }
 
   return (
