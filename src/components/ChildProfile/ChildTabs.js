@@ -1,5 +1,5 @@
 import Tabs from "@atlaskit/tabs";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { fetchChildrenRequest } from "../../api/children";
 import { constructTree } from "../../content/childContact.tree.data";
@@ -7,48 +7,26 @@ import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { CommentsTab } from "./tabs/Comments/CommentsTab";
 import { Connections } from "./tabs/Connections/Connections";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
+import { ChildContext } from "../../pages/ChildProfilePage";
 
-export const ChildTabs = (
-  {
-    id,
-    fetchChildProfile,
-    first_name: firstName,
-    last_name: lastName,
-    family_tree = [],
-  },
-  setChild
-) => {
-  const [contacts, setContacts] = useState([]);
-  const [trigger, setTrigger] = useState(false);
-
-  const fetchChildren = async () => {
-    await fetchChildProfile();
-    await fetchChildrenRequest({ id: id, view: "contacts" }).then((data) =>
-      setContacts(data.contacts)
-    );
-  };
-
-  useEffect(() => {
-    fetchChildren();
-  }, [trigger]);
-
+export const ChildTabs = ({
+  id,
+  fetchChildProfile,
+  first_name: firstName,
+  last_name: lastName,
+  family_tree = [],
+}) => {
   const tabs = [
     {
       label: "Connections",
       content: (
         <Connections
-          contacts={contacts}
-          initialContacts={contacts}
           treeContacts={constructTree({
             contacts: family_tree,
             firstName,
             lastName,
           })}
-          childId={id}
-          firstName={firstName}
-          lastName={lastName}
-          setContacts={setContacts}
-          refreshContacts={setTrigger}
+          refreshContacts={fetchChildProfile}
         />
       ),
     },
@@ -56,10 +34,6 @@ export const ChildTabs = (
       label: "Family Tree",
       content: (
         <FamilyTreePage
-          childId={id}
-          firstName={firstName}
-          lastName={lastName}
-          initialContacts={contacts}
           contacts={constructTree({
             contacts: family_tree,
             firstName,
@@ -72,7 +46,7 @@ export const ChildTabs = (
     { label: "Family Search" },
     {
       label: "Comments",
-      content: <CommentsTab childId={id} setChild={setChild} />,
+      content: <CommentsTab refresh={fetchChildProfile} />,
     },
     {
       label: "Attachments",

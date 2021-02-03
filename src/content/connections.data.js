@@ -1,12 +1,14 @@
 import { Box } from "../components/ui/atoms";
 import { FitScore } from "../components/ui/molecules";
-import { Switch } from "@chakra-ui/react";
 import { Avatar } from "../components/ui/molecules/Avatar";
 import { updateChildContactRequestConnections } from "../api/childContact";
-import { useState } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { useState, useContext } from "react";
+import Switch from "react-switch";
+import { ChildContext } from "../pages/ChildProfilePage";
+import { ACTIONS, initialState } from "../reducers/child.reducer";
 
-const connectionsTableData = (data, setIsLoading, setContacts) => {
+const ConnectionsTableData = (data, setIsLoading) => {
+  const { dispatch } = useContext(ChildContext);
   return data.map(function (item, index) {
     const onSubmitHandle = async () => {
       setIsLoading(true);
@@ -18,11 +20,12 @@ const connectionsTableData = (data, setIsLoading, setContacts) => {
         },
         item.id
       )
-        .then((items) => {
-          console.log("something");
-          data[index].potential_match = !item.potential_match;
-          setContacts(data);
-        })
+        .then(() =>
+          dispatch({
+            type: ACTIONS.POST_POTENTIAL_MATCH,
+            payload: index,
+          })
+        )
         .finally(() => {
           setIsLoading(false);
         });
@@ -35,7 +38,10 @@ const connectionsTableData = (data, setIsLoading, setContacts) => {
           key: "full_name",
           content: (
             <Box d="flex" align="center">
-              <Avatar name={`${item?.contact?.first_name} ${item?.contact?.last_name}`} size="medium" />
+              <Avatar
+                name={`${item?.contact?.first_name} ${item?.contact?.last_name}`}
+                size="medium"
+              />
               <span style={{ marginLeft: "8px" }}>
                 {`${item?.contact?.first_name || ""} ${
                   item?.contact?.last_name || ""
@@ -71,21 +77,28 @@ const connectionsTableData = (data, setIsLoading, setContacts) => {
         {
           key: "potential_match",
           content: (
-            <ChakraProvider>
-              <Box
-                d="flex"
-                style={{
-                  marginTop: "10px",
-                  marginLeft: "30px",
-                }}
-              >
-                <Switch
-                  id="potential_match"
-                  isChecked={item.potential_match}
-                  onChange={onSubmitHandle}
-                />
-              </Box>
-            </ChakraProvider>
+            <Box
+              d="flex"
+              style={{
+                marginTop: "10px",
+                marginLeft: "30px",
+              }}
+            >
+              <Switch
+                id="potential_match"
+                checked={item.potential_match}
+                onChange={onSubmitHandle}
+                onColor="#3182ce"
+                borderRadius={30}
+                handleDiameter={20}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={14}
+                width={35}
+              />
+            </Box>
           ),
         },
       ],
@@ -93,4 +106,4 @@ const connectionsTableData = (data, setIsLoading, setContacts) => {
   });
 };
 
-export { connectionsTableData };
+export { ConnectionsTableData };

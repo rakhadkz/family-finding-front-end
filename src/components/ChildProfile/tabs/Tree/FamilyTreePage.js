@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import {
   createContactRequest,
-  createTableChildContactRequest
+  createTableChildContactRequest,
 } from "../../../../api/childContact";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
@@ -12,10 +12,12 @@ import { Spacing } from "../../../ui/atoms";
 import { ModalDialog } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
 import OrgChart from "./mychart";
+import { ChildContext } from "../../../../pages/ChildProfilePage";
 
 export const FamilyTreePage = (props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  let { id } = useParams();
+  const { state, dispatch } = useContext(ChildContext);
+  const { id, contacts } = state.child;
 
   const onAddContact = async (data) => {
     await createContactRequest(data)
@@ -37,7 +39,7 @@ export const FamilyTreePage = (props) => {
               ) {
                 await createChildContact({
                   child_tree_contact: {
-                    child_id: props.childId,
+                    child_id: id,
                     parent_id: 0,
                     contact_id: data.id,
                     relationship: data.relationship,
@@ -56,7 +58,7 @@ export const FamilyTreePage = (props) => {
                   } else {
                     parentNode = await createChildContact({
                       child_tree_contact: {
-                        child_id: props.childId,
+                        child_id: id,
                         parent_id: 0,
                         relationship: parent,
                       },
@@ -66,7 +68,7 @@ export const FamilyTreePage = (props) => {
 
                 await createChildContact({
                   child_tree_contact: {
-                    child_id: props.childId,
+                    child_id: id,
                     parent_id: parentNode.id,
                     contact_id: data.id,
                     relationship: data.relationship,
@@ -103,7 +105,7 @@ export const FamilyTreePage = (props) => {
       <Spacing m={{ b: "20px" }}>
         <OrgChart
           childId={id}
-          initialContacts={props.initialContacts}
+          initialContacts={contacts}
           nodes={props.contacts}
           refreshContacts={props.refreshContacts}
         />
@@ -125,8 +127,8 @@ export const FamilyTreePage = (props) => {
           <AddContactForm
             onSubmit={async (data) => {
               console.log("DATA", data);
-              await onAddContact(data).finally(async () =>
-                await props.refreshContacts()
+              await onAddContact(data).finally(
+                async () => await props.refreshContacts()
               );
               console.log("FETCHING");
             }}

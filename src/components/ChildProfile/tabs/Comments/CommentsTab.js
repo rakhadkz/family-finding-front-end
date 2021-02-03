@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { postCommentRequest } from "../../../../api/comments";
 import { fetchComments } from "../../../../context/children/childProvider";
 import { Box, Spacing } from "../../../ui/atoms";
@@ -8,6 +8,7 @@ import { useAuth } from "../../../../context/auth/authContext";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import styled from "styled-components";
 import Spinner from "@atlaskit/spinner";
+import { ChildContext } from "../../../../pages/ChildProfilePage";
 
 const StyledSpinner = () => (
   <Box
@@ -23,50 +24,24 @@ const StyledSpinner = () => (
   </Box>
 );
 
-export const CommentsTab = ({ childId, childComments, setChild }) => {
-  const { user } = useAuth();
-  const [comments, setComments] = useState(childComments);
-  const [allComments, setAllComments] = useState(childComments);
-  const [shouldUpdate, increaseShouldUpdate] = useState(0);
+export const CommentsTab = ({ refresh }) => {
+  const { state, dispatch } = useContext(ChildContext);
+  const { comments, id } = state.child;
   const [show, handleShow] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [blocks, setBlocks] = useState(1);
   const [suggestions, setSuggestions] = useState(0);
-  const myRef = useRef(null);
+  const { user } = useAuth();
+  const scrollRef = useRef(null);
 
   const executeScroll = () =>
-    myRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-  // console.log(comments, show, comments?.length);
+    scrollRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const expandEditor = () => setIsExpanded(true);
   const collapseEditor = () => {
     setIsExpanded(false);
     handleShow(false);
     setBlocks(1);
-  };
-
-  const fetch = () => {
-    fetchComments(childId).then((items) => {
-      // console.log(items.comments);
-      if (items) {
-        setComments(
-          items.comments
-            .filter((comment) => !comment.in_reply_to)
-            .sort(
-              (a, b) =>
-                new Date(a.created_at).getTime() -
-                new Date(b.created_at).getTime()
-            )
-        );
-        setAllComments(
-          items.comments.sort(
-            (a, b) =>
-              new Date(a.created_at).getTime() -
-              new Date(b.created_at).getTime()
-          )
-        );
-      }
-    });
   };
 
   useEffect(() => {
@@ -83,24 +58,31 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
   }, []);
 
   useEffect(() => {
-    fetch();
-  }, [childId, shouldUpdate]);
-
-  useEffect(() => {
     if (show) {
       executeScroll();
     }
   }, [isExpanded, blocks]);
 
   useEffect(() => {
+    comments.sort(
+      (a, b) =>
+        (a.updated_at > a.created_at
+          ? new Date(a.updated_at).getTime()
+          : new Date(a.created_at).getTime()) -
+        (b.updated_at > b.created_at
+          ? new Date(b.updated_at).getTime()
+          : new Date(b.created_at).getTime())
+    );
     if (
       show &&
-      allComments &&
-      allComments[allComments.length - 1].in_reply_to === null
+      comments &&
+      comments[comments.length - 1].in_reply_to === null &&
+      comments[comments.length - 1].updated_at ===
+        comments[comments.length - 1].created_at
     ) {
       executeScroll();
     }
-  }, [comments, allComments]);
+  }, [comments]);
 
   return (
     <Spacing
@@ -112,22 +94,26 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
     >
       {comments ? (
         <Spacing m={{ b: "22px" }}>
-          {comments &&
-            comments.map((comment, index) => (
+          {comments
+            .filter((comment) => !comment.in_reply_to)
+            .sort(
+              (a, b) =>
+                new Date(a.created_at).getTime() -
+                new Date(b.created_at).getTime()
+            )
+            .map((comment, index) => (
               <Comments
-                childId={childId}
+                childId={id}
                 data={comment}
                 key={comment.id}
-                fetch={fetch}
-                shouldUpdate={shouldUpdate}
-                increaseShouldUpdate={increaseShouldUpdate}
+                refresh={refresh}
               />
             ))}
         </Spacing>
       ) : (
         <StyledSpinner />
       )}
-      <span ref={myRef} />
+      <ScrollDown ref={scrollRef} />
       <FormFooter
         d="flex"
         show={show}
@@ -135,25 +121,28 @@ export const CommentsTab = ({ childId, childComments, setChild }) => {
         blocks={blocks}
         suggestions={suggestions}
       >
-        <Avatar name={`${user?.first_name} ${user?.last_name}`} />
-        <Spacing m={{ l: "17px", t: "-22px" }}>
-          <CommentsForm
-            childId={childId}
-            inReply={0}
-            setBlocks={setBlocks}
-            isExpanded={isExpanded}
-            collapseEditor={collapseEditor}
-            expandEditor={expandEditor}
-            shouldUpdate={shouldUpdate}
-            increaseShouldUpdate={increaseShouldUpdate}
-            onSubmit={postCommentRequest}
-            setSuggestions={setSuggestions}
-          />
-        </Spacing>
+        <Box d="f">
+          <Avatar name={`${user?.first_name} ${user?.last_name}`} />
+          <Spacing m={{ l: "17px", t: "-31px" }}>
+            <CommentsForm
+              refresh={refresh}
+              childId={id}
+              inReply={0}
+              setBlocks={setBlocks}
+              isExpanded={isExpanded}
+              collapseEditor={collapseEditor}
+              expandEditor={expandEditor}
+              onSubmit={postCommentRequest}
+              setSuggestions={setSuggestions}
+            />
+          </Spacing>
+        </Box>
       </FormFooter>
     </Spacing>
   );
 };
+
+const ScrollDown = styled.span``;
 
 const FormFooter = styled(Box)`
   ${(props) =>
