@@ -5,7 +5,7 @@ import { updateChildContactRequestConnections } from "../api/childContact";
 import { useState, useContext } from "react";
 import Switch from "react-switch";
 import { ChildContext } from "../pages/ChildProfilePage";
-import { ACTIONS, initialState } from "../reducers/child.reducer";
+import { postPotentialMatch } from "../reducers/childProfile";
 
 const ConnectionsTableData = (data, setIsLoading) => {
   const { dispatch } = useContext(ChildContext);
@@ -20,12 +20,7 @@ const ConnectionsTableData = (data, setIsLoading) => {
         },
         item.id
       )
-        .then(() =>
-          dispatch({
-            type: ACTIONS.POST_POTENTIAL_MATCH,
-            payload: index,
-          })
-        )
+        .then(() => dispatch(postPotentialMatch(index)))
         .finally(() => {
           setIsLoading(false);
         });

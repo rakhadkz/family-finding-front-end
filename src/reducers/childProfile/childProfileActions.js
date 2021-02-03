@@ -1,28 +1,36 @@
-export const FETCH_CHILD_REQUEST = 'FETCH_CHILD_REQUEST'
-export const FETCH_CHILD_SUCCESS = 'FETCH_CHILD_SUCCESS'
-export const FETCH_CHILD_FAILURE = 'FETCH_CHILD_FAILURE'
-export const FETCH_CHILD_USERS_SUCCESS = 'FETCH_CHILD_USERS_SUCCESS'
-export const FETCH_CHILD_USERS_FAILURE = 'FETCH_CHILD_USERS_FAILURE'
+export const FETCH_CHILD_REQUEST = "FETCH_CHILD_REQUEST";
+export const FETCH_CHILD_SUCCESS = "FETCH_CHILD_SUCCESS";
+export const FETCH_CHILD_FAILURE = "FETCH_CHILD_FAILURE";
+export const FETCH_CHILD_USERS_SUCCESS = "FETCH_CHILD_USERS_SUCCESS";
+export const FETCH_CHILD_USERS_FAILURE = "FETCH_CHILD_USERS_FAILURE";
+export const POST_POTENTIAL_MATCH = "POST_POTENTIAL_MATCH";
 
 export const fetchChildRequest = () => {
   return {
-    type: FETCH_CHILD_REQUEST
-  }
-}
+    type: FETCH_CHILD_REQUEST,
+  };
+};
 
-export const fetchChildSuccess = data => {
+export const postPotentialMatch = (index) => {
+  return {
+    type: POST_POTENTIAL_MATCH,
+    payload: index,
+  };
+};
+
+export const fetchChildSuccess = (data) => {
   return {
     type: FETCH_CHILD_SUCCESS,
-    payload: data
-  }
-}
+    payload: data,
+  };
+};
 
-export const fetchChildFailure = error => {
+export const fetchChildFailure = (error) => {
   return {
     type: FETCH_CHILD_FAILURE,
-    payload: error
-  }
-}
+    payload: error,
+  };
+};
 
 export const fetchChildUsersSuccess = ({ child_users, not_child_users }) => {
   return {
@@ -33,19 +41,19 @@ export const fetchChildUsersSuccess = ({ child_users, not_child_users }) => {
         key: user.id,
         name: `${user.first_name} ${user.last_name}`,
         href: "#",
-        id: id
+        id: id,
       })),
       not_child_users: not_child_users.map((user) => ({
         label: `${user.first_name} ${user.last_name}`,
         value: user.id,
-      }))
-    }
-  }
-}
+      })),
+    },
+  };
+};
 
-export const fetchChildUsersFailure = error => {
+export const fetchChildUsersFailure = (error) => {
   return {
     type: FETCH_CHILD_USERS_FAILURE,
-    payload: error
-  }
-}
+    payload: error,
+  };
+};

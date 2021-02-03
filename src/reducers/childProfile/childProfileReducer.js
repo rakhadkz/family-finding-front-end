@@ -4,6 +4,7 @@ import {
   FETCH_CHILD_SUCCESS,
   FETCH_CHILD_USERS_FAILURE,
   FETCH_CHILD_USERS_SUCCESS,
+  POST_POTENTIAL_MATCH,
 } from "./childProfileActions";
 
 export const initialState = {
@@ -56,7 +57,7 @@ export const childProfileReducer = (state, action) => {
         child_users: [],
         not_child_users: [],
       };
-    case ACTIONS.POST_POTENTIAL_MATCH:
+    case POST_POTENTIAL_MATCH:
       state.child.contacts[action.payload].potential_match = !state.child
         .contacts[action.payload].potential_match;
       return {
