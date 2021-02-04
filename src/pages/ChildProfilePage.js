@@ -7,6 +7,8 @@ import MobileIcon from "@atlaskit/icon/glyph/mobile";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
 import Select from "@atlaskit/select";
+import Tag from "@atlaskit/tag";
+import TagGroup from "@atlaskit/tag-group";
 import { Text } from "@chakra-ui/react";
 import React, { memo, useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -16,27 +18,24 @@ import {
   createChildUserRequest,
   fetchChildrenRequest,
   fetchChildUsersRequest,
-  removeChildUserRequest,
+  removeChildUserRequest
 } from "../api/children";
 import {
   fetchCommunicationTemplateRequest,
-  sendCommunicationTemplateToUserRequest,
+  sendCommunicationTemplateToUserRequest
 } from "../api/communicationTemplates";
 import {
   ChildInformation,
   ChildTabs,
-  RelativesList,
+  RelativesList
 } from "../components/ChildProfile";
+import { AddChildForm } from "../components/Children";
 import { Box, Label, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog } from "../components/ui/common";
 import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
 import { getLocalStorageUser } from "../context/auth/authProvider";
-import { CHILDREN } from "../helpers";
-import { AddChildForm } from "../components/Children";
 import { updateChild } from "../context/children/childProvider";
-import Tag from "@atlaskit/tag";
-import TagGroup from "@atlaskit/tag-group";
-import { Preloader } from "./Preloader";
+import { CHILDREN } from "../helpers";
 import {
   childProfileReducer,
   fetchChildFailure,
@@ -44,8 +43,9 @@ import {
   fetchChildSuccess,
   fetchChildUsersFailure,
   fetchChildUsersSuccess,
-  initialState,
+  initialState
 } from "../reducers/childProfile";
+import { Preloader } from "./Preloader";
 
 export const ChildContext = React.createContext();
 
@@ -57,7 +57,7 @@ export function ChildProfilePage(props) {
   const [templatePending, setTemplatePending] = useState(false);
   const [templateHtml, setTemplateHtml] = useState("");
   const [templatePreview, setTemplatePreview] = useState("");
-  const [templateUser, setTemplateUser] = useState();
+  const [templateUser, setTemplateUser] = useState([]);
   const [filteredTemplates, setFilteredTemplates] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
@@ -105,6 +105,8 @@ export function ChildProfilePage(props) {
   };
 
   useEffect(() => {
+    console.log("TEmplate User", templateUser);
+    const firstUser = templateUser && templateUser[0]?.value;
     const text = templateHtml
       .replaceAll(
         "{{child_name}}",
@@ -112,7 +114,7 @@ export function ChildProfilePage(props) {
       )
       .replaceAll(
         "{{contact_name}}",
-        `${templateUser?.contact?.first_name} ${templateUser?.contact?.last_name}`
+        `${firstUser?.contact?.first_name} ${firstUser?.contact?.last_name}`
       )
       .replaceAll(
         "{{orgranization_name}}",
@@ -133,19 +135,18 @@ export function ChildProfilePage(props) {
       .catch((e) => dispatch(fetchChildFailure(e.message)));
   };
 
-  const sendTemplateToUser = async () => {
-    let content = templatePreview;
-    const body = {
-      email: templateUser?.contact?.email,
-      content: content,
-      template_type: templateType,
-      phone: templateUser?.contact?.phone,
-    };
-    console.log(body);
+  const handleTemplateSendSubmit = async () => {
+    let promises = [];
+    for (let i = 0; i < templateUser?.length; i++) {
+      const user = templateUser && templateUser[i]?.value;
+      if (user) {
+      }
+      promises.push(sendTemplateToUser(user));
+    }
 
-    setTemplatePending(true);
-    await sendCommunicationTemplateToUserRequest({ template_send: body })
-      .then(() =>
+    Promise.all(promises)
+      .then(() => {
+        console.log("AHHAHAHAHAH");
         toast.success("Successfully sent!", {
           position: "top-center",
           autoClose: 2000,
@@ -154,9 +155,10 @@ export function ChildProfilePage(props) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        })
-      )
-      .catch(() =>
+        });
+      })
+      .catch(() => {
+        console.log("ERROR");
         toast.error("Happened error!", {
           position: "top-center",
           autoClose: 2000,
@@ -165,14 +167,28 @@ export function ChildProfilePage(props) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        })
-      )
+        });
+      })
       .finally(() => {
         setTemplatePending(false);
         setIsTemplateOpen(false);
         setTemplateHtml("");
         setTemplateUser();
       });
+  };
+
+  const sendTemplateToUser = async (user) => {
+    let content = templatePreview;
+    const body = {
+      email: user?.contact?.email,
+      content: content,
+      template_type: templateType,
+      phone: user?.contact?.phone,
+    };
+    console.log(body);
+
+    setTemplatePending(true);
+    await sendCommunicationTemplateToUserRequest({ template_send: body });
   };
 
   const onSubmitUsers = async () => {
@@ -394,7 +410,7 @@ export function ChildProfilePage(props) {
           <ModalDialog
             isOpen={isTemplateOpen}
             setIsOpen={setIsTemplateOpen}
-            onClick={sendTemplateToUser}
+            onClick={handleTemplateSendSubmit}
             heading="Choose Template"
             positiveLabel="Send"
             isLoading={templatePending}
@@ -403,10 +419,12 @@ export function ChildProfilePage(props) {
               <div>
                 <Spacing m="10px 0px">
                   <Select
-                    className="select"
+                    className="multi-select"
                     classNamePrefix="react-select"
                     menuPortalTarget={document.body}
-                    onChange={({ value }) => setTemplateUser(value)}
+                    onChange={(e) => setTemplateUser(e)}
+                    isMulti
+                    value={templateUser}
                     validationState={validationState}
                     styles={{
                       menuPortal: (base) => ({ ...base, zIndex: 9999 }),
