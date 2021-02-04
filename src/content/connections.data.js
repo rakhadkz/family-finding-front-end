@@ -3,15 +3,13 @@ import { FitScore } from "../components/ui/molecules";
 import { Switch } from "@chakra-ui/react";
 import { Avatar } from "../components/ui/molecules/Avatar";
 import { updateChildContactRequestConnections } from "../api/childContact";
-import { useState } from "react";
 import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
+import EditorRemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import { ChakraProvider } from "@chakra-ui/react";
 import Button from "@atlaskit/button";
-import Can from "../accessControl/Can";
-import { CHILDREN } from "../helpers";
-import { ACTIONS } from "../accessControl/actions";
 
-const connectionsTableData = (data, setIsLoading, setContacts, setIsOpenEdit, setCurrentContact) => {
+const connectionsTableData = (data, setIsLoading, setContacts, setIsOpenEdit, setIsDisqualifyModalOpen, setCurrentContact) => {
+  console.log("TREEEE:", data)
   return data.map(function (item, index) {
     const onSubmitHandle = async () => {
       setIsLoading(true);
@@ -46,17 +44,18 @@ const connectionsTableData = (data, setIsLoading, setContacts, setIsOpenEdit, se
                   item?.contact?.last_name || ""
                 }`}
               </span>
-              <Can
-              perform={`${CHILDREN}:${ACTIONS.EDIT}`}
-              yes={() => (
-                <Button spacing="none" appearance="link" onClick={() => {
-                  setCurrentContact(item.contact)
-                  setIsOpenEdit(true)
-                }}>
-                  <EditorEditIcon size="medium" />
-                </Button>
-              )}
-            />
+              <Button spacing="none" appearance="link" onClick={() => {
+                setCurrentContact(item)
+                setIsOpenEdit(true)
+              }}>
+                <EditorEditIcon size="medium" />
+              </Button>
+              <Button spacing="none" appearance="link" onClick={() => {
+                setCurrentContact(item)
+                setIsDisqualifyModalOpen(true)
+              }}>
+                <EditorRemoveIcon primaryColor="red" size="medium" />
+              </Button>
             </Box>
           ),
         },

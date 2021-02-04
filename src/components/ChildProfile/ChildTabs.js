@@ -23,9 +23,7 @@ export const ChildTabs = (
 
   const fetchChildren = async () => {
     await fetchChildProfile();
-    await fetchChildrenRequest({ id: id, view: "contacts" }).then((data) =>
-      setContacts(data.contacts)
-    );
+    await fetchChildrenRequest({ id: id, view: "contacts" }).then((data) => setContacts(data.contacts));
   };
 
   useEffect(() => {

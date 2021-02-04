@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import {
   createContactRequest,
   createTableChildContactRequest,
+  updateContactChildRequest,
   updateContactRequest
 } from "../../../../api/childContact";
 import { connectionsTableData } from "../../../../content/connections.data";
@@ -51,7 +52,8 @@ const columns = [
 export const Connections = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const { contacts, setContacts } = props;
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [ isAddModalOpen, setIsAddModalOpen ] = useState(false);
+  const [ isDisqualifyModalOpen, setIsDisqualifyModalOpen ] = useState(false)
   let { id } = useParams();
   const [ currentContact, setCurrentContact ] = useState(null)
 
@@ -156,14 +158,14 @@ export const Connections = (props) => {
               onSubmit={async (data) => {
                 console.log("DATA", data);
                 if(currentContact){
-                  await updateContactRequest({id: currentContact.id, ...data}).then(props.refreshContacts).finally(() => setIsAddModalOpen(false))
+                  await updateContactRequest({id: currentContact.contact.id, ...data}).then(props.refreshContacts).finally(() => setIsAddModalOpen(false))
                 }else{
                   await onAddContact(data).finally(props.refreshContacts);
                 }
                 console.log("FETCHING");
               }}
               onCancel={() => setIsAddModalOpen(false)}
-              contact={currentContact}
+              contact={currentContact?.contact}
             />
           }
           hasActions={false}
@@ -174,10 +176,21 @@ export const Connections = (props) => {
             head={{ cells: columns }}
             loadingSpinnerSize="large"
             isLoading={isLoading}
-            rows={connectionsTableData(contacts, setIsLoading, setContacts, setIsAddModalOpen, setCurrentContact)}
+            rows={connectionsTableData(contacts, setIsLoading, setContacts, setIsAddModalOpen, setIsDisqualifyModalOpen, setCurrentContact)}
             isFixedSize
           />
         </TableWrapper>
+        <Button onClick={() => setIsDisqualifyModalOpen(true)}>Click</Button>
+        <ModalDialog
+          isOpen={isDisqualifyModalOpen}
+          setIsOpen={setIsDisqualifyModalOpen}
+          heading="Disqualify Connection"
+          body={`Are you sure you want to disqualify ${currentContact?.contact?.first_name} ${currentContact?.contact?.last_name} as a placement option for this child?`}
+          positiveLabel="Disqualify"
+          onClick={() => {
+            updateContactChildRequest({ id: currentContact.id, is_disqualified: true }).then(props.refreshContacts).finally(() => setIsDisqualifyModalOpen(false))
+          }}
+        />
       </Spacing>
     </>
   );

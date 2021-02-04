@@ -15,6 +15,10 @@ export const createChildContactRequest = (data) => {
   });
 };
 
+export const updateChildContactRequest = ({id, ...rest}) => {
+  
+}
+
 export const createTableChildContactRequest = (data) => {
   return request({
     endpoint: "child_contacts",
@@ -23,11 +27,15 @@ export const createTableChildContactRequest = (data) => {
   });
 };
 
-export const updateChildContactRequest = (data, contactId) => {
+export const updateContactChildRequest = ({id, ...rest}) => {
   return request({
-    endpoint: `child_tree_contacts/${contactId}`,
-    data,
+    endpoint: `child_contacts/${id}`,
     method: "PUT",
+    data: {
+      child_contact: {
+        ...rest
+      }
+    }
   });
 };
 
