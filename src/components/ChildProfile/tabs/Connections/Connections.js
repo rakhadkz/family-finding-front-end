@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   createContactRequest,
-  createTableChildContactRequest
+  createTableChildContactRequest,
+  updateContactRequest
 } from "../../../../api/childContact";
 import { connectionsTableData } from "../../../../content/connections.data";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
@@ -52,6 +53,7 @@ export const Connections = (props) => {
   const { contacts, setContacts } = props;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   let { id } = useParams();
+  const [ currentContact, setCurrentContact ] = useState(null)
 
   const onAddContact = async (data) => {
     await createContactRequest(data)
@@ -135,7 +137,10 @@ export const Connections = (props) => {
           <Box d="flex" justify="flex-end">
             <Button
               appearance="warning"
-              onClick={() => setIsAddModalOpen(true)}
+              onClick={() => {
+                setCurrentContact(null)
+                setIsAddModalOpen(true)
+              }}
             >
               Add Connection
             </Button>
@@ -144,16 +149,21 @@ export const Connections = (props) => {
         <ModalDialog
           isOpen={isAddModalOpen}
           setIsOpen={setIsAddModalOpen}
-          heading="Add Connection"
+          heading={currentContact ? "Edit Connection" : "Add Connection"}
           appearance={null}
           body={
             <AddContactForm
               onSubmit={async (data) => {
                 console.log("DATA", data);
-                await onAddContact(data).finally(props.refreshContacts);
+                if(currentContact){
+                  await updateContactRequest({id: currentContact.id, ...data}).then(props.refreshContacts).finally(() => setIsAddModalOpen(false))
+                }else{
+                  await onAddContact(data).finally(props.refreshContacts);
+                }
                 console.log("FETCHING");
               }}
               onCancel={() => setIsAddModalOpen(false)}
+              contact={currentContact}
             />
           }
           hasActions={false}
@@ -164,7 +174,7 @@ export const Connections = (props) => {
             head={{ cells: columns }}
             loadingSpinnerSize="large"
             isLoading={isLoading}
-            rows={connectionsTableData(contacts, setIsLoading, setContacts)}
+            rows={connectionsTableData(contacts, setIsLoading, setContacts, setIsAddModalOpen, setCurrentContact)}
             isFixedSize
           />
         </TableWrapper>

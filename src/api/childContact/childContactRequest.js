@@ -53,3 +53,15 @@ export const createContactRequest = (data) => {
     method: "POST",
   });
 };
+
+export const updateContactRequest = ({id, ...rest}) => {
+  return request({
+    endpoint: `contacts/${id}`,
+    method: 'PUT',
+    data: {
+      contact: {
+        ...rest
+      }
+    }
+  })
+}
