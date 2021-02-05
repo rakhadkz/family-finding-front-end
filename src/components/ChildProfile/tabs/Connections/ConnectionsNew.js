@@ -392,7 +392,7 @@ export const ConnectionsNew = (props) => {
         isOpen={isConfirmOpen}
         setIsOpen={setIsConfirmOpen}
         onClick={() => onSubmitHandle(false)}
-        positiveLabel="Delete"
+        positiveLabel="Confirm"
         heading="Are you sure?"
         body={`Are you sure ${
           currentConnection?.contact?.first_name +
