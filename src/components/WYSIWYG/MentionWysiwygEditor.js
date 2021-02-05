@@ -66,6 +66,7 @@ class MentionWysiwygEditor extends React.Component {
     this.state = {
       editorState: EditorState.createWithContent(stateFromHTML(defaultValue)),
       suggestions: [],
+      suggestions2: [],
       withMention,
     };
     this.myRef = React.createRef();
@@ -77,6 +78,17 @@ class MentionWysiwygEditor extends React.Component {
       theme: mentionsStyles,
       positionSuggestions,
       mentionPrefix: "@",
+      mentionTrigger: "@",
+      supportWhitespace: true,
+    });
+    this.contactMentions = [];
+    this.contactMentionPlugin = createMentionPlugin({
+      mentions: this.contactMentions,
+      entityMutability: "IMMUTABLE",
+      theme: mentionsStyles,
+      positionSuggestions,
+      mentionPrefix: "#",
+      mentionTrigger: "#",
       supportWhitespace: true,
     });
     this.emojiPlugin = createEmojiPlugin({
@@ -129,6 +141,18 @@ class MentionWysiwygEditor extends React.Component {
       this.props.setSuggestions &&
         this.props.setSuggestions(
           defaultSuggestionsFilter(value, this.context.mentions).length
+        );
+    }
+  };
+
+  onSearchChange2 = ({ value }) => {
+    if (value) {
+      this.setState({
+        suggestions2: defaultSuggestionsFilter(value, this.context.contacts),
+      });
+      this.props.setSuggestions &&
+        this.props.setSuggestions(
+          defaultSuggestionsFilter(value, this.context.contacts).length
         );
     }
   };
@@ -330,8 +354,14 @@ class MentionWysiwygEditor extends React.Component {
 
   render() {
     const { MentionSuggestions } = this.mentionPlugin;
+    const MentionSuggestions2 = this.contactMentionPlugin.MentionSuggestions;
     const { EmojiSuggestions, EmojiSelect } = this.emojiPlugin;
-    const plugins = [this.mentionPlugin, this.emojiPlugin];
+    const plugins = [
+      this.mentionPlugin,
+      this.emojiPlugin,
+      this.contactMentionPlugin,
+    ];
+    console.log(this.context.contacts);
     // console.log(convertToRaw(this.state.editorState.getCurrentContent()));
     // console.log(this.context);
     // console.log(this.editorRef.current?.editor);
@@ -399,24 +429,44 @@ class MentionWysiwygEditor extends React.Component {
             }}
           />
           {this.state.withMention && (
-            <MentionSuggestions
-              onSearchChange={this.onSearchChange}
-              suggestions={this.state.suggestions}
-              entryComponent={(props) => (
-                <MentionEntry
-                  ref={this.myRef}
-                  {...props}
-                  setSuggestions={this.props.setSuggestions}
-                />
-              )}
-              className={mentionsStyles.mentionSuggestions}
-              onOpen={() => {
-                console.log("suka!OPEN");
-              }}
-              onClose={() => {
-                console.log("ONCLOSE WORKS IN MENTIONSUGGESTIONS");
-              }}
-            />
+            <>
+              <MentionSuggestions
+                onSearchChange={this.onSearchChange}
+                suggestions={this.state.suggestions}
+                entryComponent={(props) => (
+                  <MentionEntry
+                    ref={this.myRef}
+                    {...props}
+                    setSuggestions={this.props.setSuggestions}
+                  />
+                )}
+                className={mentionsStyles.mentionSuggestions}
+                onOpen={() => {
+                  console.log("suka!OPEN");
+                }}
+                onClose={() => {
+                  console.log("ONCLOSE WORKS IN MENTIONSUGGESTIONS");
+                }}
+              />
+              <MentionSuggestions2
+                onSearchChange={this.onSearchChange2}
+                suggestions={this.state.suggestions2}
+                entryComponent={(props) => (
+                  <MentionEntry
+                    ref={this.myRef}
+                    {...props}
+                    setSuggestions={this.props.setSuggestions}
+                  />
+                )}
+                className={mentionsStyles.mentionSuggestions}
+                onOpen={() => {
+                  console.log("suka!OPEN");
+                }}
+                onClose={() => {
+                  console.log("ONCLOSE WORKS IN MENTIONSUGGESTIONS");
+                }}
+              />
+            </>
           )}
         </Editors>
       </EditorContainer>
