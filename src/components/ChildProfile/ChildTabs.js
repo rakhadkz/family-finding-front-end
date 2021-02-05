@@ -5,7 +5,7 @@ import { fetchChildrenRequest } from "../../api/children";
 import { constructTree } from "../../content/childContact.tree.data";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { CommentsTab } from "./tabs/Comments/CommentsTab";
-import { Connections } from "./tabs/Connections/Connections";
+import { ConnectionsNew } from "./tabs/Connections";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 import { ChildContext } from "../../pages/ChildProfilePage";
 
@@ -20,7 +20,7 @@ export const ChildTabs = ({
     {
       label: "Connections",
       content: (
-        <Connections
+        <ConnectionsNew
           treeContacts={constructTree({
             contacts: family_tree,
             firstName,

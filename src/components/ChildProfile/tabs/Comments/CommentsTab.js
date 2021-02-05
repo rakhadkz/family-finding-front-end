@@ -64,7 +64,7 @@ export const CommentsTab = ({ refresh }) => {
   }, [isExpanded, blocks]);
 
   useEffect(() => {
-    comments.sort(
+    comments?.sort(
       (a, b) =>
         (a.updated_at > a.created_at
           ? new Date(a.updated_at).getTime()
@@ -92,7 +92,7 @@ export const CommentsTab = ({ refresh }) => {
           : "50px",
       }}
     >
-      {comments ? (
+      {comments || comments === [] ? (
         <Spacing m={{ b: "22px" }}>
           {comments
             .filter((comment) => !comment.in_reply_to)

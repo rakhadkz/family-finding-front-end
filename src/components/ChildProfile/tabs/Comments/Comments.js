@@ -36,7 +36,10 @@ export const Comments = ({ data, childId, refresh }) => {
       if (
         (i === 0 && comment[i] === "@") ||
         (comment[i] === "@" && comment[i - 1] === " ") ||
-        (comment[i] === "@" && comment[i - 1] === ">")
+        (comment[i] === "@" && comment[i - 1] === ">") ||
+        (i === 0 && comment[i] === "#") ||
+        (comment[i] === "#" && comment[i - 1] === " ") ||
+        (comment[i] === "#" && comment[i - 1] === ">")
       ) {
         let j,
           s = 0;
@@ -194,7 +197,7 @@ export const Comments = ({ data, childId, refresh }) => {
                     appearance="link"
                     onClick={() => setModalOpen(true)}
                     style={{ padding: "0px" }}
-                    isDisabled={data.user.id !== user.id}
+                    isDisabled={data.user.id !== user?.id}
                   >
                     <ButtonContentWrapper>Delete</ButtonContentWrapper>
                   </Button>
