@@ -25,6 +25,8 @@ const ConnectionsTableData = (
   refresh
 ) => {
   const { dispatch } = useContext(ChildContext);
+  // if (data.indexOf((item) => item.is_placed === true) === -1)
+  //   setPlacedContact(null);
   return data
     .filter((item, index) => item?.is_confirmed)
     .sort((item1, item2) => item1?.is_disqualified - item2?.is_disqualified)
@@ -45,6 +47,8 @@ const ConnectionsTableData = (
         )
           .then(() => {
             item.is_confirmed = data.is_confirmed;
+            item.is_placed = data.is_placed;
+            item.is_disqualified = data.is_disqualified;
           })
           .finally(() => {
             setIsLoading(false);
@@ -157,7 +161,23 @@ const ConnectionsTableData = (
           },
           {
             key: "actions",
-            content: !item?.is_disqualified && (
+            content: item?.is_placed ? (
+              <ButtonGroup>
+                <Button
+                  onClick={() =>
+                    onSubmitHandle({
+                      is_disqualified: item.is_disqualified,
+                      is_confirmed: item.is_confirmed,
+                      is_placed: false,
+                    }).then(() => {
+                      setPlacedContact(null);
+                    })
+                  }
+                >
+                  Remove Placement
+                </Button>
+              </ButtonGroup>
+            ) : !item?.is_disqualified ? (
               <ButtonGroup>
                 <Button
                   onClick={() =>
@@ -190,10 +210,23 @@ const ConnectionsTableData = (
                       is_disqualified: item.is_disqualified,
                       is_confirmed: item.is_confirmed,
                     });
-                    refresh();
                   }}
                 >
                   Place
+                </Button>
+              </ButtonGroup>
+            ) : (
+              <ButtonGroup>
+                <Button
+                  onClick={() =>
+                    onSubmitHandle({
+                      is_disqualified: item.is_disqualified,
+                      is_confirmed: false,
+                      is_placed: item.is_placed,
+                    })
+                  }
+                >
+                  Unconfirm
                 </Button>
               </ButtonGroup>
             ),
@@ -242,29 +275,6 @@ const PossibleConnectionsTableData = (
   return data
     .filter((item, index) => !item?.is_confirmed)
     .map(function (item, index) {
-      const onSubmitHandle = async (data) => {
-        setIsLoading(true);
-        updateChildContactConnections(
-          {
-            child_contact: {
-              is_confirmed: data?.is_confirmed,
-              is_placed: data?.is_placed,
-              is_disqualified: data?.is_disqualified,
-              // potential_match: !item.potential_match,
-            },
-          },
-          item.id
-        )
-          .then(() => {
-            item.is_confirmed = data.is_confirmed;
-          })
-          .finally(() => {
-            setIsConfirmOpen(false);
-            setIsLoading(false);
-            refresh();
-          });
-      };
-
       return {
         key: index,
         cells: [
