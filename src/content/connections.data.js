@@ -26,8 +26,9 @@ const ConnectionsTableData = (
 ) => {
   const { dispatch } = useContext(ChildContext);
   return data
-    .filter((item, index) => item?.is_confirmed && !item?.is_placed)
+    .filter((item, index) => item?.is_confirmed)
     .sort((item1, item2) => item1?.is_disqualified - item2?.is_disqualified)
+    .sort((item1, item2) => item2?.is_placed - item1?.is_placed)
     .map(function (item, index) {
       const onSubmitHandle = async (data) => {
         setIsLoading(true);
@@ -47,6 +48,7 @@ const ConnectionsTableData = (
           })
           .finally(() => {
             setIsLoading(false);
+            refresh();
           });
       };
 
@@ -58,7 +60,9 @@ const ConnectionsTableData = (
             content: (
               <Box d="flex">
                 <Avatar
-                  name={`${item?.contact?.first_name} ${item?.contact?.last_name}`}
+                  name={`${item?.contact?.first_name} ${
+                    item?.contact ? item?.contact?.last_name : ""
+                  }`}
                   size="medium"
                 />
                 <Box style={{ marginLeft: "8px" }}>
@@ -66,15 +70,17 @@ const ConnectionsTableData = (
                     <Button
                       appearance="link"
                       onClick={() => {
-                        item && setCurrent(item.contact);
+                        item && setCurrent(item);
                         setIsOpen(true);
                       }}
                       style={{ marginLeft: "-12px" }}
                     >
                       {item?.contact?.first_name[0]?.toUpperCase() +
                         item?.contact?.first_name?.substring(1)}{" "}
-                      {item?.contact?.last_name[0]?.toUpperCase() +
-                        item?.contact?.last_name?.substring(1)}
+                      {item?.contact.last_name
+                        ? item?.contact?.last_name[0]?.toUpperCase() +
+                          item?.contact?.last_name?.substring(1)
+                        : ""}
                     </Button>
                     {item?.is_disqualified && (
                       <Box d="f">
@@ -82,7 +88,7 @@ const ConnectionsTableData = (
                         <EditorCloseIcon />
                       </Box>
                     )}
-                    <Box d="f" style={{ marginLeft: "-35px" }}>
+                    <Box d="f" style={{ marginLeft: "-45px" }}>
                       <Box d="f" style={{ alignItems: "center" }}>
                         <EditorCloseIcon />
                         <Text>Email</Text>
@@ -122,7 +128,7 @@ const ConnectionsTableData = (
           {
             key: "info_engagement",
             content: (
-              <Spacing m={{ l: "-10px" }}>
+              <Spacing m={{ l: "-20px" }}>
                 <Box d="f">
                   <Button appearance="link" iconBefore={<EmailIcon />}>
                     5
@@ -156,6 +162,17 @@ const ConnectionsTableData = (
                 <Button
                   onClick={() =>
                     onSubmitHandle({
+                      is_disqualified: item.is_disqualified,
+                      is_confirmed: false,
+                      is_placed: item.is_placed,
+                    })
+                  }
+                >
+                  Unconfirm
+                </Button>
+                <Button
+                  onClick={() =>
+                    onSubmitHandle({
                       is_disqualified: true,
                       is_confirmed: item.is_confirmed,
                       is_placed: item.is_placed,
@@ -176,7 +193,7 @@ const ConnectionsTableData = (
                     refresh();
                   }}
                 >
-                  Placed
+                  Place
                 </Button>
               </ButtonGroup>
             ),
@@ -217,7 +234,9 @@ const PossibleConnectionsTableData = (
   data,
   setIsLoading,
   setIsOpen,
-  setCurrent
+  setCurrent,
+  refresh,
+  setIsConfirmOpen
 ) => {
   const { dispatch } = useContext(ChildContext);
   return data
@@ -240,7 +259,9 @@ const PossibleConnectionsTableData = (
             item.is_confirmed = data.is_confirmed;
           })
           .finally(() => {
+            setIsConfirmOpen(false);
             setIsLoading(false);
+            refresh();
           });
       };
 
@@ -252,22 +273,26 @@ const PossibleConnectionsTableData = (
             content: (
               <Box d="flex" align="center">
                 <Avatar
-                  name={`${item?.contact?.first_name} ${item?.contact?.last_name}`}
+                  name={`${item?.contact?.first_name} ${
+                    item?.contact ? item?.contact?.last_name : ""
+                  }`}
                   size="medium"
                 />
                 <span style={{ marginLeft: "8px" }}>
                   <Button
                     appearance="link"
                     onClick={() => {
-                      item && setCurrent(item.contact);
+                      item && setCurrent(item);
                       setIsOpen(true);
                     }}
                     style={{ marginLeft: "-12px" }}
                   >
                     {item?.contact?.first_name[0]?.toUpperCase() +
                       item?.contact?.first_name?.substring(1)}{" "}
-                    {item?.contact?.last_name[0]?.toUpperCase() +
-                      item?.contact?.last_name?.substring(1)}
+                    {item?.contact.last_name
+                      ? item?.contact?.last_name[0]?.toUpperCase() +
+                        item?.contact?.last_name?.substring(1)
+                      : ""}
                   </Button>
                 </span>
               </Box>
@@ -300,15 +325,12 @@ const PossibleConnectionsTableData = (
             content: (
               <ButtonGroup>
                 <Button
-                  onClick={() =>
-                    onSubmitHandle({
-                      is_confirmed: true,
-                      is_placed: item?.is_placed,
-                      is_disqualified: item?.is_disqualified,
-                    })
-                  }
+                  onClick={() => {
+                    setIsConfirmOpen(true);
+                    setCurrent(item);
+                  }}
                 >
-                  Confirm Connection
+                  Confirm
                 </Button>
               </ButtonGroup>
             ),
