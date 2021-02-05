@@ -18,11 +18,15 @@ const ConnectionModal = ({ currentConnection }) => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        marginTop: "60px",
       }}
     >
       {" "}
       <Avatar
-        name={currentConnection?.first_name + currentConnection?.last_name}
+        name={
+          currentConnection?.contact?.first_name +
+          currentConnection?.contact?.last_name
+        }
         size="xlarge"
         ratio={1.25}
       />
@@ -35,15 +39,17 @@ const ConnectionModal = ({ currentConnection }) => {
           marginTop: "20px",
         }}
       >
-        {currentConnection?.first_name[0]?.toUpperCase() +
-          currentConnection?.first_name?.substring(1)}{" "}
-        {currentConnection?.last_name[0]?.toUpperCase() +
-          currentConnection?.last_name?.substring(1)}
+        {currentConnection?.contact?.first_name[0]?.toUpperCase() +
+          currentConnection?.contact?.first_name?.substring(1)}{" "}
+        {currentConnection?.contact?.last_name
+          ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
+            currentConnection?.contact?.last_name?.substring(1)
+          : ""}
       </Title>
       <Text
         style={{ marginTop: "20px", marginBottom: "15px", marginLeft: "5px" }}
       >
-        {currentConnection?.relationship}
+        {currentConnection?.contact?.relationship}
       </Text>
       <FitScore score={Math.floor(Math.random() * 6)} />
       <Box
@@ -61,19 +67,25 @@ const ConnectionModal = ({ currentConnection }) => {
           style={{ width: "200px", fontWeight: "700", marginBottom: "20px" }}
         >
           Email:
-          <Box style={{ fontWeight: "500" }}>{currentConnection?.email}</Box>
+          <Box style={{ fontWeight: "500" }}>
+            {currentConnection?.contact?.email}
+          </Box>
         </Box>
         <Box
           style={{ width: "200px", fontWeight: "700", marginBottom: "20px" }}
         >
           Address:{" "}
-          <Box style={{ fontWeight: "500" }}>{currentConnection?.address}</Box>
+          <Box style={{ fontWeight: "500" }}>
+            {currentConnection?.contact?.address}
+          </Box>
         </Box>
         <Box
           style={{ width: "200px", fontWeight: "700", marginBottom: "20px" }}
         >
           Phone:
-          <Box style={{ fontWeight: "500" }}>{currentConnection?.phone}</Box>
+          <Box style={{ fontWeight: "500" }}>
+            {currentConnection?.contact?.phone}
+          </Box>
         </Box>
       </Box>
       <div

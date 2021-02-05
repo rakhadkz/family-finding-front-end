@@ -24,6 +24,8 @@ import {
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
 import ConnectionModal from "./ConnectionModal";
+import { updateChildContactConnections } from "../../../../context/children/childProvider";
+
 const columns = [
   {
     key: "full_name",
@@ -33,7 +35,7 @@ const columns = [
   {
     key: "relationship",
     content: "Relationship",
-    width: 12,
+    width: 10,
   },
   {
     key: "info_engagement",
@@ -43,12 +45,12 @@ const columns = [
   {
     key: "link_score",
     content: "Link Score",
-    width: 18,
+    width: 13,
   },
   {
     key: "actions",
     content: "Actions",
-    width: 18,
+    width: 25,
   },
 ];
 
@@ -56,7 +58,7 @@ const columnsPossible = [
   {
     key: "full_name",
     content: "Full Name",
-    width: 18,
+    width: 25,
   },
   {
     key: "relationship",
@@ -85,6 +87,7 @@ export const ConnectionsNew = (props) => {
   const [placedContact, setPlacedContact] = useState(
     contacts.find((c) => c.is_placed)
   );
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const onAddContact = async (data) => {
     await createContactRequest(data)
       .then((data) => {
@@ -160,6 +163,30 @@ export const ConnectionsNew = (props) => {
       .finally(() => setIsAddModalOpen(false));
   };
 
+  const onSubmitHandle = async (data) => {
+    console.log(currentConnection);
+    setIsLoading(true);
+    updateChildContactConnections(
+      {
+        child_contact: {
+          is_confirmed: true,
+        },
+      },
+      currentConnection.id
+    )
+      .then(() => {
+        currentConnection.is_confirmed = true;
+        // item.is_confirmed = data.is_confirmed;
+      })
+      .finally(() => {
+        setIsConfirmOpen(false);
+        setIsLoading(false);
+        // refresh();
+      });
+  };
+
+  const onConfirm = () => {};
+
   return (
     <Box>
       {placedContact ? (
@@ -206,7 +233,11 @@ export const ConnectionsNew = (props) => {
                   size="18px"
                   style={{ marginLeft: "5px", marginBottom: "5px" }}
                 >
-                  {`${placedContact.contact.first_name} ${placedContact.contact.last_name}`}
+                  {`${placedContact.contact.first_name} ${
+                    placedContact.contact.last_name
+                      ? placedContact.contact.last_name
+                      : ""
+                  }`}
                 </Title>
                 <Text style={{ marginBottom: "15px", marginLeft: "5px" }}>
                   {placedContact.contact.relationship}
@@ -252,12 +283,29 @@ export const ConnectionsNew = (props) => {
         </Box>
       ) : null}
       <Spacing m={{ t: "20px" }}>
-        <Title
-          size="24px"
-          style={{ marginTop: "25px", marginBottom: "25px", fontWeight: "500" }}
-        >
-          Confirmed Connections
-        </Title>
+        <Box d="f" justify="space-between">
+          <Title
+            size="24px"
+            style={{
+              marginTop: "25px",
+              marginBottom: "25px",
+              fontWeight: "500",
+            }}
+          >
+            Confirmed Connections
+          </Title>
+
+          <Spacing m={{ t: "20px" }}>
+            <Box d="flex" justify="flex-end">
+              <Button
+                appearance="warning"
+                onClick={() => setIsAddModalOpen(true)}
+              >
+                Add Connection
+              </Button>
+            </Box>
+          </Spacing>
+        </Box>
         <TableWrapper>
           <DynamicTable
             head={{ cells: columns }}
@@ -277,28 +325,16 @@ export const ConnectionsNew = (props) => {
         </TableWrapper>
       </Spacing>
       <Spacing m={{ t: "20px" }}>
-        <Box d="f" justify="space-between">
-          <Title
-            size="24px"
-            style={{
-              marginTop: "25px",
-              marginBottom: "25px",
-              fontWeight: "500",
-            }}
-          >
-            Possible Connections
-          </Title>
-          <Spacing m={{ t: "20px" }}>
-            <Box d="flex" justify="flex-end">
-              <Button
-                appearance="warning"
-                onClick={() => setIsAddModalOpen(true)}
-              >
-                Add Connection
-              </Button>
-            </Box>
-          </Spacing>
-        </Box>
+        <Title
+          size="24px"
+          style={{
+            marginTop: "25px",
+            marginBottom: "25px",
+            fontWeight: "500",
+          }}
+        >
+          Possible Connections
+        </Title>
         <TableWrapper>
           <DynamicTable
             head={{ cells: columnsPossible }}
@@ -308,7 +344,9 @@ export const ConnectionsNew = (props) => {
               contacts,
               setIsLoading,
               setIsConOpen,
-              setCurrentConnection
+              setCurrentConnection,
+              props.refreshContacts,
+              setIsConfirmOpen
             )}
             isFixedSize
             emptyView="Not found"
@@ -335,9 +373,11 @@ export const ConnectionsNew = (props) => {
       <ModalDialog
         isOpen={isConOpen}
         setIsOpen={setIsConOpen}
-        heading={
-          currentConnection?.first_name + " " + currentConnection?.last_name
-        }
+        // heading={
+        //   currentConnection?.contact?.first_name +
+        //   " " +
+        //   currentConnection?.contact?.last_name
+        // }
         appearance={null}
         body={
           <ConnectionModal
@@ -347,6 +387,19 @@ export const ConnectionsNew = (props) => {
         }
         width="x-large"
         hasActions={false}
+      />
+      <ModalDialog
+        isOpen={isConfirmOpen}
+        setIsOpen={setIsConfirmOpen}
+        onClick={() => onSubmitHandle(false)}
+        positiveLabel="Delete"
+        heading="Are you sure?"
+        body={`Are you sure ${
+          currentConnection?.contact?.first_name +
+          " " +
+          currentConnection?.contact?.last_name
+        } has a kinship connection to this child?`}
+        appearance="danger"
       />
     </Box>
   );

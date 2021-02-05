@@ -17,8 +17,10 @@ export const MentionsProvider = (props) => {
           contact?.first_name[0]?.toUpperCase() +
           contact?.first_name?.substring(1)
         } ${
-          contact?.last_name[0]?.toUpperCase() +
-          contact?.last_name?.substring(1)
+          contact.last_name
+            ? contact?.last_name[0]?.toUpperCase() +
+              contact?.last_name?.substring(1)
+            : ""
         }`,
         // title: "Staff of Penn State Orphanage",
         id: contact?.id,
