@@ -288,23 +288,15 @@ const PossibleConnectionsTableData = (
                   }`}
                   size="medium"
                 />
-                <span style={{ marginLeft: "8px" }}>
-                  <Button
-                    appearance="link"
-                    onClick={() => {
-                      item && setCurrent(item);
-                      setIsOpen(true);
-                    }}
-                    style={{ marginLeft: "-12px" }}
-                  >
-                    {item?.contact?.first_name[0]?.toUpperCase() +
-                      item?.contact?.first_name?.substring(1)}{" "}
-                    {item?.contact.last_name
-                      ? item?.contact?.last_name[0]?.toUpperCase() +
-                        item?.contact?.last_name?.substring(1)
-                      : ""}
-                  </Button>
-                </span>
+                <Button
+                  appearance="link"
+                  onClick={() => {
+                    item && setCurrent(item);
+                    setIsOpen(true);
+                  }}
+                >
+                  {`${item.contact?.first_name} ${item.contact.last_name ? item.contact.last_name : ''}`}
+                </Button>
               </Box>
             ),
           },
