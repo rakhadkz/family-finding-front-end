@@ -18,6 +18,8 @@ import {
   createChildUserRequest,
   fetchChildrenRequest,
   fetchChildUsersRequest,
+  fetchConnectionsRequest,
+  fetchFamilyTreeRequest,
   removeChildUserRequest
 } from "../api/children";
 import {
@@ -33,6 +35,7 @@ import { AddChildForm } from "../components/Children";
 import { Box, Label, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog } from "../components/ui/common";
 import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
+import { constructTree } from "../content/childContact.tree.data";
 import { getLocalStorageUser } from "../context/auth/authProvider";
 import { updateChild } from "../context/children/childProvider";
 import { CHILDREN } from "../helpers";
@@ -45,6 +48,18 @@ import {
   fetchChildUsersSuccess,
   initialState
 } from "../reducers/childProfile";
+import { 
+  connectionReducer,
+  initialState as connectionInitialState,
+  fetchConnectionsFailure,
+  fetchConnectionsSuccess,
+} from "../reducers/connection";
+import { 
+  familyTreeReducer,
+  initialState as familyTreeInitialState,
+  fetchFamilyTreeFailure,
+  fetchFamilyTreeSuccess,
+} from "../reducers/familyTree";
 import { Preloader } from "./Preloader";
 
 export const ChildContext = React.createContext();
@@ -67,11 +82,15 @@ export function ChildProfilePage(props) {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const history = useHistory();
 
-  const [state, dispatch] = useReducer(childProfileReducer, initialState);
+  const [ state, dispatch ] = useReducer(childProfileReducer, initialState);
+  const [ connectionState, connectionDispatch ] = useReducer(connectionReducer, connectionInitialState)
+  const [ familyTreeState, familyTreeDispatch ] = useReducer(familyTreeReducer, familyTreeInitialState)
 
   useEffect(() => {
     dispatch(fetchChildRequest());
     fetchChildProfile();
+    fetchConnections();
+    fetchFamilyTree();
     fetchTemplates();
     (user.role === "admin" || user.role === "manager") && fetchChildUsers();
   }, []);
@@ -88,21 +107,6 @@ export function ChildProfilePage(props) {
         }))
     );
   }, [templateType]);
-
-  const fetchChildUsers = () => {
-    fetchChildUsersRequest({ id: id })
-      .then(
-        (item) =>
-          item &&
-          dispatch(
-            fetchChildUsersSuccess({
-              child_users: item.child_users,
-              not_child_users: item.not_child_users,
-            })
-          )
-      )
-      .catch((e) => dispatch(fetchChildUsersFailure(e.message)));
-  };
 
   useEffect(() => {
     console.log("TEmplate User", templateUser);
@@ -129,11 +133,41 @@ export function ChildProfilePage(props) {
     });
   };
 
-  const fetchChildProfile = async () => {
+  const fetchChildProfile = () => {
     fetchChildrenRequest({ id: id, view: "extended" })
       .then((item) => item && dispatch(fetchChildSuccess(item)))
       .catch((e) => dispatch(fetchChildFailure(e.message)));
   };
+
+  const fetchChildUsers = () => {
+    fetchChildUsersRequest({ id: id })
+      .then(
+        (item) =>
+          item &&
+          dispatch(
+            fetchChildUsersSuccess({
+              child_users: item.child_users,
+              not_child_users: item.not_child_users,
+            })
+          )
+      )
+      .catch((e) => dispatch(fetchChildUsersFailure(e.message)));
+  };
+
+  const fetchConnections = () => {
+    fetchConnectionsRequest({ id: id })
+      .then(item => item && item.contacts && connectionDispatch(fetchConnectionsSuccess(item.contacts)))
+      .catch(e => connectionDispatch(fetchConnectionsFailure(e.message)))
+  }
+
+  const fetchFamilyTree = () => {
+    fetchFamilyTreeRequest({ id: id })
+      .then(item => item && item.family_tree && familyTreeDispatch(fetchFamilyTreeSuccess({
+        family_tree: item.family_tree,
+        constructed_tree: constructTree({contacts: item.family_tree, firstName: item.first_name, lastName: item.last_name })
+      })))
+      .catch(e => familyTreeDispatch(fetchFamilyTreeFailure(e.message)))
+  }
 
   const handleTemplateSendSubmit = async () => {
     let promises = [];
@@ -263,9 +297,9 @@ export function ChildProfilePage(props) {
       .then(async () => await fetchChildUsers())
       .catch((e) => console.log(e));
   };
-  console.log(state);
+
   return (
-    <ChildContext.Provider value={{ state: state, dispatch: dispatch }}>
+    <ChildContext.Provider value={{ state, dispatch, connectionState, connectionDispatch, familyTreeState, fetchConnections, fetchFamilyTree }}>
       {state.loading ? (
         <Preloader />
       ) : state.hasAccess ? (
@@ -369,7 +403,7 @@ export function ChildProfilePage(props) {
             />
           </Spacing>
           <Spacing m={{ t: "22px" }}>
-            <RelativesList relatives={state.child.contacts || []} />
+            <RelativesList relatives={connectionState.connections || []} />
           </Spacing>
           <Spacing m={{ t: "16px" }}>
             <Box d="flex">
@@ -429,7 +463,7 @@ export function ChildProfilePage(props) {
                     styles={{
                       menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                     }}
-                    options={state.child?.contacts?.map((item) => ({
+                    options={connectionState.connections.map((item) => ({
                       label: `${item?.contact?.first_name} ${item?.contact?.last_name}`,
                       value: item,
                     }))}

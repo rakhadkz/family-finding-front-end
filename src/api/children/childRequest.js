@@ -21,6 +21,24 @@ export const fetchChildUsersRequest = (params) => {
   })
 }
 
+export const fetchConnectionsRequest = (params) => {
+  return request({
+    endpoint:
+      "children" +
+      (params.id ? `/${params.id}` : ``) + `?view=contacts`,
+    method: "GET",
+  })
+}
+
+export const fetchFamilyTreeRequest = (params) => {
+  return request({
+    endpoint:
+      "children" +
+      (params.id ? `/${params.id}` : ``) + `?view=family_tree`,
+    method: "GET",
+  })
+}
+
 export const fetchChildrenMeta = () => {
   return request({
     endpoint: "children",

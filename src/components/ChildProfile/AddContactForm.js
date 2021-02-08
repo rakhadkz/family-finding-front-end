@@ -1,17 +1,34 @@
 import Button from "@atlaskit/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { relationshipOptions } from "../../content/relationshipOptions.data";
 import { states } from "../../content/states.data";
+import { getObjectByValue } from "../Children";
 import { Box, Form, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
 
-export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
-  const { register, handleSubmit, control, errors, watch } = useForm({
+export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact }) => {
+  const { register, handleSubmit, control, errors, watch, setValue } = useForm({
     defaultValues: initialValues,
   });
   const [pending, setPending] = useState(false);
   const relationship = watch("relationship"); // you can supply default value as second argument
+
+  useEffect(() => {
+    if(contact){
+      console.log("EDITABLE CONTACT: ", contact)
+      contact.first_name && setValue("first_name", contact.first_name)
+      contact.last_name && setValue("last_name", contact.last_name)
+      contact.relationship && setValue("relationship", contact.relationship)
+      contact.email && setValue("email", contact.email)
+      contact.phone && setValue("phone", contact.phone)
+      contact.address && setValue("address", contact.address)
+      contact.address_2 && setValue("address_2", contact.address_2)
+      contact.city && setValue("city", contact.city)
+      contact.birthday && setValue("birthday", new Date(contact.birthday))
+      contact.zip && setValue("zip", contact.zip)
+    }
+  }, [contact])
 
   const onSubmitHandle = (data) => {
     setPending(true);
@@ -64,6 +81,9 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             label="Last name"
           />
           <SelectInput
+            defaultValue={contact?.relationship && 
+              getObjectByValue(relationshipOptions, contact?.relationship)
+            }
             marginX="8px"
             name={"relationship"}
             register={{ required: false }}
@@ -123,6 +143,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {} }) => {
             label="City"
           />
           <SelectInput
+            defaultValue={contact?.state && { label: contact?.state, value: contact?.state}}
             marginX="16px"
             menuPlacement="top"
             name={"state"}

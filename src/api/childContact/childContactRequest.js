@@ -39,6 +39,30 @@ export const updateChildContactRequestConnections = (data, contactId) => {
   });
 };
 
+export const updateConnectionRequest = (id, data) => {
+  return request({
+    endpoint: `child_contacts/${id}`,
+    method: "PUT",
+    data: {
+      child_contact: {
+        ...data
+      }
+    }
+  });
+};
+
+export const updateFamilyTreeRequest = (id, data) => {
+  return request({
+    endpoint: `child_tree_contacts/${id}`,
+    method: "PUT",
+    data: {
+      child_tree_contact: {
+        ...data
+      }
+    }
+  });
+}
+
 export const removeChildContactRequest = (contactId) => {
   return request({
     endpoint: `child_tree_contacts/${contactId}`,
@@ -53,3 +77,15 @@ export const createContactRequest = (data) => {
     method: "POST",
   });
 };
+
+export const updateContactRequest = ({id, ...rest}) => {
+  return request({
+    endpoint: `contacts/${id}`,
+    method: 'PUT',
+    data: {
+      contact: {
+        ...rest
+      }
+    }
+  })
+}

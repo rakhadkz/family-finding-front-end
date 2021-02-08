@@ -194,4 +194,4 @@ export const AddChildForm = ({ onSubmit, child, setIsOpenEdit, fetch }) => {
   );
 };
 
-const getObjectByValue = (array, value) => array.find(object => object.label === value)
+export const getObjectByValue = (array, value) => array.find(object => object.label === value)

@@ -302,7 +302,7 @@ class Chart extends Component {
         Avatar:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT63VcFex7-_JFQOKCju4WMQHp3xHIxlBZUJA&usqp=CAU",
       });
-      await refreshContacts();
+      refreshContacts();
       setTimeout(() => chart.draw(OrgChart.action.update), 2000);
     });
 

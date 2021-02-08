@@ -5,14 +5,16 @@ import { Table } from "../../../ui/common/Table";
 import { attachmentsTableColumns } from "../../../../content/columns.data";
 import Button from "@atlaskit/button";
 import { ModalDialog } from "../../../ui/common";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import FilePicker from './FilePicker'
 import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 import { fetchChildrenRequest } from "../../../../api/children";
+import { ChildContext } from "../../../../pages/ChildProfilePage";
 
-export const AttachmentsPage = ({ child_id }) => {
+export const AttachmentsPage = () => {
+  const { state: { child: { id } } } = useContext(ChildContext)
   const [ isOpen, setIsOpen ] = useState(false);
-  const { id } = getLocalStorageUser();
+  const user_id = getLocalStorageUser().id;
   const [ attachments, setAttachments ] = useState([]);
   const [ trigger, setTrigger ] = useState(true);
   const [ pending, setPending ] = useState(true);
@@ -20,7 +22,7 @@ export const AttachmentsPage = ({ child_id }) => {
   const [ shouldCloseOnOverlayClick, setShouldCloseOnOverlayClick ] = useState(true)
   useEffect(() => {
     setPending(true)
-    fetchChildrenRequest({id: child_id, view: "attachments"})
+    fetchChildrenRequest({id: id, view: "attachments"})
       .then(data => setAttachments(data.attachments))
       .finally(() => setPending(false))
   }, [trigger])
@@ -44,7 +46,7 @@ export const AttachmentsPage = ({ child_id }) => {
             setIsOpen={setIsOpen}
             width="small"
             hasActions={false}
-            body={<FilePicker user_id={id} child_id={child_id} setIsOpen={setIsOpen} setTrigger={setTrigger} setClosable={setClosable}/>}
+            body={<FilePicker user_id={user_id} child_id={id} setIsOpen={setIsOpen} setTrigger={setTrigger} setClosable={setClosable}/>}
             />
         </Box>
       </Spacing>
