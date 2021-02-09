@@ -354,17 +354,20 @@ export function ChildProfilePage(props) {
             setIsOpen={setIsOpenEdit}
             width="medium"
             hasActions={false}
-            shouldCloseOnEscapePress={false}
-            shouldCloseOnOverlayClick={false}
             body={
-              <div style={{ padding: "30px" }}>
-                <AddChildForm
-                  onSubmit={updateChild}
-                  setIsOpenEdit={setIsOpenEdit}
-                  child={state.child}
-                  fetch={fetchChildProfile}
-                />
-              </div>
+              <Box d="flex" direction="column" align="center">
+                <Spacing m={{ t: "30px" }}>
+                  <Title>Edit Child Profile</Title>
+                </Spacing>
+                <Spacing m={{ b: "30px" }}>
+                  <AddChildForm
+                    onSubmit={updateChild}
+                    setIsOpenEdit={setIsOpenEdit}
+                    child={state.child}
+                    fetch={fetchChildProfile}
+                  />
+                </Spacing>
+              </Box>
             }
           />
           <Box d="flex" justify="space-between">
