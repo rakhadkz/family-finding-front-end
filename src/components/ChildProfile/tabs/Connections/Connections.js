@@ -253,7 +253,7 @@ export const Connections = () => {
       <ModalDialog
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
-        heading="Add Connection"
+        heading={currentConnection ? "Edit Connection" : "Add Connection"}
         appearance={null}
         body={
           <AddContactForm
