@@ -1,14 +1,9 @@
-import { constructTree } from "../../content/childContact.tree.data";
 import {
   FETCH_CHILD_FAILURE,
   FETCH_CHILD_REQUEST,
   FETCH_CHILD_SUCCESS,
   FETCH_CHILD_USERS_FAILURE,
   FETCH_CHILD_USERS_SUCCESS,
-  FETCH_CONNECTIONS_FAILURE,
-  FETCH_CONNECTIONS_SUCCESS,
-  FETCH_FAMILY_TREE_FAILURE,
-  FETCH_FAMILY_TREE_SUCCESS,
   POST_POTENTIAL_MATCH,
 } from "./childProfileActions";
 
@@ -18,9 +13,6 @@ export const initialState = {
   child: {},
   child_users: [],
   not_child_users: [],
-  connections: [],
-  family_tree: [],
-  constructedTree: [],
   hasAccess: true,
 };
 
@@ -74,30 +66,6 @@ export const childProfileReducer = (state, action) => {
         error: action.payload,
         child: state.child,
       };
-    case FETCH_CONNECTIONS_SUCCESS:
-      return {
-        ...state,
-        connections: action.payload
-      }
-    case FETCH_CONNECTIONS_FAILURE:
-      return {
-        ...state,
-        connections: [],
-        error: action.payload
-      }
-    case FETCH_FAMILY_TREE_SUCCESS:
-      return {
-        ...state,
-        family_tree: action.payload,
-        constructedTree: constructTree({contacts: action.payload, firstName: state.child.first_name, lastName: state.child.last_name})
-      }
-    case FETCH_FAMILY_TREE_FAILURE:
-      return {
-        ...state,
-        family_tree: [],
-        constructedTree: [],
-        error: action.payload
-      }
     default:
       return state;
   }

@@ -4,10 +4,6 @@ export const FETCH_CHILD_FAILURE = "FETCH_CHILD_FAILURE";
 export const FETCH_CHILD_USERS_SUCCESS = "FETCH_CHILD_USERS_SUCCESS";
 export const FETCH_CHILD_USERS_FAILURE = "FETCH_CHILD_USERS_FAILURE";
 export const POST_POTENTIAL_MATCH = "POST_POTENTIAL_MATCH";
-export const FETCH_CONNECTIONS_SUCCESS = "FETCH_CONNECTIONS_SUCCESS";
-export const FETCH_CONNECTIONS_FAILURE = "FETCH_CONNECTIONS_FAILURE";
-export const FETCH_FAMILY_TREE_SUCCESS = "FETCH_FAMILY_TREE_SUCCESS";
-export const FETCH_FAMILY_TREE_FAILURE = "FETCH_FAMILY_TREE_FAILURE";
 
 export const fetchChildRequest = () => {
   return {
@@ -62,31 +58,3 @@ export const fetchChildUsersFailure = (error) => {
     payload: error,
   };
 };
-
-export const fetchConnectionsSuccess = data => {
-  return {
-    type: FETCH_CONNECTIONS_SUCCESS,
-    payload: data
-  }
-}
-
-export const fetchConnectionsFailure = error => {
-  return {
-    type: FETCH_CONNECTIONS_FAILURE,
-    payload: error
-  }
-}
-
-export const fetchFamilyTreeSuccess = data => {
-  return {
-    type: FETCH_FAMILY_TREE_SUCCESS,
-    payload: data
-  }
-}
-
-export const fetchFamilyTreeFailure = error => {
-  return {
-    type: FETCH_FAMILY_TREE_FAILURE,
-    payload: error
-  }
-}
