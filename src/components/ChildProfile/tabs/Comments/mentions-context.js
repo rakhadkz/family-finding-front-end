@@ -8,9 +8,9 @@ export const MentionsContext = React.createContext();
 export const MentionsProvider = (props) => {
   const localStorageUser = getLocalStorageUser();
   const [mentions, setMentions] = useState();
-  const { state, dispatch } = useContext(ChildContext);
+  const { connectionState } = useContext(ChildContext);
   const [contacts, setContacts] = useState(
-    state.child.contacts
+    connectionState.connections
       .map((s) => s?.contact)
       .map((contact) => ({
         name: `${
