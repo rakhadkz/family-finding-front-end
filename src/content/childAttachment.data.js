@@ -16,7 +16,7 @@ import Can from "../accessControl/Can";
 import { ATTACHMENTS } from "../helpers";
 import { ACTIONS } from "../accessControl/actions";
 
-const childAttachmentTableData = (data, setTrigger, setPending) => {
+const childAttachmentTableData = (data, fetchAttachments, setPending) => {
   return (
     data &&
     data.map((item, index) => {
@@ -65,8 +65,7 @@ const childAttachmentTableData = (data, setTrigger, setPending) => {
                         setPending(true);
                         await removeChildAttachmentRequest(item.id);
                         await removeAttachmentRequest(item.attachment_id);
-                        setTrigger((prev) => !prev);
-                        setPending(false);
+                        fetchAttachments()
                       }}
                       height="32px"
                       width="32px"

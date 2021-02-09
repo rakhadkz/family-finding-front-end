@@ -7,7 +7,7 @@ import { createAttachmentRequest, createChildAttachmentRequest } from '../../../
 import { useState } from 'react';
 import Folder48Icon from '@atlaskit/icon-file-type/glyph/folder/48';
 
-export default function FilePicker({ user_id, child_id, setIsOpen, setTrigger, setClosable }){
+export default function FilePicker({ user_id, child_id, setIsOpen, fetchAttachments, setClosable }){
   const handleChangeStatus = ({ meta, file }, status) => { console.log(status, meta, file) }
   const [ pending, setPending ] = useState(false);
   const handleSubmit = (files, allFiles) => {
@@ -46,7 +46,7 @@ export default function FilePicker({ user_id, child_id, setIsOpen, setTrigger, s
       if (index === allFiles.length - 1){
         setPending(false);
         setIsOpen(false);
-        setTrigger(prev => !prev);
+        fetchAttachments();
       }
     })
   }

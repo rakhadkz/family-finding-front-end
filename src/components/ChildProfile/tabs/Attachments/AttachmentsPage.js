@@ -5,31 +5,26 @@ import { Table } from "../../../ui/common/Table";
 import { attachmentsTableColumns } from "../../../../content/columns.data";
 import Button from "@atlaskit/button";
 import { ModalDialog } from "../../../ui/common";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import FilePicker from './FilePicker'
 import { getLocalStorageUser } from "../../../../context/auth/authProvider";
-import { fetchChildrenRequest } from "../../../../api/children";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
+import { fetchAttachmentsRequest } from "../../../../reducers/attachment";
 
 export const AttachmentsPage = () => {
-  const { state: { child: { id } } } = useContext(ChildContext)
+  const { state: { child: { id } }, attachmentState: { attachments, loading }, attachmentDispatch, fetchAttachments } = useContext(ChildContext)
   const [ isOpen, setIsOpen ] = useState(false);
   const user_id = getLocalStorageUser().id;
-  const [ attachments, setAttachments ] = useState([]);
-  const [ trigger, setTrigger ] = useState(true);
-  const [ pending, setPending ] = useState(true);
   const [ shouldCloseOnEscapePress, setShouldCloseOnEscapePress ] = useState(true)
   const [ shouldCloseOnOverlayClick, setShouldCloseOnOverlayClick ] = useState(true)
-  useEffect(() => {
-    setPending(true)
-    fetchChildrenRequest({id: id, view: "attachments"})
-      .then(data => setAttachments(data.attachments))
-      .finally(() => setPending(false))
-  }, [trigger])
 
   const setClosable = (bool) => {
     setShouldCloseOnEscapePress(bool)
     setShouldCloseOnOverlayClick(bool)
+  }
+
+  const setPending = () => {
+    attachmentDispatch(fetchAttachmentsRequest())
   }
 
   return (
@@ -46,15 +41,15 @@ export const AttachmentsPage = () => {
             setIsOpen={setIsOpen}
             width="small"
             hasActions={false}
-            body={<FilePicker user_id={user_id} child_id={id} setIsOpen={setIsOpen} setTrigger={setTrigger} setClosable={setClosable}/>}
+            body={<FilePicker user_id={user_id} child_id={id} setIsOpen={setIsOpen} fetchAttachments={fetchAttachments} setClosable={setClosable}/>}
             />
         </Box>
       </Spacing>
       <Spacing m={{ t: "23px" }}>
         <Table
-          pending={pending}
+          pending={loading}
           head={attachmentsTableColumns}
-          items={childAttachmentTableData(attachments, setTrigger, setPending)}
+          items={childAttachmentTableData(attachments, fetchAttachments, setPending)}
         />
       </Spacing>
     </div>
