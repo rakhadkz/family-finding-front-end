@@ -1,17 +1,12 @@
 import Tabs from "@atlaskit/tabs";
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { CommentsTab } from "./tabs/Comments/CommentsTab";
 import { Connections } from "./tabs/Connections";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
-export const ChildTabs = ({
-  id,
-  fetchChildProfile,
-  first_name: firstName,
-  last_name: lastName,
-}) => {
+export const ChildTabs = () => {
   const tabs = [
     {
       label: "Connections",
@@ -24,7 +19,7 @@ export const ChildTabs = ({
     { label: "Family Search" },
     {
       label: "Comments",
-      content: <CommentsTab refresh={fetchChildProfile} />,
+      content: <CommentsTab />,
     },
     {
       label: "Attachments",
@@ -33,7 +28,6 @@ export const ChildTabs = ({
   ];
   const location = useLocation();
   const [current, setCurrent] = useState(0);
-  let history = useHistory();
 
   useEffect(() => {
     if (location.hash.length > 0) {
@@ -47,10 +41,7 @@ export const ChildTabs = ({
 
   const selectTab = (tab, index) => {
     setCurrent(index);
-    history.push(`#${tab.label.replace(/\s+/g, "-").toLowerCase()}`);
   };
 
-  return firstName && lastName ? (
-    <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />
-  ) : null;
+  return <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />
 };

@@ -10,7 +10,7 @@ import Select from "@atlaskit/select";
 import Tag from "@atlaskit/tag";
 import TagGroup from "@atlaskit/tag-group";
 import { Text } from "@chakra-ui/react";
-import React, { memo, useEffect, useReducer, useState } from "react";
+import React, { memo, useCallback, useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
@@ -157,7 +157,7 @@ export function ChildProfilePage(props) {
       .catch((e) => dispatch(fetchChildFailure(e.message)));
   };
 
-  const fetchChildUsers = () => {
+  const fetchChildUsers = useCallback(() => {
     fetchChildUsersRequest({ id: id })
       .then(
         (item) =>
@@ -170,7 +170,7 @@ export function ChildProfilePage(props) {
           )
       )
       .catch((e) => dispatch(fetchChildUsersFailure(e.message)));
-  };
+  }, [id])
 
   const fetchConnections = () => {
     fetchConnectionsRequest({ id: id })
@@ -565,13 +565,7 @@ export function ChildProfilePage(props) {
             }
           />
           <Spacing m={{ t: "40px" }}>
-            {
-              <ChildTabs
-                user={user}
-                fetchChildProfile={fetchChildProfile}
-                {...state.child}
-              />
-            }
+            <ChildTabs />
           </Spacing>
         </>
       ) : (
