@@ -144,7 +144,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact
           />
           <SelectInput
             defaultValue={contact?.state && { label: contact?.state, value: contact?.state}}
-            marginX="16px"
+            marginX="8px"
             menuPlacement="top"
             name={"state"}
             register={{ required: false }}
@@ -156,7 +156,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact
           />
           
           <DatepickerInput
-            marginX="16px"
+            marginX="8px"
             name={"birthday"}
             register={{ required: false }}
             control={control}
@@ -184,7 +184,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact
               label="Relationship name"
             />
           ) : (
-            <div style={{ width: 256 }} />
+            <div style={{ width: 250 }} />
           )}
           
         </Spacing>
