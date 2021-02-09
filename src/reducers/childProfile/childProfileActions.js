@@ -42,6 +42,7 @@ export const fetchChildUsersSuccess = ({ child_users, not_child_users }) => {
         name: `${user.first_name} ${user.last_name}`,
         href: "#",
         id: id,
+        src: `https://ui-avatars.com/api/?background=c1c7d0&color=fff&name=${user.first_name}+${user.last_name}`
       })),
       not_child_users: not_child_users.map((user) => ({
         label: `${user.first_name} ${user.last_name}`,

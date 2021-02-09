@@ -142,11 +142,6 @@ export const searchVectorsTableColumns = [
     content: "Description",
     width: 25,
   },
-  // {
-  //   key: "in_continuous_search",
-  //   content: "In Continuous Search",
-  //   width: 15,
-  // },
   {
     key: "priority",
     content: <p align="center">Priority</p>,
@@ -237,3 +232,54 @@ export const contactsTableColumns = [
     width: 11,
   },
 ];
+
+export const possibleConnectionColumns = [
+  {
+    key: "full_name",
+    content: "Full Name",
+    width: 25,
+  },
+  {
+    key: "relationship",
+    content: "Relationship",
+    width: 15,
+  },
+  {
+    key: "engagement",
+    content: "Engagement",
+    width: 18,
+  },
+  {
+    key: "actions",
+    content: <p align="center">Actions</p>,
+    width: 15,
+  },
+]
+
+export const confirmedConnectionColumns = [
+  {
+    key: "full_name",
+    content: "Full Name",
+    width: 23,
+  },
+  {
+    key: "relationship",
+    content: "Relationship",
+    width: 10,
+  },
+  {
+    key: "engagement",
+    content: "Info & Engagement",
+    width: 15,
+  },
+  {
+    key: "link_score",
+    content: "Link Score",
+    width: 13,
+  },
+  {
+    key: "actions",
+    content: <p align="center">Actions</p>,
+    width: 20,
+  },
+]

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { postCommentRequest } from "../../../../api/comments";
-import { fetchComments } from "../../../../context/children/childProvider";
+import { fetchComments as fetchCommentsRequest } from "../../../../context/children/childProvider";
 import { Box, Spacing } from "../../../ui/atoms";
 import { Comments } from "./Comments";
 import { CommentsForm } from "./CommentsForm";
@@ -24,15 +24,16 @@ const StyledSpinner = () => (
   </Box>
 );
 
-export const CommentsTab = ({ refresh }) => {
-  const { state, dispatch } = useContext(ChildContext);
-  const { comments, id } = state.child;
+export const CommentsTab = () => {
+  const { state } = useContext(ChildContext);
+  const { id } = state.child;
   const [show, handleShow] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [blocks, setBlocks] = useState(1);
   const [suggestions, setSuggestions] = useState(0);
   const { user } = useAuth();
   const scrollRef = useRef(null);
+  const [ comments, setComments ] = useState([])
 
   const executeScroll = () =>
     scrollRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -43,6 +44,14 @@ export const CommentsTab = ({ refresh }) => {
     handleShow(false);
     setBlocks(1);
   };
+
+  useEffect(() => {
+    fetchComments()
+  }, [])
+
+  const fetchComments = () => {
+    fetchCommentsRequest(id).then(data => setComments(data.comments))
+  }
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -76,6 +85,7 @@ export const CommentsTab = ({ refresh }) => {
     if (
       show &&
       comments &&
+      comments.length > 0 &&
       comments[comments.length - 1].in_reply_to === null &&
       comments[comments.length - 1].updated_at ===
         comments[comments.length - 1].created_at
@@ -106,7 +116,7 @@ export const CommentsTab = ({ refresh }) => {
                 childId={id}
                 data={comment}
                 key={comment.id}
-                refresh={refresh}
+                refresh={fetchComments}
               />
             ))}
         </Spacing>
@@ -125,7 +135,7 @@ export const CommentsTab = ({ refresh }) => {
           <Avatar name={`${user?.first_name} ${user?.last_name}`} />
           <Spacing m={{ l: "17px", t: "-31px" }}>
             <CommentsForm
-              refresh={refresh}
+              refresh={fetchComments}
               childId={id}
               inReply={0}
               setBlocks={setBlocks}

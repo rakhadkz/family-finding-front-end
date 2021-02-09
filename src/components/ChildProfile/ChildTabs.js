@@ -1,47 +1,25 @@
 import Tabs from "@atlaskit/tabs";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { fetchChildrenRequest } from "../../api/children";
-import { constructTree } from "../../content/childContact.tree.data";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { CommentsTab } from "./tabs/Comments/CommentsTab";
-import { ConnectionsNew } from "./tabs/Connections";
+import { Connections } from "./tabs/Connections";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
-import { ChildContext } from "../../pages/ChildProfilePage";
 
 export const ChildTabs = ({
   id,
   fetchChildProfile,
   first_name: firstName,
   last_name: lastName,
-  family_tree = [],
 }) => {
   const tabs = [
     {
       label: "Connections",
-      content: (
-        <ConnectionsNew
-          treeContacts={constructTree({
-            contacts: family_tree,
-            firstName,
-            lastName,
-          })}
-          refreshContacts={fetchChildProfile}
-        />
-      ),
+      content: <Connections />,
     },
     {
       label: "Family Tree",
-      content: (
-        <FamilyTreePage
-          contacts={constructTree({
-            contacts: family_tree,
-            firstName,
-            lastName,
-          })}
-          refreshContacts={fetchChildProfile}
-        />
-      ),
+      content: <FamilyTreePage />,
     },
     { label: "Family Search" },
     {
@@ -50,7 +28,7 @@ export const ChildTabs = ({
     },
     {
       label: "Attachments",
-      content: <AttachmentsPage child_id={id} />,
+      content: <AttachmentsPage />,
     },
   ];
   const location = useLocation();

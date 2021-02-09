@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
@@ -14,17 +14,22 @@ import { AddContactForm } from "../../AddContactForm";
 import OrgChart from "./mychart";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 
-export const FamilyTreePage = (props) => {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const { state, dispatch } = useContext(ChildContext);
-  const { id, contacts } = state.child;
+export const FamilyTreePage = () => {
+  const [ isAddModalOpen, setIsAddModalOpen ] = useState(false);
+  const { state, connectionState: { connections }, familyTreeState: { constructed_tree }, fetchConnections, fetchFamilyTree } = useContext(ChildContext);
+  const { child: { id } } = state;
+
+  const refreshContacts = () => {
+    fetchConnections()
+    fetchFamilyTree()
+  }
 
   const onAddContact = async (data) => {
     await createContactRequest(data)
       .then((data) => {
         console.log("RESULT", data);
         createTableChildContactRequest({
-          child_id: props.childId,
+          child_id: id,
           contact_id: data.id,
         })
           .then(async () => {
@@ -46,7 +51,7 @@ export const FamilyTreePage = (props) => {
                   },
                 });
               } else if (parent) {
-                let parentNode = props.contacts.find((item) => {
+                let parentNode = constructed_tree.find((item) => {
                   console.log(item);
                   return item.Relationship === parent;
                 });
@@ -88,13 +93,13 @@ export const FamilyTreePage = (props) => {
           })
           .finally(async () => {
             setIsAddModalOpen(false);
-            await props.refreshContacts();
+            await refreshContacts();
           });
       })
       .finally(() => setIsAddModalOpen(false));
   };
 
-  console.log("CONTACTS", props.contacts);
+  console.log("CONTACTS", constructed_tree);
 
   return (
     <Wrapper>
@@ -105,9 +110,9 @@ export const FamilyTreePage = (props) => {
       <Spacing m={{ b: "20px" }}>
         <OrgChart
           childId={id}
-          initialContacts={contacts}
-          nodes={props.contacts}
-          refreshContacts={props.refreshContacts}
+          initialContacts={connections}
+          nodes={constructed_tree}
+          refreshContacts={refreshContacts}
         />
       </Spacing>
       {/* <Spacing m={{ b: "20px" }}>
@@ -128,7 +133,7 @@ export const FamilyTreePage = (props) => {
             onSubmit={async (data) => {
               console.log("DATA", data);
               await onAddContact(data).finally(
-                async () => await props.refreshContacts()
+                () => refreshContacts()
               );
               console.log("FETCHING");
             }}
