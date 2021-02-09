@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { postCommentRequest } from "../../../../api/comments";
-import { fetchComments as fetchCommentsRequest } from "../../../../context/children/childProvider";
 import { Box, Spacing } from "../../../ui/atoms";
 import { Comments } from "./Comments";
 import { CommentsForm } from "./CommentsForm";
@@ -25,7 +24,7 @@ const StyledSpinner = () => (
 );
 
 export const CommentsTab = () => {
-  const { state } = useContext(ChildContext);
+  const { state, commentState: { comments }, fetchComments } = useContext(ChildContext);
   const { id } = state.child;
   const [show, handleShow] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -33,8 +32,7 @@ export const CommentsTab = () => {
   const [suggestions, setSuggestions] = useState(0);
   const { user } = useAuth();
   const scrollRef = useRef(null);
-  const [ comments, setComments ] = useState([])
-
+  
   const executeScroll = () =>
     scrollRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
 
@@ -44,14 +42,6 @@ export const CommentsTab = () => {
     handleShow(false);
     setBlocks(1);
   };
-
-  useEffect(() => {
-    fetchComments()
-  }, [])
-
-  const fetchComments = () => {
-    fetchCommentsRequest(id).then(data => setComments(data.comments))
-  }
 
   useEffect(() => {
     window.addEventListener("scroll", () => {

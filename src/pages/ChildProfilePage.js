@@ -49,6 +49,13 @@ import {
   initialState
 } from "../reducers/childProfile";
 import { 
+  commentReducer,
+  initialState as commentInitialState,
+  fetchCommentsSuccess,
+  fetchCommentsFailure,
+  fetchCommentsRequest
+} from "../reducers/comment";
+import { 
   connectionReducer,
   initialState as connectionInitialState,
   fetchConnectionsFailure,
@@ -60,6 +67,13 @@ import {
   fetchFamilyTreeFailure,
   fetchFamilyTreeSuccess,
 } from "../reducers/familyTree";
+import { 
+  attachmentReducer,
+  initialState as attachmentInitialState,
+  fetchAttachmentsRequest,
+  fetchAttachmentsFailure,
+  fetchAttachmentsSuccess,
+} from "../reducers/attachment";
 import { Preloader } from "./Preloader";
 
 export const ChildContext = React.createContext();
@@ -85,6 +99,8 @@ export function ChildProfilePage(props) {
   const [ state, dispatch ] = useReducer(childProfileReducer, initialState);
   const [ connectionState, connectionDispatch ] = useReducer(connectionReducer, connectionInitialState)
   const [ familyTreeState, familyTreeDispatch ] = useReducer(familyTreeReducer, familyTreeInitialState)
+  const [ commentState, commentDispatch ] = useReducer(commentReducer, commentInitialState)
+  const [ attachmentState, attachmentDispatch ] = useReducer(attachmentReducer, attachmentInitialState)
 
   useEffect(() => {
     dispatch(fetchChildRequest());
@@ -92,6 +108,8 @@ export function ChildProfilePage(props) {
     fetchConnections();
     fetchFamilyTree();
     fetchTemplates();
+    fetchComments();
+    fetchAttachments();
     (user.role === "admin" || user.role === "manager") && fetchChildUsers();
   }, []);
 
@@ -167,6 +185,20 @@ export function ChildProfilePage(props) {
         constructed_tree: constructTree({contacts: item.family_tree, firstName: item.first_name, lastName: item.last_name })
       })))
       .catch(e => familyTreeDispatch(fetchFamilyTreeFailure(e.message)))
+  }
+
+  const fetchComments = () => {
+    commentDispatch(fetchCommentsRequest())
+    fetchChildrenRequest({ id: id, view: "comments" })
+      .then(data => data && data.comments && commentDispatch(fetchCommentsSuccess(data.comments)))
+      .catch(e => commentDispatch(fetchCommentsFailure(e.message)))
+  }
+
+  const fetchAttachments = () => {
+    attachmentDispatch(fetchAttachmentsRequest())
+    fetchChildrenRequest({ id, view: "attachments" })
+      .then(data => data && data.attachments && attachmentDispatch(fetchAttachmentsSuccess(data.attachments)))
+      .catch(e => attachmentDispatch(fetchAttachmentsFailure(e.message)))
   }
 
   const handleTemplateSendSubmit = async () => {
@@ -299,7 +331,20 @@ export function ChildProfilePage(props) {
   };
 
   return (
-    <ChildContext.Provider value={{ state, dispatch, connectionState, connectionDispatch, familyTreeState, fetchConnections, fetchFamilyTree }}>
+    <ChildContext.Provider value={{ 
+      state,
+      commentState,
+      connectionState,
+      attachmentState,
+      familyTreeState,
+      dispatch,
+      connectionDispatch,
+      attachmentDispatch,
+      fetchConnections,
+      fetchFamilyTree,
+      fetchComments,
+      fetchAttachments
+    }}>
       {state.loading ? (
         <Preloader />
       ) : state.hasAccess ? (
