@@ -213,7 +213,10 @@ export const Connections = () => {
         <Button
           appearance="warning"
           style={{ marginBottom: "10px"}}
-          onClick={() => setIsAddModalOpen(true)}
+          onClick={() => {
+            setCurrentConnection(null)
+            setIsAddModalOpen(true)
+          }}
         >
           Add Connection
         </Button>
@@ -253,28 +256,33 @@ export const Connections = () => {
       <ModalDialog
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
-        heading="Add Connection"
         appearance={null}
+        width="large"
         body={
-          <AddContactForm
-            onSubmit={async (data) => {
-              console.log("DATA", data);
-              if (currentConnection){
-                if(data.relationship){
-                  await updateConnectionRequest(currentConnection.id, { relationship: data.relationship }).then(() => {
-                    fetchConnections()
-                    fetchFamilyTree()
-                  })
-                  //TODO Add update Family Tree Update Request to immediately create a new necessary node
+          <Box d="flex" direction="column" align="center">
+            <Spacing m={{ t: "30px" }}>
+              <Title>{currentConnection ? "Edit Connection" : "Add Connection"}</Title>
+            </Spacing>
+            <AddContactForm
+              onSubmit={async (data) => {
+                console.log("DATA", data);
+                if (currentConnection){
+                  if(data.relationship){
+                    await updateConnectionRequest(currentConnection.id, { relationship: data.relationship }).then(() => {
+                      fetchConnections()
+                      fetchFamilyTree()
+                    })
+                    //TODO Add update Family Tree Update Request to immediately create a new necessary node
+                  }
+                  await updateContactRequest({id: currentConnection.contact.id, ...data}).then(() => fetchConnections()).finally(() => setIsAddModalOpen(false))
+                }else{
+                  await onAddContact(data).finally(() => fetchConnections());
                 }
-                await updateContactRequest({id: currentConnection.contact.id, ...data}).then(() => fetchConnections()).finally(() => setIsAddModalOpen(false))
-              }else{
-                await onAddContact(data).finally(() => fetchConnections());
-              }
-            }}
-            onCancel={() => setIsAddModalOpen(false)}
-            contact={currentConnection?.contact}
-          />
+              }}
+              onCancel={() => setIsAddModalOpen(false)}
+              contact={currentConnection?.contact}
+            />
+          </Box>
         }
         hasActions={false}
       />
