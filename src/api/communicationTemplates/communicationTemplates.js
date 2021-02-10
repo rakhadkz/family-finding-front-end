@@ -30,10 +30,19 @@ export const deleteCommunicationTemplateRequest = async (templateId) => {
   });
 };
 
-export const updateCommunicationTemplateRequest = (templateId) => async (data) => {
+export const updateCommunicationTemplateRequest = (templateId) => async (
+  data
+) => {
   return request({
     endpoint: `communication_templates/${templateId}`,
     method: "PUT",
     data,
+  });
+};
+
+export const fetchTemplatesSentByContactId = (contactId) => {
+  return request({
+    endpoint: `templates_sent?id=${contactId}`,
+    method: "GET",
   });
 };

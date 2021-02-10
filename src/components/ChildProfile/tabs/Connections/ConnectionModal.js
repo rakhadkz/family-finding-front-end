@@ -1,16 +1,12 @@
-import React, { useState, useContext } from "react";
-import { Box, Label, Rectangle, Spacing, Title } from "../../../ui/atoms";
-import { Avatar } from "../../../ui/molecules/Avatar";
-import { FitScore } from "../../../ui/molecules";
+import React from "react";
 import styled from "styled-components";
-import EmailIcon from "@atlaskit/icon/glyph/email";
-import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
-import AttachmentIcon from "@atlaskit/icon/glyph/attachment";
-import CommentIcon from "@atlaskit/icon/glyph/comment";
-import Button, { ButtonGroup } from "@atlaskit/button";
+import { Box, Spacing, Title } from "../../../ui/atoms";
+import { FitScore } from "../../../ui/molecules";
+import { Avatar } from "../../../ui/molecules/Avatar";
+import { ConnectionTabs } from "./ConnectionTabs";
 
 const ConnectionModal = ({ currentConnection }) => {
-  console.log(currentConnection);
+  console.log("WWSSS", currentConnection);
   return (
     <Box
       style={{
@@ -18,7 +14,8 @@ const ConnectionModal = ({ currentConnection }) => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: "60px",
+        marginTop: "20px",
+        height: '80vh'
       }}
     >
       {" "}
@@ -30,91 +27,46 @@ const ConnectionModal = ({ currentConnection }) => {
         size="xlarge"
         ratio={1.25}
       />
-      <Title
-        size="24px"
-        style={{
-          fontWeight: "700",
-          marginLeft: "5px",
-          marginBottom: "5px",
-          marginTop: "20px",
-        }}
-      >
-        {currentConnection?.contact?.first_name[0]?.toUpperCase() +
-          currentConnection?.contact?.first_name?.substring(1)}{" "}
-        {currentConnection?.contact?.last_name
-          ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
-            currentConnection?.contact?.last_name?.substring(1)
-          : ""}
-      </Title>
-      <Text
-        style={{ marginTop: "20px", marginBottom: "15px", marginLeft: "5px" }}
-      >
-        {currentConnection?.contact?.relationship}
-      </Text>
+      <Spacing m={{ t: "10px" }}>
+        <Title
+          size="24px"
+          style={{
+            fontWeight: "700",
+          }}
+        >
+          {currentConnection?.contact?.first_name[0]?.toUpperCase() +
+            currentConnection?.contact?.first_name?.substring(1)}{" "}
+          {currentConnection?.contact?.last_name
+            ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
+              currentConnection?.contact?.last_name?.substring(1)
+            : ""}
+        </Title>
+      </Spacing>
+      <Text>{currentConnection?.contact?.relationship}</Text>
       <FitScore score={Math.floor(Math.random() * 6)} />
-      <Box
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          flexDirection: "row",
-          marginTop: "50px",
-          marginBottom: "50px",
-          width: "400px",
-          flexWrap: "wrap",
-        }}
-      >
-        <Box
-          style={{ width: "200px", fontWeight: "700", marginBottom: "20px" }}
-        >
-          Email:
-          <Box style={{ fontWeight: "500" }}>
-            {currentConnection?.contact?.email}
+      <Spacing m="10px 0">
+        <Box d="flex" w="500px" justify="space-between" wrap="wrap">
+          <Box mb="20px" w="200px" style={{ fontWeight: "700" }}>
+            Email:
+            <Box style={{ fontWeight: "500" }}>
+              {currentConnection?.contact?.email}
+            </Box>
           </Box>
-        </Box>
-        <Box
-          style={{ width: "200px", fontWeight: "700", marginBottom: "20px" }}
-        >
-          Address:{" "}
-          <Box style={{ fontWeight: "500" }}>
-            {currentConnection?.contact?.address}
+          <Box mb="20px" w="200px" style={{ fontWeight: "700" }}>
+            Address:{" "}
+            <Box style={{ fontWeight: "500" }}>
+              {currentConnection?.contact?.address}
+            </Box>
           </Box>
-        </Box>
-        <Box
-          style={{ width: "200px", fontWeight: "700", marginBottom: "20px" }}
-        >
-          Phone:
-          <Box style={{ fontWeight: "500" }}>
-            {currentConnection?.contact?.phone}
+          <Box mb="0px" w="200px" style={{ fontWeight: "700" }}>
+            Phone:
+            <Box style={{ fontWeight: "500" }}>
+              {currentConnection?.contact?.phone}
+            </Box>
           </Box>
-        </Box>
-      </Box>
-      <div
-        style={{
-          borderTop: "2px solid #fff ",
-          borderColor: "#000000",
-
-          marginLeft: 20,
-          marginRight: 20,
-          width: "500px",
-          color: "#000000",
-        }}
-      ></div>
-      <Spacing m={{ l: "-10px", b: "200px" }}>
-        <Box d="f">
-          <Button appearance="link" iconBefore={<NotificationIcon />}>
-            5 link alerts
-          </Button>
-          <Button appearance="link" iconBefore={<EmailIcon />}>
-            5 contacts
-          </Button>
-          <Button appearance="link" iconBefore={<CommentIcon />}>
-            5 comments
-          </Button>
-          <Button appearance="link" iconBefore={<AttachmentIcon />}>
-            5 attachments
-          </Button>
         </Box>
       </Spacing>
+      <ConnectionTabs currentConnection={currentConnection} />
     </Box>
   );
 };

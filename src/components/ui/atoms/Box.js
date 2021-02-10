@@ -13,4 +13,5 @@ export const Box = styled.div`
   margin-left: ${prop("ml", "0px")};
   margin-top: ${prop("mt", "0px")};
   margin-bottom: ${prop("mb", "0px")};
+  flex-wrap: ${prop("wrap","unset")};
 `;

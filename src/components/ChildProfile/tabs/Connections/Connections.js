@@ -1,26 +1,26 @@
 import Button from "@atlaskit/button"
-import { Box, Rectangle, Spacing, Title } from "../../../ui/atoms"
-import { Table } from "../../../ui/common/Table"
-import EmailIcon from '@atlaskit/icon/glyph/email'
-import NotificationIcon from "@atlaskit/icon/glyph/notification-direct"
 import AttachmentIcon from "@atlaskit/icon/glyph/attachment"
 import CommentIcon from "@atlaskit/icon/glyph/comment"
-import { Avatar } from "../../../ui/molecules/Avatar"
-import { FitScore } from "../../../ui/molecules"
-import styled from "styled-components"
-import { ModalDialog } from "../../../ui/common"
+import EmailIcon from '@atlaskit/icon/glyph/email'
+import NotificationIcon from "@atlaskit/icon/glyph/notification-direct"
 import React, { useContext, useState } from 'react'
-import ConnectionModal from "./ConnectionModal"
-import { ChildContext } from "../../../../pages/ChildProfilePage"
-import { possibleConnectionRows } from "../../../../content/possibleConnection.data"
-import { fetchConnectionsRequest } from "../../../../reducers/connection"
-import { createContactRequest, createTableChildContactRequest, updateConnectionRequest, updateContactRequest, updateFamilyTreeRequest } from "../../../../api/childContact"
+import { toast } from "react-toastify"
+import styled from "styled-components"
+import { createContactRequest, createTableChildContactRequest, updateConnectionRequest, updateContactRequest } from "../../../../api/childContact"
+import { confirmedConnectionColumns, possibleConnectionColumns } from "../../../../content/columns.data"
 import { confirmedConnectionRows } from "../../../../content/confirmedConnection.data"
-import { AddContactForm } from "../../AddContactForm"
+import { possibleConnectionRows } from "../../../../content/possibleConnection.data"
 import { relationshipOptions } from "../../../../content/relationshipOptions.data"
 import { createChildContact } from "../../../../context/children/childProvider"
-import { toast } from "react-toastify"
-import { confirmedConnectionColumns, possibleConnectionColumns } from "../../../../content/columns.data"
+import { ChildContext } from "../../../../pages/ChildProfilePage"
+import { fetchConnectionsRequest } from "../../../../reducers/connection"
+import { Box, Rectangle, Spacing, Title } from "../../../ui/atoms"
+import { ModalDialog } from "../../../ui/common"
+import { Table } from "../../../ui/common/Table"
+import { FitScore } from "../../../ui/molecules"
+import { Avatar } from "../../../ui/molecules/Avatar"
+import { AddContactForm } from "../../AddContactForm"
+import ConnectionModal from "./ConnectionModal"
 
 export const SmallText = styled.div`
   font-family: Helvetica;
@@ -142,7 +142,7 @@ export const Connections = () => {
 
   return (
     <Box>
-      { placedContact && (
+      {placedContact && (
       <Box>
         <Spacing m={{ t: "36px"}}>
           <Title>Final Placement</Title>
@@ -246,7 +246,7 @@ export const Connections = () => {
             onCancel={() => setIsConnectionModalOpen(false)}
           />
         }
-        width="x-large"
+        width="large"
         hasActions={false}
       />
 
