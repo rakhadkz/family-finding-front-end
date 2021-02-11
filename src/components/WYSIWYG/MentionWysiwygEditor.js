@@ -2,11 +2,12 @@ import Button from "@atlaskit/button";
 import QuoteIcon from "@atlaskit/icon/glyph/quote";
 import Editor from "@draft-js-plugins/editor";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
+import "@draft-js-plugins/emoji/lib/plugin.css";
 import { convertToRaw, EditorState, RichUtils } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { stateFromHTML } from "draft-js-import-html";
 import createMentionPlugin, {
-  defaultSuggestionsFilter,
+  defaultSuggestionsFilter
 } from "draft-js-mention-plugin";
 import "draft-js/dist/Draft.css";
 import Immutable from "immutable";
@@ -15,9 +16,8 @@ import styled from "styled-components";
 import { MentionsContext } from "../ChildProfile/tabs/Comments/mentions-context";
 import MentionEntry from "./MentionEntry";
 import mentionsStyles from "./mentionsStyles.css";
-import Toolbars from "./Toolbar";
-import "@draft-js-plugins/emoji/lib/plugin.css";
 import position from "./position";
+import Toolbars from "./Toolbar";
 
 const positionSuggestions = ({ state, props }) => {
   let transform;
@@ -361,7 +361,6 @@ class MentionWysiwygEditor extends React.Component {
       this.emojiPlugin,
       this.contactMentionPlugin,
     ];
-    console.log(this.context.contacts);
     // console.log(convertToRaw(this.state.editorState.getCurrentContent()));
     // console.log(this.context);
     // console.log(this.editorRef.current?.editor);
