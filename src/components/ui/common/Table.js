@@ -1,7 +1,7 @@
 import DynamicTable from "@atlaskit/dynamic-table";
+import Pagination from '@atlaskit/pagination';
 import { Box } from "../atoms";
 import { TableWrapper } from "./TableWrapper";
-import Pagination from '@atlaskit/pagination';
 
 export const Table = ({
   totalPage = null,
@@ -9,6 +9,7 @@ export const Table = ({
   items,
   pending = false,
   head,
+  emptyView="Not found",
   currentPage,
 }) => {
   return (
@@ -18,7 +19,7 @@ export const Table = ({
           isLoading={pending}
           head={{ cells: head }}
           rows={items}
-          emptyView="Not found"
+          emptyView={emptyView}
           isFixedSize
         />
       </TableWrapper>

@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { fetchTemplatesSentByContactId } from "../../../../api/communicationTemplates";
+import React, { useContext } from "react";
 import { templatesSentTableColumns } from "../../../../content/columns.data";
 import { templatesSentTableData } from "../../../../content/templatesSent.data";
 import { Spacing, Title } from "../../../ui/atoms";
@@ -7,8 +6,9 @@ import { Table } from "../../../ui/common/Table";
 import { ConnectionContext } from "./ConnectionModal";
 
 const TemplatesSentTab = () => {
-
-  const { templateState: { templates, loading } } = useContext(ConnectionContext);
+  const {
+    templateState: { templates, loading },
+  } = useContext(ConnectionContext);
 
   return (
     <div
@@ -21,6 +21,7 @@ const TemplatesSentTab = () => {
       </Title>
       <Spacing m={{ t: "23px" }}>
         <Table
+          emptyView="Empty"
           pending={loading}
           head={templatesSentTableColumns}
           items={templatesSentTableData(templates)}

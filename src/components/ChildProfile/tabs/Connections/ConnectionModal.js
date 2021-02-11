@@ -3,22 +3,29 @@ import styled from "styled-components";
 import { fetchConnectionsRequest } from "../../../../api/childContact";
 import { fetchTemplatesSentByContactId } from "../../../../api/communicationTemplates";
 import { connectionAttachmentsRow } from "../../../../content/connectionAttachment.data";
-import { 
+import {
   attachmentReducer,
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
   fetchAttachmentsSuccess,
-  initialState as attachmentInitialState 
+  initialState as attachmentInitialState
 } from "../../../../reducers/attachment";
-import { 
+import {
   commentReducer,
   fetchCommentsFailure,
   fetchCommentsRequest,
   fetchCommentsSuccess,
   initialState as commentInitialState
 } from "../../../../reducers/comment";
-import { fetchTemplatesFailure, fetchTemplatesRequest, fetchTemplatesSuccess } from "../../../../reducers/template/templateActions";
-import { templateInitialState, templateReducer } from "../../../../reducers/template/templateReducer";
+import {
+  fetchTemplatesFailure,
+  fetchTemplatesRequest,
+  fetchTemplatesSuccess
+} from "../../../../reducers/template/templateActions";
+import {
+  templateInitialState,
+  templateReducer
+} from "../../../../reducers/template/templateReducer";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
@@ -27,77 +34,124 @@ import { ConnectionTabs } from "./ConnectionTabs";
 export const ConnectionContext = React.createContext();
 
 const ConnectionModal = ({ currentConnection }) => {
-  
-  const [ attachmentState, attachmentDispatch ] = useReducer(attachmentReducer, attachmentInitialState)
-  const [ commentState, commentDispatch ] = useReducer(commentReducer, commentInitialState)
-  const [ templateState, templateDispatch ] = useReducer(templateReducer, templateInitialState)
+  const [attachmentState, attachmentDispatch] = useReducer(
+    attachmentReducer,
+    attachmentInitialState
+  );
+  const [commentState, commentDispatch] = useReducer(
+    commentReducer,
+    commentInitialState
+  );
+  const [templateState, templateDispatch] = useReducer(
+    templateReducer,
+    templateInitialState
+  );
 
   useEffect(() => {
     fetchTemplates();
     fetchComments();
     fetchAttachments();
-  }, [])
+  }, []);
 
   const fetchAttachments = () => {
-    attachmentDispatch(fetchAttachmentsRequest())
-    fetchConnectionsRequest({ id: currentConnection.id, view: "attachments"})
-      .then(data => data && data.attachments && attachmentDispatch(fetchAttachmentsSuccess(connectionAttachmentsRow(data.attachments))))
-      .catch(e => e && attachmentDispatch(fetchAttachmentsFailure(e.message)))
-  }
+    attachmentDispatch(fetchAttachmentsRequest());
+    fetchConnectionsRequest({ id: currentConnection.id, view: "attachments" })
+      .then(
+        (data) =>
+          data &&
+          data.attachments &&
+          attachmentDispatch(
+            fetchAttachmentsSuccess(connectionAttachmentsRow(data.attachments))
+          )
+      )
+      .catch(
+        (e) => e && attachmentDispatch(fetchAttachmentsFailure(e.message))
+      );
+  };
 
   const fetchComments = () => {
-    commentDispatch(fetchCommentsRequest())
-    fetchConnectionsRequest({ id: currentConnection.id, view: "comments"})
-      .then(data => data && data.comments && commentDispatch(fetchCommentsSuccess(data.comments)))
-      .catch(e => e && commentDispatch(fetchCommentsFailure(e.message)))
-  }
+    commentDispatch(fetchCommentsRequest());
+    fetchConnectionsRequest({ id: currentConnection.id, view: "comments" })
+      .then(
+        (data) =>
+          data &&
+          data.comments &&
+          commentDispatch(fetchCommentsSuccess(data.comments))
+      )
+      .catch((e) => e && commentDispatch(fetchCommentsFailure(e.message)));
+  };
 
   const fetchTemplates = () => {
-    templateDispatch(fetchTemplatesRequest())
+    templateDispatch(fetchTemplatesRequest());
     fetchTemplatesSentByContactId(currentConnection.id)
-      .then(data => data && templateDispatch(fetchTemplatesSuccess(data)))
-      .catch(e => e && templateDispatch(fetchTemplatesFailure(e.message)));
-  }
+      .then((data) => data && templateDispatch(fetchTemplatesSuccess(data)))
+      .catch((e) => e && templateDispatch(fetchTemplatesFailure(e.message)));
+  };
 
   return (
-    <ConnectionContext.Provider value={{ attachmentState, commentState, templateState, fetchTemplates, fetchComments, fetchAttachments }}>
+    <ConnectionContext.Provider
+      value={{
+        attachmentState,
+        commentState,
+        templateState,
+        fetchTemplates,
+        fetchComments,
+        fetchAttachments,
+      }}
+    >
       <Box
         style={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
           marginTop: "20px",
-          height: '80vh'
+          height: "80vh",
+          width: 700,
         }}
       >
-        {" "}
-        <Avatar
-          name={
-            currentConnection?.contact?.first_name +
-            currentConnection?.contact?.last_name
-          }
-          size="xlarge"
-          ratio={1.25}
-        />
-        <Spacing m={{ t: "10px" }}>
-          <Title
-            size="24px"
-            style={{
-              fontWeight: "700",
-            }}
+        <Box d="flex">
+          <Box
+            w="150px"
+            d="flex"
+            direction="column"
+            align="center"
+            justify="center"
           >
-            {currentConnection?.contact?.first_name[0]?.toUpperCase() +
-              currentConnection?.contact?.first_name?.substring(1)}{" "}
-            {currentConnection?.contact?.last_name
-              ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
-                currentConnection?.contact?.last_name?.substring(1)
-              : ""}
-          </Title>
-        </Spacing>
-        <Text>{currentConnection?.contact?.relationship}</Text>
-        <FitScore score={Math.floor(Math.random() * 6)} />
-        <Spacing m="10px 0">
+            <Avatar
+              name={
+                currentConnection?.contact?.first_name +
+                currentConnection?.contact?.last_name
+              }
+              size="xlarge"
+              ratio={1.25}
+            />
+          </Box>
+          <Spacing m={{ t: "10px" }}>
+            <Title
+              size="28px"
+              style={{
+                fontWeight: "700",
+              }}
+            >
+              {currentConnection?.contact?.first_name[0]?.toUpperCase() +
+                currentConnection?.contact?.first_name?.substring(1)}{" "}
+              {currentConnection?.contact?.last_name
+                ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
+                  currentConnection?.contact?.last_name?.substring(1)
+                : ""}
+            </Title>
+            <Spacing m={{ t: "10px" }}>
+              <FitScore score={Math.floor(Math.random() * 6)} />
+            </Spacing>
+
+            <Spacing m={{ t: "10px" }}>
+              <Text style={{ fontSize: 15 }}>
+                {currentConnection?.contact?.relationship}
+              </Text>
+            </Spacing>
+          </Spacing>
+        </Box>
+
+        <Spacing m="30px 40px">
           <Box d="flex" w="500px" justify="space-between" wrap="wrap">
             <Box mb="20px" w="200px" style={{ fontWeight: "700" }}>
               Email:

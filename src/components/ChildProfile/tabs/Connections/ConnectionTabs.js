@@ -4,17 +4,35 @@ import EmailIcon from "@atlaskit/icon/glyph/email";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import Tabs from "@atlaskit/tabs";
 import { Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box } from "../../../ui/atoms";
 import { AttachmentsTab } from "./AttachmentsTab";
 import { CommentsTab } from "./CommentsTab";
+import { ConnectionContext } from "./ConnectionModal";
 import TemplatesSentTab from "./TemplatesSentTab";
 
 export const ConnectionTabs = (props) => {
-
-  const { alerts_size, templates_size, comments_size, attachments_size } = props.currentConnection
+  const {
+    alerts_size,
+    comments_size,
+    attachments_size,
+  } = props.currentConnection;
+  const {
+    templateState: { templates },
+  } = useContext(ConnectionContext);
 
   const tabs = [
+    {
+      label: (
+        <Box d="flex" align="center" justify="center">
+          <EmailIcon />
+          <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
+            {templates?.length || 0} contacts
+          </Text>
+        </Box>
+      ),
+      content: <TemplatesSentTab />,
+    },
     {
       label: (
         <Box d="flex" align="center" justify="center">
@@ -26,17 +44,7 @@ export const ConnectionTabs = (props) => {
       ),
       content: <div></div>,
     },
-    {
-      label: (
-        <Box d="flex" align="center" justify="center">
-          <EmailIcon />
-          <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {templates_size} contacts
-          </Text>
-        </Box>
-      ),
-      content: <TemplatesSentTab />,
-    },
+
     {
       label: (
         <Box d="flex" align="center" justify="center">
@@ -46,7 +54,7 @@ export const ConnectionTabs = (props) => {
           </Text>
         </Box>
       ),
-      content: <CommentsTab />
+      content: <CommentsTab />,
     },
     {
       label: (
@@ -66,11 +74,5 @@ export const ConnectionTabs = (props) => {
     setCurrent(index);
   };
 
-  return (
-    <Tabs
-      onSelect={selectTab}
-      selected={tabs[current]}
-      tabs={tabs}
-    />
-  );
+  return <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />;
 };

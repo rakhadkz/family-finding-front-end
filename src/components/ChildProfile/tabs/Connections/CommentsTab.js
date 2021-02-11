@@ -1,10 +1,10 @@
 import Comment, { CommentAuthor, CommentTime } from '@atlaskit/comment';
+import moment from "moment";
 import { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import { humanReadableDateFormat } from '../../../../content/date';
 import { Avatar } from '../../../ui/molecules/Avatar';
 import { ConnectionContext } from './ConnectionModal';
-import moment from "moment";
-import { humanReadableDateFormat } from '../../../../content/date';
-import { useHistory } from 'react-router-dom';
 
 export const CommentsTab = () => {
   const { commentState: { comments } } = useContext(ConnectionContext)

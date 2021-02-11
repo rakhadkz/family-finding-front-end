@@ -2,7 +2,6 @@ import Button, { ButtonGroup } from "@atlaskit/button";
 import ArrowDownIcon from "@atlaskit/icon/glyph/arrow-down";
 import ArrowUpIcon from "@atlaskit/icon/glyph/arrow-up";
 import { SimpleTag as Tag } from "@atlaskit/tag";
-import { Text } from "@chakra-ui/react";
 import moment from "moment";
 import { useState } from "react";
 import { ACTIONS } from "../accessControl/actions";
@@ -60,11 +59,11 @@ const Toogler = ({ item }) => {
           </ButtonGroup>
         )}
       />
-      {toogled && (
+      {/* {toogled && (
         <div style={{ border: "2px solid #DFE1E6", width: "100%" }}>
           <Text dangerouslySetInnerHTML={{ __html: item.content }}></Text>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
