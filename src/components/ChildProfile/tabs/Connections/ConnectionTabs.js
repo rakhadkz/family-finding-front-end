@@ -60,5 +60,12 @@ export const ConnectionTabs = (props) => {
     setCurrent(index);
   };
 
-  return <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />;
+  return (
+    <Tabs
+      style={{ justifyContent: "center" }}
+      onSelect={selectTab}
+      selected={tabs[current]}
+      tabs={tabs}
+    />
+  );
 };

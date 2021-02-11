@@ -18,9 +18,6 @@ const TemplatesSentTab = ({ currentConnection }) => {
   return (
     <div
       style={{
-        position: "absolute",
-        left: "5%",
-        width: "90%",
         textAlign: "center",
       }}
     >
