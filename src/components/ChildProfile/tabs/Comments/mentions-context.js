@@ -11,19 +11,18 @@ export const MentionsProvider = (props) => {
   const { connectionState } = useContext(ChildContext);
   const [contacts, setContacts] = useState(
     connectionState.connections
-      .map((s) => s?.contact)
-      .map((contact) => ({
+      .map((connection) => connection && connection.contact && ({
         name: `${
-          contact?.first_name[0]?.toUpperCase() +
-          contact?.first_name?.substring(1)
+          connection.contact?.first_name[0]?.toUpperCase() +
+          connection.contact?.first_name?.substring(1)
         } ${
-          contact.last_name
-            ? contact?.last_name[0]?.toUpperCase() +
-              contact?.last_name?.substring(1)
+          connection.contact.last_name
+            ? connection.contact?.last_name[0]?.toUpperCase() +
+            connection.contact?.last_name?.substring(1)
             : ""
         }`,
         // title: "Staff of Penn State Orphanage",
-        id: contact?.id,
+        id: connection?.id,
       }))
   );
 

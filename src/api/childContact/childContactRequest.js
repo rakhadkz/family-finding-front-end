@@ -7,6 +7,32 @@ export const fetchContactsRequest = () => {
   });
 };
 
+export const fetchConnectionsRequest = (params) => {
+  const { view = "", page = "", search = "", meta = false } = params;
+  return request({
+    endpoint:
+      "child_contacts" +
+      (params.id ? `/${params.id}` : ``) +
+      `?view=${view}&page=${page}&search=${search}`,
+    method: "GET",
+    meta: meta,
+  });
+};
+
+export const removeConnectionAttachmentsRequest = id => {
+  return request({
+    endpoint: "connection_attachments/" + id,
+    method: "DELETE",
+  });
+}
+
+export const fetchAttachmentConnectionsRequest = (attachment_id) => {
+  return request({
+    endpoint: `attachments/${attachment_id}?view=connections`,
+    method: "GET"
+  });
+}
+
 export const createChildContactRequest = (data) => {
   return request({
     endpoint: "child_tree_contacts",

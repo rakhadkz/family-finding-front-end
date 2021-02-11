@@ -103,22 +103,22 @@ export const confirmedConnectionRows = (
                 </Box>
                 <Box d="flex" mt="8px">
                   <Box d="flex" mr="4px">
-                    <EditorDoneIcon/>
+                    {item.contact.email ? <EditorDoneIcon/> : <EditorCloseIcon/>}
                     <SmallText>Email</SmallText>
                   </Box>
                   <Box d="flex" mr="4px">
-                    <EditorCloseIcon/>
+                  {item.contact.phone ? <EditorDoneIcon/> : <EditorCloseIcon/>}
                     <SmallText>Phone</SmallText>
                   </Box>
                   <Box d="flex" mr="6px">
-                    <EditorCloseIcon/>
+                  {item.contact.address ? <EditorDoneIcon/> : <EditorCloseIcon/>}
                     <SmallText>Address</SmallText>
                   </Box>
                   <Box d="flex">
                     <StyledButton appearance="link" spacing="none">
                       <Box d="flex" align="center">
                         <CommentIcon size="small" />
-                        <SmallText style={{marginLeft: "4px"}}>4 Comments</SmallText>
+                        <SmallText style={{marginLeft: "4px"}}>{item.comments_size} Comments</SmallText>
                       </Box>
                     </StyledButton>
                   </Box>
@@ -137,7 +137,7 @@ export const confirmedConnectionRows = (
                   <Button appearance="link" spacing="none" style={{ marginRight: "17px" }}>
                     <Box d="flex" align="center">
                       <Spacing m={{r: "4px"}}>
-                        5
+                        {item.templates_size}
                       </Spacing>
                       <EmailIcon />
                     </Box>
@@ -145,7 +145,7 @@ export const confirmedConnectionRows = (
                   <Button appearance="link" spacing="none" style={{ marginRight: "17px" }}>
                     <Box d="flex" align="center">
                       <Spacing m={{r: "4px"}}>
-                        3
+                        {item.alerts_size}
                       </Spacing>
                       <NotificationIcon />
                     </Box>
@@ -153,7 +153,7 @@ export const confirmedConnectionRows = (
                   <Button appearance="link" spacing="none">
                     <Box d="flex" align="center">
                       <Spacing m={{r: "4px"}}>
-                        6
+                        {item.attachments_size}
                       </Spacing>
                       <AttachmentIcon />
                     </Box>

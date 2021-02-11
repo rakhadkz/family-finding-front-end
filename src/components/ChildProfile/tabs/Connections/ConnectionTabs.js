@@ -6,16 +6,21 @@ import Tabs from "@atlaskit/tabs";
 import { Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Box } from "../../../ui/atoms";
+import { AttachmentsTab } from "./AttachmentsTab";
+import { CommentsTab } from "./CommentsTab";
 import TemplatesSentTab from "./TemplatesSentTab";
 
 export const ConnectionTabs = (props) => {
+
+  const { alerts_size, templates_size, comments_size, attachments_size } = props.currentConnection
+
   const tabs = [
     {
       label: (
         <Box d="flex" align="center" justify="center">
           <NotificationIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {" 5"} link alerts
+            {alerts_size} link alerts
           </Text>
         </Box>
       ),
@@ -26,32 +31,33 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <EmailIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {" 5"} contacts
+            {templates_size} contacts
           </Text>
         </Box>
       ),
-      content: <TemplatesSentTab {...props} />,
+      content: <TemplatesSentTab />,
     },
     {
       label: (
         <Box d="flex" align="center" justify="center">
           <CommentIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {" 5"} comments
+            {comments_size} comments
           </Text>
         </Box>
       ),
+      content: <CommentsTab />
     },
     {
       label: (
         <Box d="flex" align="center" justify="center">
           <AttachmentIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {" 5"} attachments
+            {attachments_size} attachments
           </Text>
         </Box>
       ),
-      content: <div></div>,
+      content: <AttachmentsTab connection={props.currentConnection} />,
     },
   ];
   const [current, setCurrent] = useState(0);
@@ -62,7 +68,6 @@ export const ConnectionTabs = (props) => {
 
   return (
     <Tabs
-      style={{ justifyContent: "center" }}
       onSelect={selectTab}
       selected={tabs[current]}
       tabs={tabs}

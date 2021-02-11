@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useMentions } from "./mentions-context";
 import { TextInput } from "../../../ui/molecules";
 import { MentionsProvider } from "./mentions-context";
+import { createConnectionCommentsRequest } from "../../../../api/comments";
 
 export const CommentsForm = ({
   onSubmit,
@@ -32,9 +33,13 @@ export const CommentsForm = ({
   const onSubmitHandle = async (e) => {
     e.preventDefault();
     let mentionedUsers = [];
+    let mentionedConnections = []
     for (let key in rawData.entityMap) {
       if (rawData.entityMap[key].type === "mention") {
         mentionedUsers.push(rawData.entityMap[key].data.mention.id);
+      }
+      if (rawData.entityMap[key].type === "#mention") {
+        mentionedConnections.push(rawData.entityMap[key].data.mention.id)
       }
     }
 
@@ -52,6 +57,7 @@ export const CommentsForm = ({
       .then((items) => {
         setUpd(upd + 1);
         console.log(items);
+        mentionedConnections.map(id => createConnectionCommentsRequest(id, items.id))
       })
       .finally(() => {
         refresh();
@@ -70,6 +76,7 @@ export const CommentsForm = ({
                   upd={upd}
                   onChange={(tex, raw, html) => {
                     setText(tex);
+                    console.log("RAW RAW: ", raw)
                     setRawData(raw);
                     setHtmlText(html);
                   }}

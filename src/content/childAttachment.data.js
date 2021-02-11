@@ -6,7 +6,7 @@ import ExcelSpreadsheet24Icon from "@atlaskit/icon-file-type/glyph/excel-spreads
 import Image24Icon from "@atlaskit/icon-file-type/glyph/image/24";
 import Video24Icon from "@atlaskit/icon-file-type/glyph/video/24";
 import { Box } from "../components/ui/atoms";
-import Button from "@atlaskit/button";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import CrossIcon from "@atlaskit/icon/glyph/cross";
 import {
   removeAttachmentRequest,
@@ -16,7 +16,7 @@ import Can from "../accessControl/Can";
 import { ATTACHMENTS } from "../helpers";
 import { ACTIONS } from "../accessControl/actions";
 
-const childAttachmentTableData = (data, fetchAttachments, setPending) => {
+const childAttachmentTableData = (data, fetchAttachments, setPending, openModal) => {
   return (
     data &&
     data.map((item, index) => {
@@ -27,18 +27,7 @@ const childAttachmentTableData = (data, fetchAttachments, setPending) => {
         cells: [
           {
             key: "file_name",
-            content: (
-              <Box d="flex" align="center">
-                <AttachmentIcon file_format={attachment.file_format} />
-                <Button
-                  href={attachment.file_url}
-                  target="_blank"
-                  appearance="link"
-                >{`${attachment.file_name}.${
-                  attachment.file_format || ""
-                }`}</Button>
-              </Box>
-            ),
+            content: <FileName attachment={attachment} />,
           },
           {
             key: "size",
@@ -55,26 +44,29 @@ const childAttachmentTableData = (data, fetchAttachments, setPending) => {
           {
             key: "action",
             content: (
-              <Can
-                perform={`${ATTACHMENTS}:${ACTIONS.REMOVE}`}
-                authorId={attachment.user_id}
-                yes={() => (
-                  <div align="center">
-                    <Button
-                      onClick={async () => {
-                        setPending(true);
-                        await removeChildAttachmentRequest(item.id);
-                        await removeAttachmentRequest(item.attachment_id);
-                        fetchAttachments()
-                      }}
-                      height="32px"
-                      width="32px"
-                    >
-                      <CrossIcon size="small" />
-                    </Button>
-                  </div>
-                )}
-              />
+              <ButtonGroup>
+                <Can
+                  perform={`${ATTACHMENTS}:${ACTIONS.REMOVE}`}
+                  authorId={attachment.user_id}
+                  yes={() => (
+                    <div align="center">
+                      <Button
+                        onClick={async () => {
+                          setPending(true);
+                          await removeChildAttachmentRequest(item.id);
+                          await removeAttachmentRequest(item.attachment_id);
+                          fetchAttachments()
+                        }}
+                        height="32px"
+                        width="32px"
+                      >
+                        <CrossIcon size="small" />
+                      </Button>
+                    </div>
+                  )}
+                />
+                <Button onClick={() => openModal(attachment.id)}>Connection</Button>
+              </ButtonGroup>
             ),
           },
         ],
@@ -83,7 +75,20 @@ const childAttachmentTableData = (data, fetchAttachments, setPending) => {
   );
 };
 
-const AttachmentIcon = ({ file_format }) => {
+export const FileName = ({ attachment }) => (
+  <Box d="flex" align="center">
+    <AttachmentIcon file_format={attachment.file_format} />
+    <Button
+      href={attachment.file_url}
+      target="_blank"
+      appearance="link"
+    >{`${attachment.file_name}.${
+      attachment.file_format || ""
+    }`}</Button>
+  </Box>
+)
+
+export const AttachmentIcon = ({ file_format }) => {
   switch (file_format) {
     case "ppt":
     case "pptx":
@@ -109,13 +114,13 @@ const AttachmentIcon = ({ file_format }) => {
   }
 };
 
-function formatDate(date) {
+export function formatDate(date) {
   let currentDate = new Date(date);
   var fd = currentDate.toDateString();
   return fd;
 }
 
-function humanReadableFileSize(bytes, si = true, dp = 1) {
+export function humanReadableFileSize(bytes, si = true, dp = 1) {
   const thresh = si ? 1000 : 1024;
 
   if (Math.abs(bytes) < thresh) {
