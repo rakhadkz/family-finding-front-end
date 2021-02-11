@@ -1,121 +1,181 @@
-import React, { useState, useContext } from "react";
-import { Box, Label, Rectangle, Spacing, Title } from "../../../ui/atoms";
-import { Avatar } from "../../../ui/molecules/Avatar";
-import { FitScore } from "../../../ui/molecules";
+import React, { useEffect, useReducer } from "react";
 import styled from "styled-components";
-import EmailIcon from "@atlaskit/icon/glyph/email";
-import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
-import AttachmentIcon from "@atlaskit/icon/glyph/attachment";
-import CommentIcon from "@atlaskit/icon/glyph/comment";
-import Button, { ButtonGroup } from "@atlaskit/button";
+import { fetchConnectionsRequest } from "../../../../api/childContact";
+import { fetchTemplatesSentByContactId } from "../../../../api/communicationTemplates";
+import { connectionAttachmentsRow } from "../../../../content/connectionAttachment.data";
+import {
+  attachmentReducer,
+  fetchAttachmentsFailure,
+  fetchAttachmentsRequest,
+  fetchAttachmentsSuccess,
+  initialState as attachmentInitialState
+} from "../../../../reducers/attachment";
+import {
+  commentReducer,
+  fetchCommentsFailure,
+  fetchCommentsRequest,
+  fetchCommentsSuccess,
+  initialState as commentInitialState
+} from "../../../../reducers/comment";
+import {
+  fetchTemplatesFailure,
+  fetchTemplatesRequest,
+  fetchTemplatesSuccess
+} from "../../../../reducers/template/templateActions";
+import {
+  templateInitialState,
+  templateReducer
+} from "../../../../reducers/template/templateReducer";
+import { Box, Spacing, Title } from "../../../ui/atoms";
+import { FitScore } from "../../../ui/molecules";
+import { Avatar } from "../../../ui/molecules/Avatar";
+import { ConnectionTabs } from "./ConnectionTabs";
+
+export const ConnectionContext = React.createContext();
 
 const ConnectionModal = ({ currentConnection }) => {
-  console.log(currentConnection);
+  const [attachmentState, attachmentDispatch] = useReducer(
+    attachmentReducer,
+    attachmentInitialState
+  );
+  const [commentState, commentDispatch] = useReducer(
+    commentReducer,
+    commentInitialState
+  );
+  const [templateState, templateDispatch] = useReducer(
+    templateReducer,
+    templateInitialState
+  );
+
+  useEffect(() => {
+    fetchTemplates();
+    fetchComments();
+    fetchAttachments();
+  }, []);
+
+  const fetchAttachments = () => {
+    attachmentDispatch(fetchAttachmentsRequest());
+    fetchConnectionsRequest({ id: currentConnection.id, view: "attachments" })
+      .then(
+        (data) =>
+          data &&
+          data.attachments &&
+          attachmentDispatch(
+            fetchAttachmentsSuccess(connectionAttachmentsRow(data.attachments))
+          )
+      )
+      .catch(
+        (e) => e && attachmentDispatch(fetchAttachmentsFailure(e.message))
+      );
+  };
+
+  const fetchComments = () => {
+    commentDispatch(fetchCommentsRequest());
+    fetchConnectionsRequest({ id: currentConnection.id, view: "comments" })
+      .then(
+        (data) =>
+          data &&
+          data.comments &&
+          commentDispatch(fetchCommentsSuccess(data.comments))
+      )
+      .catch((e) => e && commentDispatch(fetchCommentsFailure(e.message)));
+  };
+
+  const fetchTemplates = () => {
+    templateDispatch(fetchTemplatesRequest());
+    fetchTemplatesSentByContactId(currentConnection.id)
+      .then((data) => data && templateDispatch(fetchTemplatesSuccess(data)))
+      .catch((e) => e && templateDispatch(fetchTemplatesFailure(e.message)));
+  };
+
   return (
-    <Box
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: "60px",
+    <ConnectionContext.Provider
+      value={{
+        attachmentState,
+        commentState,
+        templateState,
+        fetchTemplates,
+        fetchComments,
+        fetchAttachments,
       }}
     >
-      {" "}
-      <Avatar
-        name={
-          currentConnection?.contact?.first_name +
-          currentConnection?.contact?.last_name
-        }
-        size="xlarge"
-        ratio={1.25}
-      />
-      <Title
-        size="24px"
-        style={{
-          fontWeight: "700",
-          marginLeft: "5px",
-          marginBottom: "5px",
-          marginTop: "20px",
-        }}
-      >
-        {currentConnection?.contact?.first_name[0]?.toUpperCase() +
-          currentConnection?.contact?.first_name?.substring(1)}{" "}
-        {currentConnection?.contact?.last_name
-          ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
-            currentConnection?.contact?.last_name?.substring(1)
-          : ""}
-      </Title>
-      <Text
-        style={{ marginTop: "20px", marginBottom: "15px", marginLeft: "5px" }}
-      >
-        {currentConnection?.contact?.relationship}
-      </Text>
-      <FitScore score={Math.floor(Math.random() * 6)} />
       <Box
         style={{
           display: "flex",
-          justifyContent: "space-between",
-          flexDirection: "row",
-          marginTop: "50px",
-          marginBottom: "50px",
-          width: "400px",
-          flexWrap: "wrap",
+          flexDirection: "column",
+          marginTop: "20px",
+          height: "80vh",
+          width: 700,
         }}
       >
-        <Box
-          style={{ width: "200px", fontWeight: "700", marginBottom: "20px" }}
-        >
-          Email:
-          <Box style={{ fontWeight: "500" }}>
-            {currentConnection?.contact?.email}
+        <Box d="flex">
+          <Box
+            w="150px"
+            d="flex"
+            direction="column"
+            align="center"
+            justify="center"
+          >
+            <Avatar
+              name={
+                currentConnection?.contact?.first_name +
+                currentConnection?.contact?.last_name
+              }
+              size="xlarge"
+              ratio={1.25}
+            />
           </Box>
-        </Box>
-        <Box
-          style={{ width: "200px", fontWeight: "700", marginBottom: "20px" }}
-        >
-          Address:{" "}
-          <Box style={{ fontWeight: "500" }}>
-            {currentConnection?.contact?.address}
-          </Box>
-        </Box>
-        <Box
-          style={{ width: "200px", fontWeight: "700", marginBottom: "20px" }}
-        >
-          Phone:
-          <Box style={{ fontWeight: "500" }}>
-            {currentConnection?.contact?.phone}
-          </Box>
-        </Box>
-      </Box>
-      <div
-        style={{
-          borderTop: "2px solid #fff ",
-          borderColor: "#000000",
+          <Spacing m={{ t: "10px" }}>
+            <Title
+              size="28px"
+              style={{
+                fontWeight: "700",
+              }}
+            >
+              {currentConnection?.contact?.first_name[0]?.toUpperCase() +
+                currentConnection?.contact?.first_name?.substring(1)}{" "}
+              {currentConnection?.contact?.last_name
+                ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
+                  currentConnection?.contact?.last_name?.substring(1)
+                : ""}
+            </Title>
+            <Spacing m={{ t: "10px" }}>
+              <FitScore score={Math.floor(Math.random() * 6)} />
+            </Spacing>
 
-          marginLeft: 20,
-          marginRight: 20,
-          width: "500px",
-          color: "#000000",
-        }}
-      ></div>
-      <Spacing m={{ l: "-10px", b: "200px" }}>
-        <Box d="f">
-          <Button appearance="link" iconBefore={<NotificationIcon />}>
-            5 link alerts
-          </Button>
-          <Button appearance="link" iconBefore={<EmailIcon />}>
-            5 contacts
-          </Button>
-          <Button appearance="link" iconBefore={<CommentIcon />}>
-            5 comments
-          </Button>
-          <Button appearance="link" iconBefore={<AttachmentIcon />}>
-            5 attachments
-          </Button>
+            <Spacing m={{ t: "10px" }}>
+              <Text style={{ fontSize: 15 }}>
+                {currentConnection?.contact?.relationship}
+              </Text>
+            </Spacing>
+          </Spacing>
         </Box>
-      </Spacing>
-    </Box>
+
+        <Spacing m="30px 40px">
+          <Box d="flex" w="500px" justify="space-between" wrap="wrap">
+            <Box mb="20px" w="200px" style={{ fontWeight: "700" }}>
+              Email:
+              <Box style={{ fontWeight: "500" }}>
+                {currentConnection?.contact?.email}
+              </Box>
+            </Box>
+            <Box mb="20px" w="200px" style={{ fontWeight: "700" }}>
+              Address:{" "}
+              <Box style={{ fontWeight: "500" }}>
+                {currentConnection?.contact?.address}
+              </Box>
+            </Box>
+            <Box mb="0px" w="200px" style={{ fontWeight: "700" }}>
+              Phone:
+              <Box style={{ fontWeight: "500" }}>
+                {currentConnection?.contact?.phone}
+              </Box>
+            </Box>
+          </Box>
+        </Spacing>
+        <ConnectionTabs currentConnection={currentConnection} />
+      </Box>
+    </ConnectionContext.Provider>
   );
 };
 const Text = styled.div`

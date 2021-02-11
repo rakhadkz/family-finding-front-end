@@ -283,3 +283,32 @@ export const confirmedConnectionColumns = [
     width: 20,
   },
 ]
+
+
+export const templatesSentTableColumns = [
+  {
+    key: "created",
+    content: "Date",
+    width: 20,
+  },
+  {
+    key: "template_type",
+    content: "Template Type",
+    width: 20,
+  },
+  {
+    key: "status",
+    content: "Status",
+    width: 20,
+  },
+  {
+    key: "updated_at",
+    content: "Last update",
+    width: 20,
+  },
+  {
+    key: "actions",
+    content: <p align="center">Actions</p>,
+    width: 15,
+  },
+];

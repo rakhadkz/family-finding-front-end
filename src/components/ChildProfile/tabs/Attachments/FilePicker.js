@@ -3,11 +3,11 @@ import Dropzone from 'react-dropzone-uploader'
 import { Box, Spacing } from '../../../ui/atoms'
 import { DropzoneLayout, DropzonePreview, DropzoneSubmitButton } from '../../../ui/molecules'
 import { uploadRequest } from '../../../../api/cloudinary';
-import { createAttachmentRequest, createChildAttachmentRequest } from '../../../../api/attachments/attachmentRequest';
+import { createAttachmentRequest } from '../../../../api/attachments/attachmentRequest';
 import { useState } from 'react';
 import Folder48Icon from '@atlaskit/icon-file-type/glyph/folder/48';
 
-export default function FilePicker({ user_id, child_id, setIsOpen, fetchAttachments, setClosable }){
+export default function FilePicker({ user_id, setIsOpen, fetchAttachments, setClosable, onSubmit }){
   const handleChangeStatus = ({ meta, file }, status) => { console.log(status, meta, file) }
   const [ pending, setPending ] = useState(false);
   const handleSubmit = (files, allFiles) => {
@@ -37,12 +37,7 @@ export default function FilePicker({ user_id, child_id, setIsOpen, fetchAttachme
           "user_id": user_id
         }
       });
-      await createChildAttachmentRequest({
-        "child_attachment": {
-          "child_id": child_id,
-          "attachment_id": id
-        }
-      });
+      await onSubmit(id);
       if (index === allFiles.length - 1){
         setPending(false);
         setIsOpen(false);

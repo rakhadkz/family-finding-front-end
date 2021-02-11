@@ -86,7 +86,7 @@ export const Comments = ({ data, childId, refresh }) => {
   };
 
   const onEdit = async (e) => {
-    updateCommentRequest(e)
+    await updateCommentRequest(e)
       .then((items) => {
         setBody(items.html_body);
       })

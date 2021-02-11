@@ -16,6 +16,14 @@ export const createChildAttachmentRequest = (data) => {
   });
 };
 
+export const createConnectionAttachmentRequest = (data) => {
+  return request({
+    endpoint: "connection_attachments",
+    data,
+    method: "POST",
+  });
+}
+
 export const removeChildAttachmentRequest = (childAttachmentId) => {
   return request({
     endpoint: "child_attachments/" + childAttachmentId,
