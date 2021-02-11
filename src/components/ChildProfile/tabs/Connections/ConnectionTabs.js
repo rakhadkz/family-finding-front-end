@@ -4,18 +4,23 @@ import EmailIcon from "@atlaskit/icon/glyph/email";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import Tabs from "@atlaskit/tabs";
 import { Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box } from "../../../ui/atoms";
+import { AttachmentsTab } from "./AttachmentsTab";
+import { CommentsTab } from "./CommentsTab";
+import { ConnectionContext } from "./ConnectionModal";
 import TemplatesSentTab from "./TemplatesSentTab";
 
 export const ConnectionTabs = (props) => {
+  const { attachmentState: { attachments }, commentState: { comments }, templateState: { templates } } = useContext(ConnectionContext);
+
   const tabs = [
     {
       label: (
         <Box d="flex" align="center" justify="center">
           <NotificationIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {" 5"} link alerts
+            {" 0"} link alerts
           </Text>
         </Box>
       ),
@@ -26,7 +31,7 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <EmailIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {" 5"} contacts
+            {templates.length} contacts
           </Text>
         </Box>
       ),
@@ -37,21 +42,22 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <CommentIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {" 5"} comments
+            {comments.length} comments
           </Text>
         </Box>
       ),
+      content: <CommentsTab />
     },
     {
       label: (
         <Box d="flex" align="center" justify="center">
           <AttachmentIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {" 5"} attachments
+            {attachments.length} attachments
           </Text>
         </Box>
       ),
-      content: <div></div>,
+      content: <AttachmentsTab connection={props.currentConnection} />,
     },
   ];
   const [current, setCurrent] = useState(0);

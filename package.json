@@ -8,6 +8,7 @@
     "@atlaskit/badge": "^14.0.6",
     "@atlaskit/breadcrumbs": "^10.0.9",
     "@atlaskit/button": "^15.1.2",
+    "@atlaskit/comment": "^10.0.6",
     "@atlaskit/css-reset": "^6.0.5",
     "@atlaskit/datetime-picker": "^10.0.7",
     "@atlaskit/dropdown-menu": "^10.1.2",

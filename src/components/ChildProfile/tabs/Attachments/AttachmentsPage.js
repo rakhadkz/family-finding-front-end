@@ -10,6 +10,7 @@ import FilePicker from './FilePicker'
 import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 import { fetchAttachmentsRequest } from "../../../../reducers/attachment";
+import { createChildAttachmentRequest } from "../../../../api/attachments/attachmentRequest";
 
 export const AttachmentsPage = () => {
   const { state: { child: { id } }, attachmentState: { attachments, loading }, attachmentDispatch, fetchAttachments } = useContext(ChildContext)
@@ -27,6 +28,15 @@ export const AttachmentsPage = () => {
     attachmentDispatch(fetchAttachmentsRequest())
   }
 
+  const onSubmit = async (attachment_id) => {
+    await createChildAttachmentRequest({
+      "child_attachment": {
+        "child_id": id,
+        "attachment_id": attachment_id
+      }
+    });
+  }
+
   return (
     <div>
       <Spacing m={{ t: "23px" }}>
@@ -41,7 +51,7 @@ export const AttachmentsPage = () => {
             setIsOpen={setIsOpen}
             width="small"
             hasActions={false}
-            body={<FilePicker user_id={user_id} child_id={id} setIsOpen={setIsOpen} fetchAttachments={fetchAttachments} setClosable={setClosable}/>}
+            body={<FilePicker user_id={user_id} setIsOpen={setIsOpen} fetchAttachments={fetchAttachments} setClosable={setClosable} onSubmit={onSubmit}/>}
             />
         </Box>
       </Spacing>

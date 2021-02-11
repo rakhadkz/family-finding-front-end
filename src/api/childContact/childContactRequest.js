@@ -7,6 +7,18 @@ export const fetchContactsRequest = () => {
   });
 };
 
+export const fetchConnectionsRequest = (params) => {
+  const { view = "", page = "", search = "", meta = false } = params;
+  return request({
+    endpoint:
+      "child_contacts" +
+      (params.id ? `/${params.id}` : ``) +
+      `?view=${view}&page=${page}&search=${search}`,
+    method: "GET",
+    meta: meta,
+  });
+};
+
 export const createChildContactRequest = (data) => {
   return request({
     endpoint: "child_tree_contacts",

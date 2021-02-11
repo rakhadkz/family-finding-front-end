@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { fetchTemplatesSentByContactId } from "../../../../api/communicationTemplates";
 import { templatesSentTableColumns } from "../../../../content/columns.data";
 import { templatesSentTableData } from "../../../../content/templatesSent.data";
 import { Spacing, Title } from "../../../ui/atoms";
 import { Table } from "../../../ui/common/Table";
+import { ConnectionContext } from "./ConnectionModal";
 
 const TemplatesSentTab = ({ currentConnection }) => {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    fetchTemplatesSentByContactId(currentConnection.id)
-      .then(setData)
-      .finally(() => setLoading(false));
-  }, [currentConnection]);
+  const { templateState: { templates, loading } } = useContext(ConnectionContext);
 
   return (
     <div
@@ -28,7 +23,7 @@ const TemplatesSentTab = ({ currentConnection }) => {
         <Table
           pending={loading}
           head={templatesSentTableColumns}
-          items={templatesSentTableData(data)}
+          items={templatesSentTableData(templates)}
         />
       </Spacing>
     </div>

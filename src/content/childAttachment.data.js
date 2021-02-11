@@ -27,18 +27,7 @@ const childAttachmentTableData = (data, fetchAttachments, setPending) => {
         cells: [
           {
             key: "file_name",
-            content: (
-              <Box d="flex" align="center">
-                <AttachmentIcon file_format={attachment.file_format} />
-                <Button
-                  href={attachment.file_url}
-                  target="_blank"
-                  appearance="link"
-                >{`${attachment.file_name}.${
-                  attachment.file_format || ""
-                }`}</Button>
-              </Box>
-            ),
+            content: <FileName attachment={attachment} />,
           },
           {
             key: "size",
@@ -83,7 +72,20 @@ const childAttachmentTableData = (data, fetchAttachments, setPending) => {
   );
 };
 
-const AttachmentIcon = ({ file_format }) => {
+export const FileName = ({ attachment }) => (
+  <Box d="flex" align="center">
+    <AttachmentIcon file_format={attachment.file_format} />
+    <Button
+      href={attachment.file_url}
+      target="_blank"
+      appearance="link"
+    >{`${attachment.file_name}.${
+      attachment.file_format || ""
+    }`}</Button>
+  </Box>
+)
+
+export const AttachmentIcon = ({ file_format }) => {
   switch (file_format) {
     case "ppt":
     case "pptx":
@@ -109,13 +111,13 @@ const AttachmentIcon = ({ file_format }) => {
   }
 };
 
-function formatDate(date) {
+export function formatDate(date) {
   let currentDate = new Date(date);
   var fd = currentDate.toDateString();
   return fd;
 }
 
-function humanReadableFileSize(bytes, si = true, dp = 1) {
+export function humanReadableFileSize(bytes, si = true, dp = 1) {
   const thresh = si ? 1000 : 1024;
 
   if (Math.abs(bytes) < thresh) {
