@@ -4,15 +4,15 @@ import EmailIcon from "@atlaskit/icon/glyph/email";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import Tabs from "@atlaskit/tabs";
 import { Text } from "@chakra-ui/react";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Box } from "../../../ui/atoms";
 import { AttachmentsTab } from "./AttachmentsTab";
 import { CommentsTab } from "./CommentsTab";
-import { ConnectionContext } from "./ConnectionModal";
 import TemplatesSentTab from "./TemplatesSentTab";
 
 export const ConnectionTabs = (props) => {
-  const { attachmentState: { attachments }, commentState: { comments }, templateState: { templates } } = useContext(ConnectionContext);
+
+  const { alerts_size, templates_size, comments_size, attachments_size } = props.currentConnection
 
   const tabs = [
     {
@@ -20,7 +20,7 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <NotificationIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {" 0"} link alerts
+            {alerts_size} link alerts
           </Text>
         </Box>
       ),
@@ -31,7 +31,7 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <EmailIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {templates.length} contacts
+            {templates_size} contacts
           </Text>
         </Box>
       ),
@@ -42,7 +42,7 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <CommentIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {comments.length} comments
+            {comments_size} comments
           </Text>
         </Box>
       ),
@@ -53,7 +53,7 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <AttachmentIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {attachments.length} attachments
+            {attachments_size} attachments
           </Text>
         </Box>
       ),
@@ -68,7 +68,6 @@ export const ConnectionTabs = (props) => {
 
   return (
     <Tabs
-      style={{ justifyContent: "center" }}
       onSelect={selectTab}
       selected={tabs[current]}
       tabs={tabs}
