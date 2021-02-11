@@ -105,7 +105,6 @@ export function ChildProfilePage(props) {
   useEffect(() => {
     dispatch(fetchChildRequest());
     fetchChildProfile();
-    fetchConnections();
     fetchFamilyTree();
     fetchTemplates();
     fetchComments();
@@ -343,7 +342,7 @@ export function ChildProfilePage(props) {
       fetchConnections,
       fetchFamilyTree,
       fetchComments,
-      fetchAttachments
+      fetchAttachments,
     }}>
       {state.loading ? (
         <Preloader />

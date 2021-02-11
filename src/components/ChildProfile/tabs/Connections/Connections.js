@@ -3,7 +3,7 @@ import AttachmentIcon from "@atlaskit/icon/glyph/attachment"
 import CommentIcon from "@atlaskit/icon/glyph/comment"
 import EmailIcon from '@atlaskit/icon/glyph/email'
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct"
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { toast } from "react-toastify"
 import styled from "styled-components"
 import { createContactRequest, createTableChildContactRequest, updateConnectionRequest, updateContactRequest } from "../../../../api/childContact"
@@ -54,6 +54,9 @@ export const Connections = () => {
   const placedConnection = connections.find(c => c.is_placed)
   const placedContact = placedConnection?.contact
   
+  useEffect(() => {
+    fetchConnections();
+  }, [])
 
   const setPending = () => {
     connectionDispatch(fetchConnectionsRequest())
@@ -168,7 +171,7 @@ export const Connections = () => {
                     <Box d="flex" align="center">
                       <EmailIcon />
                       <Spacing m={{l: "4px"}}>
-                        5 contacts
+                        {placedConnection.templates_size} contacts
                       </Spacing>
                     </Box>
                   </Button>
@@ -176,7 +179,7 @@ export const Connections = () => {
                     <Box d="flex" align="center">
                       <CommentIcon />
                       <Spacing m={{l: "4px"}}>
-                        5 comments
+                        {placedConnection.comments_size} comments
                       </Spacing>
                     </Box>
                   </Button>
@@ -184,7 +187,7 @@ export const Connections = () => {
                     <Box d="flex" align="center">
                       <AttachmentIcon />
                       <Spacing m={{l: "4px"}}>
-                        4 attachments
+                        {placedConnection.attachments_size} attachments
                       </Spacing>
                     </Box>
                   </Button>
@@ -192,14 +195,14 @@ export const Connections = () => {
                     <Box d="flex" align="center">
                       <NotificationIcon />
                       <Spacing m={{l: "4px"}}>
-                        3 link alerts
+                        {placedConnection.alerts_size} link alerts
                       </Spacing>
                     </Box>
                   </Button>
                 </Box>
                 <Box mt="12px">
-                  <span style={{ marginRight: "12px" }}>Email: </span>
-                  <span>Phone: </span>
+                  <span style={{ marginRight: "12px" }}>Email: <strong>{placedContact.email}</strong></span>
+                  <span>Phone: <strong>{placedContact.phone}</strong></span>
                 </Box>
               </Box>
             </Box>

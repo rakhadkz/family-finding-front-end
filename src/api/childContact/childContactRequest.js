@@ -19,6 +19,20 @@ export const fetchConnectionsRequest = (params) => {
   });
 };
 
+export const removeConnectionAttachmentsRequest = id => {
+  return request({
+    endpoint: "connection_attachments/" + id,
+    method: "DELETE",
+  });
+}
+
+export const fetchAttachmentConnectionsRequest = (attachment_id) => {
+  return request({
+    endpoint: `attachments/${attachment_id}?view=connections`,
+    method: "GET"
+  });
+}
+
 export const createChildContactRequest = (data) => {
   return request({
     endpoint: "child_tree_contacts",
