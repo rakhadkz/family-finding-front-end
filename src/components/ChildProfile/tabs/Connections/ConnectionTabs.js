@@ -35,7 +35,7 @@ export const ConnectionTabs = (props) => {
           </Text>
         </Box>
       ),
-      content: <TemplatesSentTab {...props} />,
+      content: <TemplatesSentTab />,
     },
     {
       label: (

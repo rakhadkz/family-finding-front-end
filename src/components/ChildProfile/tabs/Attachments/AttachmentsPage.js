@@ -53,7 +53,6 @@ export const AttachmentsPage = () => {
         if (data){
           setAssignedConnections(data.attachment_connections)
           if (data.attachment_connections.length > 0){
-            console.log("HELLO:", data.attachment_connections)
             setNotAssignedConnections(connections.filter(item => filter(data.attachment_connections, item.id)).map(connection => ({
               label: `${connection.contact.first_name} ${connection.contact.last_name}`,
               value: connection.id,

@@ -6,7 +6,7 @@ import { Spacing, Title } from "../../../ui/atoms";
 import { Table } from "../../../ui/common/Table";
 import { ConnectionContext } from "./ConnectionModal";
 
-const TemplatesSentTab = ({ currentConnection }) => {
+const TemplatesSentTab = () => {
 
   const { templateState: { templates, loading } } = useContext(ConnectionContext);
 
