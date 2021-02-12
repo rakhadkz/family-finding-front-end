@@ -165,7 +165,6 @@ export const Comments = ({ data, childId, refresh }) => {
                             isExpanded={isExpanded}
                             collapseEditor={collapseEditor}
                             expandEditor={expandEditor}
-                            initialValue={initialValue}
                           />
                         </Spacing>
                       </Spacing>

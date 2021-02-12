@@ -17,3 +17,4 @@ export * from "./NotFound";
 export * from "./Preloader";
 export * from "./ComponentWrapper";
 export * from "./ChildProfilePage";
+export * from "./ResourcesPage";

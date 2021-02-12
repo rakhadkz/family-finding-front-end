@@ -1,4 +1,16 @@
-import { ACTION_ITEMS, ATTACHMENTS, CHILDREN, COMMUNICATION_TEMPLATES, ORGANIZATIONS, ORGANIZATION_USERS, REPORTS, SEARCHVECTOR, SETTINGS, USERS } from "../helpers";
+import {
+  ACTION_ITEMS,
+  ATTACHMENTS,
+  CHILDREN,
+  COMMUNICATION_TEMPLATES,
+  ORGANIZATIONS,
+  ORGANIZATION_USERS,
+  REPORTS,
+  SEARCHVECTOR,
+  SETTINGS,
+  USERS,
+  RESOURCES,
+} from "../helpers";
 import { ACTIONS } from "./actions";
 
 const rules = {
@@ -10,13 +22,14 @@ const rules = {
       `${SETTINGS}:${ACTIONS.VISIT}`,
       `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`,
       `${ORGANIZATION_USERS}:${ACTIONS.VISIT_ONE}`,
+      `${RESOURCES}:${ACTIONS.VISIT}`,
     ],
     dynamic: {
       "attachments:REMOVE": ({ userId, authorId }) => {
-        if (!userId || !authorId) return false
-        return userId === authorId
-      }
-    }
+        if (!userId || !authorId) return false;
+        return userId === authorId;
+      },
+    },
   },
   manager: {
     static: [
@@ -35,6 +48,7 @@ const rules = {
       `${SETTINGS}:${ACTIONS.VISIT}`,
       `${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`,
       `${REPORTS}:${ACTIONS.VISIT}`,
+      `${RESOURCES}:${ACTIONS.VISIT}`,
     ],
   },
   admin: {
@@ -59,7 +73,8 @@ const rules = {
       `${REPORTS}:${ACTIONS.VISIT}`,
       `${USERS}:${ACTIONS.ADD}`,
       `${USERS}:${ACTIONS.REMOVE}`,
-    ]
+      `${RESOURCES}:${ACTIONS.VISIT}`,
+    ],
   },
   super_admin: {
     static: [
@@ -75,8 +90,8 @@ const rules = {
       `${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`,
       `${COMMUNICATION_TEMPLATES}:${ACTIONS.EDIT}`,
       `${COMMUNICATION_TEMPLATES}:${ACTIONS.ADD}`,
-    ]
-  }
-}
+    ],
+  },
+};
 
-export default rules
+export default rules;
