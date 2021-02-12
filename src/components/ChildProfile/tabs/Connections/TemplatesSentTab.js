@@ -16,7 +16,7 @@ const TemplatesSentTab = () => {
         textAlign: "center",
       }}
     >
-      <Title size="18px" style={{ marginTop: 15 }}>
+      <Title size="18px" style={{ marginTop: 30 }}>
         Messages sent to this user
       </Title>
       <Spacing m={{ t: "23px" }}>

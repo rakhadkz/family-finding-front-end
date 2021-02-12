@@ -21,6 +21,8 @@ export const ConnectionTabs = (props) => {
     templateState: { templates },
   } = useContext(ConnectionContext);
 
+  const currentTab = props.currentTab
+
   const tabs = [
     {
       label: (
@@ -68,7 +70,17 @@ export const ConnectionTabs = (props) => {
       content: <AttachmentsTab connection={props.currentConnection} />,
     },
   ];
-  const [current, setCurrent] = useState(0);
+
+  const getCurrentTab = () => {
+    switch(currentTab){
+      case "alerts": return 1;
+      case "comments": return 2;
+      case "attachments": return 3;
+      default: return 0;
+    }
+  }
+
+  const [current, setCurrent] = useState(getCurrentTab);
 
   const selectTab = (tab, index) => {
     setCurrent(index);

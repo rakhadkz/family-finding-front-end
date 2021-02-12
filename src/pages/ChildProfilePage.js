@@ -244,21 +244,23 @@ export function ChildProfilePage(props) {
       });
   };
 
-  const sendTemplateToUser = async (user) => {
+  const sendTemplateToUser = async (connection) => {
     let content = templatePreview;
     const body = {
-      email: user?.contact?.email,
-      contact_id: user?.contact?.id,
+      email: connection?.contact?.email,
+      contact_id: connection?.contact?.id,
       template_id: templateId,
+      child_contact_id: connection.id,
       child_id: id,
       content: content,
       template_type: templateType,
-      phone: user?.contact?.phone,
+      phone: connection?.contact?.phone,
     };
     console.log(body);
 
     setTemplatePending(true);
     await sendCommunicationTemplateToUserRequest({ template_send: body });
+    fetchConnections();
   };
 
   const onSubmitUsers = async () => {
