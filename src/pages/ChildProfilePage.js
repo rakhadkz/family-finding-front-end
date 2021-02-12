@@ -40,6 +40,14 @@ import { getLocalStorageUser } from "../context/auth/authProvider";
 import { updateChild } from "../context/children/childProvider";
 import { CHILDREN } from "../helpers";
 import {
+  attachmentReducer,
+
+
+  fetchAttachmentsFailure, fetchAttachmentsRequest,
+
+  fetchAttachmentsSuccess, initialState as attachmentInitialState
+} from "../reducers/attachment";
+import {
   childProfileReducer,
   fetchChildFailure,
   fetchChildRequest,
@@ -48,32 +56,25 @@ import {
   fetchChildUsersSuccess,
   initialState
 } from "../reducers/childProfile";
-import { 
+import {
   commentReducer,
-  initialState as commentInitialState,
-  fetchCommentsSuccess,
+
+
   fetchCommentsFailure,
-  fetchCommentsRequest
+  fetchCommentsRequest, fetchCommentsSuccess, initialState as commentInitialState
 } from "../reducers/comment";
-import { 
+import {
   connectionReducer,
-  initialState as connectionInitialState,
+
   fetchConnectionsFailure,
-  fetchConnectionsSuccess,
+  fetchConnectionsSuccess, initialState as connectionInitialState
 } from "../reducers/connection";
-import { 
+import {
   familyTreeReducer,
-  initialState as familyTreeInitialState,
+
   fetchFamilyTreeFailure,
-  fetchFamilyTreeSuccess,
+  fetchFamilyTreeSuccess, initialState as familyTreeInitialState
 } from "../reducers/familyTree";
-import { 
-  attachmentReducer,
-  initialState as attachmentInitialState,
-  fetchAttachmentsRequest,
-  fetchAttachmentsFailure,
-  fetchAttachmentsSuccess,
-} from "../reducers/attachment";
 import { Preloader } from "./Preloader";
 
 export const ChildContext = React.createContext();
@@ -87,6 +88,7 @@ export function ChildProfilePage(props) {
   const [templateHtml, setTemplateHtml] = useState("");
   const [templatePreview, setTemplatePreview] = useState("");
   const [templateUser, setTemplateUser] = useState([]);
+  const [templateId, setTemplateId] = useState();
   const [filteredTemplates, setFilteredTemplates] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
@@ -119,7 +121,7 @@ export function ChildProfilePage(props) {
       templates
         .filter((item) => item.template_type === templateType)
         .map((item) => ({
-          value: item.content,
+          value: item,
           label: `${item.name} - ${item.template_type}`,
         }))
     );
@@ -205,8 +207,8 @@ export function ChildProfilePage(props) {
     for (let i = 0; i < templateUser?.length; i++) {
       const user = templateUser && templateUser[i]?.value;
       if (user) {
+        promises.push(sendTemplateToUser(user));
       }
-      promises.push(sendTemplateToUser(user));
     }
 
     Promise.all(promises)
@@ -242,18 +244,23 @@ export function ChildProfilePage(props) {
       });
   };
 
-  const sendTemplateToUser = async (user) => {
+  const sendTemplateToUser = async (connection) => {
     let content = templatePreview;
     const body = {
-      email: user?.contact?.email,
+      email: connection?.contact?.email,
+      contact_id: connection?.contact?.id,
+      template_id: templateId,
+      child_contact_id: connection.id,
+      child_id: id,
       content: content,
       template_type: templateType,
-      phone: user?.contact?.phone,
+      phone: connection?.contact?.phone,
     };
     console.log(body);
 
     setTemplatePending(true);
     await sendCommunicationTemplateToUserRequest({ template_send: body });
+    fetchConnections();
   };
 
   const onSubmitUsers = async () => {
@@ -523,10 +530,11 @@ export function ChildProfilePage(props) {
                   menuPortalTarget={document.body}
                   onChange={(e) => {
                     console.log("EEE", e, state.child);
+                    setTemplateId(e.value.id)
                     setTemplateHtml(
                       templateType === "SMS"
-                        ? e.value.replace(/<(?:.|\n)*?>/gm, "")
-                        : e.value
+                        ? e.value.content.replace(/<(?:.|\n)*?>/gm, "")
+                        : e.value.content
                     );
                     setValidationState("default");
                   }}

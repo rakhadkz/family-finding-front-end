@@ -49,7 +49,7 @@ export const AttachmentsTab = ({ connection }) => {
             />
         </Box>
       </Spacing>
-      <Spacing m={{ t: "23px" }}>
+      <Spacing m={{ t: "23px", b: "50px" }}>
         <Table
           head={head}
           items={attachments}

@@ -33,7 +33,7 @@ export const StyledButton = styled(Button)`
 export const confirmedConnectionRows = (
   data,
   setPending,
-  setIsConnectionModalOpen,
+  openModal,
   setCurrentConnection,
   fetchConnections,
   setIsAddModalOpen
@@ -69,11 +69,6 @@ export const confirmedConnectionRows = (
         }).then(() => fetchConnections())
       }
 
-      const setCurrentConnectionFunc = (item) => {
-        item && setCurrentConnection(item)
-        setIsConnectionModalOpen(true)
-      }
-
       return item && item.contact && {
         index: index,
         cells: [
@@ -85,7 +80,7 @@ export const confirmedConnectionRows = (
                   <Avatar name={`${item.contact.first_name} ${item.contact.last_name}`} size="medium" ratio={0.4}/>
                   <Box ml="8px">
                     <Box d="flex" align="center">
-                      <Button appearance="link" spacing="none" onClick={() => setCurrentConnectionFunc(item)}>{`${item.contact.first_name} ${item.contact.last_name}`}</Button>
+                      <Button appearance="link" spacing="none" onClick={() => openModal("main", item)}>{`${item.contact.first_name} ${item.contact.last_name}`}</Button>
                       <Button spacing="none" style={{marginLeft: "5px"}} appearance="link" onClick={() => {
                         setCurrentConnection(item)
                         setIsAddModalOpen(true)
@@ -115,7 +110,7 @@ export const confirmedConnectionRows = (
                     <SmallText>Address</SmallText>
                   </Box>
                   <Box d="flex">
-                    <StyledButton appearance="link" spacing="none">
+                    <StyledButton appearance="link" spacing="none" onClick={() => openModal("comments", item)}>
                       <Box d="flex" align="center">
                         <CommentIcon size="small" />
                         <SmallText style={{marginLeft: "4px"}}>{item.comments_size} Comments</SmallText>
@@ -134,7 +129,7 @@ export const confirmedConnectionRows = (
             key: "engagement",
             content: (
               <Box d="flex">
-                  <Button appearance="link" spacing="none" style={{ marginRight: "17px" }}>
+                  <Button appearance="link" spacing="none" onClick={() => openModal("templates", item)} style={{ marginRight: "17px" }}>
                     <Box d="flex" align="center">
                       <Spacing m={{r: "4px"}}>
                         {item.templates_size}
@@ -142,7 +137,7 @@ export const confirmedConnectionRows = (
                       <EmailIcon />
                     </Box>
                   </Button>
-                  <Button appearance="link" spacing="none" style={{ marginRight: "17px" }}>
+                  <Button appearance="link" spacing="none" onClick={() => openModal("alerts", item)} style={{ marginRight: "17px" }}>
                     <Box d="flex" align="center">
                       <Spacing m={{r: "4px"}}>
                         {item.alerts_size}
@@ -150,7 +145,7 @@ export const confirmedConnectionRows = (
                       <NotificationIcon />
                     </Box>
                   </Button>
-                  <Button appearance="link" spacing="none">
+                  <Button appearance="link" spacing="none" onClick={() => openModal("attachments", item)}>
                     <Box d="flex" align="center">
                       <Spacing m={{r: "4px"}}>
                         {item.attachments_size}

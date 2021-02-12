@@ -67,6 +67,7 @@ export const Connections = () => {
   const { constructed_tree } = familyTreeState;
   const placedConnection = connections.find((c) => c.is_placed);
   const placedContact = placedConnection?.contact;
+  const [ currentTab, setCurrentTab ] = useState(null)
 
   useEffect(() => {
     fetchConnections();
@@ -159,6 +160,12 @@ export const Connections = () => {
       .finally(() => setIsAddModalOpen(false));
   };
 
+  const openModal = (tab, connection = placedConnection) => {
+    setCurrentTab(tab);
+    setCurrentConnection(connection)
+    setIsConnectionModalOpen(true)
+  }
+
   return (
     <Box>
       {placedContact && (
@@ -187,6 +194,7 @@ export const Connections = () => {
                       appearance="link"
                       spacing="none"
                       style={{ marginRight: "17px" }}
+                      onClick={() => openModal("templates", placedConnection)}
                     >
                       <Box d="flex" align="center">
                         <EmailIcon />
@@ -199,6 +207,7 @@ export const Connections = () => {
                       appearance="link"
                       spacing="none"
                       style={{ marginRight: "17px" }}
+                      onClick={() => openModal("comments", placedConnection)}
                     >
                       <Box d="flex" align="center">
                         <CommentIcon />
@@ -211,6 +220,7 @@ export const Connections = () => {
                       appearance="link"
                       spacing="none"
                       style={{ marginRight: "17px" }}
+                      onClick={() => openModal("attachments", placedConnection)}
                     >
                       <Box d="flex" align="center">
                         <AttachmentIcon />
@@ -223,6 +233,7 @@ export const Connections = () => {
                       appearance="link"
                       spacing="none"
                       style={{ marginRight: "17px" }}
+                      onClick={() => openModal("alerts", placedConnection)}
                     >
                       <Box d="flex" align="center">
                         <NotificationIcon />
@@ -267,7 +278,7 @@ export const Connections = () => {
           items={confirmedConnectionRows(
             connections,
             setPending,
-            setIsConnectionModalOpen,
+            openModal,
             setCurrentConnection,
             fetchConnections,
             setIsAddModalOpen
@@ -283,7 +294,7 @@ export const Connections = () => {
           head={possibleConnectionColumns}
           items={possibleConnectionRows(
             connections,
-            setIsConnectionModalOpen,
+            openModal,
             setCurrentConnection,
             setIsConfirmModalOpen,
             setIsAddModalOpen
@@ -298,6 +309,7 @@ export const Connections = () => {
         <ConnectionModal
           currentConnection={currentConnection}
           onCancel={() => setIsConnectionModalOpen(false)}
+          currentTab={currentTab}
         />
       </Drawer>
 

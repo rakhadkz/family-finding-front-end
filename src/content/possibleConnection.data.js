@@ -9,7 +9,7 @@ import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
 
 export const possibleConnectionRows = (
   data,
-  setIsConnectionModalOpen,
+  openModal,
   setCurrentConnection,
   setIsConfirmModalOpen,
   setIsAddModalOpen
@@ -30,10 +30,7 @@ export const possibleConnectionRows = (
                     appearance="link" 
                     spacing="none" 
                     style={{marginLeft: "8px"}}
-                    onClick={() => {
-                      setCurrentConnection(item)
-                      setIsConnectionModalOpen(true)
-                    }}
+                    onClick={() => openModal("main", item)}
                   >
                     {`${item.contact.first_name} ${item.contact.last_name}`}
                   </Button>

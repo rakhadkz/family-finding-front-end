@@ -33,7 +33,7 @@ import { ConnectionTabs } from "./ConnectionTabs";
 
 export const ConnectionContext = React.createContext();
 
-const ConnectionModal = ({ currentConnection }) => {
+const ConnectionModal = ({ currentConnection, currentTab }) => {
   const [attachmentState, attachmentDispatch] = useReducer(
     attachmentReducer,
     attachmentInitialState
@@ -83,8 +83,8 @@ const ConnectionModal = ({ currentConnection }) => {
 
   const fetchTemplates = () => {
     templateDispatch(fetchTemplatesRequest());
-    fetchTemplatesSentByContactId(currentConnection.id)
-      .then((data) => data && templateDispatch(fetchTemplatesSuccess(data)))
+    fetchConnectionsRequest({ id: currentConnection.id, view: "templates"})
+      .then((data) => data && data.templates && templateDispatch(fetchTemplatesSuccess(data.templates)))
       .catch((e) => e && templateDispatch(fetchTemplatesFailure(e.message)));
   };
 
@@ -173,7 +173,7 @@ const ConnectionModal = ({ currentConnection }) => {
             </Box>
           </Box>
         </Spacing>
-        <ConnectionTabs currentConnection={currentConnection} />
+        <div style={{ width: 650}}><ConnectionTabs currentConnection={currentConnection} currentTab={currentTab} /></div>
       </Box>
     </ConnectionContext.Provider>
   );
