@@ -32,14 +32,17 @@ export const CommentsForm = ({
 
   const onSubmitHandle = async (e) => {
     e.preventDefault();
+    let check = new Set(text.split(""));
+    if (check.size === 1 && check.values().next().value.charCodeAt(0) === 10)
+      return -1;
     let mentionedUsers = [];
-    let mentionedConnections = []
+    let mentionedConnections = [];
     for (let key in rawData.entityMap) {
       if (rawData.entityMap[key].type === "mention") {
         mentionedUsers.push(rawData.entityMap[key].data.mention.id);
       }
       if (rawData.entityMap[key].type === "#mention") {
-        mentionedConnections.push(rawData.entityMap[key].data.mention.id)
+        mentionedConnections.push(rawData.entityMap[key].data.mention.id);
       }
     }
 
@@ -57,7 +60,9 @@ export const CommentsForm = ({
       .then((items) => {
         setUpd(upd + 1);
         console.log(items);
-        mentionedConnections.map(id => createConnectionCommentsRequest(id, items.id))
+        mentionedConnections.map((id) =>
+          createConnectionCommentsRequest(id, items.id)
+        );
       })
       .finally(() => {
         refresh();
@@ -76,7 +81,7 @@ export const CommentsForm = ({
                   upd={upd}
                   onChange={(tex, raw, html) => {
                     setText(tex);
-                    console.log("RAW RAW: ", raw)
+                    console.log("RAW RAW: ", raw);
                     setRawData(raw);
                     setHtmlText(html);
                   }}

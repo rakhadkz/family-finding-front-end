@@ -22,6 +22,7 @@ const rules = {
       `${SETTINGS}:${ACTIONS.VISIT}`,
       `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`,
       `${ORGANIZATION_USERS}:${ACTIONS.VISIT_ONE}`,
+      `${RESOURCES}:${ACTIONS.VISIT}`,
     ],
     dynamic: {
       "attachments:REMOVE": ({ userId, authorId }) => {
@@ -47,6 +48,7 @@ const rules = {
       `${SETTINGS}:${ACTIONS.VISIT}`,
       `${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`,
       `${REPORTS}:${ACTIONS.VISIT}`,
+      `${RESOURCES}:${ACTIONS.VISIT}`,
     ],
   },
   admin: {
