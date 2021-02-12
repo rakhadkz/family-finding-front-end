@@ -289,7 +289,7 @@ export const templatesSentTableColumns = [
     width: 20,
   },
   {
-    key: "status",
+    key: "opened",
     content: "Status",
     width: 20,
   },

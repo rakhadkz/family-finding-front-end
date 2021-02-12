@@ -9,6 +9,14 @@ import Can from "../accessControl/Can";
 import { COMMUNICATION_TEMPLATES } from "../helpers";
 import { humanReadableDateFormat } from "./date";
 
+const colors = {
+  failed: "red",
+  queued: "yellow",
+  sent: "teal",
+  delivered: "green",
+  open: "green",
+};
+
 const templatesSentTableData = (data) =>
   data.map((item, index) => ({
     key: index,
@@ -22,8 +30,13 @@ const templatesSentTableData = (data) =>
         content: item?.communication_template?.template_type,
       },
       {
-        key: "status",
-        content: <Tag text="PENDING" color="yellow" />,
+        key: "opened",
+        content: (
+          <Tag
+            text={item?.opened?.toUpperCase() || "PENDING"}
+            color={colors[item?.opened] || "yellow"}
+          />
+        ),
       },
       {
         key: "updated_at",
