@@ -24,7 +24,11 @@ export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
             <Can
               perform={`${CHILDREN}:${ACTIONS.EDIT}`}
               yes={() => (
-                <Button spacing="none" appearance="link" onClick={() => setIsOpenEdit(true)}>
+                <Button
+                  spacing="none"
+                  appearance="link"
+                  onClick={() => setIsOpenEdit(true)}
+                >
                   <EditorEditIcon size="medium" />
                 </Button>
               )}
@@ -54,7 +58,7 @@ export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
           <Text>{child.system_status}</Text>
         </Spacing>
         <Spacing m={{ l: "8px", r: "8px" }}>
-          <StyledLabel>Matches</StyledLabel>
+          <StyledLabel>Connections</StyledLabel>
           <Text>1</Text>
         </Spacing>
       </Box>

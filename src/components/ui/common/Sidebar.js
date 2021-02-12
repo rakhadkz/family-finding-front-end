@@ -7,6 +7,7 @@ import QueuesIcon from "@atlaskit/icon/glyph/queues";
 import Screen from "@atlaskit/icon/glyph/screen";
 import SettingsIcon from "@atlaskit/icon/glyph/settings";
 import Signout from "@atlaskit/icon/glyph/sign-out";
+import SuitcaseIcon from "@atlaskit/icon/glyph/suitcase";
 import Select from "@atlaskit/select";
 import React, { memo } from "react";
 import { Link, useHistory } from "react-router-dom";
@@ -14,7 +15,18 @@ import { ACTIONS } from "../../../accessControl/actions";
 import Can from "../../../accessControl/Can";
 import { updateUserRequest } from "../../../api/user/userRequest";
 import { useAuth } from "../../../context/auth/authContext";
-import { ACTION_ITEMS, CHILDREN, COMMUNICATION_TEMPLATES, ORGANIZATIONS, ORGANIZATION_USERS, REPORTS, SEARCHVECTOR, SETTINGS, USERS } from "../../../helpers";
+import {
+  ACTION_ITEMS,
+  CHILDREN,
+  COMMUNICATION_TEMPLATES,
+  ORGANIZATIONS,
+  ORGANIZATION_USERS,
+  REPORTS,
+  SEARCHVECTOR,
+  SETTINGS,
+  USERS,
+  RESOURCES,
+} from "../../../helpers";
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
 
@@ -24,7 +36,7 @@ const SIDEBAR_ITEMS = [
     title: "Organizations",
     icon: () => <OfficeBuilding />,
     exact: "super_admin",
-    perform: `${ORGANIZATIONS}:${ACTIONS.VISIT}`
+    perform: `${ORGANIZATIONS}:${ACTIONS.VISIT}`,
   },
 
   {
@@ -32,62 +44,63 @@ const SIDEBAR_ITEMS = [
     title: "Action Items",
     icon: () => <Screen />,
     atLeast: "user",
-    perform: `${ACTION_ITEMS}:${ACTIONS.VISIT}`
+    perform: `${ACTION_ITEMS}:${ACTIONS.VISIT}`,
   },
   {
     to: "/children",
     title: "Children",
     icon: () => <EmojiSymbolsIcon />,
     atLeast: "user",
-    perform: `${CHILDREN}:${ACTIONS.VISIT}`
+    perform: `${CHILDREN}:${ACTIONS.VISIT}`,
   },
   {
     to: "/reports",
     title: "Reports",
     icon: () => <QueuesIcon />,
     exact: "admin",
-    perform: `${REPORTS}:${ACTIONS.VISIT}`
+    perform: `${REPORTS}:${ACTIONS.VISIT}`,
   },
   {
     to: "/users",
     title: "Users",
     icon: () => <People />,
     exact: "super_admin",
-    perform: `${USERS}:${ACTIONS.VISIT}`
+    perform: `${USERS}:${ACTIONS.VISIT}`,
   },
   {
     to: "/organization_users",
     title: "Organization Users",
     icon: () => <People />,
     exact: "admin",
-    perform: `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`
+    perform: `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`,
   },
   {
     to: "/communications-templates",
     title: "Communications Templates",
     icon: () => <MentionIcon />,
     exact: "admin",
-    perform: `${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`
+    perform: `${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`,
   },
   {
     to: "/settings",
     title: "Settings",
     icon: () => <SettingsIcon />,
     atLeast: "user",
-    perform: `${SETTINGS}:${ACTIONS.VISIT}`
+    perform: `${SETTINGS}:${ACTIONS.VISIT}`,
   },
   {
     to: "/search-vectors",
     title: "Search Vectors",
     icon: () => <ChildIssuesIcon />,
     exact: "admin",
-    perform: `${SEARCHVECTOR}:${ACTIONS.VISIT}`
+    perform: `${SEARCHVECTOR}:${ACTIONS.VISIT}`,
   },
   {
-    to: "/reports",
-    title: "Reports",
-    icon: () => <QueuesIcon />,
-    perform: `${REPORTS}:${ACTIONS.VISIT}`
+    to: "/resources",
+    title: "Resources",
+    icon: () => <SuitcaseIcon />,
+    atLeast: "user",
+    perform: `${RESOURCES}:${ACTIONS.VISIT}`,
   },
 ];
 
@@ -106,6 +119,7 @@ const SidebarInner = () => {
     await fetchMe();
     history.push("/");
   };
+  console.log(user);
 
   return (
     <Box
@@ -136,7 +150,7 @@ const SidebarInner = () => {
         </Spacing>
 
         {SIDEBAR_ITEMS.map((item) => (
-          <Can 
+          <Can
             perform={item.perform}
             yes={() => (
               <SidebarMenuItem key={item.to}>
