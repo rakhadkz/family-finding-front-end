@@ -64,7 +64,7 @@ export const usersTableColumns = (role = "user") => {
     {
       key: "phone",
       content: "Phone",
-      width: role === "user" ? 20 : 15
+      width: role === "user" ? 20 : 15,
     },
   ];
   if (role === "super_admin")
@@ -81,14 +81,12 @@ export const usersTableColumns = (role = "user") => {
     },
   ];
 
-  if (role !== "user"){
-    columns2.push(
-      {
-        key: "actions",
-        content: <p align="center">Actions</p>,
-        width: 10,
-      },
-    )
+  if (role !== "user") {
+    columns2.push({
+      key: "actions",
+      content: <p align="center">Actions</p>,
+      width: 10,
+    });
   }
   return columns1.concat(columns2);
 };
@@ -97,37 +95,32 @@ export const childrenTableColumns = (isUser = true) => [
   {
     key: "full_name",
     content: "Full Name",
-    width: 25,
+    width: 30,
   },
   {
     key: "permanency_goal",
     content: "Permanency Goal",
-    width: 20,
+    width: 25,
   },
   {
     key: "continuous_search",
     content: <p align="center">Continuous Search</p>,
-    width: 14,
+    width: 15,
   },
   {
     key: "days_in_system",
     content: <p align="center">Days in system</p>,
-    width: isUser ? 10 : 13,
+    width: isUser ? 15 : 20,
   },
   {
-    key: "relatives",
-    content: <p align="center">Relatives</p>,
-    width: isUser ? 10 : 13,
-  },
-  {
-    key: "matches",
-    content: <p align="center">Matches</p>,
-    width: isUser ? 10 : 13,
+    key: "connections",
+    content: <p align="center">Connections</p>,
+    width: isUser ? 15 : 20,
   },
   isUser && {
     key: "status",
     content: <p align="center">Status</p>,
-    width: 16,
+    width: 15,
   },
 ];
 
@@ -254,7 +247,7 @@ export const possibleConnectionColumns = [
     content: <p align="center">Actions</p>,
     width: 15,
   },
-]
+];
 
 export const confirmedConnectionColumns = [
   {
@@ -282,8 +275,7 @@ export const confirmedConnectionColumns = [
     content: <p align="center">Actions</p>,
     width: 20,
   },
-]
-
+];
 
 export const templatesSentTableColumns = [
   {

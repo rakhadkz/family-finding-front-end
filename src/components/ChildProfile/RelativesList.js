@@ -12,7 +12,7 @@ export const RelativesList = memo(({ relatives }) => {
 
   return (
     <Rectangle p="14px 26px 14px 26px">
-      <Title size="14px">Relatives ({childParents?.length})</Title>
+      <Title size="14px">Parents / Guardians</Title>
       <Spacing m={{ t: "8px" }}>
         <RelativeListContainer>
           {childParents.map((relative) => (

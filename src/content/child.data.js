@@ -1,6 +1,6 @@
 import Button from "@atlaskit/button";
 import { Box } from "../components/ui/atoms";
-import Lozenge from '@atlaskit/lozenge';
+import Lozenge from "@atlaskit/lozenge";
 import { Avatar } from "../components/ui/molecules/Avatar";
 
 const childTableData = (data, history, assignUser, isUser = true) =>
@@ -11,7 +11,7 @@ const childTableData = (data, history, assignUser, isUser = true) =>
         key: "full_name",
         content: (
           <Box d="flex" align="center">
-            <Avatar name={item.full_name} size="medium" ratio={0.4}/>
+            <Avatar name={item.full_name} size="medium" ratio={0.4} />
             <Button
               style={{ marginLeft: "8px" }}
               onClick={() => history.push("/children/" + item.id)}
@@ -36,27 +36,34 @@ const childTableData = (data, history, assignUser, isUser = true) =>
         content: <p align="center">{item.days_in_system}</p>,
       },
       {
-        key: "relatives",
+        key: "connections",
         content: <p align="center">{item.relatives}</p>,
-      },
-      {
-        key: "matches",
-        content: <p align="center">{item.matches}</p>,
       },
       isUser && {
         key: "status",
-        content: 
-        <div align="center">{item.user_request ? 
-          (item.user_request.date_approved ? 
-            <Lozenge appearance="success">Approved</Lozenge> 
-            : (item.user_request.date_denied ? 
-              <Button appearance="link" onClick={() => assignUser(item, true)}>Request Access</Button>
-                : <Lozenge appearance="inprogress">Pending</Lozenge>
+        content: (
+          <div align="center">
+            {item.user_request ? (
+              item.user_request.date_approved ? (
+                <Lozenge appearance="success">Approved</Lozenge>
+              ) : item.user_request.date_denied ? (
+                <Button
+                  appearance="link"
+                  onClick={() => assignUser(item, true)}
+                >
+                  Request Access
+                </Button>
+              ) : (
+                <Lozenge appearance="inprogress">Pending</Lozenge>
               )
-          ) 
-          : <Button appearance="link" onClick={() => assignUser(item)}>Request Access</Button>}
-        </div>
-      }
+            ) : (
+              <Button appearance="link" onClick={() => assignUser(item)}>
+                Request Access
+              </Button>
+            )}
+          </div>
+        ),
+      },
     ],
   }));
 
