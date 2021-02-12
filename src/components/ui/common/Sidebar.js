@@ -99,7 +99,6 @@ const SIDEBAR_ITEMS = [
     to: "/resources",
     title: "Resources",
     icon: () => <SuitcaseIcon />,
-    atLeast: "user",
     perform: `${RESOURCES}:${ACTIONS.VISIT}`,
   },
 ];
@@ -119,7 +118,6 @@ const SidebarInner = () => {
     await fetchMe();
     history.push("/");
   };
-  console.log(user);
 
   return (
     <Box
