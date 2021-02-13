@@ -13,12 +13,12 @@ import TemplatesSentTab from "./TemplatesSentTab";
 
 export const ConnectionTabs = (props) => {
   const {
-    alerts_size,
-    comments_size,
-    attachments_size,
+    alerts_size
   } = props.currentConnection;
   const {
     templateState: { templates },
+    attachmentState: { attachments },
+    commentState: { comments },
   } = useContext(ConnectionContext);
 
   const currentTab = props.currentTab
@@ -52,7 +52,7 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <CommentIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {comments_size} comments
+            {comments.length} comments
           </Text>
         </Box>
       ),
@@ -63,7 +63,7 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <AttachmentIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {attachments_size} attachments
+            {attachments.length} attachments
           </Text>
         </Box>
       ),

@@ -33,7 +33,7 @@ import { ConnectionTabs } from "./ConnectionTabs";
 
 export const ConnectionContext = React.createContext();
 
-const ConnectionModal = ({ currentConnection, currentTab }) => {
+const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) => {
   const [attachmentState, attachmentDispatch] = useReducer(
     attachmentReducer,
     attachmentInitialState
@@ -97,6 +97,7 @@ const ConnectionModal = ({ currentConnection, currentTab }) => {
         fetchTemplates,
         fetchComments,
         fetchAttachments,
+        fetchConnections
       }}
     >
       <Box

@@ -310,6 +310,7 @@ export const Connections = () => {
           currentConnection={currentConnection}
           onCancel={() => setIsConnectionModalOpen(false)}
           currentTab={currentTab}
+          fetchConnections={fetchConnections}
         />
       </Drawer>
 

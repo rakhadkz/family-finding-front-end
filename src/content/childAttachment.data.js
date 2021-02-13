@@ -45,6 +45,7 @@ const childAttachmentTableData = (data, fetchAttachments, setPending, openModal)
             key: "action",
             content: (
               <ButtonGroup>
+                <Button onClick={() => openModal(attachment.id)}>Connection</Button>
                 <Can
                   perform={`${ATTACHMENTS}:${ACTIONS.REMOVE}`}
                   authorId={attachment.user_id}
@@ -65,7 +66,6 @@ const childAttachmentTableData = (data, fetchAttachments, setPending, openModal)
                     </div>
                   )}
                 />
-                <Button onClick={() => openModal(attachment.id)}>Connection</Button>
               </ButtonGroup>
             ),
           },
