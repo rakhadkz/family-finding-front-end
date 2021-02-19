@@ -31,6 +31,8 @@ import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { ConnectionTabs } from "./ConnectionTabs";
 import Button from "@atlaskit/button";
+import Badge from "@atlaskit/badge";
+
 export const ConnectionContext = React.createContext();
 
 const ConnectionModal = ({
@@ -152,9 +154,9 @@ const ConnectionModal = ({
                       currentConnection?.contact?.last_name?.substring(1)
                     : ""}
                 </Title>
-                <Text style={{ marginBottom: "0px" }}>
-                  {currentConnection.is_disqualified ? "  (DISQUALIFIED)" : ""}
-                </Text>
+                {currentConnection.is_disqualified ? (
+                  <Badge appearance="important">{"DISQUALIFIED"}</Badge>
+                ) : null}
               </Box>
               <Spacing m={{ t: "10px" }}>
                 <FitScore score={Math.floor(Math.random() * 6)} />
@@ -167,16 +169,6 @@ const ConnectionModal = ({
               </Spacing>
             </Spacing>
           </Box>
-          {currentConnection.is_disqualified ? (
-            <Box mr="50px" mt="10px">
-              <Button
-                onClick={allowDisqualifiedConnection}
-                appearance="warning"
-              >
-                Allow
-              </Button>
-            </Box>
-          ) : null}
         </Box>
 
         <Spacing m="30px 40px">
@@ -198,6 +190,18 @@ const ConnectionModal = ({
               <Box style={{ fontWeight: "500" }}>
                 {currentConnection?.contact?.phone}
               </Box>
+            </Box>
+            <Box mb="0px" w="200px" style={{ fontWeight: "700" }}>
+              {currentConnection.is_disqualified ? (
+                <Box>
+                  <Button
+                    onClick={allowDisqualifiedConnection}
+                    appearance="warning"
+                  >
+                    Remove Disqualification
+                  </Button>
+                </Box>
+              ) : null}
             </Box>
           </Box>
         </Spacing>

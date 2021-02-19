@@ -30,7 +30,9 @@ import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { AddContactForm } from "../../AddContactForm";
 import ConnectionModal from "./ConnectionModal";
-import { DisqualifyModal } from "./index";
+import { DisqualifyModal, PlaceModal } from "./index";
+import moment from "moment";
+import { humanReadableDateFormat } from "../../../../content/date";
 
 export const SmallText = styled.div`
   font-family: Helvetica;
@@ -64,6 +66,7 @@ export const Connections = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDisModalOpen, setIsDisModalOpen] = useState(false);
+  const [isPlaceModalOpen, setIsPlaceModalOpen] = useState(false);
   const { id } = state.child;
   const { connections } = connectionState;
   const { constructed_tree } = familyTreeState;
@@ -214,6 +217,14 @@ export const Connections = () => {
                 <Box>
                   <Title size="18px">{`${placedContact.first_name} ${placedContact.last_name}`}</Title>
                   <span>{placedConnection.relationship}</span>
+                  <span style={{ marginRight: "0px" }}>
+                    Placed Date:{" "}
+                    <strong>
+                      {moment(placedConnection.placed_date).format(
+                        humanReadableDateFormat
+                      )}
+                    </strong>
+                  </span>
                   <Box d="flex" mt="24px">
                     <Button
                       appearance="link"
@@ -307,7 +318,8 @@ export const Connections = () => {
             setCurrentConnection,
             fetchConnections,
             setIsAddModalOpen,
-            setIsDisModalOpen
+            setIsDisModalOpen,
+            setIsPlaceModalOpen
           )}
         />
       </Spacing>
@@ -409,6 +421,23 @@ export const Connections = () => {
             id={currentConnection?.id}
             contact={currentConnection?.contact}
             setIsDisModalOpen={setIsDisModalOpen}
+            refresh={fetchConnections}
+          />
+        }
+        hasActions={false}
+      />
+
+      <ModalDialog
+        isOpen={isPlaceModalOpen}
+        setIsOpen={setIsPlaceModalOpen}
+        appearance={null}
+        width="large"
+        body={
+          <PlaceModal
+            onSubmit={updateConnectionRequest}
+            id={currentConnection?.id}
+            contact={currentConnection?.contact}
+            setIsPlaceModalOpen={setIsPlaceModalOpen}
             refresh={fetchConnections}
           />
         }
