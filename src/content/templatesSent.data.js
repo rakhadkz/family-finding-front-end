@@ -75,7 +75,7 @@ const templatesSentTableData = (data, setToggled, toggled) => {
                       appearance="warning"
                       onClick={() =>
                         window.open(
-                          `${authURL}templates_sent/generate_pdf.pdf?id=${item.id}`
+                          `${authURL}/templates_sent/generate_pdf.pdf?id=${item.id}`
                         )
                       }
                     >

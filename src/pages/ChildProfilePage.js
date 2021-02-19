@@ -300,7 +300,7 @@ export function ChildProfilePage(props) {
       (res) => {
         if (templateType === "Letter") {
           window.open(
-            `${authURL}templates_sent/generate_pdf.pdf?id=${res.id}`,
+            `${authURL}/templates_sent/generate_pdf.pdf?id=${res.id}`,
             "",
             "width=1000, height=500"
           );
