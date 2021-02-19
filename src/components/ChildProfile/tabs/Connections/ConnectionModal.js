@@ -43,7 +43,7 @@ const ConnectionModal = ({
   currentTab,
   fetchConnections,
   setIsConnectionModalOpen,
-  allowDisqualifiedConnection
+  allowDisqualifiedConnection,
 }) => {
   const { setCurrentCommentId } = useContext(ChildContext);
   const [attachmentState, attachmentDispatch] = useReducer(
@@ -150,11 +150,12 @@ const ConnectionModal = ({
               />
             </Box>
             <Spacing m={{ t: "10px" }}>
-              <Box d="f">
+              <Box d="flex" direction="column" align="flex-start">
                 <Title
                   size="28px"
                   style={{
                     fontWeight: "700",
+                    marginBottom: 15,
                   }}
                 >
                   {currentConnection?.contact?.first_name[0]?.toUpperCase() +
