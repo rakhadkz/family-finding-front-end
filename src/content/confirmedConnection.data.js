@@ -11,7 +11,8 @@ import { updateConnectionRequest } from "../api/childContact";
 import { Box, Spacing } from "../components/ui/atoms";
 import { Avatar } from "../components/ui/molecules/Avatar";
 import { FitScore } from "../components/ui/molecules";
-
+import Tooltip from "@atlaskit/tooltip";
+import { DisqualifyTooltip } from "../components/ChildProfile/tabs/Connections/DisqualifyTooltip";
 export const SmallText = styled.div`
   font-family: Helvetica;
   font-style: normal;
@@ -36,7 +37,9 @@ export const confirmedConnectionRows = (
   openModal,
   setCurrentConnection,
   fetchConnections,
-  setIsAddModalOpen
+  setIsAddModalOpen,
+  setIsDisModalOpen,
+  setIsPlaceModalOpen
 ) => {
   const existPlaced = data.find((c) => c.is_placed);
   return data
@@ -51,13 +54,7 @@ export const confirmedConnectionRows = (
         setPending();
         updateConnectionRequest(item.id, {
           is_placed: is_placed,
-        }).then(() => fetchConnections());
-      };
-
-      const onDisqualifyUpdate = (is_disqualified = true) => {
-        setPending();
-        updateConnectionRequest(item.id, {
-          is_disqualified: is_disqualified,
+          placed_date: null,
         }).then(() => fetchConnections());
       };
 
@@ -97,10 +94,18 @@ export const confirmedConnectionRows = (
                         >{`${item.contact.first_name} ${item.contact.last_name}`}</Button>
                       </Box>
                       {item.is_disqualified && (
-                        <Box d="flex">
-                          <SmallText>(DISQUALIFIED)</SmallText>
-                          <EditorCloseIcon />
-                        </Box>
+                        <Tooltip
+                          content={
+                            <DisqualifyTooltip
+                              contact={item?.contact}
+                              reason={item?.disqualify_reason}
+                            />
+                          }
+                        >
+                          <Box d="flex" style={{ cursor: "pointer" }}>
+                            <SmallText>(DISQUALIFIED)</SmallText>
+                          </Box>
+                        </Tooltip>
                       )}
                     </Box>
                   </Box>
@@ -220,11 +225,21 @@ export const confirmedConnectionRows = (
                       <Button onClick={() => onConfirmUpdate(false)}>
                         Unconfirm
                       </Button>
-                      <Button onClick={() => onDisqualifyUpdate(true)}>
+                      <Button
+                        onClick={() => {
+                          setIsDisModalOpen(true);
+                          setCurrentConnection(item);
+                        }}
+                      >
                         Disqualify
                       </Button>
                       {!existPlaced && (
-                        <Button onClick={() => onPlacementUpdate()}>
+                        <Button
+                          onClick={() => {
+                            setIsPlaceModalOpen(true);
+                            setCurrentConnection(item);
+                          }}
+                        >
                           Place
                         </Button>
                       )}

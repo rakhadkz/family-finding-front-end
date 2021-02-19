@@ -33,6 +33,8 @@ import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { Rounded } from "../../../ui/molecules/Rounded";
 import { ConnectionTabs } from "./ConnectionTabs";
+import Button from "@atlaskit/button";
+import Badge from "@atlaskit/badge";
 
 export const ConnectionContext = React.createContext();
 
@@ -41,6 +43,7 @@ const ConnectionModal = ({
   currentTab,
   fetchConnections,
   setIsConnectionModalOpen,
+  allowDisqualifiedConnection
 }) => {
   const { setCurrentCommentId } = useContext(ChildContext);
   const [attachmentState, attachmentDispatch] = useReducer(
@@ -128,47 +131,54 @@ const ConnectionModal = ({
           width: 700,
         }}
       >
-        <Box d="flex">
-          <Box
-            w="150px"
-            d="flex"
-            direction="column"
-            align="center"
-            justify="center"
-          >
-            <Avatar
-              name={
-                currentConnection?.contact?.first_name +
-                currentConnection?.contact?.last_name
-              }
-              size="xlarge"
-              ratio={1.25}
-            />
-          </Box>
-          <Spacing m={{ t: "10px" }}>
-            <Title
-              size="28px"
-              style={{
-                fontWeight: "700",
-              }}
+        <Box d="flex" style={{ justifyContent: "space-between" }}>
+          <Box d="f">
+            <Box
+              w="150px"
+              d="flex"
+              direction="column"
+              align="center"
+              justify="center"
             >
-              {currentConnection?.contact?.first_name[0]?.toUpperCase() +
-                currentConnection?.contact?.first_name?.substring(1)}{" "}
-              {currentConnection?.contact?.last_name
-                ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
-                  currentConnection?.contact?.last_name?.substring(1)
-                : ""}
-            </Title>
+              <Avatar
+                name={
+                  currentConnection?.contact?.first_name +
+                  currentConnection?.contact?.last_name
+                }
+                size="xlarge"
+                ratio={1.25}
+              />
+            </Box>
             <Spacing m={{ t: "10px" }}>
-              <FitScore score={Math.floor(Math.random() * 6)} />
-            </Spacing>
+              <Box d="f">
+                <Title
+                  size="28px"
+                  style={{
+                    fontWeight: "700",
+                  }}
+                >
+                  {currentConnection?.contact?.first_name[0]?.toUpperCase() +
+                    currentConnection?.contact?.first_name?.substring(1)}{" "}
+                  {currentConnection?.contact?.last_name
+                    ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
+                      currentConnection?.contact?.last_name?.substring(1)
+                    : ""}
+                </Title>
+                {currentConnection.is_disqualified ? (
+                  <Badge appearance="important">{"DISQUALIFIED"}</Badge>
+                ) : null}
+              </Box>
+              <Spacing m={{ t: "10px" }}>
+                <FitScore score={Math.floor(Math.random() * 6)} />
+              </Spacing>
 
-            <Spacing m={{ t: "10px" }}>
-              <Text style={{ fontSize: 15 }}>
-                {currentConnection?.contact?.relationship}
-              </Text>
+              <Spacing m={{ t: "10px" }}>
+                <Text style={{ fontSize: 15 }}>
+                  {currentConnection?.contact?.relationship}
+                </Text>
+              </Spacing>
             </Spacing>
-          </Spacing>
+          </Box>
         </Box>
 
         <Spacing m="30px 40px">
@@ -190,6 +200,18 @@ const ConnectionModal = ({
               <Box style={{ fontWeight: "500" }}>
                 {currentConnection?.contact?.phone}
               </Box>
+            </Box>
+            <Box mb="0px" w="200px" style={{ fontWeight: "700" }}>
+              {currentConnection.is_disqualified ? (
+                <Box>
+                  <Button
+                    onClick={allowDisqualifiedConnection}
+                    appearance="warning"
+                  >
+                    Remove Disqualification
+                  </Button>
+                </Box>
+              ) : null}
             </Box>
           </Box>
         </Spacing>

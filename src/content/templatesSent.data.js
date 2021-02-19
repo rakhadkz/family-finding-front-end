@@ -2,8 +2,8 @@ import Button, { ButtonGroup } from "@atlaskit/button";
 import ArrowDownIcon from "@atlaskit/icon/glyph/arrow-down";
 import ArrowUpIcon from "@atlaskit/icon/glyph/arrow-up";
 import { SimpleTag as Tag } from "@atlaskit/tag";
+import { Text } from "@chakra-ui/react";
 import moment from "moment";
-import { useState } from "react";
 import { ACTIONS } from "../accessControl/actions";
 import Can from "../accessControl/Can";
 import { COMMUNICATION_TEMPLATES } from "../helpers";
@@ -17,53 +17,79 @@ const colors = {
   open: "green",
 };
 
-const templatesSentTableData = (data) =>
-  data.map((item, index) => ({
-    key: index,
-    cells: [
+const templatesSentTableData = (data, setToggled, toggled) => {
+  return data.reduce((array, item, index) => {
+    const newArr = [
+      ...array,
       {
-        key: "date",
-        content: moment(item?.created).format(humanReadableDateFormat),
+        key: index,
+        cells: [
+          {
+            key: "date",
+            content: moment(item?.created_at).format(humanReadableDateFormat),
+          },
+          {
+            key: "template_type",
+            content: item?.communication_template?.template_type,
+          },
+          {
+            key: "opened",
+            content: (
+              <Tag
+                text={item?.opened?.toUpperCase() || "PENDING"}
+                color={colors[item?.opened] || "yellow"}
+              />
+            ),
+          },
+          {
+            key: "updated_at",
+            content: moment(item?.updated_at).format(humanReadableDateFormat),
+          },
+          {
+            key: "actions",
+            content: (
+              <Toogler
+                toggled={toggled[index]}
+                onToggle={() => setToggled(index)}
+              />
+            ),
+          },
+        ],
       },
-      {
-        key: "template_type",
-        content: item?.communication_template?.template_type,
-      },
-      {
-        key: "opened",
-        content: (
-          <Tag
-            text={item?.opened?.toUpperCase() || "PENDING"}
-            color={colors[item?.opened] || "yellow"}
-          />
-        ),
-      },
-      {
-        key: "updated_at",
-        content: moment(item?.updated_at).format(humanReadableDateFormat),
-      },
-      {
-        key: "actions",
-        content: <Toogler item={item} />,
-      },
-    ],
-  }));
+    ];
+    return toggled[index]
+      ? [
+          ...newArr,
+          {
+            key: index,
+            cells: [
+              {
+                key: "content",
+                content: (
+                  <Text
+                    dangerouslySetInnerHTML={{
+                      __html: `<div style="background-color: rgb(244, 245, 247);padding: 10px"><b>Content</b>: <br /> <div style="padding:10px">${item?.content}</div></div>`,
+                    }}
+                  />
+                ),
+                colSpan: 5,
+              },
+            ],
+          },
+        ]
+      : newArr;
+  }, []);
+};
 
-const Toogler = ({ item }) => {
-  const [toogled, setToogled] = useState(false);
-
+const Toogler = ({ toggled, onToggle }) => {
   return (
     <div align="center">
       <Can
         perform={`${COMMUNICATION_TEMPLATES}:${ACTIONS.EDIT}`}
         yes={() => (
           <ButtonGroup>
-            <Button
-              onClick={() => setToogled(!toogled)}
-              height="32px"
-              width="32px"
-            >
-              {toogled ? (
+            <Button onClick={onToggle} height="32px" width="32px">
+              {toggled ? (
                 <ArrowUpIcon size="small" />
               ) : (
                 <ArrowDownIcon size="small" />
@@ -72,11 +98,6 @@ const Toogler = ({ item }) => {
           </ButtonGroup>
         )}
       />
-      {/* {toogled && (
-        <div style={{ border: "2px solid #DFE1E6", width: "100%" }}>
-          <Text dangerouslySetInnerHTML={{ __html: item.content }}></Text>
-        </div>
-      )} */}
     </div>
   );
 };

@@ -30,6 +30,9 @@ import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { AddContactForm } from "../../AddContactForm";
 import ConnectionModal from "./ConnectionModal";
+import { DisqualifyModal, PlaceModal } from "./index";
+import moment from "moment";
+import { humanReadableDateFormat } from "../../../../content/date";
 
 export const SmallText = styled.div`
   font-family: Helvetica;
@@ -62,6 +65,8 @@ export const Connections = () => {
   } = useContext(ChildContext);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDisModalOpen, setIsDisModalOpen] = useState(false);
+  const [isPlaceModalOpen, setIsPlaceModalOpen] = useState(false);
   const { id } = state.child;
   const { connections } = connectionState;
   const { constructed_tree } = familyTreeState;
@@ -158,6 +163,29 @@ export const Connections = () => {
     setIsConnectionModalOpen(true);
   };
 
+  const allowDisqualifiedConnection = () => {
+    updateConnectionRequest(currentConnection.id, {
+      disqualify_reason: "",
+      is_disqualified: false,
+    })
+      .then(() => {
+        toast.success(`Contact is successfully allowed!`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      })
+      .finally(() => {
+        currentConnection.disqualify_reason = "";
+        currentConnection.is_disqualified = false;
+        fetchConnections();
+      });
+  };
+
   return (
     <Box>
       {placedContact && (
@@ -181,6 +209,14 @@ export const Connections = () => {
                 <Box>
                   <Title size="18px">{`${placedContact.first_name} ${placedContact.last_name}`}</Title>
                   <span>{placedConnection.relationship}</span>
+                  <span style={{ marginRight: "0px" }}>
+                    Placed Date:{" "}
+                    <strong>
+                      {moment(placedConnection.placed_date).format(
+                        humanReadableDateFormat
+                      )}
+                    </strong>
+                  </span>
                   <Box d="flex" mt="24px">
                     <Button
                       appearance="link"
@@ -273,7 +309,9 @@ export const Connections = () => {
             openModal,
             setCurrentConnection,
             fetchConnections,
-            setIsAddModalOpen
+            setIsAddModalOpen,
+            setIsDisModalOpen,
+            setIsPlaceModalOpen
           )}
         />
       </Spacing>
@@ -304,6 +342,7 @@ export const Connections = () => {
           currentTab={currentTab}
           fetchConnections={fetchConnections}
           setIsConnectionModalOpen={setIsConnectionModalOpen}
+          allowDisqualifiedConnection={allowDisqualifiedConnection}
         />
       </Drawer>
 
@@ -362,6 +401,40 @@ export const Connections = () => {
           currentConnection?.contact?.last_name
         } has a kinship connection to this child?`}
         appearance="danger"
+      />
+
+      <ModalDialog
+        isOpen={isDisModalOpen}
+        setIsOpen={setIsDisModalOpen}
+        appearance={null}
+        width="large"
+        body={
+          <DisqualifyModal
+            onSubmit={updateConnectionRequest}
+            id={currentConnection?.id}
+            contact={currentConnection?.contact}
+            setIsDisModalOpen={setIsDisModalOpen}
+            refresh={fetchConnections}
+          />
+        }
+        hasActions={false}
+      />
+
+      <ModalDialog
+        isOpen={isPlaceModalOpen}
+        setIsOpen={setIsPlaceModalOpen}
+        appearance={null}
+        width="large"
+        body={
+          <PlaceModal
+            onSubmit={updateConnectionRequest}
+            id={currentConnection?.id}
+            contact={currentConnection?.contact}
+            setIsPlaceModalOpen={setIsPlaceModalOpen}
+            refresh={fetchConnections}
+          />
+        }
+        hasActions={false}
       />
     </Box>
   );

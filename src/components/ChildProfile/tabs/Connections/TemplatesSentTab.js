@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { templatesSentTableColumns } from "../../../../content/columns.data";
 import { templatesSentTableData } from "../../../../content/templatesSent.data";
 import { Spacing, Title } from "../../../ui/atoms";
@@ -9,6 +9,20 @@ const TemplatesSentTab = () => {
   const {
     templateState: { templates, loading },
   } = useContext(ConnectionContext);
+
+  const [toggled, setToggled] = useState([
+    Array(templates?.length).fill(false),
+  ]);
+
+  useEffect(() => {
+    setToggled(Array(templates?.length).fill(false));
+  }, [templates]);
+
+  const handleToogle = (index) => {
+    const toggleCopy = toggled;
+    toggled[index] = !toggled[index];
+    setToggled([...toggleCopy]);
+  };
 
   return (
     <div
@@ -24,7 +38,7 @@ const TemplatesSentTab = () => {
           emptyView="Empty"
           pending={loading}
           head={templatesSentTableColumns}
-          items={templatesSentTableData(templates)}
+          items={templatesSentTableData(templates, handleToogle, toggled)}
         />
       </Spacing>
     </div>

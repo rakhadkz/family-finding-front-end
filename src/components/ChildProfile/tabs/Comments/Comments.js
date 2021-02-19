@@ -12,6 +12,7 @@ import {
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { useAuth } from "../../../../context/auth/authContext";
 import { ModalDialog } from "../../../ui/common";
+import { useMentions } from "./CommentsContext";
 import moment from "moment";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 
@@ -24,6 +25,7 @@ export const Comments = ({ data, childId, refresh, currentCommentId }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [initialValue, setInitialValue] = useState("");
   const { user } = useAuth();
+
   const expandEditor = () => setIsExpanded(true);
   const focusedComment = useRef(null)
   const commentId = useMemo(() => currentCommentId, [])

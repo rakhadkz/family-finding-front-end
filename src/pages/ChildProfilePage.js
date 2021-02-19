@@ -121,6 +121,7 @@ export function ChildProfilePage(props) {
     attachmentReducer,
     attachmentInitialState
   );
+  
   const [currentCommentId, setCurrentCommentId] = useState(null);
 
   useEffect(() => {
@@ -380,6 +381,7 @@ export function ChildProfilePage(props) {
         fetchComments,
         fetchAttachments,
         setCurrentCommentId,
+        loading: state.loading,
       }}
     >
       {state.loading ? (

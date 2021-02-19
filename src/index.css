@@ -24,3 +24,17 @@ code {
     background-color: #3972d6;
   }
 }
+
+.e8k2yoa {
+  margin: 0;
+  padding: 0;
+  width: 2.5em;
+  height: 1.5em;
+  box-sizing: border-box;
+  line-height: 1.2em;
+  font-size: 1.5em;
+  color: #888;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+}
