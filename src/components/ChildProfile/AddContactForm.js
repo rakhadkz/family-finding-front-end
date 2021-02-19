@@ -1,4 +1,4 @@
-import Button from "@atlaskit/button";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { relationshipOptions } from "../../content/relationshipOptions.data";
@@ -7,7 +7,12 @@ import { getObjectByValue } from "../Children";
 import { Box, Form, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
 
-export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact }) => {
+export const AddContactForm = ({
+  onSubmit,
+  onCancel,
+  initialValues = {},
+  contact,
+}) => {
   const { register, handleSubmit, control, errors, watch, setValue } = useForm({
     defaultValues: initialValues,
   });
@@ -15,20 +20,20 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   useEffect(() => {
-    if(contact){
-      console.log("EDITABLE CONTACT: ", contact)
-      contact.first_name && setValue("first_name", contact.first_name)
-      contact.last_name && setValue("last_name", contact.last_name)
-      contact.relationship && setValue("relationship", contact.relationship)
-      contact.email && setValue("email", contact.email)
-      contact.phone && setValue("phone", contact.phone)
-      contact.address && setValue("address", contact.address)
-      contact.address_2 && setValue("address_2", contact.address_2)
-      contact.city && setValue("city", contact.city)
-      contact.birthday && setValue("birthday", new Date(contact.birthday))
-      contact.zip && setValue("zip", contact.zip)
+    if (contact) {
+      console.log("EDITABLE CONTACT: ", contact);
+      contact.first_name && setValue("first_name", contact.first_name);
+      contact.last_name && setValue("last_name", contact.last_name);
+      contact.relationship && setValue("relationship", contact.relationship);
+      contact.email && setValue("email", contact.email);
+      contact.phone && setValue("phone", contact.phone);
+      contact.address && setValue("address", contact.address);
+      contact.address_2 && setValue("address_2", contact.address_2);
+      contact.city && setValue("city", contact.city);
+      contact.birthday && setValue("birthday", new Date(contact.birthday));
+      contact.zip && setValue("zip", contact.zip);
     }
-  }, [contact])
+  }, [contact]);
 
   const onSubmitHandle = (data) => {
     setPending(true);
@@ -81,7 +86,8 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact
             label="Last name"
           />
           <SelectInput
-            defaultValue={contact?.relationship && 
+            defaultValue={
+              contact?.relationship &&
               getObjectByValue(relationshipOptions, contact?.relationship)
             }
             marginX="8px"
@@ -143,7 +149,9 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact
             label="City"
           />
           <SelectInput
-            defaultValue={contact?.state && { label: contact?.state, value: contact?.state}}
+            defaultValue={
+              contact?.state && { label: contact?.state, value: contact?.state }
+            }
             marginX="8px"
             menuPlacement="top"
             name={"state"}
@@ -154,7 +162,7 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact
             label="State"
             placeholder="Choose State"
           />
-          
+
           <DatepickerInput
             marginX="8px"
             name={"birthday"}
@@ -186,14 +194,14 @@ export const AddContactForm = ({ onSubmit, onCancel, initialValues = {}, contact
           ) : (
             <div style={{ width: 250 }} />
           )}
-          
         </Spacing>
         <Box d="flex" w="100%" justify="center" mb="20px">
-          <Button isDisabled={pending} type="submit" appearance="primary">
-            Save
-          </Button>
-          <Spacing m={{ l: "5px", r: "5px" }} />
-          <Button onClick={onCancel}>Cancel</Button>
+          <ButtonGroup>
+            <Button isDisabled={pending} type="submit" appearance="primary">
+              Save
+            </Button>
+            <Button onClick={onCancel}>Cancel</Button>
+          </ButtonGroup>
         </Box>
       </Form>
     </>

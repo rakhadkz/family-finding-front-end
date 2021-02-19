@@ -1,8 +1,10 @@
-import React, { useEffect, useReducer } from "react";
+import { ButtonGroup } from "@atlaskit/button";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { fetchConnectionsRequest } from "../../../../api/childContact";
-import { fetchTemplatesSentByContactId } from "../../../../api/communicationTemplates";
 import { connectionAttachmentsRow } from "../../../../content/connectionAttachment.data";
+import { ChildContext } from "../../../../pages/ChildProfilePage";
 import {
   attachmentReducer,
   fetchAttachmentsFailure,
@@ -29,6 +31,7 @@ import {
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
+import { Rounded } from "../../../ui/molecules/Rounded";
 import { ConnectionTabs } from "./ConnectionTabs";
 import Button from "@atlaskit/button";
 import Badge from "@atlaskit/badge";
@@ -39,8 +42,10 @@ const ConnectionModal = ({
   currentConnection,
   currentTab,
   fetchConnections,
-  allowDisqualifiedConnection,
+  setIsConnectionModalOpen,
+  allowDisqualifiedConnection
 }) => {
+  const { setCurrentCommentId } = useContext(ChildContext);
   const [attachmentState, attachmentDispatch] = useReducer(
     attachmentReducer,
     attachmentInitialState
@@ -54,7 +59,11 @@ const ConnectionModal = ({
     templateInitialState
   );
 
+  const history = useHistory();
+
   useEffect(() => {
+    console.log("Connected children: ", currentConnection);
+    setCurrentCommentId(null);
     fetchTemplates();
     fetchComments();
     fetchAttachments();
@@ -110,6 +119,7 @@ const ConnectionModal = ({
         fetchComments,
         fetchAttachments,
         fetchConnections,
+        setIsConnectionModalOpen,
       }}
     >
       <Box
@@ -205,10 +215,31 @@ const ConnectionModal = ({
             </Box>
           </Box>
         </Spacing>
+        <Box d="flex">
+          <ButtonGroup>
+            {currentConnection.children.map((child) => (
+              <Rounded
+                onClick={() => history.push("../children/" + child.id)}
+                content={
+                  <>
+                    <Avatar
+                      size="small"
+                      name={`${child.first_name} ${child.last_name}`}
+                    />
+                    <span style={{ marginLeft: "5px", color: "#455670" }}>
+                      {child.first_name} {child.last_name}
+                    </span>
+                  </>
+                }
+              />
+            ))}
+          </ButtonGroup>
+        </Box>
         <div style={{ width: 650 }}>
           <ConnectionTabs
             currentConnection={currentConnection}
             currentTab={currentTab}
+            setCurrentCommentId={setCurrentCommentId}
           />
         </div>
       </Box>

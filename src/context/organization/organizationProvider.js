@@ -8,17 +8,9 @@ const fetchOrganizations = (params = null) => {
   const errorStatuses = {
     500: "Error on Server !",
   };
-  return fetchOrganizationsRequest(params).catch((err) => {
-    toast.error(errorStatuses[err.status], {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  });
+  return fetchOrganizationsRequest(params).catch((err) =>
+    toast.error(errorStatuses[err.status])
+  );
 };
 
 const createOrganization = (data) => {
@@ -26,17 +18,9 @@ const createOrganization = (data) => {
     500: "Error on Server !",
   };
 
-  return createOrganizationRequest(data).catch((err) => {
-    toast.error(errorStatuses[err.status], {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  });
+  return createOrganizationRequest(data).catch((err) =>
+    toast.error(errorStatuses[err.status])
+  );
 };
 
 export { fetchOrganizations, createOrganization };

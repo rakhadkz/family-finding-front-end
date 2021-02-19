@@ -4,7 +4,6 @@ import {
   CHILDREN,
   COMMUNICATION_TEMPLATES,
   ORGANIZATIONS,
-  ORGANIZATION_USERS,
   REPORTS,
   SEARCHVECTOR,
   SETTINGS,
@@ -20,8 +19,8 @@ const rules = {
       `${CHILDREN}:${ACTIONS.VISIT}`,
       `${CHILDREN}:${ACTIONS.VISIT_ONE}`,
       `${SETTINGS}:${ACTIONS.VISIT}`,
-      `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`,
-      `${ORGANIZATION_USERS}:${ACTIONS.VISIT_ONE}`,
+      `${USERS}:${ACTIONS.VISIT}`,
+      `${USERS}:${ACTIONS.VISIT_ONE}`,
       `${RESOURCES}:${ACTIONS.VISIT}`,
     ],
     dynamic: {
@@ -33,8 +32,8 @@ const rules = {
   },
   manager: {
     static: [
-      `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`,
-      `${ORGANIZATION_USERS}:${ACTIONS.VISIT_ONE}`,
+      `${USERS}:${ACTIONS.VISIT}`,
+      `${USERS}:${ACTIONS.VISIT_ONE}`,
       `${ATTACHMENTS}:${ACTIONS.REMOVE}`,
       `${ACTION_ITEMS}:${ACTIONS.VISIT}`,
       `${CHILDREN}:${ACTIONS.ADD}`,
@@ -53,8 +52,6 @@ const rules = {
   },
   admin: {
     static: [
-      `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`,
-      `${ORGANIZATION_USERS}:${ACTIONS.VISIT_ONE}`,
       `${ATTACHMENTS}:${ACTIONS.REMOVE}`,
       `${ACTION_ITEMS}:${ACTIONS.VISIT}`,
       `${CHILDREN}:${ACTIONS.ADD}`,
@@ -71,6 +68,8 @@ const rules = {
       `${COMMUNICATION_TEMPLATES}:${ACTIONS.ADD}`,
       `${COMMUNICATION_TEMPLATES}:${ACTIONS.EDIT}`,
       `${REPORTS}:${ACTIONS.VISIT}`,
+      `${USERS}:${ACTIONS.VISIT}`,
+      `${USERS}:${ACTIONS.VISIT_ONE}`,
       `${USERS}:${ACTIONS.ADD}`,
       `${USERS}:${ACTIONS.REMOVE}`,
       `${RESOURCES}:${ACTIONS.VISIT}`,

@@ -263,17 +263,17 @@ export const confirmedConnectionColumns = [
   {
     key: "engagement",
     content: "Info & Engagement",
-    width: 15,
+    width: 13,
   },
   {
     key: "link_score",
     content: "Link Score",
-    width: 13,
+    width: 11,
   },
   {
     key: "actions",
     content: <p align="center">Actions</p>,
-    width: 20,
+    width: 25,
   },
 ];
 

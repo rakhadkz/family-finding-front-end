@@ -6,7 +6,13 @@ import { getLocalStorageUser } from "../context/auth/authProvider";
 import { USERS } from "../helpers";
 import { role_label } from "./sample.data";
 
-const userTableData = (data, user, setIsOpen, setCurrentUser, history = null) => {
+const userTableData = (
+  data,
+  user,
+  setIsOpen,
+  setCurrentUser,
+  history = null
+) => {
   const isArray = Array.isArray(data);
   data = isArray ? data : (data = [data]);
   const { organization_id, role } = getLocalStorageUser();
@@ -16,7 +22,11 @@ const userTableData = (data, user, setIsOpen, setCurrentUser, history = null) =>
       !isArray ? (
         full_name
       ) : (
-        <Button onClick={() => history.push((user?.role === 'super_admin' ? '/users/' : '/organization_users/') + item.id)} appearance="link" spacing="none">
+        <Button
+          onClick={() => history.push("/users/" + item.id)}
+          appearance="link"
+          spacing="none"
+        >
           {full_name}
         </Button>
       ),
@@ -27,22 +37,30 @@ const userTableData = (data, user, setIsOpen, setCurrentUser, history = null) =>
             <p>{item.organization?.name}</p>
           ))
         : null,
-      item.user_organizations?.map((item) => role !== "super_admin" ? item.organization_id === organization_id && <p>{role_label(item.role)}</p> : <p>{role_label(item.role)}</p>),
-      <Can 
-          perform={`${USERS}:${ACTIONS.REMOVE}`}
-          yes={() => (
-            <Button
-              isDisabled={user?.id === item.id}
-              onClick={() => {
-                setIsOpen(true);
-                setCurrentUser(item.id);
-              }}
-              height="32px"
-              width="32px"
-            >
-              <CrossIcon size="small" />
-            </Button>
-          )}
+      item.user_organizations?.map((item) =>
+        role !== "super_admin" ? (
+          item.organization_id === organization_id && (
+            <p>{role_label(item.role)}</p>
+          )
+        ) : (
+          <p>{role_label(item.role)}</p>
+        )
+      ),
+      <Can
+        perform={`${USERS}:${ACTIONS.REMOVE}`}
+        yes={() => (
+          <Button
+            isDisabled={user?.id === item.id}
+            onClick={() => {
+              setIsOpen(true);
+              setCurrentUser(item.id);
+            }}
+            height="32px"
+            width="32px"
+          >
+            <CrossIcon size="small" />
+          </Button>
+        )}
       />
     );
     return {

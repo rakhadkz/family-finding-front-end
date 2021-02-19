@@ -65,6 +65,11 @@ export const confirmedConnectionRows = (
         }).then(() => fetchConnections());
       };
 
+      const onEdit = () => {
+        setCurrentConnection(item);
+        setIsAddModalOpen(true);
+      };
+
       return (
         item &&
         item.contact && {
@@ -87,17 +92,6 @@ export const confirmedConnectionRows = (
                           spacing="none"
                           onClick={() => openModal("main", item)}
                         >{`${item.contact.first_name} ${item.contact.last_name}`}</Button>
-                        <Button
-                          spacing="none"
-                          style={{ marginLeft: "5px" }}
-                          appearance="link"
-                          onClick={() => {
-                            setCurrentConnection(item);
-                            setIsAddModalOpen(true);
-                          }}
-                        >
-                          <EditorEditIcon size="medium" />
-                        </Button>
                       </Box>
                       {item.is_disqualified && (
                         <Tooltip
@@ -212,15 +206,22 @@ export const confirmedConnectionRows = (
               content: (
                 <div align="center">
                   {item.is_placed ? (
-                    <Button onClick={() => onPlacementUpdate(false)}>
-                      Remove Placement
-                    </Button>
+                    <ButtonGroup>
+                      <Button onClick={onEdit}>Edit</Button>
+                      <Button onClick={() => onPlacementUpdate(false)}>
+                        Remove Placement
+                      </Button>
+                    </ButtonGroup>
                   ) : item.is_disqualified ? (
-                    <Button onClick={() => onConfirmUpdate(false)}>
-                      Unconfirm
-                    </Button>
+                    <ButtonGroup>
+                      <Button onClick={onEdit}>Edit</Button>
+                      <Button onClick={() => onConfirmUpdate(false)}>
+                        Unconfirm
+                      </Button>
+                    </ButtonGroup>
                   ) : (
                     <ButtonGroup>
+                      <Button onClick={onEdit}>Edit</Button>
                       <Button onClick={() => onConfirmUpdate(false)}>
                         Unconfirm
                       </Button>

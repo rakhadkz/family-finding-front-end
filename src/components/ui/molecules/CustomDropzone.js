@@ -27,11 +27,11 @@ export const DropzoneLayout = ({
   files,
   extra: { maxFiles },
   setIsOpen,
-  setClosable
+  setClosable = null
 }) => (
   <div { ...dropzoneProps} style={{paddingBottom: "12px"}}>
     {previews}
-    {files.length === 0 ? setClosable(true) : setClosable(false)}
+    {setClosable && (files.length === 0 ? setClosable(true) : setClosable(false))}
     {files.length < maxFiles && input}
     <Box w="100%" d="flex" direction="row-reverse">
       {files.length > 0 && <Button appearance="subtle" style={{marginLeft: "10px", marginRight: "10px"}} onClick={() => setIsOpen(false)}>Cancel</Button>}

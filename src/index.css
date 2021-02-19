@@ -14,6 +14,17 @@ code {
     monospace;
 }
 
+.animated {
+  border-radius: 3px;
+  animation: highlight 1000ms ease-out;
+}
+
+@keyframes highlight {
+  from {
+    background-color: #3972d6;
+  }
+}
+
 .e8k2yoa {
   margin: 0;
   padding: 0;

@@ -55,17 +55,7 @@ export const CommunicationTemplatesPage = (props) => {
   const onDelete = (id) => {
     setRefresh(true);
     deleteCommunicationTemplateRequest(id)
-      .catch((err) => {
-        toast.error("Error on server !", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      })
+      .catch((err) => toast.error("Error on server !"))
       .finally(() => {
         setRefresh(false);
         setIsOpen(false);

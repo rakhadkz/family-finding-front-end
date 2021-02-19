@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef, useContext, useMemo } from "react";
 import { postCommentRequest } from "../../../../api/comments";
 import { Box, Spacing } from "../../../ui/atoms";
 import { Comments } from "./Comments";
@@ -27,11 +27,12 @@ const FooterForm = styled(Box)`
 
 const ScrollDown = styled.span``;
 
-export const CommentsTab = () => {
+export const CommentsTab = ({ currentCommentId }) => {
   const {
     state,
-    fetchComments,
     commentState: { comments, loading },
+    fetchComments,
+    setCurrentCommentId,
   } = useContext(ChildContext);
   const { id } = state.child;
   const [isExpanded, setIsExpanded] = useState(false);
@@ -39,7 +40,10 @@ export const CommentsTab = () => {
   const [suggestions, setSuggestions] = useState(0);
   const { user } = useAuth();
   const scrollRef = useRef(null);
+  const focusedComment = useRef(null);
+  const commentId = useMemo(() => currentCommentId, []);
   const [sticky, setSticky] = useState(false);
+
   useScrollPosition(
     ({ prevPos, currPos }) => {
       const isShow = currPos.y > prevPos.y;
@@ -69,6 +73,16 @@ export const CommentsTab = () => {
     setIsExpanded(false);
     setBlocks(1);
   };
+
+  useEffect(() => {
+    if (focusedComment?.current) {
+      focusedComment.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setCurrentCommentId(null);
+    }
+  }, []);
 
   useEffect(() => {
     if (isExpanded) executeScroll();
@@ -108,12 +122,23 @@ export const CommentsTab = () => {
                   new Date(b.created_at).getTime()
               )
               .map((comment, index) => (
-                <Comments
-                  childId={id}
-                  data={comment}
-                  key={comment.id}
-                  refresh={fetchComments}
-                />
+                <div
+                  className={comment.id === commentId ? "animated" : null}
+                  ref={comment.id === commentId ? focusedComment : null}
+                  style={{
+                    border: comment.id === commentId && "2px solid #eee",
+                    padding: "8px 0",
+                    width: "100%",
+                  }}
+                >
+                  <Comments
+                    childId={id}
+                    data={comment}
+                    key={comment.id}
+                    refresh={fetchComments}
+                    currentCommentId={currentCommentId}
+                  />
+                </div>
               ))}
           </Spacing>
         ) : (

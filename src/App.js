@@ -23,7 +23,6 @@ import {
   LOGIN,
   NEW_PASSWORD,
   ORGANIZATIONS,
-  ORGANIZATION_USERS,
   REPORTS,
   SEARCHVECTOR,
   SETTINGS,
@@ -56,7 +55,7 @@ import { AccessDenied } from "./pages/AccessDenied";
 import LoginPage from "./pages/Login";
 import { localStorageKey } from "./utils/requestHandler";
 
-const PrivateRoute = ({ perform, roles, component: Component, ...rest }) => {
+const PrivateRoute = ({ perform, component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
@@ -82,6 +81,17 @@ function App() {
   return (
     <div style={{ display: "flex" }}>
       <Router>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable
+          pauseOnHover={false}
+        />
         <SidebarTemplate sidebar={<Sidebar />} />
         <React.Suspense fallback={<Preloader />}>
           <Switch>
@@ -110,42 +120,36 @@ function App() {
             <PrivateRoute
               exact
               perform={`${SEARCHVECTOR}:${ACTIONS.VISIT}`}
-              roles={["a", "m"]}
               path={`/${SEARCHVECTOR}`}
               component={SearchVectorsPage}
             />
             <PrivateRoute
               exact
               perform={`${SETTINGS}:${ACTIONS.VISIT}`}
-              roles={["a", "m"]}
               path={`/${SETTINGS}`}
               component={SettingsPage}
             />
             <PrivateRoute
               exact
               perform={`${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`}
-              roles={["a", "m"]}
               path={`/${COMMUNICATION_TEMPLATES}`}
               component={CommunicationTemplatesPage}
             />
             <PrivateRoute
               exact
               perform={`${COMMUNICATION_TEMPLATES}:${ACTIONS.ADD}`}
-              roles={["a", "s"]}
               path={`/${COMMUNICATION_TEMPLATES}-${ADD}`}
               component={AddCommunicationTemplatePage}
             />
             <PrivateRoute
               exact
               perform={`${REPORTS}:${ACTIONS.VISIT}`}
-              roles={["a", "m"]}
               path={`/${REPORTS}`}
               component={ReportsPage}
             />
             <PrivateRoute
               exact
               perform={`${USERS}:${ACTIONS.VISIT}`}
-              roles={["s"]}
               path={`/${USERS}`}
               component={(props) => (
                 <UsersPage isOrganization={false} {...props} />
@@ -153,94 +157,65 @@ function App() {
             />
             <PrivateRoute
               exact
-              perform={`${ORGANIZATION_USERS}:${ACTIONS.VISIT}`}
-              roles={["s", "m", "a"]}
-              path={`/${ORGANIZATION_USERS}`}
-              component={(props) => (
-                <UsersPage isOrganization={true} {...props} />
-              )}
-            />
-            <PrivateRoute
-              exact
-              perform={`${ORGANIZATION_USERS}:${ACTIONS.VISIT_ONE}`}
-              roles={["u", "m", "a"]}
-              path={`/${ORGANIZATION_USERS}/:id`}
-              component={(props) => (
-                <UsersPage isOrganization={true} {...props} />
-              )}
-            />
-            <PrivateRoute
-              exact
               perform={`${ORGANIZATIONS}:${ACTIONS.VISIT}`}
-              roles={["s"]}
               path={`/${ORGANIZATIONS}`}
               component={OrganizationsPage}
             />
             <PrivateRoute
               exact
               perform={`${ORGANIZATIONS}:${ACTIONS.ADD}`}
-              roles={["s"]}
               path={`/${ORGANIZATIONS}-${ADD}`}
               component={AddOrganizationPage}
             />
             <PrivateRoute
               exact
               perform={`${USERS}:${ACTIONS.ADD}`}
-              roles={["s", "a"]}
               path={`/${USERS}-${ADD}`}
               component={AddUserPage}
             />
             <PrivateRoute
               exact
               perform={`${USERS}:${ACTIONS.VISIT_ONE}`}
-              roles={["s"]}
               path={`/${USERS}/:id`}
               component={UsersPage}
             />
             <PrivateRoute
               exact
               perform={`${CHILDREN}:${ACTIONS.ADD}`}
-              roles={["a", "m"]}
               path={`/${CHILDREN}-${ADD}`}
               component={AddChildPage}
             />
             <PrivateRoute
               exact
               perform={`${ORGANIZATIONS}:${ACTIONS.VISIT_ONE}`}
-              roles={["s"]}
               path={`/${ORGANIZATIONS}/:id`}
               component={OrganizationsPage}
             />
             <PrivateRoute
               exact
               perform={`${ACTION_ITEMS}:${ACTIONS.VISIT}`}
-              roles={["a", "u", "m"]}
               path={`/${ACTION_ITEMS}`}
               component={ActionItemsPage}
             />
             <PrivateRoute
               exact
               perform={`${CHILDREN}:${ACTIONS.VISIT}`}
-              roles={["a", "u", "m"]}
               path={`/${CHILDREN}`}
               component={ChildrenPage}
             />
             <PrivateRoute
               exact
               perform={`${CHILDREN}:${ACTIONS.VISIT_ONE}`}
-              roles={["a", "u", "m"]}
               path={`/${CHILDREN}/:id`}
               component={ChildProfilePage}
             />
             <PrivateRoute
               exact
               perform={`${RESOURCES}:${ACTIONS.VISIT}`}
-              roles={["a", "u", "m"]}
               path={`/${RESOURCES}`}
               component={ResourcesPage}
             />
             <PrivateRoute component={NotFound} />
-            <ToastContainer />
           </Switch>
         </React.Suspense>
       </Router>

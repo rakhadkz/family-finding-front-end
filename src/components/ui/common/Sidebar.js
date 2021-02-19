@@ -20,7 +20,6 @@ import {
   CHILDREN,
   COMMUNICATION_TEMPLATES,
   ORGANIZATIONS,
-  ORGANIZATION_USERS,
   REPORTS,
   SEARCHVECTOR,
   SETTINGS,
@@ -30,7 +29,7 @@ import {
 import { Box, Logo, SidebarMenuItem, Spacing } from "../atoms";
 import { SidebarUser } from "./SidebarUser";
 
-const SIDEBAR_ITEMS = [
+const SIDEBAR_ITEMS = (isSuperAdmin = false) => [
   {
     to: "/",
     title: "Organizations",
@@ -62,17 +61,10 @@ const SIDEBAR_ITEMS = [
   },
   {
     to: "/users",
-    title: "Users",
+    title: isSuperAdmin ? "Users" : "Organization users",
     icon: () => <People />,
     exact: "super_admin",
     perform: `${USERS}:${ACTIONS.VISIT}`,
-  },
-  {
-    to: "/organization_users",
-    title: "Organization Users",
-    icon: () => <People />,
-    exact: "admin",
-    perform: `${ORGANIZATION_USERS}:${ACTIONS.VISIT}`,
   },
   {
     to: "/communications-templates",
@@ -147,7 +139,7 @@ const SidebarInner = () => {
           />
         </Spacing>
 
-        {SIDEBAR_ITEMS.map((item) => (
+        {SIDEBAR_ITEMS(user?.role === "super_admin").map((item) => (
           <Can
             perform={item.perform}
             yes={() => (

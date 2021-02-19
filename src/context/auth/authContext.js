@@ -21,28 +21,26 @@ export const AuthProvider = (props) => {
 
   const fetchMe = React.useCallback(
     () =>
-      auth
-        .fetchMe()
-        .then(
-          (user) => {
-            if (user){
-              var selectedOrganization = null
-              user.user_organizations.map(item => {
-                if (item.organization_id === user.organization_id && 
-                  item.role === user.role){
-                    selectedOrganization = {
-                      value: item,
-                      label: item.organization.name
-                    }
-                  }
-              })
-              setUser({
-                ...user,
-                selectedOrganization: selectedOrganization
-              })
+      auth.fetchMe().then((user) => {
+        if (user) {
+          var selectedOrganization = null;
+          user.user_organizations.map((item) => {
+            if (
+              item.organization_id === user.organization_id &&
+              item.role === user.role
+            ) {
+              selectedOrganization = {
+                value: item,
+                label: item.organization.name,
+              };
             }
-          }
-        ),
+          });
+          setUser({
+            ...user,
+            selectedOrganization: selectedOrganization,
+          });
+        }
+      }),
     []
   );
 
@@ -63,7 +61,7 @@ export const AuthProvider = (props) => {
     }
   };
 
-  const login = React.useCallback((form   ) => auth.login(form).then(setUser), []);
+  const login = React.useCallback((form) => auth.login(form).then(setUser), []);
 
   const sign = React.useCallback((form) => auth.signup(form), []);
 

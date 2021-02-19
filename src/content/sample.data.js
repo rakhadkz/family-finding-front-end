@@ -1,4 +1,4 @@
-const tableData = (data, cells) => {
+export const tableData = (data, cells) => {
   var out = data.map((item, index) => {
     return {
       key: index,
@@ -9,7 +9,7 @@ const tableData = (data, cells) => {
   return out;
 };
 
-const fillCells = (data, cells) => {
+export const fillCells = (data, cells) => {
   return cells.map((item) => {
     return {
       key: item.key,
@@ -30,5 +30,3 @@ export const role_label = (role) => {
       return "Organization user";
   }
 };
-
-export { tableData };

@@ -15,14 +15,22 @@ import OrgChart from "./mychart";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 
 export const FamilyTreePage = () => {
-  const [ isAddModalOpen, setIsAddModalOpen ] = useState(false);
-  const { state, connectionState: { connections }, familyTreeState: { constructed_tree }, fetchConnections, fetchFamilyTree } = useContext(ChildContext);
-  const { child: { id } } = state;
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const {
+    state,
+    connectionState: { connections },
+    familyTreeState: { constructed_tree },
+    fetchConnections,
+    fetchFamilyTree,
+  } = useContext(ChildContext);
+  const {
+    child: { id },
+  } = state;
 
   const refreshContacts = () => {
-    fetchConnections()
-    fetchFamilyTree()
-  }
+    fetchConnections();
+    fetchFamilyTree();
+  };
 
   const onAddContact = async (data) => {
     await createContactRequest(data)
@@ -81,15 +89,7 @@ export const FamilyTreePage = () => {
                 });
               }
             }
-            toast.success("User successfully created!", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
+            toast.success("Contact successfully created!");
           })
           .finally(async () => {
             setIsAddModalOpen(false);
@@ -132,9 +132,7 @@ export const FamilyTreePage = () => {
           <AddContactForm
             onSubmit={async (data) => {
               console.log("DATA", data);
-              await onAddContact(data).finally(
-                () => refreshContacts()
-              );
+              await onAddContact(data).finally(() => refreshContacts());
               console.log("FETCHING");
             }}
             onCancel={() => setIsAddModalOpen(false)}

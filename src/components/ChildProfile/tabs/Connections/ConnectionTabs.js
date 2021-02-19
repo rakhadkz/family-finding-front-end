@@ -56,7 +56,7 @@ export const ConnectionTabs = (props) => {
           </Text>
         </Box>
       ),
-      content: <CommentsTab />,
+      content: <CommentsTab setCurrentCommentId={props.setCurrentCommentId} />,
     },
     {
       label: (

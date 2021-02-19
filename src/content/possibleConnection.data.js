@@ -1,4 +1,4 @@
-import Button from "@atlaskit/button";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import AttachmentIcon from "@atlaskit/icon/glyph/attachment";
 import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
 import EmailIcon from "@atlaskit/icon/glyph/email";
@@ -39,17 +39,6 @@ export const possibleConnectionRows = (
                       onClick={() => openModal("main", item)}
                     >
                       {`${item.contact.first_name} ${item.contact.last_name}`}
-                    </Button>
-                    <Button
-                      spacing="none"
-                      style={{ marginLeft: "5px" }}
-                      appearance="link"
-                      onClick={() => {
-                        setCurrentConnection(item);
-                        setIsAddModalOpen(true);
-                      }}
-                    >
-                      <EditorEditIcon size="medium" />
                     </Button>
                   </Box>
                 </Box>
@@ -98,14 +87,24 @@ export const possibleConnectionRows = (
               key: "actions",
               content: (
                 <div align="center">
-                  <Button
-                    onClick={() => {
-                      setCurrentConnection(item);
-                      setIsConfirmModalOpen(true);
-                    }}
-                  >
-                    Confirm
-                  </Button>
+                  <ButtonGroup>
+                    <Button
+                      onClick={() => {
+                        setCurrentConnection(item);
+                        setIsAddModalOpen(true);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setCurrentConnection(item);
+                        setIsConfirmModalOpen(true);
+                      }}
+                    >
+                      Confirm
+                    </Button>
+                  </ButtonGroup>
                 </div>
               ),
             },

@@ -147,15 +147,7 @@ export const Connections = () => {
                 });
               }
             }
-            toast.success("User successfully created!", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
+            toast.success("Contact successfully created!");
           })
           .finally(() => {
             fetchConnections();
@@ -243,6 +235,19 @@ export const Connections = () => {
                       appearance="link"
                       spacing="none"
                       style={{ marginRight: "17px" }}
+                      onClick={() => openModal("alerts", placedConnection)}
+                    >
+                      <Box d="flex" align="center">
+                        <NotificationIcon />
+                        <Spacing m={{ l: "4px" }}>
+                          {placedConnection.alerts_size} link alerts
+                        </Spacing>
+                      </Box>
+                    </Button>
+                    <Button
+                      appearance="link"
+                      spacing="none"
+                      style={{ marginRight: "17px" }}
                       onClick={() => openModal("comments", placedConnection)}
                     >
                       <Box d="flex" align="center">
@@ -262,19 +267,6 @@ export const Connections = () => {
                         <AttachmentIcon />
                         <Spacing m={{ l: "4px" }}>
                           {placedConnection.attachments_size} attachments
-                        </Spacing>
-                      </Box>
-                    </Button>
-                    <Button
-                      appearance="link"
-                      spacing="none"
-                      style={{ marginRight: "17px" }}
-                      onClick={() => openModal("alerts", placedConnection)}
-                    >
-                      <Box d="flex" align="center">
-                        <NotificationIcon />
-                        <Spacing m={{ l: "4px" }}>
-                          {placedConnection.alerts_size} link alerts
                         </Spacing>
                       </Box>
                     </Button>
@@ -349,6 +341,7 @@ export const Connections = () => {
           onCancel={() => setIsConnectionModalOpen(false)}
           currentTab={currentTab}
           fetchConnections={fetchConnections}
+          setIsConnectionModalOpen={setIsConnectionModalOpen}
           allowDisqualifiedConnection={allowDisqualifiedConnection}
         />
       </Drawer>
@@ -360,7 +353,7 @@ export const Connections = () => {
         width="large"
         body={
           <Box d="flex" direction="column" align="center">
-            <Spacing m={{ t: "30px" }}>
+            <Spacing m={{ t: "17px" }}>
               <Title>
                 {currentConnection ? "Edit Connection" : "Add Connection"}
               </Title>
