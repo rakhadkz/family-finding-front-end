@@ -314,7 +314,7 @@ export const Connections = () => {
         width="large"
         body={
           <Box d="flex" direction="column" align="center">
-            <Spacing m={{ t: "30px" }}>
+            <Spacing m={{ t: "17px" }}>
               <Title>
                 {currentConnection ? "Edit Connection" : "Add Connection"}
               </Title>

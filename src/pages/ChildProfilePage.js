@@ -1,5 +1,5 @@
 import AvatarGroup from "@atlaskit/avatar-group";
-import Button from "@atlaskit/button";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import "@atlaskit/css-reset";
 import EmailIcon from "@atlaskit/icon/glyph/email";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
@@ -330,7 +330,9 @@ export function ChildProfilePage(props) {
   };
 
   const AssignedUser = memo(({ data }) => (
-    <AvatarGroup appearance="stack" data={data} />
+    <div style={{ marginLeft: "8px" }}>
+      <AvatarGroup appearance="stack" data={data} />
+    </div>
   ));
 
   const assignUser = () => {
@@ -410,13 +412,13 @@ export function ChildProfilePage(props) {
             {user?.role !== "user" && (
               <>
                 <Box d="flex">
-                  <Button
-                    appearance="primary"
-                    iconBefore={<NotificationIcon />}
-                  >
-                    Set Reminder
-                  </Button>
-                  <Spacing m="0px 10px">
+                  <ButtonGroup>
+                    <Button
+                      appearance="primary"
+                      iconBefore={<NotificationIcon />}
+                    >
+                      Set Reminder
+                    </Button>
                     <Button
                       appearance="primary"
                       iconBefore={<WatchIcon />}
@@ -424,49 +426,49 @@ export function ChildProfilePage(props) {
                     >
                       Assign
                     </Button>
-                    <ModalDialog
-                      isOpen={isOpen}
-                      setIsOpen={setIsOpen}
-                      heading="Assign a User"
-                      positiveLabel="Assign"
-                      onClick={() => onSubmitUsers()}
-                      width="small"
-                      isLoading={buttonPending}
-                      body={
-                        <>
-                          <TagGroup>
-                            {state.child_users?.map((user) => (
-                              <Tag
-                                appearance="rounded"
-                                text={user.name}
-                                onBeforeRemoveAction={() => {
-                                  removeUser(user.id);
-                                  return false;
-                                }}
-                              />
-                            ))}
-                          </TagGroup>
-                          <Select
-                            className="multi-select"
-                            classNamePrefix="react-select"
-                            isMulti
-                            menuPortalTarget={document.body}
-                            value={assignedUsers}
-                            validationState={validationState}
-                            onChange={(e) => {
-                              setAssignedUsers(e);
-                              setValidationState("default");
-                            }}
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                            }}
-                            options={state.not_child_users}
-                            placeholder="Choose a User(s)"
-                          />
-                        </>
-                      }
-                    />
-                  </Spacing>
+                  </ButtonGroup>
+                  <ModalDialog
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    heading="Assign a User"
+                    positiveLabel="Assign"
+                    onClick={() => onSubmitUsers()}
+                    width="small"
+                    isLoading={buttonPending}
+                    body={
+                      <>
+                        <TagGroup>
+                          {state.child_users?.map((user) => (
+                            <Tag
+                              appearance="rounded"
+                              text={user.name}
+                              onBeforeRemoveAction={() => {
+                                removeUser(user.id);
+                                return false;
+                              }}
+                            />
+                          ))}
+                        </TagGroup>
+                        <Select
+                          className="multi-select"
+                          classNamePrefix="react-select"
+                          isMulti
+                          menuPortalTarget={document.body}
+                          value={assignedUsers}
+                          validationState={validationState}
+                          onChange={(e) => {
+                            setAssignedUsers(e);
+                            setValidationState("default");
+                          }}
+                          styles={{
+                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                          }}
+                          options={state.not_child_users}
+                          placeholder="Choose a User(s)"
+                        />
+                      </>
+                    }
+                  />
                   <AssignedUser data={state.child_users || []} />
                 </Box>
               </>
@@ -490,17 +492,17 @@ export function ChildProfilePage(props) {
           </Spacing>
           <Spacing m={{ t: "16px" }}>
             <Box d="flex">
-              <Button
-                onClick={() => {
-                  setTemplateType("Letter");
-                  setIsTemplateOpen(true);
-                }}
-                iconBefore={<EmailIcon />}
-                isSelected
-              >
-                Generate Letter
-              </Button>
-              <Spacing m="0px 10px">
+              <ButtonGroup>
+                <Button
+                  onClick={() => {
+                    setTemplateType("Letter");
+                    setIsTemplateOpen(true);
+                  }}
+                  iconBefore={<EmailIcon />}
+                  isSelected
+                >
+                  Generate Letter
+                </Button>
                 <Button
                   onClick={() => {
                     setTemplateType("Email");
@@ -511,17 +513,17 @@ export function ChildProfilePage(props) {
                 >
                   Send Email
                 </Button>
-              </Spacing>
-              <Button
-                onClick={() => {
-                  setTemplateType("SMS");
-                  setIsTemplateOpen(true);
-                }}
-                iconBefore={<MobileIcon />}
-                isSelected
-              >
-                Send SMS Text
-              </Button>
+                <Button
+                  onClick={() => {
+                    setTemplateType("SMS");
+                    setIsTemplateOpen(true);
+                  }}
+                  iconBefore={<MobileIcon />}
+                  isSelected
+                >
+                  Send SMS Text
+                </Button>
+              </ButtonGroup>
             </Box>
           </Spacing>
           <ModalDialog
