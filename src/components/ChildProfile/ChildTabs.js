@@ -4,9 +4,10 @@ import { useLocation } from "react-router-dom";
 import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { CommentsTab } from "./tabs/Comments/CommentsTab";
 import { Connections } from "./tabs/Connections";
+import { FamilySearchTab } from "./tabs/FamilySearch/FamilySearchTab";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
-export const ChildTabs = () => {
+export const ChildTabs = ({ currentCommentId }) => {
   const tabs = [
     {
       label: "Connections",
@@ -16,10 +17,13 @@ export const ChildTabs = () => {
       label: "Family Tree",
       content: <FamilyTreePage />,
     },
-    { label: "Family Search" },
+    {
+      label: "Family Search",
+      content: <FamilySearchTab />,
+    },
     {
       label: "Comments",
-      content: <CommentsTab />,
+      content: <CommentsTab currentCommentId={currentCommentId} />,
     },
     {
       label: "Attachments",
@@ -28,6 +32,12 @@ export const ChildTabs = () => {
   ];
   const location = useLocation();
   const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (currentCommentId) {
+      setCurrent(3);
+    }
+  }, [currentCommentId]);
 
   useEffect(() => {
     if (location.hash.length > 0) {
@@ -43,5 +53,5 @@ export const ChildTabs = () => {
     setCurrent(index);
   };
 
-  return <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />
+  return <Tabs onSelect={selectTab} selected={tabs[current]} tabs={tabs} />;
 };

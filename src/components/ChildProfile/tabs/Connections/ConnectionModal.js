@@ -1,8 +1,9 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { fetchConnectionsRequest } from "../../../../api/childContact";
-import { fetchTemplatesSentByContactId } from "../../../../api/communicationTemplates";
 import { connectionAttachmentsRow } from "../../../../content/connectionAttachment.data";
+import { ChildContext } from "../../../../pages/ChildProfilePage";
 import {
   attachmentReducer,
   fetchAttachmentsFailure,
@@ -33,7 +34,8 @@ import { ConnectionTabs } from "./ConnectionTabs";
 
 export const ConnectionContext = React.createContext();
 
-const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) => {
+const ConnectionModal = ({ currentConnection, currentTab, fetchConnections, setIsConnectionModalOpen }) => {
+  const { setCurrentCommentId } = useContext(ChildContext);
   const [attachmentState, attachmentDispatch] = useReducer(
     attachmentReducer,
     attachmentInitialState
@@ -47,7 +49,11 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) =>
     templateInitialState
   );
 
+  const history = useHistory();
+
   useEffect(() => {
+    console.log("Connected children: ", currentConnection)
+    setCurrentCommentId(null);
     fetchTemplates();
     fetchComments();
     fetchAttachments();
@@ -97,7 +103,8 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) =>
         fetchTemplates,
         fetchComments,
         fetchAttachments,
-        fetchConnections
+        fetchConnections,
+        setIsConnectionModalOpen
       }}
     >
       <Box
@@ -174,7 +181,15 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) =>
             </Box>
           </Box>
         </Spacing>
-        <div style={{ width: 650}}><ConnectionTabs currentConnection={currentConnection} currentTab={currentTab} /></div>
+        <Spacing>
+          {currentConnection.children.map(child => (
+            <Rounded>
+                <Avatar size="small" name={`${child.first_name} ${child.last_name}`} />
+                <a href={"../children/" + child.id}>{`${child.first_name} ${child.last_name}`}</a>
+              </Rounded>
+          ))}
+        </Spacing>
+        <div style={{ width: 650}}><ConnectionTabs currentConnection={currentConnection} currentTab={currentTab} setCurrentCommentId={setCurrentCommentId} /></div>
       </Box>
     </ConnectionContext.Provider>
   );
@@ -187,5 +202,17 @@ const Text = styled.div`
   line-height: 20px;
   color: #172b4d;
 `;
+
+const Rounded = styled.div`
+  display: inline-block;
+  padding: 6px 8px;
+  margin-right: 8px;
+  border-radius: 20px;
+  background: #eee;
+
+  a {
+    margin-left: 5px;
+  }
+`
 
 export default ConnectionModal;

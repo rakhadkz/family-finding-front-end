@@ -13,3 +13,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.animated {
+  border-radius: 3px;
+  animation: highlight 1000ms ease-out;
+}
+
+@keyframes highlight {
+  from {
+    background-color: #3972d6;
+  }
+}

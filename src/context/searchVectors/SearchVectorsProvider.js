@@ -11,17 +11,9 @@ const fetchSearchVectors = (params = null) => {
     500: "Error on Server!",
   };
 
-  return fetchSearchVectorsRequest(params).catch((err) => {
-    toast.error(errorStatuses[err.status], {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  });
+  return fetchSearchVectorsRequest(params).catch((err) =>
+    toast.error(errorStatuses[err.status])
+  );
 };
 
 const postSearchVector = (params) => {
@@ -29,17 +21,9 @@ const postSearchVector = (params) => {
     500: "Error on Server!",
   };
 
-  return postSearchVectorRequest(params).catch((err) => {
-    toast.error(errorStatuses[err.status], {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  });
+  return postSearchVectorRequest(params).catch((err) =>
+    toast.error(errorStatuses[err.status])
+  );
 };
 
 const deleteSearchVector = (params) => {
@@ -47,17 +31,9 @@ const deleteSearchVector = (params) => {
     500: "Error on Server!",
   };
 
-  return deleteSearchVectorRequest(params).catch((err) => {
-    toast.error(errorStatuses[err.status], {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  });
+  return deleteSearchVectorRequest(params).catch((err) =>
+    toast.error(errorStatuses[err.status])
+  );
 };
 
 const updateSearchVector = (params) => {
@@ -65,17 +41,9 @@ const updateSearchVector = (params) => {
     500: "Error on Server!",
   };
 
-  return updateSearchVectorRequest(params).catch((err) => {
-    toast.error(errorStatuses[err.status], {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  });
+  return updateSearchVectorRequest(params).catch((err) =>
+    toast.error(errorStatuses[err.status])
+  );
 };
 
 export {

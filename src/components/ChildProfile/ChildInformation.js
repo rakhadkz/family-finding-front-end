@@ -66,7 +66,7 @@ export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
   );
 });
 
-const StyledLabel = styled(Label)`
+export const StyledLabel = styled(Label)`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;

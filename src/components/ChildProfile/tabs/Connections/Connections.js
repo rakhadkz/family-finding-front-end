@@ -11,11 +11,11 @@ import {
   createContactRequest,
   createTableChildContactRequest,
   updateConnectionRequest,
-  updateContactRequest
+  updateContactRequest,
 } from "../../../../api/childContact";
 import {
   confirmedConnectionColumns,
-  possibleConnectionColumns
+  possibleConnectionColumns,
 } from "../../../../content/columns.data";
 import { confirmedConnectionRows } from "../../../../content/confirmedConnection.data";
 import { possibleConnectionRows } from "../../../../content/possibleConnection.data";
@@ -67,7 +67,7 @@ export const Connections = () => {
   const { constructed_tree } = familyTreeState;
   const placedConnection = connections.find((c) => c.is_placed);
   const placedContact = placedConnection?.contact;
-  const [ currentTab, setCurrentTab ] = useState(null)
+  const [currentTab, setCurrentTab] = useState(null);
 
   useEffect(() => {
     fetchConnections();
@@ -142,15 +142,7 @@ export const Connections = () => {
                 });
               }
             }
-            toast.success("User successfully created!", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
+            toast.success("Contact successfully created!");
           })
           .finally(() => {
             fetchConnections();
@@ -162,9 +154,9 @@ export const Connections = () => {
 
   const openModal = (tab, connection = placedConnection) => {
     setCurrentTab(tab);
-    setCurrentConnection(connection)
-    setIsConnectionModalOpen(true)
-  }
+    setCurrentConnection(connection);
+    setIsConnectionModalOpen(true);
+  };
 
   return (
     <Box>
@@ -207,6 +199,19 @@ export const Connections = () => {
                       appearance="link"
                       spacing="none"
                       style={{ marginRight: "17px" }}
+                      onClick={() => openModal("alerts", placedConnection)}
+                    >
+                      <Box d="flex" align="center">
+                        <NotificationIcon />
+                        <Spacing m={{ l: "4px" }}>
+                          {placedConnection.alerts_size} link alerts
+                        </Spacing>
+                      </Box>
+                    </Button>
+                    <Button
+                      appearance="link"
+                      spacing="none"
+                      style={{ marginRight: "17px" }}
                       onClick={() => openModal("comments", placedConnection)}
                     >
                       <Box d="flex" align="center">
@@ -226,19 +231,6 @@ export const Connections = () => {
                         <AttachmentIcon />
                         <Spacing m={{ l: "4px" }}>
                           {placedConnection.attachments_size} attachments
-                        </Spacing>
-                      </Box>
-                    </Button>
-                    <Button
-                      appearance="link"
-                      spacing="none"
-                      style={{ marginRight: "17px" }}
-                      onClick={() => openModal("alerts", placedConnection)}
-                    >
-                      <Box d="flex" align="center">
-                        <NotificationIcon />
-                        <Spacing m={{ l: "4px" }}>
-                          {placedConnection.alerts_size} link alerts
                         </Spacing>
                       </Box>
                     </Button>
@@ -311,6 +303,7 @@ export const Connections = () => {
           onCancel={() => setIsConnectionModalOpen(false)}
           currentTab={currentTab}
           fetchConnections={fetchConnections}
+          setIsConnectionModalOpen={setIsConnectionModalOpen}
         />
       </Drawer>
 

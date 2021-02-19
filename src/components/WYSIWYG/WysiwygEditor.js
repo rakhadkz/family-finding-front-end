@@ -24,7 +24,7 @@ export const WysiwygEditor = (props) => {
 };
 
 const StyledBox = styled(Box)`
-  margin: 10px;
+  margin: 10px 0;
   border: 1px solid rgb(215, 215, 215);
   .rdw-editor-main {
     padding: 0 20px 10px;

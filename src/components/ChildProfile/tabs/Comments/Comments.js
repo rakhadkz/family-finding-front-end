@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo, useContext } from "react";
 import styled from "styled-components";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import Button, { ButtonGroup } from "@atlaskit/button";
@@ -13,8 +13,10 @@ import { Avatar } from "../../../ui/molecules/Avatar";
 import { useAuth } from "../../../../context/auth/authContext";
 import { ModalDialog } from "../../../ui/common";
 import moment from "moment";
+import { ChildContext } from "../../../../pages/ChildProfilePage";
 
-export const Comments = ({ data, childId, refresh }) => {
+export const Comments = ({ data, childId, refresh, currentCommentId }) => {
+  const { setCurrentCommentId } = useContext(ChildContext);
   const [showReply, setShowReply] = useState(false);
   const [body, setBody] = useState(data.html_body ? data.html_body : data.body);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -23,10 +25,19 @@ export const Comments = ({ data, childId, refresh }) => {
   const [initialValue, setInitialValue] = useState("");
   const { user } = useAuth();
   const expandEditor = () => setIsExpanded(true);
+  const focusedComment = useRef(null)
+  const commentId = useMemo(() => currentCommentId, [])
   const collapseEditor = () => {
     setShowReply(false);
     setIsExpanded(false);
   };
+
+  useEffect(() => {
+    if (focusedComment?.current){
+      focusedComment.current.scrollIntoView({behavior: "smooth", block: "center"});
+      setCurrentCommentId(null)
+    }
+  }, [])
 
   // console.log(data);
   useEffect(() => {
@@ -108,7 +119,7 @@ export const Comments = ({ data, childId, refresh }) => {
   };
 
   return (
-    <Spacing m={{ t: "17px" }}>
+    <Spacing>
       <Box d="flex">
         <Avatar name={`${data.user.first_name} ${data.user.last_name}`} />
         <Spacing m={{ l: "7px" }}>
@@ -206,12 +217,15 @@ export const Comments = ({ data, childId, refresh }) => {
           )}
 
           {data.replies.map((reply) => (
-            <Comments
-              childId={childId}
-              refresh={refresh}
-              key={data.id}
-              data={reply}
-            />
+            <div className={reply.id === commentId ? "animated" : null} ref={reply.id === commentId ? focusedComment : null} style={{ width: "100vh", margin: 0, border: reply.id === commentId && "2px solid #eee", padding: "8px 0" }}>
+              <Comments
+                childId={childId}
+                refresh={refresh}
+                key={data.id}
+                data={reply}
+                currentCommentId={currentCommentId}
+              />
+            </div>
           ))}
 
           <ModalDialog
