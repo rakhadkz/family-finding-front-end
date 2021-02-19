@@ -38,7 +38,8 @@ export const confirmedConnectionRows = (
   setCurrentConnection,
   fetchConnections,
   setIsAddModalOpen,
-  setIsDisModalOpen
+  setIsDisModalOpen,
+  setIsPlaceModalOpen
 ) => {
   const existPlaced = data.find((c) => c.is_placed);
   return data
@@ -53,13 +54,7 @@ export const confirmedConnectionRows = (
         setPending();
         updateConnectionRequest(item.id, {
           is_placed: is_placed,
-        }).then(() => fetchConnections());
-      };
-
-      const onDisqualifyUpdate = (is_disqualified = true) => {
-        setPending();
-        updateConnectionRequest(item.id, {
-          is_disqualified: is_disqualified,
+          placed_date: null,
         }).then(() => fetchConnections());
       };
 
@@ -238,7 +233,12 @@ export const confirmedConnectionRows = (
                         Disqualify
                       </Button>
                       {!existPlaced && (
-                        <Button onClick={() => onPlacementUpdate()}>
+                        <Button
+                          onClick={() => {
+                            setIsPlaceModalOpen(true);
+                            setCurrentConnection(item);
+                          }}
+                        >
                           Place
                         </Button>
                       )}

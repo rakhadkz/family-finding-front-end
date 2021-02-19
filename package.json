@@ -5,7 +5,7 @@
   "dependencies": {
     "@atlaskit/avatar": "^20.0.6",
     "@atlaskit/avatar-group": "^8.0.13",
-    "@atlaskit/badge": "^14.0.6",
+    "@atlaskit/badge": "^14.1.0",
     "@atlaskit/breadcrumbs": "^10.0.9",
     "@atlaskit/button": "^15.1.2",
     "@atlaskit/comment": "^10.0.6",

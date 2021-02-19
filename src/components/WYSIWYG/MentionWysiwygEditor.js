@@ -18,6 +18,7 @@ import MentionEntry from "./MentionEntry";
 import mentionsStyles from "./mentionsStyles.css";
 import position from "./position";
 import Toolbars from "./Toolbar";
+import emojiStyles from "./emojiStyles.css";
 
 const positionSuggestions = ({ state, props }) => {
   let transform;
@@ -94,6 +95,8 @@ class MentionWysiwygEditor extends React.Component {
     this.emojiPlugin = createEmojiPlugin({
       useNativeArt: true,
       positionSuggestions: position,
+      selectButtonContent: "😀",
+      // theme: emojiStyles,
     });
     this.blockTypeButtons = [
       {
@@ -394,6 +397,7 @@ class MentionWysiwygEditor extends React.Component {
               toggleBlockType={this.toggleBlockType}
             />
             <EmojiSelect
+              className={emojiStyles}
               onOpen={() => {
                 console.log("ONOPEN ON EMOJI!");
                 this.props.setSuggestions && this.props.setSuggestions(10);
