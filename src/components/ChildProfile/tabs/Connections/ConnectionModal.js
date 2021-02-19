@@ -197,7 +197,7 @@ const ConnectionModal = ({
           <ButtonGroup>
             {currentConnection.children.map((child) => (
               <Rounded
-                onClick={() => history.go("../children/" + child.id)}
+                onClick={() => history.push("../children/" + child.id)}
                 content={
                   <>
                     <Avatar

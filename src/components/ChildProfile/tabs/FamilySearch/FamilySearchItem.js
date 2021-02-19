@@ -7,6 +7,37 @@ import { useState } from "react";
 import { ButtonItem, PopupMenuGroup, Section } from "@atlaskit/menu";
 import { AttachmentItem, AttachmentTag } from "./AttachmentTag";
 
+const attachments = [
+  {
+    file_name: "document.docx",
+    file_format: "docx",
+  },
+  {
+    file_name: "presentation.ppt",
+    file_format: "ppt",
+  },
+  {
+    file_name: "table.xls",
+    file_format: "xls",
+  },
+  {
+    file_name: "avatar.png",
+    file_format: "png",
+  },
+  {
+    file_name: "video.mp4",
+    file_format: "mp4",
+  },
+  {
+    file_name: "list_of_students.xls",
+    file_format: "xls",
+  },
+  {
+    file_name: "information.docx",
+    file_format: "docx",
+  },
+];
+
 export const FamilySearchItem = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -35,25 +66,35 @@ export const FamilySearchItem = () => {
           />
           <Box ml="6px" d="flex" align="center">
             <ButtonGroup>
-              <AttachmentTag file_format="ppt" file_name="presentation.ppt" />
-              <AttachmentTag file_format="docx" file_name="documents.docx" />
-              <AttachmentTag file_format="pdf" file_name="info.pdf" />
-              <Popup
-                isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
-                content={() => <OtherAttachments />}
-                placement="bottom-start"
-                trigger={(triggerProps) => (
-                  <Button
-                    appearance="subtle"
-                    {...triggerProps}
-                    isSelected={isOpen}
-                    onClick={() => setIsOpen(!isOpen)}
-                  >
-                    +4
-                  </Button>
-                )}
-              />
+              {attachments.map(
+                (item, index) =>
+                  index < 3 && (
+                    <AttachmentTag
+                      file_format={item.file_format}
+                      file_name={item.file_name}
+                    />
+                  )
+              )}
+              {attachments.length > 3 && (
+                <Popup
+                  isOpen={isOpen}
+                  onClose={() => setIsOpen(false)}
+                  content={() => (
+                    <OtherAttachments attachments={attachments.slice(3)} />
+                  )}
+                  placement="bottom-start"
+                  trigger={(triggerProps) => (
+                    <Button
+                      appearance="subtle"
+                      {...triggerProps}
+                      isSelected={isOpen}
+                      onClick={() => setIsOpen(!isOpen)}
+                    >
+                      +{attachments.length - 3}
+                    </Button>
+                  )}
+                />
+              )}
             </ButtonGroup>
           </Box>
         </Box>
@@ -72,16 +113,18 @@ export const FamilySearchItem = () => {
   );
 };
 
-const OtherAttachments = () => {
+const OtherAttachments = ({ attachments }) => {
   return (
     <PopupMenuGroup onClick={(e) => e.stopPropagation()}>
       <Section>
-        <ButtonItem>
-          <AttachmentItem file_format="ppt" file_name="ppt" />
-        </ButtonItem>
-        <ButtonItem>
-          <AttachmentItem file_format="ppt" file_name="ppt" />
-        </ButtonItem>
+        {attachments.map((item) => (
+          <ButtonItem>
+            <AttachmentItem
+              file_format={item.file_format}
+              file_name={item.file_name}
+            />
+          </ButtonItem>
+        ))}
       </Section>
     </PopupMenuGroup>
   );
