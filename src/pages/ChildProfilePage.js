@@ -10,7 +10,13 @@ import Select from "@atlaskit/select";
 import Tag from "@atlaskit/tag";
 import TagGroup from "@atlaskit/tag-group";
 import { Text } from "@chakra-ui/react";
-import React, { memo, useCallback, useEffect, useReducer, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
@@ -20,16 +26,16 @@ import {
   fetchChildUsersRequest,
   fetchConnectionsRequest,
   fetchFamilyTreeRequest,
-  removeChildUserRequest
+  removeChildUserRequest,
 } from "../api/children";
 import {
   fetchCommunicationTemplateRequest,
-  sendCommunicationTemplateToUserRequest
+  sendCommunicationTemplateToUserRequest,
 } from "../api/communicationTemplates";
 import {
   ChildInformation,
   ChildTabs,
-  RelativesList
+  RelativesList,
 } from "../components/ChildProfile";
 import { AddChildForm } from "../components/Children";
 import { Box, Label, Spacing, Title } from "../components/ui/atoms";
@@ -41,11 +47,10 @@ import { updateChild } from "../context/children/childProvider";
 import { CHILDREN } from "../helpers";
 import {
   attachmentReducer,
-
-
-  fetchAttachmentsFailure, fetchAttachmentsRequest,
-
-  fetchAttachmentsSuccess, initialState as attachmentInitialState
+  fetchAttachmentsFailure,
+  fetchAttachmentsRequest,
+  fetchAttachmentsSuccess,
+  initialState as attachmentInitialState,
 } from "../reducers/attachment";
 import {
   childProfileReducer,
@@ -54,26 +59,26 @@ import {
   fetchChildSuccess,
   fetchChildUsersFailure,
   fetchChildUsersSuccess,
-  initialState
+  initialState,
 } from "../reducers/childProfile";
 import {
   commentReducer,
-
-
   fetchCommentsFailure,
-  fetchCommentsRequest, fetchCommentsSuccess, initialState as commentInitialState
+  fetchCommentsRequest,
+  fetchCommentsSuccess,
+  initialState as commentInitialState,
 } from "../reducers/comment";
 import {
   connectionReducer,
-
   fetchConnectionsFailure,
-  fetchConnectionsSuccess, initialState as connectionInitialState
+  fetchConnectionsSuccess,
+  initialState as connectionInitialState,
 } from "../reducers/connection";
 import {
   familyTreeReducer,
-
   fetchFamilyTreeFailure,
-  fetchFamilyTreeSuccess, initialState as familyTreeInitialState
+  fetchFamilyTreeSuccess,
+  initialState as familyTreeInitialState,
 } from "../reducers/familyTree";
 import { Preloader } from "./Preloader";
 
@@ -98,11 +103,23 @@ export function ChildProfilePage(props) {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const history = useHistory();
 
-  const [ state, dispatch ] = useReducer(childProfileReducer, initialState);
-  const [ connectionState, connectionDispatch ] = useReducer(connectionReducer, connectionInitialState)
-  const [ familyTreeState, familyTreeDispatch ] = useReducer(familyTreeReducer, familyTreeInitialState)
-  const [ commentState, commentDispatch ] = useReducer(commentReducer, commentInitialState)
-  const [ attachmentState, attachmentDispatch ] = useReducer(attachmentReducer, attachmentInitialState)
+  const [state, dispatch] = useReducer(childProfileReducer, initialState);
+  const [connectionState, connectionDispatch] = useReducer(
+    connectionReducer,
+    connectionInitialState
+  );
+  const [familyTreeState, familyTreeDispatch] = useReducer(
+    familyTreeReducer,
+    familyTreeInitialState
+  );
+  const [commentState, commentDispatch] = useReducer(
+    commentReducer,
+    commentInitialState
+  );
+  const [attachmentState, attachmentDispatch] = useReducer(
+    attachmentReducer,
+    attachmentInitialState
+  );
 
   useEffect(() => {
     dispatch(fetchChildRequest());
@@ -171,36 +188,62 @@ export function ChildProfilePage(props) {
           )
       )
       .catch((e) => dispatch(fetchChildUsersFailure(e.message)));
-  }, [id])
+  }, [id]);
 
   const fetchConnections = () => {
     fetchConnectionsRequest({ id: id })
-      .then(item => item && item.contacts && connectionDispatch(fetchConnectionsSuccess(item.contacts)))
-      .catch(e => connectionDispatch(fetchConnectionsFailure(e.message)))
-  }
+      .then(
+        (item) =>
+          item &&
+          item.contacts &&
+          connectionDispatch(fetchConnectionsSuccess(item.contacts))
+      )
+      .catch((e) => connectionDispatch(fetchConnectionsFailure(e.message)));
+  };
 
   const fetchFamilyTree = () => {
     fetchFamilyTreeRequest({ id: id })
-      .then(item => item && item.family_tree && familyTreeDispatch(fetchFamilyTreeSuccess({
-        family_tree: item.family_tree,
-        constructed_tree: constructTree({contacts: item.family_tree, firstName: item.first_name, lastName: item.last_name })
-      })))
-      .catch(e => familyTreeDispatch(fetchFamilyTreeFailure(e.message)))
-  }
+      .then(
+        (item) =>
+          item &&
+          item.family_tree &&
+          familyTreeDispatch(
+            fetchFamilyTreeSuccess({
+              family_tree: item.family_tree,
+              constructed_tree: constructTree({
+                contacts: item.family_tree,
+                firstName: item.first_name,
+                lastName: item.last_name,
+              }),
+            })
+          )
+      )
+      .catch((e) => familyTreeDispatch(fetchFamilyTreeFailure(e.message)));
+  };
 
   const fetchComments = () => {
-    commentDispatch(fetchCommentsRequest())
+    commentDispatch(fetchCommentsRequest());
     fetchChildrenRequest({ id: id, view: "comments" })
-      .then(data => data && data.comments && commentDispatch(fetchCommentsSuccess(data.comments)))
-      .catch(e => commentDispatch(fetchCommentsFailure(e.message)))
-  }
+      .then(
+        (data) =>
+          data &&
+          data.comments &&
+          commentDispatch(fetchCommentsSuccess(data.comments))
+      )
+      .catch((e) => commentDispatch(fetchCommentsFailure(e.message)));
+  };
 
   const fetchAttachments = () => {
-    attachmentDispatch(fetchAttachmentsRequest())
+    attachmentDispatch(fetchAttachmentsRequest());
     fetchChildrenRequest({ id, view: "attachments" })
-      .then(data => data && data.attachments && attachmentDispatch(fetchAttachmentsSuccess(data.attachments)))
-      .catch(e => attachmentDispatch(fetchAttachmentsFailure(e.message)))
-  }
+      .then(
+        (data) =>
+          data &&
+          data.attachments &&
+          attachmentDispatch(fetchAttachmentsSuccess(data.attachments))
+      )
+      .catch((e) => attachmentDispatch(fetchAttachmentsFailure(e.message)));
+  };
 
   const handleTemplateSendSubmit = async () => {
     let promises = [];
@@ -337,20 +380,23 @@ export function ChildProfilePage(props) {
   };
 
   return (
-    <ChildContext.Provider value={{ 
-      state,
-      commentState,
-      connectionState,
-      attachmentState,
-      familyTreeState,
-      dispatch,
-      connectionDispatch,
-      attachmentDispatch,
-      fetchConnections,
-      fetchFamilyTree,
-      fetchComments,
-      fetchAttachments,
-    }}>
+    <ChildContext.Provider
+      value={{
+        state,
+        commentState,
+        connectionState,
+        attachmentState,
+        familyTreeState,
+        dispatch,
+        connectionDispatch,
+        attachmentDispatch,
+        fetchConnections,
+        fetchFamilyTree,
+        fetchComments,
+        fetchAttachments,
+        loading: state.loading,
+      }}
+    >
       {state.loading ? (
         <Preloader />
       ) : state.hasAccess ? (
@@ -530,7 +576,7 @@ export function ChildProfilePage(props) {
                   menuPortalTarget={document.body}
                   onChange={(e) => {
                     console.log("EEE", e, state.child);
-                    setTemplateId(e.value.id)
+                    setTemplateId(e.value.id);
                     setTemplateHtml(
                       templateType === "SMS"
                         ? e.value.content.replace(/<(?:.|\n)*?>/gm, "")

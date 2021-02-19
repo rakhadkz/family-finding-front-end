@@ -5,7 +5,6 @@ import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 
 export const RelativeTooltip = ({ relative }) => {
-  // console.log(relative);
   return (
     <CustomTooltip>
       <Rectangle>
@@ -47,7 +46,7 @@ const Text = styled.div`
   color: #172b4d;
 `;
 
-const CustomTooltip = styled(TooltipPrimitive)`
+export const CustomTooltip = styled(TooltipPrimitive)`
   background: white;
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);

@@ -11,11 +11,11 @@ import {
   createContactRequest,
   createTableChildContactRequest,
   updateConnectionRequest,
-  updateContactRequest
+  updateContactRequest,
 } from "../../../../api/childContact";
 import {
   confirmedConnectionColumns,
-  possibleConnectionColumns
+  possibleConnectionColumns,
 } from "../../../../content/columns.data";
 import { confirmedConnectionRows } from "../../../../content/confirmedConnection.data";
 import { possibleConnectionRows } from "../../../../content/possibleConnection.data";
@@ -30,6 +30,7 @@ import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { AddContactForm } from "../../AddContactForm";
 import ConnectionModal from "./ConnectionModal";
+import { DisqualifyModal } from "./index";
 
 export const SmallText = styled.div`
   font-family: Helvetica;
@@ -62,12 +63,13 @@ export const Connections = () => {
   } = useContext(ChildContext);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDisModalOpen, setIsDisModalOpen] = useState(false);
   const { id } = state.child;
   const { connections } = connectionState;
   const { constructed_tree } = familyTreeState;
   const placedConnection = connections.find((c) => c.is_placed);
   const placedContact = placedConnection?.contact;
-  const [ currentTab, setCurrentTab ] = useState(null)
+  const [currentTab, setCurrentTab] = useState(null);
 
   useEffect(() => {
     fetchConnections();
@@ -162,9 +164,32 @@ export const Connections = () => {
 
   const openModal = (tab, connection = placedConnection) => {
     setCurrentTab(tab);
-    setCurrentConnection(connection)
-    setIsConnectionModalOpen(true)
-  }
+    setCurrentConnection(connection);
+    setIsConnectionModalOpen(true);
+  };
+
+  const allowDisqualifiedConnection = () => {
+    updateConnectionRequest(currentConnection.id, {
+      disqualify_reason: "",
+      is_disqualified: false,
+    })
+      .then(() => {
+        toast.success(`Contact is successfully allowed!`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      })
+      .finally(() => {
+        currentConnection.disqualify_reason = "";
+        currentConnection.is_disqualified = false;
+        fetchConnections();
+      });
+  };
 
   return (
     <Box>
@@ -281,7 +306,8 @@ export const Connections = () => {
             openModal,
             setCurrentConnection,
             fetchConnections,
-            setIsAddModalOpen
+            setIsAddModalOpen,
+            setIsDisModalOpen
           )}
         />
       </Spacing>
@@ -311,6 +337,7 @@ export const Connections = () => {
           onCancel={() => setIsConnectionModalOpen(false)}
           currentTab={currentTab}
           fetchConnections={fetchConnections}
+          allowDisqualifiedConnection={allowDisqualifiedConnection}
         />
       </Drawer>
 
@@ -369,6 +396,23 @@ export const Connections = () => {
           currentConnection?.contact?.last_name
         } has a kinship connection to this child?`}
         appearance="danger"
+      />
+
+      <ModalDialog
+        isOpen={isDisModalOpen}
+        setIsOpen={setIsDisModalOpen}
+        appearance={null}
+        width="large"
+        body={
+          <DisqualifyModal
+            onSubmit={updateConnectionRequest}
+            id={currentConnection?.id}
+            contact={currentConnection?.contact}
+            setIsDisModalOpen={setIsDisModalOpen}
+            refresh={fetchConnections}
+          />
+        }
+        hasActions={false}
       />
     </Box>
   );

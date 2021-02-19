@@ -4,9 +4,8 @@ import { FormSection } from "@atlaskit/form";
 import Button from "@atlaskit/button";
 import { WysiwygEditor } from "../../../WYSIWYG";
 import styled from "styled-components";
-import { useMentions } from "./mentions-context";
+import { useMentions } from "./CommentsContext";
 import { TextInput } from "../../../ui/molecules";
-import { MentionsProvider } from "./mentions-context";
 import { createConnectionCommentsRequest } from "../../../../api/comments";
 
 export const CommentsForm = ({
@@ -29,9 +28,11 @@ export const CommentsForm = ({
   const [text, setText] = useState("");
   const [htmlText, setHtmlText] = useState("");
   const [rawData, setRawData] = useState("");
+  const { setPending } = useMentions();
 
   const onSubmitHandle = async (e) => {
     e.preventDefault();
+    setPending(true);
     let check = new Set(text.split(""));
     if (check.size === 1 && check.values().next().value.charCodeAt(0) === 10)
       return -1;
@@ -67,56 +68,55 @@ export const CommentsForm = ({
       .finally(() => {
         refresh();
         setShowReply && setShowReply(false);
+        setPending(false);
       });
   };
 
   return (
-    <MentionsProvider>
-      <Form w="100%" onSubmit={onSubmitHandle} noValidate>
-        <FormSection>
-          {isExpanded ? (
-            <>
-              <Spacing m={{ l: "-10px" }}>
-                <WysiwygEditor
-                  upd={upd}
-                  onChange={(tex, raw, html) => {
-                    setText(tex);
-                    console.log("RAW RAW: ", raw);
-                    setRawData(raw);
-                    setHtmlText(html);
-                  }}
-                  setBlocks={setBlocks}
-                  defaultValue={initialValue}
-                  setSuggestions={setSuggestions}
-                />
-                <StyledButtonGroup>
-                  <Button type="submit" appearance="primary">
-                    Comment
-                  </Button>
+    <Form w="100%" onSubmit={onSubmitHandle} noValidate>
+      <FormSection>
+        {isExpanded ? (
+          <>
+            <Spacing m={{ l: "-10px" }}>
+              <WysiwygEditor
+                upd={upd}
+                onChange={(tex, raw, html) => {
+                  setText(tex);
+                  console.log("RAW RAW: ", raw);
+                  setRawData(raw);
+                  setHtmlText(html);
+                }}
+                setBlocks={setBlocks}
+                defaultValue={initialValue}
+                setSuggestions={setSuggestions}
+              />
+              <StyledButtonGroup>
+                <Button type="submit" appearance="primary">
+                  Comment
+                </Button>
 
-                  <Button
-                    appearance="subtle"
-                    onClick={() => {
-                      collapseEditor();
-                      setShowReply && setShowReply(false);
-                      setEdit && setEdit(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </StyledButtonGroup>
-              </Spacing>
-            </>
-          ) : (
-            <TextInput
-              width={400}
-              onClick={expandEditor}
-              placeholder="Add a comment..."
-            />
-          )}
-        </FormSection>
-      </Form>
-    </MentionsProvider>
+                <Button
+                  appearance="subtle"
+                  onClick={() => {
+                    collapseEditor();
+                    setShowReply && setShowReply(false);
+                    setEdit && setEdit(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </StyledButtonGroup>
+            </Spacing>
+          </>
+        ) : (
+          <TextInput
+            width={400}
+            onClick={expandEditor}
+            placeholder="Add a comment..."
+          />
+        )}
+      </FormSection>
+    </Form>
   );
 };
 

@@ -8,32 +8,37 @@ import {
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
   fetchAttachmentsSuccess,
-  initialState as attachmentInitialState
+  initialState as attachmentInitialState,
 } from "../../../../reducers/attachment";
 import {
   commentReducer,
   fetchCommentsFailure,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  initialState as commentInitialState
+  initialState as commentInitialState,
 } from "../../../../reducers/comment";
 import {
   fetchTemplatesFailure,
   fetchTemplatesRequest,
-  fetchTemplatesSuccess
+  fetchTemplatesSuccess,
 } from "../../../../reducers/template/templateActions";
 import {
   templateInitialState,
-  templateReducer
+  templateReducer,
 } from "../../../../reducers/template/templateReducer";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { ConnectionTabs } from "./ConnectionTabs";
-
+import Button from "@atlaskit/button";
 export const ConnectionContext = React.createContext();
 
-const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) => {
+const ConnectionModal = ({
+  currentConnection,
+  currentTab,
+  fetchConnections,
+  allowDisqualifiedConnection,
+}) => {
   const [attachmentState, attachmentDispatch] = useReducer(
     attachmentReducer,
     attachmentInitialState
@@ -83,8 +88,13 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) =>
 
   const fetchTemplates = () => {
     templateDispatch(fetchTemplatesRequest());
-    fetchConnectionsRequest({ id: currentConnection.id, view: "templates"})
-      .then((data) => data && data.templates && templateDispatch(fetchTemplatesSuccess(data.templates)))
+    fetchConnectionsRequest({ id: currentConnection.id, view: "templates" })
+      .then(
+        (data) =>
+          data &&
+          data.templates &&
+          templateDispatch(fetchTemplatesSuccess(data.templates))
+      )
       .catch((e) => e && templateDispatch(fetchTemplatesFailure(e.message)));
   };
 
@@ -97,7 +107,7 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) =>
         fetchTemplates,
         fetchComments,
         fetchAttachments,
-        fetchConnections
+        fetchConnections,
       }}
     >
       <Box
@@ -109,47 +119,64 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) =>
           width: 700,
         }}
       >
-        <Box d="flex">
-          <Box
-            w="150px"
-            d="flex"
-            direction="column"
-            align="center"
-            justify="center"
-          >
-            <Avatar
-              name={
-                currentConnection?.contact?.first_name +
-                currentConnection?.contact?.last_name
-              }
-              size="xlarge"
-              ratio={1.25}
-            />
-          </Box>
-          <Spacing m={{ t: "10px" }}>
-            <Title
-              size="28px"
-              style={{
-                fontWeight: "700",
-              }}
+        <Box d="flex" style={{ justifyContent: "space-between" }}>
+          <Box d="f">
+            <Box
+              w="150px"
+              d="flex"
+              direction="column"
+              align="center"
+              justify="center"
             >
-              {currentConnection?.contact?.first_name[0]?.toUpperCase() +
-                currentConnection?.contact?.first_name?.substring(1)}{" "}
-              {currentConnection?.contact?.last_name
-                ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
-                  currentConnection?.contact?.last_name?.substring(1)
-                : ""}
-            </Title>
+              <Avatar
+                name={
+                  currentConnection?.contact?.first_name +
+                  currentConnection?.contact?.last_name
+                }
+                size="xlarge"
+                ratio={1.25}
+              />
+            </Box>
             <Spacing m={{ t: "10px" }}>
-              <FitScore score={Math.floor(Math.random() * 6)} />
-            </Spacing>
+              <Box d="f">
+                <Title
+                  size="28px"
+                  style={{
+                    fontWeight: "700",
+                  }}
+                >
+                  {currentConnection?.contact?.first_name[0]?.toUpperCase() +
+                    currentConnection?.contact?.first_name?.substring(1)}{" "}
+                  {currentConnection?.contact?.last_name
+                    ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
+                      currentConnection?.contact?.last_name?.substring(1)
+                    : ""}
+                </Title>
+                <Text style={{ marginBottom: "0px" }}>
+                  {currentConnection.is_disqualified ? "  (DISQUALIFIED)" : ""}
+                </Text>
+              </Box>
+              <Spacing m={{ t: "10px" }}>
+                <FitScore score={Math.floor(Math.random() * 6)} />
+              </Spacing>
 
-            <Spacing m={{ t: "10px" }}>
-              <Text style={{ fontSize: 15 }}>
-                {currentConnection?.contact?.relationship}
-              </Text>
+              <Spacing m={{ t: "10px" }}>
+                <Text style={{ fontSize: 15 }}>
+                  {currentConnection?.contact?.relationship}
+                </Text>
+              </Spacing>
             </Spacing>
-          </Spacing>
+          </Box>
+          {currentConnection.is_disqualified ? (
+            <Box mr="50px" mt="10px">
+              <Button
+                onClick={allowDisqualifiedConnection}
+                appearance="warning"
+              >
+                Allow
+              </Button>
+            </Box>
+          ) : null}
         </Box>
 
         <Spacing m="30px 40px">
@@ -174,7 +201,12 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections }) =>
             </Box>
           </Box>
         </Spacing>
-        <div style={{ width: 650}}><ConnectionTabs currentConnection={currentConnection} currentTab={currentTab} /></div>
+        <div style={{ width: 650 }}>
+          <ConnectionTabs
+            currentConnection={currentConnection}
+            currentTab={currentTab}
+          />
+        </div>
       </Box>
     </ConnectionContext.Provider>
   );

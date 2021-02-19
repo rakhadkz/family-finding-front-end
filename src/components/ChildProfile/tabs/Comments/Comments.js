@@ -12,6 +12,7 @@ import {
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { useAuth } from "../../../../context/auth/authContext";
 import { ModalDialog } from "../../../ui/common";
+import { useMentions } from "./CommentsContext";
 import moment from "moment";
 
 export const Comments = ({ data, childId, refresh }) => {
@@ -22,6 +23,7 @@ export const Comments = ({ data, childId, refresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [initialValue, setInitialValue] = useState("");
   const { user } = useAuth();
+
   const expandEditor = () => setIsExpanded(true);
   const collapseEditor = () => {
     setShowReply(false);
