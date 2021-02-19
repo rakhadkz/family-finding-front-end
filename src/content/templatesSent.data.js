@@ -70,11 +70,16 @@ const templatesSentTableData = (data, setToggled, toggled) => {
                 content: (
                   <div>
                     <Button
+                      style={{ marginLeft: 10 }}
                       iconBefore={<PdfIcon />}
                       appearance="warning"
-                      onClick={()=> window.open(`${authURL}templates_sent/generate_pdf.pdf?id=${item.id}`)}
+                      onClick={() =>
+                        window.open(
+                          `${authURL}templates_sent/generate_pdf.pdf?id=${item.id}`
+                        )
+                      }
                     >
-                      Get as Pdf
+                      Get as PDF
                     </Button>{" "}
                     <Text
                       dangerouslySetInnerHTML={{

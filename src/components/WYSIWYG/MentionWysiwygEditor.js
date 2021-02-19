@@ -7,17 +7,18 @@ import { convertToRaw, EditorState, RichUtils } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { stateFromHTML } from "draft-js-import-html";
 import createMentionPlugin, {
-  defaultSuggestionsFilter
+  defaultSuggestionsFilter,
 } from "draft-js-mention-plugin";
 import "draft-js/dist/Draft.css";
 import Immutable from "immutable";
 import React from "react";
 import styled from "styled-components";
-import { MentionsContext } from "../ChildProfile/tabs/Comments/mentions-context";
+import { CommentsContext } from "../ChildProfile/tabs/Comments/CommentsContext";
 import MentionEntry from "./MentionEntry";
 import mentionsStyles from "./mentionsStyles.css";
 import position from "./position";
 import Toolbars from "./Toolbar";
+import emojiStyles from "./emojiStyles.css";
 
 const positionSuggestions = ({ state, props }) => {
   let transform;
@@ -58,7 +59,7 @@ const positionSuggestionsEmoji = ({ state, props }) => {
 };
 
 class MentionWysiwygEditor extends React.Component {
-  static contextType = MentionsContext;
+  static contextType = CommentsContext;
 
   constructor(props) {
     super(props);
@@ -94,6 +95,8 @@ class MentionWysiwygEditor extends React.Component {
     this.emojiPlugin = createEmojiPlugin({
       useNativeArt: true,
       positionSuggestions: position,
+      selectButtonContent: "😀",
+      // theme: emojiStyles,
     });
     this.blockTypeButtons = [
       {
@@ -394,6 +397,7 @@ class MentionWysiwygEditor extends React.Component {
               toggleBlockType={this.toggleBlockType}
             />
             <EmojiSelect
+              className={emojiStyles}
               onOpen={() => {
                 console.log("ONOPEN ON EMOJI!");
                 this.props.setSuggestions && this.props.setSuggestions(10);

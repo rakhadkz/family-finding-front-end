@@ -16,7 +16,17 @@ export const TEMPLATE_TYPES = [
 ];
 
 export const CommunicationTemplateForm = React.forwardRef(
-  ({ onSubmit, isUpdate = false, initialValues = {}, setRefresh,setIsOpenEdit, refresh }, ref) => {
+  (
+    {
+      onSubmit,
+      isUpdate = false,
+      initialValues = {},
+      setRefresh,
+      setIsOpenEdit,
+      refresh,
+    },
+    ref
+  ) => {
     const history = useHistory();
     const { register, handleSubmit, control, errors } = useForm({
       defaultValues: initialValues,
@@ -38,21 +48,12 @@ export const CommunicationTemplateForm = React.forwardRef(
       onSubmit({ communication_template: requestData })
         .then(() => {
           toast.success(
-            `Template successfully ${isUpdate ? "updated" : "created"}!`,
-            {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            }
+            `Template successfully ${isUpdate ? "updated" : "created"}!`
           );
           if (isUpdate) {
             history.push("../communications-templates");
-            setRefresh(!refresh)
-            setIsOpenEdit(false)
+            setRefresh(!refresh);
+            setIsOpenEdit(false);
           } else {
             history.goBack();
           }

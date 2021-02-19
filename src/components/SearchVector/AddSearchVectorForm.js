@@ -41,15 +41,7 @@ export const AddSearchVectorForm = ({
       ? something({ data, id: currSv })
           .then((res) => {
             console.log(res);
-            toast.success("Search Vector was successfully created!", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
+            toast.success("Search Vector was successfully created!");
           })
           .finally(() => {
             setPending(false);
@@ -59,15 +51,7 @@ export const AddSearchVectorForm = ({
       : onSubmit(data)
           .then((res) => {
             console.log(res);
-            toast.success("Search Vector was successfully created!", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
+            toast.success("Search Vector was successfully created!");
           })
           .finally(() => {
             setPending(false);

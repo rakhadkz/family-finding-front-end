@@ -23,25 +23,19 @@ export const AddUserForm = ({ onSubmit }) => {
     console.log(data);
 
     onSubmit(data)
-      .then(() => {
-        toast.success("User successfully created!", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        history.goBack();
-      })
+      .then(() => history.goBack())
       .finally(() => setPending(false));
   };
 
   return (
     <Box>
       <Box d="flex" justify="space-evenly" mt="16px">
-        <Form w="400px" d="flex" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
+        <Form
+          w="400px"
+          d="flex"
+          onSubmit={handleSubmit(onSubmitHandle)}
+          noValidate
+        >
           <TextInput
             width="100%"
             className="input"
@@ -84,11 +78,7 @@ export const AddUserForm = ({ onSubmit }) => {
             type={"phone"}
           />
           <Box mt="16px">
-            <Button
-              isDisabled={pending}
-              type="submit"
-              appearance="primary"
-            >
+            <Button isDisabled={pending} type="submit" appearance="primary">
               Add New User
             </Button>
           </Box>

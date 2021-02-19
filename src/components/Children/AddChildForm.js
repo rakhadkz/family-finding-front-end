@@ -1,4 +1,4 @@
-import Button from "@atlaskit/button";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
@@ -27,12 +27,12 @@ const permanency_goal_options = [
     value: "appla",
     label: "Another Planned Permanent Living Arrangement (APPLA)",
   },
-]
+];
 
 const gender_options = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },
-]
+];
 
 const race_options = [
   {
@@ -59,25 +59,31 @@ const race_options = [
     value: "white",
     label: "White",
   },
-]
+];
 
-export const AddChildForm = ({ onSubmit, child, setIsOpenEdit, fetch }) => {
+export const AddChildForm = ({
+  onSubmit,
+  child,
+  setIsOpenEdit,
+  fetch,
+  setIsImportOpen,
+}) => {
   const history = useHistory();
   const { register, handleSubmit, control, errors, setValue } = useForm();
 
   useEffect(() => {
-    if (child){
-      setValue("first_name", child.first_name)
-      setValue("last_name", child.last_name)
-      setValue("birthday", new Date(child.birthday))
+    if (child) {
+      setValue("first_name", child.first_name);
+      setValue("last_name", child.last_name);
+      setValue("birthday", new Date(child.birthday));
     }
-  }, [child])
+  }, [child]);
 
   const [pending, setPending] = useState(false);
   const onSubmitHandle = (data) => {
     setPending(true);
-    if (child){
-      data.id = child.id
+    if (child) {
+      data.id = child.id;
     }
     onSubmit({
       ...data,
@@ -86,27 +92,21 @@ export const AddChildForm = ({ onSubmit, child, setIsOpenEdit, fetch }) => {
       permanency_goal: data.permanency_goal?.value || null,
     })
       .then(() => {
-        toast.success(child ? "Child successfully updated" : "Child successfully created!", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setPending(false)
-        if (setIsOpenEdit){
-          fetch()
-          setIsOpenEdit(false)
-        } else{
+        toast.success(
+          child ? "Child successfully updated" : "Child successfully created!"
+        );
+        setPending(false);
+        if (setIsOpenEdit) {
+          fetch();
+          setIsOpenEdit(false);
+        } else {
           history.goBack();
         }
       })
       .finally(() => {
-        setPending(false)
-        if (setIsOpenEdit){
-          setIsOpenEdit(false)
+        setPending(false);
+        if (setIsOpenEdit) {
+          setIsOpenEdit(false);
         }
       });
   };
@@ -146,7 +146,8 @@ export const AddChildForm = ({ onSubmit, child, setIsOpenEdit, fetch }) => {
         />
         <SelectInput
           width="100%"
-          defaultValue={child?.permanency_goal &&
+          defaultValue={
+            child?.permanency_goal &&
             getObjectByValue(permanency_goal_options, child.permanency_goal)
           }
           name="permanency_goal"
@@ -157,8 +158,8 @@ export const AddChildForm = ({ onSubmit, child, setIsOpenEdit, fetch }) => {
           options={permanency_goal_options}
         />
         <SelectInput
-          defaultValue={child?.gender &&
-            getObjectByValue(gender_options, child.gender)
+          defaultValue={
+            child?.gender && getObjectByValue(gender_options, child.gender)
           }
           width="100%"
           name="gender"
@@ -168,8 +169,8 @@ export const AddChildForm = ({ onSubmit, child, setIsOpenEdit, fetch }) => {
           options={gender_options}
         />
         <SelectInput
-          defaultValue={child?.race &&
-            getObjectByValue(race_options, child.race)
+          defaultValue={
+            child?.race && getObjectByValue(race_options, child.race)
           }
           width="100%"
           name="race"
@@ -180,18 +181,27 @@ export const AddChildForm = ({ onSubmit, child, setIsOpenEdit, fetch }) => {
           options={race_options}
         />
         <Box mt="16px">
-          <Button appearance="primary" isDisabled={pending} type="submit">
-            {child ? 'Update Child' : 'Add New Child'}
-          </Button>
-          { setIsOpenEdit && 
-            <Button appearance="subtle" isDisabled={pending} onClick={() => setIsOpenEdit(false)}>
-              Cancel
+          <ButtonGroup>
+            <Button appearance="primary" isDisabled={pending} type="submit">
+              {child ? "Update Child" : "Add New Child"}
             </Button>
-          }
+            {setIsOpenEdit ? (
+              <Button
+                appearance="subtle"
+                isDisabled={pending}
+                onClick={() => setIsOpenEdit(false)}
+              >
+                Cancel
+              </Button>
+            ) : (
+              <Button onClick={() => setIsImportOpen(true)}>Import</Button>
+            )}
+          </ButtonGroup>
         </Box>
       </Box>
     </Form>
   );
 };
 
-export const getObjectByValue = (array, value) => array.find(object => object.label === value)
+export const getObjectByValue = (array, value) =>
+  array.find((object) => object.label === value);
