@@ -1,7 +1,7 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Box, Form, Spacing } from "../../../ui/atoms";
+import { Box, Spacing } from "../../../ui/atoms";
 import { SelectInput } from "../../../ui/molecules";
 import { WysiwygEditor } from "../../../WYSIWYG";
 import DocumentIcon from "@atlaskit/icon/glyph/document";
@@ -16,45 +16,43 @@ export function FamilySearchTab() {
     { label: "Select2", value: "select2" },
   ];
   return (
-    <div style={{ width: "100%", marginBottom: "100px" }}>
-      <Spacing m={{ t: "23px" }}>
-        <Box w="100%" d="flex" direction="row-reverse">
-          <ButtonGroup appearance="primary">
-            <Button>Add New Search Result</Button>
-            <Button>Export Search Result</Button>
+    <Spacing m={{ t: "23px", b: "40px" }}>
+      <Box w="100%" d="flex" direction="row-reverse">
+        <ButtonGroup appearance="primary">
+          <Button>Add New Search Result</Button>
+          <Button>Export Search Result</Button>
+        </ButtonGroup>
+      </Box>
+      <Spacing m={{ b: "30px" }}>
+        <form>
+          <SelectInput
+            className="input"
+            name="organization"
+            options={options}
+            register={{ required: true }}
+            control={control}
+            label="Search Vector"
+            placeholder="Select search vector"
+          />
+          <WysiwygEditor
+            withMention={false}
+            onChange={(tex, raw, html) => {}}
+          />
+          <ButtonGroup>
+            <Button appearance="primary">Add Search Result</Button>
+            <Button appearance="subtle" iconBefore={<DocumentIcon />} />
+            <Button appearance="subtle" iconBefore={<InviteTeamIcon />} />
           </ButtonGroup>
-        </Box>
-        <Spacing m={{ b: "30px" }}>
-          <form>
-            <SelectInput
-              className="input"
-              name="organization"
-              options={options}
-              register={{ required: true }}
-              control={control}
-              label="Search Vector"
-              placeholder="Select search vector"
-            />
-            <WysiwygEditor
-              withMention={false}
-              onChange={(tex, raw, html) => {}}
-            />
-            <ButtonGroup>
-              <Button appearance="primary">Add Search Result</Button>
-              <Button appearance="subtle" iconBefore={<DocumentIcon />} />
-              <Button appearance="subtle" iconBefore={<InviteTeamIcon />} />
-            </ButtonGroup>
-          </form>
-        </Spacing>
-
-        {/* Family Search Items  */}
-        <Spacing>
-          <FamilySearchItem />
-          <FamilySearchItem />
-          <FamilySearchItem />
-          <FamilySearchItem />
-        </Spacing>
+        </form>
       </Spacing>
-    </div>
+
+      {/* Family Search Items  */}
+      <Spacing>
+        <FamilySearchItem />
+        <FamilySearchItem />
+        <FamilySearchItem />
+        <FamilySearchItem />
+      </Spacing>
+    </Spacing>
   );
 }
