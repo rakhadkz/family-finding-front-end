@@ -3,27 +3,31 @@ import { fetchUsersRequest } from "../../../../api/user";
 import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 
-export const MentionsContext = React.createContext();
+export const CommentsContext = React.createContext();
 
-export const MentionsProvider = (props) => {
+export const CommentsProvider = (props) => {
   const localStorageUser = getLocalStorageUser();
+  const [pending, setPending] = useState(false);
   const [mentions, setMentions] = useState();
   const { connectionState } = useContext(ChildContext);
   const [contacts, setContacts] = useState(
-    connectionState.connections
-      .map((connection) => connection && connection.contact && ({
-        name: `${
-          connection.contact?.first_name[0]?.toUpperCase() +
-          connection.contact?.first_name?.substring(1)
-        } ${
-          connection.contact.last_name
-            ? connection.contact?.last_name[0]?.toUpperCase() +
-            connection.contact?.last_name?.substring(1)
-            : ""
-        }`,
-        // title: "Staff of Penn State Orphanage",
-        id: connection?.id,
-      }))
+    connectionState.connections.map(
+      (connection) =>
+        connection &&
+        connection.contact && {
+          name: `${
+            connection.contact?.first_name[0]?.toUpperCase() +
+            connection.contact?.first_name?.substring(1)
+          } ${
+            connection.contact.last_name
+              ? connection.contact?.last_name[0]?.toUpperCase() +
+                connection.contact?.last_name?.substring(1)
+              : ""
+          }`,
+          // title: "Staff of Penn State Orphanage",
+          id: connection?.id,
+        }
+    )
   );
 
   useEffect(() => {
@@ -45,17 +49,22 @@ export const MentionsProvider = (props) => {
     () => ({
       mentions,
       contacts,
+      pending,
+      setPending,
     }),
-    [mentions, contacts]
+    [mentions, contacts, pending, setPending]
   );
 
-  return <MentionsContext.Provider value={value} {...props} />;
+  return <CommentsContext.Provider value={value} {...props} />;
 };
 
 export const useMentions = () => {
-  const context = React.useContext(MentionsContext);
+  const context = React.useContext(CommentsContext);
   if (context === undefined) {
-    return { mentions: [], contacts: [] };
+    return {
+      mentions: [],
+      contacts: [],
+    };
   }
   return context;
 };

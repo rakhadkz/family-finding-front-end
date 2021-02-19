@@ -7,13 +7,13 @@ import { convertToRaw, EditorState, RichUtils } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { stateFromHTML } from "draft-js-import-html";
 import createMentionPlugin, {
-  defaultSuggestionsFilter
+  defaultSuggestionsFilter,
 } from "draft-js-mention-plugin";
 import "draft-js/dist/Draft.css";
 import Immutable from "immutable";
 import React from "react";
 import styled from "styled-components";
-import { MentionsContext } from "../ChildProfile/tabs/Comments/mentions-context";
+import { CommentsContext } from "../ChildProfile/tabs/Comments/CommentsContext";
 import MentionEntry from "./MentionEntry";
 import mentionsStyles from "./mentionsStyles.css";
 import position from "./position";
@@ -58,7 +58,7 @@ const positionSuggestionsEmoji = ({ state, props }) => {
 };
 
 class MentionWysiwygEditor extends React.Component {
-  static contextType = MentionsContext;
+  static contextType = CommentsContext;
 
   constructor(props) {
     super(props);
