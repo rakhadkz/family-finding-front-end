@@ -1,15 +1,14 @@
 import AvatarGroup from "@atlaskit/avatar-group";
-import Button from "@atlaskit/button";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { StyledLabel } from "../../ChildInformation";
-import styled from "styled-components";
-import { AttachmentIcon } from "../../../../content/childAttachment.data";
-import Generic24Icon from "@atlaskit/icon-file-type/glyph/generic/24";
-import PowerpointPresentation16Icon from "@atlaskit/icon-file-type/glyph/powerpoint-presentation/16";
-import WordDocument16Icon from "@atlaskit/icon-file-type/glyph/word-document/16";
-import ExcelSpreadsheet16Icon from "@atlaskit/icon-file-type/glyph/excel-spreadsheet/16";
+import Popup from "@atlaskit/popup";
+import { useState } from "react";
+import { ButtonItem, PopupMenuGroup, Section } from "@atlaskit/menu";
+import { AttachmentItem, AttachmentTag } from "./AttachmentTag";
 
 export const FamilySearchItem = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <Box d="flex" mt="5px">
       <Box d="flex" direction="column">
@@ -34,19 +33,28 @@ export const FamilySearchItem = () => {
             maxCount={4}
             data={RANDOM_USERS}
           />
-          <Box ml="4px" d="flex">
-            <AttachmentTag>
-              <WordDocument16Icon />
-              <span className="file-name">document.docx</span>
-            </AttachmentTag>
-            <AttachmentTag>
-              <PowerpointPresentation16Icon />
-              <span className="file-name">presentation.ppt</span>
-            </AttachmentTag>
-            <AttachmentTag>
-              <ExcelSpreadsheet16Icon />
-              <span className="file-name">table.xlsx</span>
-            </AttachmentTag>
+          <Box ml="6px" d="flex" align="center">
+            <ButtonGroup>
+              <AttachmentTag file_format="ppt" file_name="presentation.ppt" />
+              <AttachmentTag file_format="docx" file_name="documents.docx" />
+              <AttachmentTag file_format="pdf" file_name="info.pdf" />
+              <Popup
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                content={() => <OtherAttachments />}
+                placement="bottom-start"
+                trigger={(triggerProps) => (
+                  <Button
+                    appearance="subtle"
+                    {...triggerProps}
+                    isSelected={isOpen}
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    +4
+                  </Button>
+                )}
+              />
+            </ButtonGroup>
           </Box>
         </Box>
         <Box d="flex" justify="space-between" align="baseline" mt="10px">
@@ -64,23 +72,20 @@ export const FamilySearchItem = () => {
   );
 };
 
-const AttachmentTag = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  margin: 0 4px;
-  border-radius: 30px;
-  border: 1px solid #c1c7d0;
-  transition: 0.2s;
-  .file-name {
-    margin-left: 10px;
-  }
-
-  :hover {
-    background: #f0f0f0;
-    cursor: pointer;
-  }
-`;
+const OtherAttachments = () => {
+  return (
+    <PopupMenuGroup onClick={(e) => e.stopPropagation()}>
+      <Section>
+        <ButtonItem>
+          <AttachmentItem file_format="ppt" file_name="ppt" />
+        </ButtonItem>
+        <ButtonItem>
+          <AttachmentItem file_format="ppt" file_name="ppt" />
+        </ButtonItem>
+      </Section>
+    </PopupMenuGroup>
+  );
+};
 
 const RANDOM_USERS = [
   {

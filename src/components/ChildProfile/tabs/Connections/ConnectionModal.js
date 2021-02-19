@@ -1,3 +1,4 @@
+import { ButtonGroup } from "@atlaskit/button";
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
@@ -9,32 +10,38 @@ import {
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
   fetchAttachmentsSuccess,
-  initialState as attachmentInitialState
+  initialState as attachmentInitialState,
 } from "../../../../reducers/attachment";
 import {
   commentReducer,
   fetchCommentsFailure,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  initialState as commentInitialState
+  initialState as commentInitialState,
 } from "../../../../reducers/comment";
 import {
   fetchTemplatesFailure,
   fetchTemplatesRequest,
-  fetchTemplatesSuccess
+  fetchTemplatesSuccess,
 } from "../../../../reducers/template/templateActions";
 import {
   templateInitialState,
-  templateReducer
+  templateReducer,
 } from "../../../../reducers/template/templateReducer";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
+import { Rounded } from "../../../ui/molecules/Rounded";
 import { ConnectionTabs } from "./ConnectionTabs";
 
 export const ConnectionContext = React.createContext();
 
-const ConnectionModal = ({ currentConnection, currentTab, fetchConnections, setIsConnectionModalOpen }) => {
+const ConnectionModal = ({
+  currentConnection,
+  currentTab,
+  fetchConnections,
+  setIsConnectionModalOpen,
+}) => {
   const { setCurrentCommentId } = useContext(ChildContext);
   const [attachmentState, attachmentDispatch] = useReducer(
     attachmentReducer,
@@ -52,7 +59,7 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections, setI
   const history = useHistory();
 
   useEffect(() => {
-    console.log("Connected children: ", currentConnection)
+    console.log("Connected children: ", currentConnection);
     setCurrentCommentId(null);
     fetchTemplates();
     fetchComments();
@@ -89,8 +96,13 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections, setI
 
   const fetchTemplates = () => {
     templateDispatch(fetchTemplatesRequest());
-    fetchConnectionsRequest({ id: currentConnection.id, view: "templates"})
-      .then((data) => data && data.templates && templateDispatch(fetchTemplatesSuccess(data.templates)))
+    fetchConnectionsRequest({ id: currentConnection.id, view: "templates" })
+      .then(
+        (data) =>
+          data &&
+          data.templates &&
+          templateDispatch(fetchTemplatesSuccess(data.templates))
+      )
       .catch((e) => e && templateDispatch(fetchTemplatesFailure(e.message)));
   };
 
@@ -104,7 +116,7 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections, setI
         fetchComments,
         fetchAttachments,
         fetchConnections,
-        setIsConnectionModalOpen
+        setIsConnectionModalOpen,
       }}
     >
       <Box
@@ -181,15 +193,33 @@ const ConnectionModal = ({ currentConnection, currentTab, fetchConnections, setI
             </Box>
           </Box>
         </Spacing>
-        <Spacing>
-          {currentConnection.children.map(child => (
-            <Rounded>
-                <Avatar size="small" name={`${child.first_name} ${child.last_name}`} />
-                <a href={"../children/" + child.id}>{`${child.first_name} ${child.last_name}`}</a>
-              </Rounded>
-          ))}
-        </Spacing>
-        <div style={{ width: 650}}><ConnectionTabs currentConnection={currentConnection} currentTab={currentTab} setCurrentCommentId={setCurrentCommentId} /></div>
+        <Box d="flex">
+          <ButtonGroup>
+            {currentConnection.children.map((child) => (
+              <Rounded
+                onClick={() => history.go("../children/" + child.id)}
+                content={
+                  <>
+                    <Avatar
+                      size="small"
+                      name={`${child.first_name} ${child.last_name}`}
+                    />
+                    <span style={{ marginLeft: "5px", color: "#455670" }}>
+                      {child.first_name} {child.last_name}
+                    </span>
+                  </>
+                }
+              />
+            ))}
+          </ButtonGroup>
+        </Box>
+        <div style={{ width: 650 }}>
+          <ConnectionTabs
+            currentConnection={currentConnection}
+            currentTab={currentTab}
+            setCurrentCommentId={setCurrentCommentId}
+          />
+        </div>
       </Box>
     </ConnectionContext.Provider>
   );
@@ -202,17 +232,5 @@ const Text = styled.div`
   line-height: 20px;
   color: #172b4d;
 `;
-
-const Rounded = styled.div`
-  display: inline-block;
-  padding: 6px 8px;
-  margin-right: 8px;
-  border-radius: 20px;
-  background: #eee;
-
-  a {
-    margin-left: 5px;
-  }
-`
 
 export default ConnectionModal;
