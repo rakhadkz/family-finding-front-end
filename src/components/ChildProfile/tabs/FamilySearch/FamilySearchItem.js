@@ -1,11 +1,8 @@
-import AvatarGroup from "@atlaskit/avatar-group";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { StyledLabel } from "../../ChildInformation";
-import Popup from "@atlaskit/popup";
 import { useState } from "react";
-import { ButtonItem, PopupMenuGroup, Section } from "@atlaskit/menu";
-import { AttachmentItem, AttachmentTag } from "./AttachmentTag";
+import { AvatarGroup, AttachmentGroup } from "../../../ui/molecules";
 
 const attachments = [
   {
@@ -39,7 +36,6 @@ const attachments = [
 ];
 
 export const FamilySearchItem = () => {
-  const [isOpen, setIsOpen] = useState(false);
   return (
     <Box d="flex" mt="5px">
       <Box d="flex" direction="column">
@@ -58,45 +54,10 @@ export const FamilySearchItem = () => {
           culpa qui officia deserunt mollit anim id est laborum.
         </p>
         <Box mt="11px" d="flex">
-          <AvatarGroup
-            size="medium"
-            appearance="stack"
-            maxCount={4}
-            data={RANDOM_USERS}
-          />
-          <Box ml="6px" d="flex" align="center">
-            <ButtonGroup>
-              {attachments.map(
-                (item, index) =>
-                  index < 3 && (
-                    <AttachmentTag
-                      file_format={item.file_format}
-                      file_name={item.file_name}
-                    />
-                  )
-              )}
-              {attachments.length > 3 && (
-                <Popup
-                  isOpen={isOpen}
-                  onClose={() => setIsOpen(false)}
-                  content={() => (
-                    <OtherAttachments attachments={attachments.slice(3)} />
-                  )}
-                  placement="bottom-start"
-                  trigger={(triggerProps) => (
-                    <Button
-                      appearance="subtle"
-                      {...triggerProps}
-                      isSelected={isOpen}
-                      onClick={() => setIsOpen(!isOpen)}
-                    >
-                      +{attachments.length - 3}
-                    </Button>
-                  )}
-                />
-              )}
-            </ButtonGroup>
-          </Box>
+          <ButtonGroup>
+            <AvatarGroup data={RANDOM_USERS} />
+            <AttachmentGroup data={attachments} />
+          </ButtonGroup>
         </Box>
         <Box d="flex" justify="space-between" align="baseline" mt="10px">
           <StyledLabel>Found via Search Vector by Alex Bell</StyledLabel>
@@ -110,23 +71,6 @@ export const FamilySearchItem = () => {
         />
       </Spacing>
     </Box>
-  );
-};
-
-const OtherAttachments = ({ attachments }) => {
-  return (
-    <PopupMenuGroup onClick={(e) => e.stopPropagation()}>
-      <Section>
-        {attachments.map((item) => (
-          <ButtonItem>
-            <AttachmentItem
-              file_format={item.file_format}
-              file_name={item.file_name}
-            />
-          </ButtonItem>
-        ))}
-      </Section>
-    </PopupMenuGroup>
   );
 };
 

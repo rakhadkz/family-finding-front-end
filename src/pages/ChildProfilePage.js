@@ -1,4 +1,3 @@
-import AvatarGroup from "@atlaskit/avatar-group";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import "@atlaskit/css-reset";
 import EmailIcon from "@atlaskit/icon/glyph/email";
@@ -41,6 +40,7 @@ import { AddChildForm } from "../components/Children";
 import { Box, Label, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog } from "../components/ui/common";
 import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
+import { AvatarGroup } from "../components/ui/molecules/AvatarGroup";
 import { constructTree } from "../content/childContact.tree.data";
 import { getLocalStorageUser } from "../context/auth/authProvider";
 import { updateChild } from "../context/children/childProvider";
@@ -121,7 +121,7 @@ export function ChildProfilePage(props) {
     attachmentReducer,
     attachmentInitialState
   );
-  
+
   const [currentCommentId, setCurrentCommentId] = useState(null);
 
   useEffect(() => {
@@ -332,7 +332,7 @@ export function ChildProfilePage(props) {
 
   const AssignedUser = memo(({ data }) => (
     <div style={{ marginLeft: "8px" }}>
-      <AvatarGroup appearance="stack" data={data} />
+      <AvatarGroup data={data} />
     </div>
   ));
 
@@ -496,32 +496,35 @@ export function ChildProfilePage(props) {
             <Box d="flex">
               <ButtonGroup>
                 <Button
+                  appearance="primary"
                   onClick={() => {
                     setTemplateType("Letter");
                     setIsTemplateOpen(true);
                   }}
                   iconBefore={<EmailIcon />}
-                  isSelected
+                  //isSelected
                 >
                   Generate Letter
                 </Button>
                 <Button
+                  appearance="primary"
                   onClick={() => {
                     setTemplateType("Email");
                     setIsTemplateOpen(true);
                   }}
                   iconBefore={<MentionIcon />}
-                  isSelected
+                  //isSelected
                 >
                   Send Email
                 </Button>
                 <Button
+                  appearance="primary"
                   onClick={() => {
                     setTemplateType("SMS");
                     setIsTemplateOpen(true);
                   }}
                   iconBefore={<MobileIcon />}
-                  isSelected
+                  //isSelected
                 >
                   Send SMS Text
                 </Button>

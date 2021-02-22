@@ -1,10 +1,12 @@
 import { Box, Spacing, Title, Form, Label } from "../../../ui/atoms";
-import Button from "@atlaskit/button";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { TextInput, DatepickerInput } from "../../../ui/molecules";
 import { FormSection } from "@atlaskit/form";
 import { toast } from "react-toastify";
+import DatePicker from "react-date-picker";
+
 export const PlaceModal = ({
   contact,
   onSubmit,
@@ -22,17 +24,7 @@ export const PlaceModal = ({
     setPending(true);
     console.log(data);
     onSubmit(id, { ...data, is_placed: true })
-      .then(() => {
-        toast.success(`Contact is successfully disqualified!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      })
+      .then(() => toast.success(`Contact is successfully disqualified!`))
       .finally(() => {
         setPending(false);
         setIsPlaceModalOpen(false);
@@ -41,13 +33,13 @@ export const PlaceModal = ({
   };
   return (
     <Box d="flex" direction="column" align="center">
-      <Spacing m={{ t: "30px", b: "50px" }}>
+      <Spacing m={{ t: "30px", b: "20px" }}>
         <Title>{"Placement Date"}</Title>
         <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
-          <FormSection>
+          <div style={{ position: "absolute", left: 50 }}>
             <DatepickerInput
-              marginX="8px"
               name={"placed_date"}
+              width={300}
               register={{ required: false }}
               control={control}
               error={errors.birthday}
@@ -56,14 +48,15 @@ export const PlaceModal = ({
               }`}
               placeholder="Enter Placement Date..."
             />
-            <Box d="flex" w="100%" justify="center" mb="20px" mt="50px">
+          </div>
+          <Box d="flex" w="100%" justify="center" mt="120px">
+            <ButtonGroup>
               <Button isDisabled={pending} type="submit" appearance="primary">
                 Place
               </Button>
-              <Spacing m={{ l: "5px", r: "5px" }} />
               <Button onClick={() => setIsPlaceModalOpen(false)}>Cancel</Button>
-            </Box>
-          </FormSection>
+            </ButtonGroup>
+          </Box>
         </Form>
       </Spacing>
     </Box>

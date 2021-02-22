@@ -206,18 +206,20 @@ export const Connections = () => {
                   </Spacing>
                   <p>Link Score</p>
                 </Box>
-                <Box>
+                <Box d="flex" direction="column">
                   <Title size="18px">{`${placedContact.first_name} ${placedContact.last_name}`}</Title>
                   <span>{placedConnection.relationship}</span>
-                  <span style={{ marginRight: "0px" }}>
-                    Placed Date:{" "}
-                    <strong>
-                      {moment(placedConnection.placed_date).format(
-                        humanReadableDateFormat
-                      )}
-                    </strong>
-                  </span>
-                  <Box d="flex" mt="24px">
+                  {placedConnection.placed_date && (
+                    <span style={{ marginRight: "0px" }}>
+                      Placed Date:{" "}
+                      <strong>
+                        {moment(placedConnection.placed_date).format(
+                          humanReadableDateFormat
+                        )}
+                      </strong>
+                    </span>
+                  )}
+                  <Box d="flex" mt="20px">
                     <Button
                       appearance="link"
                       spacing="none"
@@ -350,7 +352,7 @@ export const Connections = () => {
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
         appearance={null}
-        width="large"
+        width="medium"
         body={
           <Box d="flex" direction="column" align="center">
             <Spacing m={{ t: "17px" }}>
@@ -407,7 +409,7 @@ export const Connections = () => {
         isOpen={isDisModalOpen}
         setIsOpen={setIsDisModalOpen}
         appearance={null}
-        width="large"
+        width="medium"
         body={
           <DisqualifyModal
             onSubmit={updateConnectionRequest}
@@ -424,7 +426,7 @@ export const Connections = () => {
         isOpen={isPlaceModalOpen}
         setIsOpen={setIsPlaceModalOpen}
         appearance={null}
-        width="large"
+        width="small"
         body={
           <PlaceModal
             onSubmit={updateConnectionRequest}

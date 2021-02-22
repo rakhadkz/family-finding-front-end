@@ -180,7 +180,7 @@ export const AddChildForm = ({
           menuPlacement="top"
           options={race_options}
         />
-        <Box mt="16px">
+        <Box mt="16px" d="flex" justify="center">
           <ButtonGroup>
             <Button appearance="primary" isDisabled={pending} type="submit">
               {child ? "Update Child" : "Add New Child"}
