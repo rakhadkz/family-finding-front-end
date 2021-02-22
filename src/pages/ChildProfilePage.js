@@ -14,7 +14,7 @@ import React, {
   useCallback,
   useEffect,
   useReducer,
-  useState,
+  useState
 } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -25,16 +25,16 @@ import {
   fetchChildUsersRequest,
   fetchConnectionsRequest,
   fetchFamilyTreeRequest,
-  removeChildUserRequest,
+  removeChildUserRequest
 } from "../api/children";
 import {
   fetchCommunicationTemplateRequest,
-  sendCommunicationTemplateToUserRequest,
+  sendCommunicationTemplateToUserRequest
 } from "../api/communicationTemplates";
 import {
   ChildInformation,
   ChildTabs,
-  RelativesList,
+  RelativesList
 } from "../components/ChildProfile";
 import { AddChildForm } from "../components/Children";
 import { Box, Label, Spacing, Title } from "../components/ui/atoms";
@@ -50,7 +50,7 @@ import {
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
   fetchAttachmentsSuccess,
-  initialState as attachmentInitialState,
+  initialState as attachmentInitialState
 } from "../reducers/attachment";
 import {
   childProfileReducer,
@@ -59,27 +59,28 @@ import {
   fetchChildSuccess,
   fetchChildUsersFailure,
   fetchChildUsersSuccess,
-  initialState,
+  initialState
 } from "../reducers/childProfile";
 import {
   commentReducer,
   fetchCommentsFailure,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  initialState as commentInitialState,
+  initialState as commentInitialState
 } from "../reducers/comment";
 import {
   connectionReducer,
   fetchConnectionsFailure,
   fetchConnectionsSuccess,
-  initialState as connectionInitialState,
+  initialState as connectionInitialState
 } from "../reducers/connection";
 import {
   familyTreeReducer,
   fetchFamilyTreeFailure,
   fetchFamilyTreeSuccess,
-  initialState as familyTreeInitialState,
+  initialState as familyTreeInitialState
 } from "../reducers/familyTree";
+import { authURL } from "../utils/request";
 import { Preloader } from "./Preloader";
 
 export const ChildContext = React.createContext();
@@ -269,21 +270,43 @@ export function ChildProfilePage(props) {
   };
 
   const sendTemplateToUser = async (connection) => {
-    let content = templatePreview;
+    const text = templateHtml
+      .replaceAll(
+        "{{child_name}}",
+        `${state.child?.first_name} ${state.child?.last_name}`
+      )
+      .replaceAll(
+        "{{contact_name}}",
+        `${connection?.contact?.first_name} ${connection?.contact?.last_name}`
+      )
+      .replaceAll(
+        "{{orgranization_name}}",
+        localStorage.getItem("organizationName")
+      );
     const body = {
       email: connection?.contact?.email,
       contact_id: connection?.contact?.id,
       template_id: templateId,
       child_contact_id: connection.id,
       child_id: id,
-      content: content,
+      content: text,
       template_type: templateType,
       phone: connection?.contact?.phone,
     };
     console.log(body);
 
     setTemplatePending(true);
-    await sendCommunicationTemplateToUserRequest({ template_send: body });
+    await sendCommunicationTemplateToUserRequest({ template_send: body }).then(
+      (res) => {
+        if (templateType === "Letter") {
+          window.open(
+            `${authURL}/templates_sent/generate_pdf.pdf?id=${res.id}`,
+            "",
+            "width=1000, height=500"
+          );
+        }
+      }
+    );
     fetchConnections();
   };
 

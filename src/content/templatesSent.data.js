@@ -1,12 +1,14 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
 import ArrowDownIcon from "@atlaskit/icon/glyph/arrow-down";
 import ArrowUpIcon from "@atlaskit/icon/glyph/arrow-up";
+import PdfIcon from "@atlaskit/icon/glyph/pdf";
 import { SimpleTag as Tag } from "@atlaskit/tag";
 import { Text } from "@chakra-ui/react";
 import moment from "moment";
 import { ACTIONS } from "../accessControl/actions";
 import Can from "../accessControl/Can";
 import { COMMUNICATION_TEMPLATES } from "../helpers";
+import { authURL } from "../utils/request";
 import { humanReadableDateFormat } from "./date";
 
 const colors = {
@@ -66,11 +68,25 @@ const templatesSentTableData = (data, setToggled, toggled) => {
               {
                 key: "content",
                 content: (
-                  <Text
-                    dangerouslySetInnerHTML={{
-                      __html: `<div style="background-color: rgb(244, 245, 247);padding: 10px"><b>Content</b>: <br /> <div style="padding:10px">${item?.content}</div></div>`,
-                    }}
-                  />
+                  <div>
+                    <Button
+                      style={{ marginLeft: 10 }}
+                      iconBefore={<PdfIcon />}
+                      appearance="warning"
+                      onClick={() =>
+                        window.open(
+                          `${authURL}/templates_sent/generate_pdf.pdf?id=${item.id}`
+                        )
+                      }
+                    >
+                      Get as PDF
+                    </Button>{" "}
+                    <Text
+                      dangerouslySetInnerHTML={{
+                        __html: `<div style="padding: 10px"><b>Content</b>: <br /> <div style="padding:10px">${item?.content}</div></div>`,
+                      }}
+                    />
+                  </div>
                 ),
                 colSpan: 5,
               },
