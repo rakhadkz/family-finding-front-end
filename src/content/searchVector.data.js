@@ -10,11 +10,9 @@ import { ACTIONS } from "../accessControl/actions";
 
 const searchVectorTableData = (
   data,
-  history,
   setIsOpen,
-  setCurrentSV,
-  setIsAddModalOpen,
-  setEdit
+  setCurrentSearchVector,
+  setIsAddModalOpen
 ) =>
   data.map((item, index) => ({
     key: index,
@@ -45,16 +43,14 @@ const searchVectorTableData = (
         key: "Actions",
         content: (
           <div align="center">
-            <Can 
+            <Can
               perform={`${SEARCHVECTOR}:${ACTIONS.EDIT}`}
               yes={() => (
                 <ButtonGroup>
                   <Button
-                    // isDisabled={user?.id === item.id}
                     onClick={() => {
                       setIsAddModalOpen(true);
-                      setCurrentSV(item.id);
-                      setEdit(true);
+                      setCurrentSearchVector(item);
                     }}
                     height="32px"
                     width="32px"
@@ -62,10 +58,9 @@ const searchVectorTableData = (
                     <EditIcon size="small" />
                   </Button>
                   <Button
-                    // isDisabled={user?.id === item.id}
                     onClick={() => {
                       setIsOpen(true);
-                      setCurrentSV(item.id);
+                      setCurrentSearchVector(item);
                     }}
                     height="32px"
                     width="32px"
@@ -84,9 +79,9 @@ const searchVectorTableData = (
 const inContinuousSearchOptions = [
   {
     label: "Yes",
-    value: "Yes",
+    value: true,
   },
-  { label: "No", value: "No" },
+  { label: "No", value: false },
 ];
 
 export { searchVectorTableData, inContinuousSearchOptions };

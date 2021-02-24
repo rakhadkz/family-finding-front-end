@@ -27,19 +27,22 @@ export const Comments = ({ data, childId, refresh, currentCommentId }) => {
   const { user } = useAuth();
 
   const expandEditor = () => setIsExpanded(true);
-  const focusedComment = useRef(null)
-  const commentId = useMemo(() => currentCommentId, [])
+  const focusedComment = useRef(null);
+  const commentId = useMemo(() => currentCommentId, []);
   const collapseEditor = () => {
     setShowReply(false);
     setIsExpanded(false);
   };
 
   useEffect(() => {
-    if (focusedComment?.current){
-      focusedComment.current.scrollIntoView({behavior: "smooth", block: "center"});
-      setCurrentCommentId(null)
+    if (focusedComment?.current) {
+      focusedComment.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setCurrentCommentId(null);
     }
-  }, [])
+  }, []);
 
   // console.log(data);
   useEffect(() => {
@@ -219,7 +222,16 @@ export const Comments = ({ data, childId, refresh, currentCommentId }) => {
           )}
 
           {data.replies.map((reply) => (
-            <div className={reply.id === commentId ? "animated" : null} ref={reply.id === commentId ? focusedComment : null} style={{ width: "100vh", margin: 0, border: reply.id === commentId && "2px solid #eee", padding: "8px 0" }}>
+            <div
+              className={reply.id === commentId ? "animated" : null}
+              ref={reply.id === commentId ? focusedComment : null}
+              style={{
+                width: "100vh",
+                margin: 0,
+                border: reply.id === commentId && "2px solid #eee",
+                padding: "8px 0",
+              }}
+            >
               <Comments
                 childId={childId}
                 refresh={refresh}
