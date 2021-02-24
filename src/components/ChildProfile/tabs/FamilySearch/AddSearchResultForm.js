@@ -65,7 +65,7 @@ export const AddSearchResultForm = ({
   };
 
   const onSubmitHandle = async (data) => {
-    if (assignedConnections.length === 0) {
+    if (!data.search_vector) {
       setValidationState("error");
       return;
     }
@@ -111,7 +111,7 @@ export const AddSearchResultForm = ({
 
   const clearForm = () => {
     setSelectedSearchVector(null);
-    setAssignedConnections(null);
+    setAssignedConnections([]);
   };
 
   return (
