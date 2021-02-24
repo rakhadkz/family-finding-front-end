@@ -75,10 +75,11 @@ export const AddSearchResultForm = ({
       description: description,
       user_id: userId,
     });
-    await assignedConnections?.forEach((connection) => {
-      createSearchResultConnectionRequest(id, connection.value);
-    });
-    files.forEach(async (f, index) => {
+    await assignedConnections?.forEach(
+      (connection) =>
+        connection && createSearchResultConnectionRequest(id, connection.value)
+    );
+    files?.forEach(async (f, index) => {
       const {
         resource_type,
         original_filename,
@@ -112,6 +113,7 @@ export const AddSearchResultForm = ({
   const clearForm = () => {
     setSelectedSearchVector(null);
     setAssignedConnections([]);
+    setFiles([]);
   };
 
   return (
