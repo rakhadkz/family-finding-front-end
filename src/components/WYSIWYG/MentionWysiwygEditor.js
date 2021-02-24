@@ -19,6 +19,11 @@ import mentionsStyles from "./mentionsStyles.css";
 import position from "./position";
 import Toolbars from "./Toolbar";
 import emojiStyles from "./emojiStyles.css";
+import {
+  theme,
+  StyledEmojiSelectWrapper,
+  GlobalStyleForEmojiSelect,
+} from "./emojiStyles";
 
 const positionSuggestions = ({ state, props }) => {
   let transform;
@@ -94,9 +99,8 @@ class MentionWysiwygEditor extends React.Component {
     });
     this.emojiPlugin = createEmojiPlugin({
       useNativeArt: true,
-      positionSuggestions: position,
       selectButtonContent: "😀",
-      // theme: emojiStyles,
+      theme: theme,
     });
     this.blockTypeButtons = [
       {
@@ -396,18 +400,20 @@ class MentionWysiwygEditor extends React.Component {
               onFontSizeClick={this.onFontSizeClick}
               toggleBlockType={this.toggleBlockType}
             />
-            <EmojiSelect
-              className={emojiStyles}
-              onOpen={() => {
-                console.log("ONOPEN ON EMOJI!");
-                this.props.setSuggestions && this.props.setSuggestions(10);
-              }}
-              onClose={() => {
-                console.log("ONCLOSE ON EMOJI!");
+            <StyledEmojiSelectWrapper>
+              <EmojiSelect
+                // className={emojiStyles}
+                onOpen={() => {
+                  console.log("ONOPEN ON EMOJI!");
+                  this.props.setSuggestions && this.props.setSuggestions(10);
+                }}
+                onClose={() => {
+                  console.log("ONCLOSE ON EMOJI!");
 
-                this.props.setSuggestions && this.props.setSuggestions(0);
-              }}
-            />
+                  this.props.setSuggestions && this.props.setSuggestions(0);
+                }}
+              />
+            </StyledEmojiSelectWrapper>
           </div>
           <Editor
             editorState={this.state.editorState}
@@ -418,15 +424,6 @@ class MentionWysiwygEditor extends React.Component {
             blockRenderMap={this.blockRenderMap}
           />
           <EmojiSuggestions
-            onOpen={() => {
-              console.log("ONOPEN ON EMOJI!");
-              this.props.setSuggestions && this.props.setSuggestions(10);
-            }}
-            onClose={() => {
-              console.log("ONCLOSE ON EMOJI!");
-
-              this.props.setSuggestions && this.props.setSuggestions(0);
-            }}
             onSearchChange={() => {
               console.log("sds");
             }}
@@ -444,12 +441,6 @@ class MentionWysiwygEditor extends React.Component {
                   />
                 )}
                 className={mentionsStyles.mentionSuggestions}
-                onOpen={() => {
-                  console.log("suka!OPEN");
-                }}
-                onClose={() => {
-                  console.log("ONCLOSE WORKS IN MENTIONSUGGESTIONS");
-                }}
               />
               <MentionSuggestions2
                 onSearchChange={this.onSearchChange2}
@@ -462,12 +453,6 @@ class MentionWysiwygEditor extends React.Component {
                   />
                 )}
                 className={mentionsStyles.mentionSuggestions}
-                onOpen={() => {
-                  console.log("suka!OPEN");
-                }}
-                onClose={() => {
-                  console.log("ONCLOSE WORKS IN MENTIONSUGGESTIONS");
-                }}
               />
             </>
           )}
