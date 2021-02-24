@@ -36,7 +36,7 @@ export const createSearchResultAttachmentRequest = (
     endpoint: "family_search_attachments",
     method: "POST",
     data: {
-      family_search_connection: {
+      family_search_attachment: {
         family_search_id: family_search_id,
         attachment_id: attachment_id,
       },

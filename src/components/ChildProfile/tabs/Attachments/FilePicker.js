@@ -18,6 +18,7 @@ export default function FilePicker({
   fetchAttachments,
   setClosable,
   onSubmit,
+  setFiles,
 }) {
   const handleChangeStatus = ({ meta, file }, status) => {
     console.log(status, meta, file);
@@ -25,39 +26,46 @@ export default function FilePicker({
   const [pending, setPending] = useState(false);
   const handleSubmit = (files, allFiles) => {
     setPending(true);
-    allFiles.forEach(async (f, index) => {
-      const {
-        resource_type,
-        original_filename,
-        bytes,
-        public_id,
-        secure_url,
-        format,
-      } = await uploadRequest(f.file);
-      if (!public_id) {
-        alert("Upload failed. Try again!");
-        setPending(false);
-        return;
-      }
-      const { id } = await createAttachmentRequest({
-        attachment: {
-          file_name: original_filename,
-          file_type: resource_type,
-          file_url: secure_url,
-          file_id: public_id,
-          file_size: bytes,
-          file_format: format,
-          user_id: user_id,
-        },
+    if (setFiles) {
+      setFiles(allFiles);
+      setPending(false);
+      setIsOpen(false);
+      console.log("fsdfsdfs");
+    } else {
+      allFiles.forEach(async (f, index) => {
+        const {
+          resource_type,
+          original_filename,
+          bytes,
+          public_id,
+          secure_url,
+          format,
+        } = await uploadRequest(f.file);
+        if (!public_id) {
+          alert("Upload failed. Try again!");
+          setPending(false);
+          return;
+        }
+        const { id } = await createAttachmentRequest({
+          attachment: {
+            file_name: original_filename,
+            file_type: resource_type,
+            file_url: secure_url,
+            file_id: public_id,
+            file_size: bytes,
+            file_format: format,
+            user_id: user_id,
+          },
+        });
+        await onSubmit(id);
+        if (index === allFiles.length - 1) {
+          setPending(false);
+          setIsOpen(false);
+          toast.success("Uploaded successfully!");
+          fetchAttachments();
+        }
       });
-      await onSubmit(id);
-      if (index === allFiles.length - 1) {
-        setPending(false);
-        setIsOpen(false);
-        toast.success("Uploaded successfully!");
-        fetchAttachments();
-      }
-    });
+    }
   };
 
   return (

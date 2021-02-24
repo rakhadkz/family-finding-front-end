@@ -1,30 +1,43 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
 import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { Box } from "../../../ui/atoms";
-import { SelectInput } from "../../../ui/molecules";
 import Select from "@atlaskit/select";
 import { WysiwygEditor } from "../../../WYSIWYG";
 import DocumentIcon from "@atlaskit/icon/glyph/document";
 import { fetchSearchVectorsRequest } from "../../../../api/searchVectors/searchVectorsRequests";
 import { ModalDialog } from "../../../ui/common";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
-import {
-  createSearchResultAttachmentRequest,
-  createSearchResultConnectionRequest,
-  createSearchResultRequest,
-} from "../../../../api/searchResults/searchResultsRequests";
+import FilePicker from "../Attachments/FilePicker";
 import { getLocalStorageUser } from "../../../../context/auth/authProvider";
+import {
+  AvatarGroup,
+  AttachmentGroup,
+  SelectInput,
+} from "../../../ui/molecules";
+import {
+  createSearchResultRequest,
+  createSearchResultConnectionRequest,
+  createSearchResultAttachmentRequest,
+} from "../../../../api/searchResults/searchResultsRequests";
+import { toast } from "react-toastify";
+import { createAttachmentRequest } from "../../../../api/attachments/attachmentRequest";
+import { uploadRequest } from "../../../../api/cloudinary";
+import { useForm } from "react-hook-form";
 
 export const AddSearchResultForm = ({
   currentSearchResult,
   setIsFormVisible,
 }) => {
-  const { control, handleSubmit, reset } = useForm();
+  const userId = getLocalStorageUser().id;
+  const { control, handleSubmit } = useForm();
   const [options, setOptions] = useState([]);
   const [description, setDescription] = useState("");
-  const userId = getLocalStorageUser().id;
   const [selectedSearchVector, setSelectedSearchVector] = useState(null);
+  const [pending, setPending] = useState(false);
+  const [isFileUploadModalOpen, setIsFileUploadModalOpen] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [assignedConnections, setAssignedConnections] = useState([]);
+  const [validationState, setValidationState] = useState("default");
   const connections = useContext(ChildContext).connectionState.connections.map(
     (connection) => {
       if (connection && connection.contact) {
@@ -40,7 +53,6 @@ export const AddSearchResultForm = ({
       return null;
     }
   );
-  const [assignedConnections, setAssignedConnections] = useState([]);
 
   useEffect(() => {
     fetchSearchVectors();
@@ -52,17 +64,48 @@ export const AddSearchResultForm = ({
     );
   };
 
-  const onCreateSubmit = async (data) => {
+  const onSubmitHandle = async (data) => {
+    if (assignedConnections.length === 0) {
+      setValidationState("error");
+      return;
+    }
+    setPending(true);
     const { id } = await createSearchResultRequest({
       search_vector_id: data.search_vector.value,
       description: description,
       user_id: userId,
     });
-    await assignedConnections.forEach((connection) => {
+    await assignedConnections?.forEach((connection) => {
       createSearchResultConnectionRequest(id, connection.value);
     });
-    //Tut attachments cherez await
-
+    files.forEach(async (f, index) => {
+      const {
+        resource_type,
+        original_filename,
+        bytes,
+        public_id,
+        secure_url,
+        format,
+      } = await uploadRequest(f.file);
+      if (!public_id) {
+        alert("Upload failed. Try again!");
+        return;
+      }
+      const attachment = await createAttachmentRequest({
+        attachment: {
+          file_name: original_filename,
+          file_type: resource_type,
+          file_url: secure_url,
+          file_id: public_id,
+          file_size: bytes,
+          file_format: format,
+          user_id: userId,
+        },
+      });
+      await createSearchResultAttachmentRequest(id, attachment.id);
+    });
+    toast.success("Created successfully!");
+    setPending(false);
     clearForm();
   };
 
@@ -72,17 +115,20 @@ export const AddSearchResultForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onCreateSubmit)}>
+    <form onSubmit={handleSubmit(onSubmitHandle)}>
       <SelectInput
         className="input"
         name="search_vector"
         options={options}
         myValue={selectedSearchVector}
-        myOnChange={setSelectedSearchVector}
-        register={{ required: true }}
+        myOnChange={(e) => {
+          setSelectedSearchVector(e);
+          setValidationState("default");
+        }}
         control={control}
         label="Search Vector"
         placeholder="Select search vector"
+        validationState={validationState}
       />
       <WysiwygEditor
         withMention={false}
@@ -103,16 +149,40 @@ export const AddSearchResultForm = ({
       />
       <Box d="flex" justify="space-between">
         <ButtonGroup>
-          <Button type="submit" appearance="primary">
+          <Button appearance="primary" type="submit" isDisabled={pending}>
             Add Search Result
           </Button>
-          <Button appearance="subtle" iconBefore={<DocumentIcon />} />
+          <Button
+            appearance="subtle"
+            iconBefore={<DocumentIcon />}
+            onClick={() => setIsFileUploadModalOpen(true)}
+          />
+          {files && (
+            <AttachmentGroup
+              data={files.map((f, i) => ({
+                file_name: f.file.name,
+                file_format: f.file.name.split(".").pop(),
+              }))}
+            />
+          )}
         </ButtonGroup>
         <Button onClick={() => setIsFormVisible(false)} appearance="subtle">
           Cancel
         </Button>
 
-        {/* Murat's part starting here */}
+        <ModalDialog
+          isOpen={isFileUploadModalOpen}
+          setIsOpen={setIsFileUploadModalOpen}
+          width="small"
+          hasActions={false}
+          body={
+            <FilePicker
+              user_id={userId}
+              setIsOpen={setIsFileUploadModalOpen}
+              setFiles={setFiles}
+            />
+          }
+        />
       </Box>
     </form>
   );
