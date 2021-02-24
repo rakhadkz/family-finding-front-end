@@ -2,7 +2,6 @@ import Button, { ButtonGroup } from "@atlaskit/button";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Box } from "../../../ui/atoms";
-import { SelectInput } from "../../../ui/molecules";
 import Select from "@atlaskit/select";
 import { WysiwygEditor } from "../../../WYSIWYG";
 import DocumentIcon from "@atlaskit/icon/glyph/document";
@@ -12,6 +11,13 @@ import { ModalDialog } from "../../../ui/common";
 //import tag from "@atlaskit/tag/dist/types/tag";
 import TagGroup from "@atlaskit/tag-group";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
+import FilePicker from "../Attachments/FilePicker";
+import { getLocalStorageUser } from "../../../../context/auth/authProvider";
+import {
+  AvatarGroup,
+  AttachmentGroup,
+  SelectInput,
+} from "../../../ui/molecules";
 
 export const AddSearchResultForm = ({
   currentSearchResult,
@@ -20,10 +26,13 @@ export const AddSearchResultForm = ({
   const { control } = useForm();
   const [options, setOptions] = useState([]);
   const [isConnectionModalOpen, setIsConnectionModalOpen] = useState(false);
+  const [isFileUplodModalOpen, setIsFileUplodModalOpen] = useState(false);
+  const [files, setFiles] = useState();
   const [connections, setConnections] = useState(
     useContext(ChildContext).connectionState.connections || []
   );
   const [assignedConnections, setAssignedConnections] = useState([]);
+  const userId = getLocalStorageUser().id;
 
   useEffect(() => {
     console.log("Connections:::", connections);
@@ -46,6 +55,7 @@ export const AddSearchResultForm = ({
     setConnections((prev) => prev.filter((connection) => connection.id !== id));
   };
 
+  // console.log(files);
   return (
     <form>
       <SelectInput
@@ -61,18 +71,43 @@ export const AddSearchResultForm = ({
       <Box d="flex" justify="space-between">
         <ButtonGroup>
           <Button appearance="primary">Add Search Result</Button>
-          <Button appearance="subtle" iconBefore={<DocumentIcon />} />
+          <Button
+            appearance="subtle"
+            iconBefore={<DocumentIcon />}
+            onClick={() => setIsFileUplodModalOpen(true)}
+          />
           <Button
             appearance="subtle"
             iconBefore={<InviteTeamIcon />}
             onClick={() => setIsConnectionModalOpen(true)}
           />
+          {files && (
+            <AttachmentGroup
+              data={files.map((f, i) => ({
+                file_name: f.file.name,
+                file_format: f.file.name.split(".").pop(),
+              }))}
+            />
+          )}
         </ButtonGroup>
         <Button onClick={() => setIsFormVisible(false)} appearance="subtle">
           Cancel
         </Button>
 
         {/* Murat's part starting here */}
+        <ModalDialog
+          isOpen={isFileUplodModalOpen}
+          setIsOpen={setIsFileUplodModalOpen}
+          width="small"
+          hasActions={false}
+          body={
+            <FilePicker
+              user_id={userId}
+              setIsOpen={setIsFileUplodModalOpen}
+              setFiles={setFiles}
+            />
+          }
+        />
 
         {/* That's Shyngys's part */}
         <ModalDialog
