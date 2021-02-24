@@ -1,6 +1,5 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
 import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { Box } from "../../../ui/atoms";
 import Select from "@atlaskit/select";
 import { WysiwygEditor } from "../../../WYSIWYG";
@@ -15,14 +14,25 @@ import {
   AttachmentGroup,
   SelectInput,
 } from "../../../ui/molecules";
+import {
+  createSearchResultRequest,
+  createSearchResultConnectionRequest,
+  createSearchResultAttachmentRequest,
+} from "../../../../api/searchResults/searchResultsRequests";
+import { toast } from "react-toastify";
+import { createAttachmentRequest } from "../../../../api/attachments/attachmentRequest";
+import { uploadRequest } from "../../../../api/cloudinary";
 
 export const AddSearchResultForm = ({
   currentSearchResult,
   setIsFormVisible,
 }) => {
-  const { control } = useForm();
+  const [svId, setSvId] = useState();
+  const [text, setText] = useState();
+  const [rawData, setRawData] = useState();
+  const [htmlText, setHTMLText] = useState();
   const [options, setOptions] = useState([]);
-  const [isConnectionModalOpen, setIsConnectionModalOpen] = useState(false);
+  const [pending, setPending] = useState(false);
   const [isFileUplodModalOpen, setIsFileUplodModalOpen] = useState(false);
   const [files, setFiles] = useState();
   const connections = useContext(ChildContext).connectionState.connections.map(
@@ -54,19 +64,78 @@ export const AddSearchResultForm = ({
     );
   };
 
-  // console.log(files);
+  const onSubmitHandle = async (e) => {
+    e.preventDefault();
+    if (svId) {
+      setPending(true);
+      const { id } = await createSearchResultRequest({
+        search_vector_id: svId,
+        user_id: userId,
+        description: htmlText,
+      });
+      if (files) {
+        files.forEach(async (f, index) => {
+          const {
+            resource_type,
+            original_filename,
+            bytes,
+            public_id,
+            secure_url,
+            format,
+          } = await uploadRequest(f.file);
+          if (!public_id) {
+            alert("Upload failed. Try again!");
+            return;
+          }
+          const attachment = await createAttachmentRequest({
+            attachment: {
+              file_name: original_filename,
+              file_type: resource_type,
+              file_url: secure_url,
+              file_id: public_id,
+              file_size: bytes,
+              file_format: format,
+              user_id: userId,
+            },
+          });
+          await createSearchResultAttachmentRequest(id, attachment.id);
+          if (index === files.length - 1) {
+            toast.success("Uploaded successfully!");
+            setPending(false);
+          }
+        });
+        if (assignedConnections)
+          assignedConnections.forEach(async (connection, index) => {
+            await createSearchResultConnectionRequest(id, connection.value);
+          });
+      }
+      if (!files && id) setPending(false);
+    }
+  };
+
   return (
-    <form>
-      <SelectInput
-        className="input"
-        name="organization"
-        options={options}
-        register={{ required: true }}
-        control={control}
-        label="Search Vector"
-        placeholder="Select search vector"
+    <form onSubmit={onSubmitHandle}>
+      <Box w="200px">
+        <Select
+          style={{ width: "400px" }}
+          className="input"
+          name="organization"
+          options={options}
+          label="Search Vector"
+          placeholder="Select search vector"
+          onChange={(e) => {
+            setSvId(e.value);
+          }}
+        />
+      </Box>
+      <WysiwygEditor
+        withMention={false}
+        onChange={(text, raw, html) => {
+          setText(text);
+          setRawData(raw);
+          setHTMLText(html);
+        }}
       />
-      <WysiwygEditor withMention={false} onChange={(tex, raw, html) => {}} />
       <Select
         className="multi-select"
         classNamePrefix="react-select"
@@ -74,18 +143,16 @@ export const AddSearchResultForm = ({
         menuPortalTarget={document.body}
         value={assignedConnections}
         onChange={(e) => {
-          console.log("EEE:", e);
           setAssignedConnections(e);
-        }}
-        styles={{
-          control: (base) => ({ ...base, width: 400, marginBottom: 10 }),
         }}
         options={connections}
         placeholder="Choose a Connection(s)"
       />
       <Box d="flex" justify="space-between">
         <ButtonGroup>
-          <Button appearance="primary">Add Search Result</Button>
+          <Button appearance="primary" type="submit" isDisabled={pending}>
+            Add Search Result
+          </Button>
           <Button
             appearance="subtle"
             iconBefore={<DocumentIcon />}
