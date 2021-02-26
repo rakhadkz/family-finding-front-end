@@ -112,19 +112,22 @@ export const AddSearchResultForm = ({
         },
       });
       await createSearchResultAttachmentRequest(id, attachment.id);
+      if (index === files.length - 1) {
+        toast.success("Created successfully!");
+        setPending(false);
+        clearForm();
+        await fetch();
+      }
     });
-    toast.success("Created successfully!");
-    fetch();
-    setPending(false);
-    clearForm();
-    setUpd(upd + 1);
-    setIsFormVisible(false);
   };
 
   const clearForm = () => {
+    files.forEach((file) => file.remove());
     setSelectedSearchVector(null);
     setAssignedConnections([]);
     setFiles([]);
+    setUpd(upd + 1);
+    setIsFormVisible(false);
   };
 
   useEffect(() => {
@@ -194,7 +197,6 @@ export const AddSearchResultForm = ({
         <Button
           onClick={() => {
             clearForm();
-            setIsFormVisible(false);
           }}
           appearance="subtle"
         >

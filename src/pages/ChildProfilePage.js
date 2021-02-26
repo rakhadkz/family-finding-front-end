@@ -261,9 +261,9 @@ export function ChildProfilePage(props) {
       .catch((e) => attachmentDispatch(fetchAttachmentsFailure(e.message)));
   };
 
-  const fetchSearchResults = () => {
+  const fetchSearchResults = async () => {
     searchResultDispatch(fetchSearchResultsRequest());
-    fetchChildrenRequest({ id, view: "family_searches" })
+    await fetchChildrenRequest({ id, view: "family_searches" })
       .then(
         (data) =>
           data &&
