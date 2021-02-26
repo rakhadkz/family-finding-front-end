@@ -1,4 +1,4 @@
-import Button, { ButtonGroup } from "@atlaskit/button";
+import Button, { ButtonGroup, LoadingButton } from "@atlaskit/button";
 import { useContext, useEffect, useState } from "react";
 import { Box } from "../../../ui/atoms";
 import Select from "@atlaskit/select";
@@ -9,11 +9,7 @@ import { ModalDialog } from "../../../ui/common";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 import FilePicker from "../Attachments/FilePicker";
 import { getLocalStorageUser } from "../../../../context/auth/authProvider";
-import {
-  AvatarGroup,
-  AttachmentGroup,
-  SelectInput,
-} from "../../../ui/molecules";
+import { AttachmentGroup, SelectInput } from "../../../ui/molecules";
 import {
   createSearchResultRequest,
   createSearchResultConnectionRequest,
@@ -23,8 +19,6 @@ import { toast } from "react-toastify";
 import { createAttachmentRequest } from "../../../../api/attachments/attachmentRequest";
 import { uploadRequest } from "../../../../api/cloudinary";
 import { useForm } from "react-hook-form";
-import TagGroup from "@atlaskit/tag-group";
-import Tag from "@atlaskit/tag";
 
 export const AddSearchResultForm = ({
   currentSearchResult,
@@ -83,42 +77,44 @@ export const AddSearchResultForm = ({
       user_id: userId,
       child_id: child_id,
     });
-    await assignedConnections?.forEach(
-      (connection) =>
-        connection && createSearchResultConnectionRequest(id, connection.value)
-    );
-    files?.forEach(async (f, index) => {
-      const {
-        resource_type,
-        original_filename,
-        bytes,
-        public_id,
-        secure_url,
-        format,
-      } = await uploadRequest(f.file);
-      if (!public_id) {
-        alert("Upload failed. Try again!");
-        return;
+    if (assignedConnections) {
+      for (const connection of assignedConnections) {
+        connection &&
+          (await createSearchResultConnectionRequest(id, connection.value));
       }
-      const attachment = await createAttachmentRequest({
-        attachment: {
-          file_name: original_filename,
-          file_type: resource_type,
-          file_url: secure_url,
-          file_id: public_id,
-          file_size: bytes,
-          file_format: format,
-          user_id: userId,
-        },
-      });
-      await createSearchResultAttachmentRequest(id, attachment.id);
-      if (index === files.length - 1) {
-        toast.success("Created successfully!");
-        setPending(false);
-        clearForm();
-        await fetch();
+    }
+    if (files) {
+      for (const file of files) {
+        const {
+          resource_type,
+          original_filename,
+          bytes,
+          public_id,
+          secure_url,
+          format,
+        } = await uploadRequest(file.file);
+        if (!public_id) {
+          alert("Upload failed. Try again!");
+          return;
+        }
+        const attachment = await createAttachmentRequest({
+          attachment: {
+            file_name: original_filename,
+            file_type: resource_type,
+            file_url: secure_url,
+            file_id: public_id,
+            file_size: bytes,
+            file_format: format,
+            user_id: userId,
+          },
+        });
+        await createSearchResultAttachmentRequest(id, attachment.id);
       }
-    });
+    }
+    await fetch();
+    toast.success("Created successfully!");
+    setPending(false);
+    clearForm();
   };
 
   const clearForm = () => {
@@ -170,9 +166,14 @@ export const AddSearchResultForm = ({
       />
       <Box d="flex" justify="space-between">
         <ButtonGroup>
-          <Button appearance="primary" type="submit" isDisabled={pending}>
+          <LoadingButton
+            appearance="primary"
+            type="submit"
+            isLoading={pending}
+            isDisabled={pending}
+          >
             Add Search Result
-          </Button>
+          </LoadingButton>
           <Button
             appearance="subtle"
             iconBefore={<DocumentIcon />}
