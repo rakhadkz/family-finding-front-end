@@ -17,6 +17,7 @@ export const AttachmentGroup = ({ data }) => {
         <AttachmentTag
           file_format={item.file_format}
           file_name={item.file_name}
+          file_url={item.file_url}
           onClick={() => window.open(item.file_url, "_blank")}
         />
       ))}
