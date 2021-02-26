@@ -27,7 +27,13 @@ import { useForm } from "react-hook-form";
 export const AddSearchResultForm = ({
   currentSearchResult,
   setIsFormVisible,
+  fetch,
 }) => {
+  const {
+    state: { child },
+    connectionState,
+  } = useContext(ChildContext);
+  const child_id = child.id;
   const userId = getLocalStorageUser().id;
   const { control, handleSubmit } = useForm();
   const [options, setOptions] = useState([]);
@@ -38,21 +44,19 @@ export const AddSearchResultForm = ({
   const [files, setFiles] = useState([]);
   const [assignedConnections, setAssignedConnections] = useState([]);
   const [validationState, setValidationState] = useState("default");
-  const connections = useContext(ChildContext).connectionState.connections.map(
-    (connection) => {
-      if (connection && connection.contact) {
-        const {
-          contact: { first_name, last_name },
-          id,
-        } = connection;
-        return {
-          label: first_name + " " + last_name,
-          value: id,
-        };
-      }
-      return null;
+  const connections = connectionState.connections.map((connection) => {
+    if (connection && connection.contact) {
+      const {
+        contact: { first_name, last_name },
+        id,
+      } = connection;
+      return {
+        label: first_name + " " + last_name,
+        value: id,
+      };
     }
-  );
+    return null;
+  });
 
   useEffect(() => {
     fetchSearchVectors();
@@ -74,6 +78,7 @@ export const AddSearchResultForm = ({
       search_vector_id: data.search_vector.value,
       description: description,
       user_id: userId,
+      child_id: child_id,
     });
     await assignedConnections?.forEach(
       (connection) =>
@@ -106,6 +111,7 @@ export const AddSearchResultForm = ({
       await createSearchResultAttachmentRequest(id, attachment.id);
     });
     toast.success("Created successfully!");
+    fetch();
     setPending(false);
     clearForm();
   };
