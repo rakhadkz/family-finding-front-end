@@ -34,6 +34,7 @@ export const AddSearchResultForm = ({
     connectionState,
   } = useContext(ChildContext);
   const child_id = child.id;
+  const [upd, setUpd] = useState(0);
   const userId = getLocalStorageUser().id;
   const { control, handleSubmit } = useForm();
   const [options, setOptions] = useState([]);
@@ -114,6 +115,8 @@ export const AddSearchResultForm = ({
     fetch();
     setPending(false);
     clearForm();
+    setUpd(upd + 1);
+    setIsFormVisible(false);
   };
 
   const clearForm = () => {
@@ -141,6 +144,7 @@ export const AddSearchResultForm = ({
       <WysiwygEditor
         withMention={false}
         onChange={(tex, raw, html) => setDescription(html)}
+        upd={upd}
       />
       <Select
         className="multi-select"
