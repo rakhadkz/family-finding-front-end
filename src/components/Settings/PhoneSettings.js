@@ -14,7 +14,7 @@ function PhoneSettings() {
     if (isModalOpen) {
       fetchNumbers();
     }
-  });
+  }, [isModalOpen]);
 
   const fetchNumbers = () => {
     fetchPhoneNumbers().then(setNumbers);
