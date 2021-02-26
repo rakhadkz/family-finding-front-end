@@ -6,6 +6,13 @@ import { fetchConnectionsRequest } from "../../../../api/childContact";
 import { connectionAttachmentsRow } from "../../../../content/connectionAttachment.data";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 import {
+  alertReducer,
+  fetchAlertsFailure,
+  fetchAlertsRequest,
+  fetchAlertsSuccess,
+  initialState as alertInitialState,
+} from "../../../../reducers/alertLinks";
+import {
   attachmentReducer,
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
@@ -46,6 +53,10 @@ const ConnectionModal = ({
   allowDisqualifiedConnection,
 }) => {
   const { setCurrentCommentId } = useContext(ChildContext);
+  const [alertsState, alertDispatch] = useReducer(
+    alertReducer,
+    alertInitialState
+  );
   const [attachmentState, attachmentDispatch] = useReducer(
     attachmentReducer,
     attachmentInitialState
@@ -58,6 +69,7 @@ const ConnectionModal = ({
     templateReducer,
     templateInitialState
   );
+  const [children, setChildren] = useState([]);
 
   const history = useHistory();
 
@@ -67,7 +79,19 @@ const ConnectionModal = ({
     fetchTemplates();
     fetchComments();
     fetchAttachments();
+    fetchAlerts();
+    fetchChildren();
   }, []);
+
+  const fetchAlerts = () => {
+    alertDispatch(fetchAlertsRequest());
+    fetchConnectionsRequest({ id: currentConnection.id, view: "alerts" })
+      .then((data) => {
+        data && data.alerts && alertDispatch(fetchAlertsSuccess(data.alerts));
+        console.log("=======================", data.alerts);
+      })
+      .catch((e) => e && alertDispatch(fetchAlertsFailure(e.message)));
+  };
 
   const fetchAttachments = () => {
     attachmentDispatch(fetchAttachmentsRequest());
@@ -83,6 +107,13 @@ const ConnectionModal = ({
       .catch(
         (e) => e && attachmentDispatch(fetchAttachmentsFailure(e.message))
       );
+  };
+
+  const fetchChildren = () => {
+    fetchConnectionsRequest({
+      id: currentConnection.id,
+      view: "children",
+    }).then((data) => data && data.children && setChildren(data.children));
   };
 
   const fetchComments = () => {
@@ -112,9 +143,11 @@ const ConnectionModal = ({
   return (
     <ConnectionContext.Provider
       value={{
+        alertsState,
         attachmentState,
         commentState,
         templateState,
+        fetchAlerts,
         fetchTemplates,
         fetchComments,
         fetchAttachments,
@@ -218,7 +251,7 @@ const ConnectionModal = ({
         </Spacing>
         <Box d="flex">
           <ButtonGroup>
-            {currentConnection.children.map((child) => (
+            {children.map((child) => (
               <Rounded
                 onClick={() => history.push("../children/" + child.id)}
                 content={

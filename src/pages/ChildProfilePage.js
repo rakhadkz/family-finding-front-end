@@ -1,4 +1,3 @@
-import AvatarGroup from "@atlaskit/avatar-group";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import "@atlaskit/css-reset";
 import EmailIcon from "@atlaskit/icon/glyph/email";
@@ -15,7 +14,7 @@ import React, {
   useCallback,
   useEffect,
   useReducer,
-  useState
+  useState,
 } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -26,21 +25,22 @@ import {
   fetchChildUsersRequest,
   fetchConnectionsRequest,
   fetchFamilyTreeRequest,
-  removeChildUserRequest
+  removeChildUserRequest,
 } from "../api/children";
 import {
   fetchCommunicationTemplateRequest,
-  sendCommunicationTemplateToUserRequest
+  sendCommunicationTemplateToUserRequest,
 } from "../api/communicationTemplates";
 import {
   ChildInformation,
   ChildTabs,
-  RelativesList
+  RelativesList,
 } from "../components/ChildProfile";
 import { AddChildForm } from "../components/Children";
 import { Box, Label, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog } from "../components/ui/common";
 import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
+import { AvatarGroup } from "../components/ui/molecules/AvatarGroup";
 import { constructTree } from "../content/childContact.tree.data";
 import { getLocalStorageUser } from "../context/auth/authProvider";
 import { updateChild } from "../context/children/childProvider";
@@ -50,7 +50,7 @@ import {
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
   fetchAttachmentsSuccess,
-  initialState as attachmentInitialState
+  initialState as attachmentInitialState,
 } from "../reducers/attachment";
 import {
   childProfileReducer,
@@ -59,27 +59,34 @@ import {
   fetchChildSuccess,
   fetchChildUsersFailure,
   fetchChildUsersSuccess,
-  initialState
+  initialState,
 } from "../reducers/childProfile";
 import {
   commentReducer,
   fetchCommentsFailure,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  initialState as commentInitialState
+  initialState as commentInitialState,
 } from "../reducers/comment";
 import {
   connectionReducer,
   fetchConnectionsFailure,
   fetchConnectionsSuccess,
-  initialState as connectionInitialState
+  initialState as connectionInitialState,
 } from "../reducers/connection";
 import {
   familyTreeReducer,
   fetchFamilyTreeFailure,
   fetchFamilyTreeSuccess,
-  initialState as familyTreeInitialState
+  initialState as familyTreeInitialState,
 } from "../reducers/familyTree";
+import {
+  searchResultReducer,
+  initialState as searchResultInitialState,
+  fetchSearchResultsRequest,
+  fetchSearchResultsSuccess,
+  fetchSearchResultsFailure,
+} from "../reducers/searchResult";
 import { authURL } from "../utils/request";
 import { Preloader } from "./Preloader";
 
@@ -122,7 +129,11 @@ export function ChildProfilePage(props) {
     attachmentReducer,
     attachmentInitialState
   );
-  
+  const [searchResultState, searchResultDispatch] = useReducer(
+    searchResultReducer,
+    searchResultInitialState
+  );
+
   const [currentCommentId, setCurrentCommentId] = useState(null);
 
   useEffect(() => {
@@ -132,6 +143,7 @@ export function ChildProfilePage(props) {
     fetchTemplates();
     fetchComments();
     fetchAttachments();
+    fetchSearchResults();
     (user.role === "admin" || user.role === "manager") && fetchChildUsers();
   }, []);
 
@@ -249,6 +261,18 @@ export function ChildProfilePage(props) {
       .catch((e) => attachmentDispatch(fetchAttachmentsFailure(e.message)));
   };
 
+  const fetchSearchResults = () => {
+    searchResultDispatch(fetchSearchResultsRequest());
+    fetchChildrenRequest({ id, view: "family_searches" })
+      .then(
+        (data) =>
+          data &&
+          data.family_searches &&
+          searchResultDispatch(fetchSearchResultsSuccess(data.family_searches))
+      )
+      .catch((e) => attachmentDispatch(fetchSearchResultsFailure(e.message)));
+  };
+
   const handleTemplateSendSubmit = async () => {
     let promises = [];
     for (let i = 0; i < templateUser?.length; i++) {
@@ -355,7 +379,7 @@ export function ChildProfilePage(props) {
 
   const AssignedUser = memo(({ data }) => (
     <div style={{ marginLeft: "8px" }}>
-      <AvatarGroup appearance="stack" data={data} />
+      <AvatarGroup data={data} />
     </div>
   ));
 
@@ -396,6 +420,7 @@ export function ChildProfilePage(props) {
         connectionState,
         attachmentState,
         familyTreeState,
+        searchResultState,
         dispatch,
         connectionDispatch,
         attachmentDispatch,
@@ -403,6 +428,7 @@ export function ChildProfilePage(props) {
         fetchFamilyTree,
         fetchComments,
         fetchAttachments,
+        fetchSearchResults,
         setCurrentCommentId,
         loading: state.loading,
       }}
@@ -519,32 +545,35 @@ export function ChildProfilePage(props) {
             <Box d="flex">
               <ButtonGroup>
                 <Button
+                  appearance="primary"
                   onClick={() => {
                     setTemplateType("Letter");
                     setIsTemplateOpen(true);
                   }}
                   iconBefore={<EmailIcon />}
-                  isSelected
+                  //isSelected
                 >
                   Generate Letter
                 </Button>
                 <Button
+                  appearance="primary"
                   onClick={() => {
                     setTemplateType("Email");
                     setIsTemplateOpen(true);
                   }}
                   iconBefore={<MentionIcon />}
-                  isSelected
+                  //isSelected
                 >
                   Send Email
                 </Button>
                 <Button
+                  appearance="primary"
                   onClick={() => {
                     setTemplateType("SMS");
                     setIsTemplateOpen(true);
                   }}
                   iconBefore={<MobileIcon />}
-                  isSelected
+                  //isSelected
                 >
                   Send SMS Text
                 </Button>

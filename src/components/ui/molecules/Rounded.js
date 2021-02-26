@@ -1,7 +1,11 @@
 import styled from "styled-components";
 
-export const Rounded = ({ content, onClick }) => {
-  return <Container onClick={onClick}>{content}</Container>;
+export const Rounded = ({ content, onClick, isRemovable = false }) => {
+  return (
+    <Container onClick={onClick} isRemovable={isRemovable}>
+      {content}
+    </Container>
+  );
 };
 
 export const Container = styled.div`
@@ -12,8 +16,12 @@ export const Container = styled.div`
   border: 1px solid #c1c7d0;
   transition: 0.2s;
 
-  :hover {
-    background: #f0f0f0;
-    cursor: pointer;
-  }
+  ${({ isRemovable }) =>
+    !isRemovable &&
+    `
+      :hover {
+        background: #f0f0f0;
+        cursor: pointer;  
+      }
+    `}
 `;

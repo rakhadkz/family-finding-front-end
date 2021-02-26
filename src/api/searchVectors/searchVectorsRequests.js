@@ -17,11 +17,15 @@ export const fetchSearchVectorsRequest = (params) => {
   });
 };
 
-export const postSearchVectorRequest = (data) => {
+export const createSearchVectorRequest = (data) => {
   return request({
     endpoint: "admin/search_vectors",
     method: "POST",
-    data: data,
+    data: {
+      search_vector: {
+        ...data,
+      },
+    },
   });
 };
 
@@ -32,10 +36,14 @@ export const deleteSearchVectorRequest = (data) => {
   });
 };
 
-export const updateSearchVectorRequest = (params) => {
+export const updateSearchVectorRequest = (id, data) => {
   return request({
-    endpoint: `admin/search_vectors/${params.id}`,
+    endpoint: `admin/search_vectors/${id}`,
     method: "PUT",
-    data: params.data,
+    data: {
+      search_vector: {
+        ...data,
+      },
+    },
   });
 };

@@ -1,16 +1,19 @@
 import ReactAvatar from "react-avatar";
+import Tooltip from "@atlaskit/tooltip";
 
 export const Avatar = ({ name, size = "large", ratio = 2.5 }) => {
   return (
-    <ReactAvatar
-      name={name}
-      color="#c1c7d0"
-      fgColor="#FFFFFF"
-      round
-      size={calculate_size(size)}
-      textSizeRatio={ratio}
-      textMarginRatio={0.17}
-    />
+    <Tooltip content={name}>
+      <ReactAvatar
+        name={name}
+        color="#c1c7d0"
+        fgColor="#FFFFFF"
+        round
+        size={calculate_size(size)}
+        textSizeRatio={ratio}
+        textMarginRatio={0.17}
+      />
+    </Tooltip>
   );
 };
 

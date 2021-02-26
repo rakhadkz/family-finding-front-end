@@ -6,24 +6,48 @@ import ExcelSpreadsheet16Icon from "@atlaskit/icon-file-type/glyph/excel-spreads
 import Image16Icon from "@atlaskit/icon-file-type/glyph/image/16";
 import Video16Icon from "@atlaskit/icon-file-type/glyph/video/16";
 import { Rounded } from "../../../ui/molecules/Rounded";
+import EditorCloseIcon from "@atlaskit/icon/glyph/editor/close";
+import { Box } from "../../../ui/atoms";
+import Button from "@atlaskit/button";
 
-export const AttachmentTag = ({ file_format, file_name }) => {
+export const AttachmentTag = ({
+  file_format,
+  file_name,
+  onClick = () => {},
+  isRemovable,
+}) => {
   return (
     <Rounded
       content={
-        <AttachmentItem file_format={file_format} file_name={file_name} />
+        <AttachmentItem
+          file_format={file_format}
+          file_name={file_name}
+          isRemovable={isRemovable}
+        />
       }
-      onClick={() => alert("Hello")}
+      onClick={onClick}
+      isRemovable={isRemovable}
     />
   );
 };
 
-export const AttachmentItem = ({ file_format, file_name }) => {
+export const AttachmentItem = ({ file_format, file_name, isRemovable }) => {
   return (
-    <>
-      <AttachmentIcon file_format={file_format} />
-      <span style={{ marginLeft: "10px", color: "#455670" }}>{file_name}</span>
-    </>
+    <Box d="flex" align="center" justify="space-between">
+      <div>
+        <AttachmentIcon file_format={file_format} />
+        <span
+          style={{
+            marginLeft: "10px",
+            color: "#455670",
+            marginRight: isRemovable && "10px",
+          }}
+        >
+          {file_name}
+        </span>
+      </div>
+      {isRemovable && <div style={{ cursor: "pointer" }}>✕</div>}
+    </Box>
   );
 };
 

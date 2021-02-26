@@ -1,6 +1,6 @@
 import Button from "@atlaskit/button";
 import EmojiAddIcon from "@atlaskit/icon/glyph/emoji-add";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
 import {
@@ -15,7 +15,7 @@ import { searchVectorsTableColumns } from "../content/columns.data";
 import { getLocalStorageUser } from "../context/auth/authProvider";
 import {
   fetchSearchVectors,
-  postSearchVector,
+  createSearchVector,
   deleteSearchVector,
   updateSearchVector,
 } from "../context/searchVectors/SearchVectorsProvider";
@@ -23,12 +23,17 @@ import { updateQueryParams } from "./OrganizationsPage";
 import { AddSearchVectorForm } from "../components/SearchVector/";
 import { ModalDialog } from "../components/ui/common";
 import ChildIssuesIcon from "@atlaskit/icon/glyph/child-issues";
+import {
+  searchVectorReducer,
+  initialState,
+  fetchSearchVectorsSuccess,
+  fetchSearchVectorsFailure,
+  fetchSearchVectorsRequest,
+} from "../reducers/searchVector";
+import { toast } from "react-toastify";
 
 export const SearchVectorsPage = (props) => {
   const history = useHistory();
-  const [searchVector, setSearchVector] = useState([]);
-  const [tablePending, setTablePending] = useState(true);
-  const user = getLocalStorageUser();
   const query = new URLSearchParams(props.location.search);
   const head = searchVectorsTableColumns;
   const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
@@ -36,13 +41,11 @@ export const SearchVectorsPage = (props) => {
   const [search, setSearch] = useState(query.get("search") || "");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [currentSV, setCurrentSV] = useState(-1);
-  const [isEdit, setEdit] = useState(false);
+  const [state, dispatch] = useReducer(searchVectorReducer, initialState);
+  const [currentSearchVector, setCurrentSearchVector] = useState(null);
 
   useEffect(() => {
-    console.log("User in Children Page", user);
     history.push(updateQueryParams(currentPage, search));
-    setTablePending(true);
     const timer = setTimeout(() => fetch(), search?.length === 0 ? 0 : 1000);
     return () => clearTimeout(timer);
   }, [currentPage, search]);
@@ -52,40 +55,69 @@ export const SearchVectorsPage = (props) => {
   }, [search]);
 
   const fetch = () => {
+    dispatch(fetchSearchVectorsRequest());
     fetchSearchVectors({
       page: currentPage,
       meta: true,
       search: search,
-      organization_id: user.organization_id,
     })
       .then((response) => {
-        if (response) {
-          setTotalPage(response?.meta?.num_pages);
-          console.log(response);
-          console.log(response?.data);
-          setSearchVector(
-            searchVectorTableData(
-              response?.data,
-              history,
-              setIsOpen,
-              setCurrentSV,
-              setIsAddModalOpen,
-              setEdit
+        if (response && response.meta && response.data) {
+          dispatch(
+            fetchSearchVectorsSuccess(
+              searchVectorTableData(
+                response.data,
+                setIsOpen,
+                setCurrentSearchVector,
+                setIsAddModalOpen
+              )
             )
           );
+          setTotalPage(response.meta.num_pages);
         }
       })
-      .finally(() => setTablePending(false));
+      .catch((e) => e && dispatch(fetchSearchVectorsFailure(e.message)));
   };
 
   const onDelete = (id) => {
-    deleteSearchVector({ id }).finally(() => {
-      setIsOpen(false);
-      setSearchVector(searchVector.filter((sv) => sv.id !== id));
-    });
+    deleteSearchVector({ id })
+      .then(() => {
+        fetch();
+        toast.success("Search Vector is deleted successfully!");
+      })
+      .catch(() =>
+        toast.error("Couldn't delete. Something went wrong. Try again!")
+      )
+      .finally(() => setIsOpen(false));
   };
 
-  console.log(searchVector, currentSV);
+  const onEdit = (data) => {
+    dispatch(fetchSearchVectorsRequest());
+    updateSearchVector(currentSearchVector.id, data)
+      .then(() => {
+        fetch();
+        toast.success("Search Vector was successfully updated!");
+      })
+      .catch((e) => {
+        dispatch(fetchSearchVectorsFailure(e?.message));
+        toast.error("Couldn't update. Something went wrong. Try again!");
+      })
+      .finally(() => setIsAddModalOpen(false));
+  };
+
+  const onCreate = (data) => {
+    dispatch(fetchSearchVectorsRequest());
+    createSearchVector(data)
+      .then(() => {
+        fetch();
+        toast.success("Search Vector was successfully created!");
+      })
+      .catch((e) => {
+        dispatch(fetchSearchVectorsFailure(e?.message));
+        toast.error("Couldn't create. Something went wrong. Try again!");
+      })
+      .finally(() => setIsAddModalOpen(false));
+  };
 
   return (
     <>
@@ -99,7 +131,10 @@ export const SearchVectorsPage = (props) => {
           <Button
             iconBefore={<ChildIssuesIcon />}
             appearance="primary"
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={() => {
+              setCurrentSearchVector(null);
+              setIsAddModalOpen(true);
+            }}
           >
             Add Search Vector
           </Button>
@@ -108,18 +143,16 @@ export const SearchVectorsPage = (props) => {
       <ModalDialog
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
-        heading={isEdit ? "Edit Search Vector" : "Add Search Vector"}
+        heading={
+          currentSearchVector ? "Edit Search Vector" : "Add Search Vector"
+        }
         appearance={null}
         body={
           <AddSearchVectorForm
-            onSubmit={postSearchVector}
-            something={updateSearchVector}
-            fetch={fetch}
+            onSubmit={currentSearchVector ? onEdit : onCreate}
             onCancel={() => setIsAddModalOpen(false)}
-            organization_id={user.organization_id}
-            currSv={currentSV}
-            sv={searchVector}
-            isEdit={isEdit}
+            currentSearchVector={currentSearchVector}
+            pending={state.loading}
           />
         }
         hasActions={false}
@@ -129,15 +162,15 @@ export const SearchVectorsPage = (props) => {
           totalPage={totalPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-          items={searchVector}
-          pending={tablePending}
+          items={state.searchVectors}
+          pending={state.loading}
           head={head}
         />
       </Spacing>
       <ModalDialog
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        onClick={() => onDelete(currentSV)}
+        onClick={() => onDelete(currentSearchVector.id)}
         positiveLabel="Delete"
         heading="Are you sure you want to remove this search vector?"
         body="You will no longer have access to this search vector"

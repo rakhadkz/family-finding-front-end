@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import {
   fetchSearchVectorsRequest,
-  postSearchVectorRequest,
+  createSearchVectorRequest,
   deleteSearchVectorRequest,
   updateSearchVectorRequest,
 } from "../../api/searchVectors";
@@ -16,12 +16,12 @@ const fetchSearchVectors = (params = null) => {
   );
 };
 
-const postSearchVector = (params) => {
+const createSearchVector = (params) => {
   const errorStatuses = {
     500: "Error on Server!",
   };
 
-  return postSearchVectorRequest(params).catch((err) =>
+  return createSearchVectorRequest(params).catch((err) =>
     toast.error(errorStatuses[err.status])
   );
 };
@@ -36,19 +36,19 @@ const deleteSearchVector = (params) => {
   );
 };
 
-const updateSearchVector = (params) => {
+const updateSearchVector = (id, data) => {
   const errorStatuses = {
     500: "Error on Server!",
   };
 
-  return updateSearchVectorRequest(params).catch((err) =>
+  return updateSearchVectorRequest(id, data).catch((err) =>
     toast.error(errorStatuses[err.status])
   );
 };
 
 export {
   fetchSearchVectors,
-  postSearchVector,
+  createSearchVector,
   deleteSearchVector,
   updateSearchVector,
 };

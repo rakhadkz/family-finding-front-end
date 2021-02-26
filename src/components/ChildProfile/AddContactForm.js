@@ -111,6 +111,15 @@ export const AddContactForm = ({
             error={errors.email}
             label="Email"
           />
+          <DatepickerInput
+            marginX="8px"
+            name={"birthday"}
+            register={{ required: false }}
+            control={control}
+            error={errors.birthday}
+            label="Birthday"
+            placeholder="Select birthday"
+          />
           <TextInput
             marginX="8px"
             name={"phone"}
@@ -161,16 +170,6 @@ export const AddContactForm = ({
             error={errors.state}
             label="State"
             placeholder="Choose State"
-          />
-
-          <DatepickerInput
-            marginX="8px"
-            name={"birthday"}
-            register={{ required: false }}
-            control={control}
-            error={errors.birthday}
-            label="Birthday"
-            placeholder="Select birthday"
           />
           <TextInput
             marginX="8px"

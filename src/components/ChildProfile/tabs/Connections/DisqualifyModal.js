@@ -1,5 +1,5 @@
 import { Box, Spacing, Title, Form, Label } from "../../../ui/atoms";
-import Button from "@atlaskit/button";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { TextInput } from "../../../ui/molecules";
@@ -41,14 +41,13 @@ export const DisqualifyModal = ({
   };
   return (
     <Box d="flex" direction="column" align="center">
-      <Spacing m={{ t: "30px", b: "50px" }}>
+      <Spacing m={{ t: "30px", b: "20px" }}>
         <Title>{"Reason for Disqualification"}</Title>
         <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
           <FormSection>
             <TextInput
               placeholder="Add a reason..."
               width={500}
-              marginX="8px"
               name={"disqualify_reason"}
               register={register({ required: false })}
               control={control}
@@ -57,12 +56,13 @@ export const DisqualifyModal = ({
                 contact?.first_name + " " + contact?.last_name
               }`}
             />
-            <Box d="flex" w="100%" justify="center" mb="20px" mt="50px">
-              <Button isDisabled={pending} type="submit" appearance="primary">
-                Disqualify
-              </Button>
-              <Spacing m={{ l: "5px", r: "5px" }} />
-              <Button onClick={() => setIsDisModalOpen(false)}>Cancel</Button>
+            <Box d="flex" w="100%" justify="center" mt="30px">
+              <ButtonGroup>
+                <Button isDisabled={pending} type="submit" appearance="primary">
+                  Disqualify
+                </Button>
+                <Button onClick={() => setIsDisModalOpen(false)}>Cancel</Button>
+              </ButtonGroup>
             </Box>
           </FormSection>
         </Form>
