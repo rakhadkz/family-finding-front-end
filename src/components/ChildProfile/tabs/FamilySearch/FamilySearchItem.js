@@ -52,7 +52,7 @@ const months = [
 
 export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
   let date = new Date(item.created_at);
-
+  console.log(!noMeta, !noEdit, item.attachments);
   return (
     <Box d="flex" mt="5px">
       <Box d="flex" direction="column">
