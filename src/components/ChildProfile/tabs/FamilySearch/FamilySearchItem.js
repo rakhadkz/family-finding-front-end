@@ -35,7 +35,7 @@ const attachments = [
   },
 ];
 
-const month = [
+const months = [
   "January",
   "February",
   "March",
@@ -50,45 +50,49 @@ const month = [
   "December",
 ];
 
-export const FamilySearchItem = ({ item }) => {
-  var date = new Date(item.created_at);
-
+export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
+  let date = new Date(item.created_at);
+  console.log(!noMeta, !noEdit, item.attachments);
   return (
     <Box d="flex" mt="5px">
       <Box d="flex" direction="column">
         <Title>{date.getDate()}</Title>
-        <span>{month[date.getMonth()]}</span>
+        <span>{months[date.getMonth()]}</span>
         <span>{date.getFullYear()}</span>
       </Box>
       <div style={{ marginLeft: "16px", width: "100%" }}>
         <p dangerouslySetInnerHTML={{ __html: item.description }}></p>
-        <Box mt="11px" d="flex">
-          <ButtonGroup>
-            <AvatarGroup
-              data={item.child_contacts.map(
-                ({ contact: { first_name, last_name } }) => ({
-                  name: first_name + " " + last_name,
-                })
-              )}
-            />
-            <AttachmentGroup
-              data={item.attachments.map((item) => ({
-                ...item,
-                onClick: () => {
-                  window.open(item.file_url, "_blank");
-                },
-              }))}
-            />
-          </ButtonGroup>
-        </Box>
+        {!noMeta && (
+          <Box mt="11px" d="flex">
+            <ButtonGroup>
+              <AvatarGroup
+                data={item.child_contacts.map(
+                  ({ contact: { first_name, last_name } }) => ({
+                    name: first_name + " " + last_name,
+                  })
+                )}
+              />
+              <AttachmentGroup
+                data={item.attachments.map((item) => ({
+                  ...item,
+                  onClick: () => {
+                    window.open(item.file_url, "_blank");
+                  },
+                }))}
+              />
+            </ButtonGroup>
+          </Box>
+        )}
         <Box d="flex" justify="space-between" align="baseline" mt="10px">
           <StyledLabel>
-            Found via {item.search_vector.name} by{" "}
-            {`${item.user.first_name} ${item.user.last_name}`}
+            Found via {item.search_vector?.name} by{" "}
+            {`${item.user?.first_name} ${item.user?.last_name}`}
           </StyledLabel>
-          <Button appearance="link" spacing="none">
-            Edit Result
-          </Button>
+          {!noEdit && (
+            <Button appearance="link" spacing="none">
+              Edit Result
+            </Button>
+          )}
         </Box>
         <Spacing
           style={{ borderBottom: "1px solid #dee1e5" }}
