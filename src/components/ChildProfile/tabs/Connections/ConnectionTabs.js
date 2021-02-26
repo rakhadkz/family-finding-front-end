@@ -13,7 +13,6 @@ import TemplatesSentTab from "./TemplatesSentTab";
 import { AlertsTab } from "./AlertsTab";
 
 export const ConnectionTabs = (props) => {
-  const { alerts_size } = props.currentConnection;
   const {
     alertsState: { alerts },
     templateState: { templates },
@@ -40,7 +39,7 @@ export const ConnectionTabs = (props) => {
         <Box d="flex" align="center" justify="center">
           <NotificationIcon />
           <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
-            {alerts_size} link alerts
+            {alerts.length} link alerts
           </Text>
         </Box>
       ),
