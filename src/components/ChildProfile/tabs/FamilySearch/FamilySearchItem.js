@@ -35,35 +35,76 @@ const attachments = [
   },
 ];
 
-export const FamilySearchItem = () => {
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+export const FamilySearchItem = ({
+  created_at,
+  description,
+  noEdit,
+  noMeta,
+}) => {
+  const s = new Date(created_at);
+  console.log(new Date(created_at), s.getDate());
   return (
     <Box d="flex" mt="5px">
       <Box d="flex" direction="column">
-        <Title>14</Title>
-        <span>February</span>
-        <span>2021</span>
+        {created_at ? (
+          <>
+            <Title>{s.getDate()}</Title>
+            <span>{months[s.getMonth() - 1]}</span>
+            <span>{s.getFullYear()}</span>
+          </>
+        ) : (
+          <>
+            <Title>14</Title>
+            <span>February</span>
+            <span>2021</span>
+          </>
+        )}
       </Box>
       <Spacing m={{ l: "16px" }}>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <Box mt="11px" d="flex">
-          <ButtonGroup>
-            <AvatarGroup data={RANDOM_USERS} />
-            <AttachmentGroup data={attachments} />
-          </ButtonGroup>
-        </Box>
+        {description ? (
+          <p dangerouslySetInnerHTML={{ __html: description }}></p>
+        ) : (
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        )}
+
+        {!noMeta && (
+          <Box mt="11px" d="flex">
+            <ButtonGroup>
+              <AvatarGroup data={RANDOM_USERS} />
+              <AttachmentGroup data={attachments} />
+            </ButtonGroup>
+          </Box>
+        )}
         <Box d="flex" justify="space-between" align="baseline" mt="10px">
           <StyledLabel>Found via Search Vector by Alex Bell</StyledLabel>
-          <Button appearance="link" spacing="none">
-            Edit Result
-          </Button>
+          {!noEdit && (
+            <Button appearance="link" spacing="none">
+              Edit Result
+            </Button>
+          )}
         </Box>
         <Spacing
           style={{ borderBottom: "1px solid #dee1e5" }}
