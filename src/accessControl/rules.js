@@ -3,12 +3,19 @@ import {
   ATTACHMENTS,
   CHILDREN,
   COMMUNICATION_TEMPLATES,
-  ORGANIZATIONS,
+
+
+
+
+
+  CONTACTS, ORGANIZATIONS,
   REPORTS,
-  SEARCHVECTOR,
+
+
+
+  RESOURCES, SEARCHVECTOR,
   SETTINGS,
-  USERS,
-  RESOURCES,
+  USERS
 } from "../helpers";
 import { ACTIONS } from "./actions";
 
@@ -73,6 +80,8 @@ const rules = {
       `${USERS}:${ACTIONS.ADD}`,
       `${USERS}:${ACTIONS.REMOVE}`,
       `${RESOURCES}:${ACTIONS.VISIT}`,
+      `${CONTACTS}:${ACTIONS.VISIT}`,
+      `${CONTACTS}:${ACTIONS.EDIT}`,
     ],
   },
   super_admin: {

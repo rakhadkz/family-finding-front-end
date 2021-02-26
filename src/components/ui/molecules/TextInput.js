@@ -26,6 +26,7 @@ export const TextInput = (props) => {
     mb,
     marginX = "0px",
     marginY = "8px",
+    disabled = false,
     ...rest
   } = props;
 
@@ -46,6 +47,7 @@ export const TextInput = (props) => {
         type={type || name}
         width={width}
         isCompact
+        disabled={disabled}
         {...rest}
       />
       {error && (
