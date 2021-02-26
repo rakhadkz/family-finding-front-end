@@ -71,7 +71,14 @@ export const FamilySearchItem = ({ item }) => {
                 })
               )}
             />
-            <AttachmentGroup data={item.attachments} />
+            <AttachmentGroup
+              data={item.attachments.map((item) => ({
+                ...item,
+                onClick: () => {
+                  window.open(item.file_url, "_blank");
+                },
+              }))}
+            />
           </ButtonGroup>
         </Box>
         <Box d="flex" justify="space-between" align="baseline" mt="10px">
