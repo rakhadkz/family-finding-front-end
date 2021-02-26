@@ -10,24 +10,29 @@ import { Rounded } from "../../../ui/molecules/Rounded";
 export const AttachmentTag = ({
   file_format,
   file_name,
+  file_url,
   onClick = () => {},
 }) => {
   return (
     <Rounded
       content={
-        <AttachmentItem file_format={file_format} file_name={file_name} />
+        <AttachmentItem
+          file_format={file_format}
+          file_name={file_name}
+          file_url={file_url}
+        />
       }
       onClick={onClick}
     />
   );
 };
 
-export const AttachmentItem = ({ file_format, file_name }) => {
+export const AttachmentItem = ({ file_format, file_name, file_url }) => {
   return (
-    <>
+    <div onClick={() => window.open(file_url, "_blank")}>
       <AttachmentIcon file_format={file_format} />
       <span style={{ marginLeft: "10px", color: "#455670" }}>{file_name}</span>
-    </>
+    </div>
   );
 };
 
