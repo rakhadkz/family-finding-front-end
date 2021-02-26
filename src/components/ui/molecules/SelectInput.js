@@ -25,7 +25,8 @@ export const SelectInput = (props) => {
     myOnChange,
     menuPlacement = "bottom",
     marginX = "0px",
-    marginY = "8px"
+    marginY = "8px",
+    validationState = "default",
   } = props;
 
   return (
@@ -39,6 +40,7 @@ export const SelectInput = (props) => {
         defaultValue={defaultValue}
         render={(props) => (
           <Select
+            validationState={validationState}
             menuPlacement={menuPlacement}
             control={control}
             name={name}

@@ -10,18 +10,18 @@ import { AttachmentsTab } from "./AttachmentsTab";
 import { CommentsTab } from "./CommentsTab";
 import { ConnectionContext } from "./ConnectionModal";
 import TemplatesSentTab from "./TemplatesSentTab";
+import { AlertsTab } from "./AlertsTab";
 
 export const ConnectionTabs = (props) => {
+  const { alerts_size } = props.currentConnection;
   const {
-    alerts_size
-  } = props.currentConnection;
-  const {
+    alertsState: { alerts },
     templateState: { templates },
     attachmentState: { attachments },
     commentState: { comments },
   } = useContext(ConnectionContext);
 
-  const currentTab = props.currentTab
+  const currentTab = props.currentTab;
 
   const tabs = [
     {
@@ -44,7 +44,7 @@ export const ConnectionTabs = (props) => {
           </Text>
         </Box>
       ),
-      content: <div></div>,
+      content: <AlertsTab />,
     },
 
     {
@@ -72,13 +72,17 @@ export const ConnectionTabs = (props) => {
   ];
 
   const getCurrentTab = () => {
-    switch(currentTab){
-      case "alerts": return 1;
-      case "comments": return 2;
-      case "attachments": return 3;
-      default: return 0;
+    switch (currentTab) {
+      case "alerts":
+        return 1;
+      case "comments":
+        return 2;
+      case "attachments":
+        return 3;
+      default:
+        return 0;
     }
-  }
+  };
 
   const [current, setCurrent] = useState(getCurrentTab);
 

@@ -7,13 +7,17 @@ import Image16Icon from "@atlaskit/icon-file-type/glyph/image/16";
 import Video16Icon from "@atlaskit/icon-file-type/glyph/video/16";
 import { Rounded } from "../../../ui/molecules/Rounded";
 
-export const AttachmentTag = ({ file_format, file_name }) => {
+export const AttachmentTag = ({
+  file_format,
+  file_name,
+  onClick = () => {},
+}) => {
   return (
     <Rounded
       content={
         <AttachmentItem file_format={file_format} file_name={file_name} />
       }
-      onClick={() => alert("Hello")}
+      onClick={onClick}
     />
   );
 };

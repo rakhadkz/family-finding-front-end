@@ -17,6 +17,7 @@ export const AttachmentGroup = ({ data }) => {
         <AttachmentTag
           file_format={item.file_format}
           file_name={item.file_name}
+          onClick={() => window.open(item.file_url, "_blank")}
         />
       ))}
       {data.length > MAX_VISIBLE && (
@@ -48,7 +49,7 @@ const OtherAttachments = ({ attachments }) => {
     <PopupMenuGroup onClick={(e) => e.stopPropagation()}>
       <Section>
         {attachments.map((item) => (
-          <ButtonItem>
+          <ButtonItem onClick={() => window.open(item.file_url, "_blank")}>
             <AttachmentItem
               file_format={item.file_format}
               file_name={item.file_name}
