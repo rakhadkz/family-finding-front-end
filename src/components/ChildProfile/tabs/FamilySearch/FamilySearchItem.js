@@ -72,7 +72,14 @@ export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
                   })
                 )}
               />
-              <AttachmentGroup data={item.attachments} />
+              <AttachmentGroup
+                data={item.attachments.map((item) => ({
+                  ...item,
+                  onClick: () => {
+                    window.open(item.file_url, "_blank");
+                  },
+                }))}
+              />
             </ButtonGroup>
           </Box>
         )}

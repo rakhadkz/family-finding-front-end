@@ -9,7 +9,7 @@ import {
 
 const MAX_VISIBLE = 3;
 
-export const AttachmentGroup = ({ data }) => {
+export const AttachmentGroup = ({ data, isRemovable = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <ButtonGroup>
@@ -17,7 +17,8 @@ export const AttachmentGroup = ({ data }) => {
         <AttachmentTag
           file_format={item.file_format}
           file_name={item.file_name}
-          onClick={() => window.open(item.file_url, "_blank")}
+          onClick={item.onClick}
+          isRemovable={isRemovable}
         />
       ))}
       {data.length > MAX_VISIBLE && (
@@ -25,7 +26,10 @@ export const AttachmentGroup = ({ data }) => {
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           content={() => (
-            <OtherAttachments attachments={data.slice(MAX_VISIBLE)} />
+            <OtherAttachments
+              attachments={data.slice(MAX_VISIBLE)}
+              isRemovable={isRemovable}
+            />
           )}
           placement="bottom-start"
           trigger={(triggerProps) => (
@@ -44,15 +48,16 @@ export const AttachmentGroup = ({ data }) => {
   );
 };
 
-const OtherAttachments = ({ attachments }) => {
+const OtherAttachments = ({ attachments, isRemovable }) => {
   return (
     <PopupMenuGroup onClick={(e) => e.stopPropagation()}>
       <Section>
         {attachments.map((item) => (
-          <ButtonItem onClick={() => window.open(item.file_url, "_blank")}>
+          <ButtonItem onClick={item.onClick}>
             <AttachmentItem
               file_format={item.file_format}
               file_name={item.file_name}
+              isRemovable={isRemovable}
             />
           </ButtonItem>
         ))}

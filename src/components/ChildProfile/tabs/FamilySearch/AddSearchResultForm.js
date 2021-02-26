@@ -23,6 +23,8 @@ import { toast } from "react-toastify";
 import { createAttachmentRequest } from "../../../../api/attachments/attachmentRequest";
 import { uploadRequest } from "../../../../api/cloudinary";
 import { useForm } from "react-hook-form";
+import TagGroup from "@atlaskit/tag-group";
+import Tag from "@atlaskit/tag";
 
 export const AddSearchResultForm = ({
   currentSearchResult,
@@ -125,6 +127,10 @@ export const AddSearchResultForm = ({
     setFiles([]);
   };
 
+  useEffect(() => {
+    console.log("FILES UPDATED: ", files);
+  }, [files]);
+
   return (
     <form onSubmit={handleSubmit(onSubmitHandle)}>
       <SelectInput
@@ -174,11 +180,24 @@ export const AddSearchResultForm = ({
               data={files.map((f, i) => ({
                 file_name: f.file.name,
                 file_format: f.file.name.split(".").pop(),
+                onClick: () => {
+                  f.remove();
+                  setFiles((prev) =>
+                    prev.filter((item) => item.meta.id !== f.meta.id)
+                  );
+                },
               }))}
+              isRemovable
             />
           )}
         </ButtonGroup>
-        <Button onClick={() => setIsFormVisible(false)} appearance="subtle">
+        <Button
+          onClick={() => {
+            clearForm();
+            setIsFormVisible(false);
+          }}
+          appearance="subtle"
+        >
           Cancel
         </Button>
 
