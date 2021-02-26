@@ -1,9 +1,9 @@
 import React from "react";
 import {
+  BrowserRouter as Router,
   Redirect,
   Route,
-  BrowserRouter as Router,
-  Switch,
+  Switch
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,40 +18,40 @@ import {
   ADD,
   CHILDREN,
   COMMUNICATION_TEMPLATES,
-  CONTINUOUS_SEARCH,
+  CONTACTS,
   FORGOT_PASSWORD,
   LOGIN,
   NEW_PASSWORD,
   ORGANIZATIONS,
   REPORTS,
+  RESOURCES,
   SEARCHVECTOR,
   SETTINGS,
-  USERS,
-  RESOURCES,
+  USERS
 } from "./helpers/routes";
 import {
   ActionItemsPage,
-  CommunicationTemplatesPage,
-  ContinuousSearchPage,
-  NewPassword,
-  OrganizationsPage,
-  ReportsPage,
-  ResetPassword,
-  SearchVectorsPage,
-  SettingsPage,
-  UsersPage,
-  NotFound,
-  Preloader,
-  ComponentWrapper,
-  ChildrenPage,
-  ChildProfilePage,
-  AddCommunicationTemplatePage,
   AddChildPage,
+  AddCommunicationTemplatePage,
   AddOrganizationPage,
   AddUserPage,
+  ChildProfilePage,
+  ChildrenPage,
+  CommunicationTemplatesPage,
+  ComponentWrapper,
+  NewPassword,
+  NotFound,
+  OrganizationsPage,
+  Preloader,
+  ReportsPage,
+  ResetPassword,
   ResourcesPage,
+  SearchVectorsPage,
+  SettingsPage,
+  UsersPage
 } from "./pages";
 import { AccessDenied } from "./pages/AccessDenied";
+import ContactsSettingPage from "./pages/ContactsSettingPage";
 import LoginPage from "./pages/Login";
 import { localStorageKey } from "./utils/requestHandler";
 
@@ -128,6 +128,12 @@ function App() {
               perform={`${SETTINGS}:${ACTIONS.VISIT}`}
               path={`/${SETTINGS}`}
               component={SettingsPage}
+            />
+            <PrivateRoute
+              exact
+              perform={`${CONTACTS}:${ACTIONS.REMOVE}`}
+              path={`/${SETTINGS}/${CONTACTS}`}
+              component={ContactsSettingPage}
             />
             <PrivateRoute
               exact
