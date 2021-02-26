@@ -69,6 +69,7 @@ const ConnectionModal = ({
     templateReducer,
     templateInitialState
   );
+  const [children, setChildren] = useState([]);
 
   const history = useHistory();
 
@@ -79,6 +80,7 @@ const ConnectionModal = ({
     fetchComments();
     fetchAttachments();
     fetchAlerts();
+    fetchChildren();
   }, []);
 
   const fetchAlerts = () => {
@@ -105,6 +107,13 @@ const ConnectionModal = ({
       .catch(
         (e) => e && attachmentDispatch(fetchAttachmentsFailure(e.message))
       );
+  };
+
+  const fetchChildren = () => {
+    fetchConnectionsRequest({
+      id: currentConnection.id,
+      view: "children",
+    }).then((data) => data && data.children && setChildren(data.children));
   };
 
   const fetchComments = () => {
@@ -242,7 +251,7 @@ const ConnectionModal = ({
         </Spacing>
         <Box d="flex">
           <ButtonGroup>
-            {currentConnection.children.map((child) => (
+            {children.map((child) => (
               <Rounded
                 onClick={() => history.push("../children/" + child.id)}
                 content={

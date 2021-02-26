@@ -50,56 +50,37 @@ const months = [
   "December",
 ];
 
-export const FamilySearchItem = ({
-  created_at,
-  description,
-  noEdit,
-  noMeta,
-}) => {
-  const s = new Date(created_at);
-  console.log(new Date(created_at), s.getDate());
+export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
+  let date = new Date(item.created_at);
+
   return (
     <Box d="flex" mt="5px">
       <Box d="flex" direction="column">
-        {created_at ? (
-          <>
-            <Title>{s.getDate()}</Title>
-            <span>{months[s.getMonth() - 1]}</span>
-            <span>{s.getFullYear()}</span>
-          </>
-        ) : (
-          <>
-            <Title>14</Title>
-            <span>February</span>
-            <span>2021</span>
-          </>
-        )}
+        <Title>{date.getDate()}</Title>
+        <span>{months[date.getMonth()]}</span>
+        <span>{date.getFullYear()}</span>
       </Box>
-      <Spacing m={{ l: "16px" }}>
-        {description ? (
-          <p dangerouslySetInnerHTML={{ __html: description }}></p>
-        ) : (
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-        )}
-
+      <div style={{ marginLeft: "16px", width: "100%" }}>
+        <p dangerouslySetInnerHTML={{ __html: item.description }}></p>
         {!noMeta && (
           <Box mt="11px" d="flex">
             <ButtonGroup>
-              <AvatarGroup data={RANDOM_USERS} />
-              <AttachmentGroup data={attachments} />
+              <AvatarGroup
+                data={item.child_contacts.map(
+                  ({ contact: { first_name, last_name } }) => ({
+                    name: first_name + " " + last_name,
+                  })
+                )}
+              />
+              <AttachmentGroup data={item.attachments} />
             </ButtonGroup>
           </Box>
         )}
         <Box d="flex" justify="space-between" align="baseline" mt="10px">
-          <StyledLabel>Found via Search Vector by Alex Bell</StyledLabel>
+          <StyledLabel>
+            Found via {item.search_vector?.name} by{" "}
+            {`${item.user?.first_name} ${item.user?.last_name}`}
+          </StyledLabel>
           {!noEdit && (
             <Button appearance="link" spacing="none">
               Edit Result
@@ -110,7 +91,7 @@ export const FamilySearchItem = ({
           style={{ borderBottom: "1px solid #dee1e5" }}
           m={{ t: "8px", b: "8px" }}
         />
-      </Spacing>
+      </div>
     </Box>
   );
 };
