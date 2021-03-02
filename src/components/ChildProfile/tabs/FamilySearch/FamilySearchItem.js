@@ -66,7 +66,7 @@ export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
           <Box mt="11px" d="flex">
             <ButtonGroup>
               <AvatarGroup
-                data={item.child_contacts.map(
+                data={item?.child_contacts?.map(
                   ({ contact: { first_name, last_name } }) => ({
                     name: first_name + " " + last_name,
                   })

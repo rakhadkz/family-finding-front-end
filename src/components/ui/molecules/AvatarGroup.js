@@ -10,12 +10,12 @@ export const AvatarGroup = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div w="100%" style={{ display: "flex" }}>
-      {data.slice(0, MAX_VISIBLE).map((item) => (
+      {data && data.slice(0, MAX_VISIBLE).map((item) => (
         <div style={{ marginRight: "2px" }}>
           <Avatar size="medium" name={item.name} />
         </div>
       ))}
-      {data.length > MAX_VISIBLE && (
+      {data && data.length > MAX_VISIBLE && (
         <Popup
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
