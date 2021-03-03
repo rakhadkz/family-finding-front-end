@@ -27,10 +27,7 @@ export function FamilySearchTab() {
           m={{ b: "15px" }}
           style={{ display: isFormVisible ? "block" : "none" }}
         >
-          <AddSearchResultForm
-            setIsFormVisible={setIsFormVisible}
-            fetch={fetchSearchResults}
-          />
+          <AddSearchResultForm setIsFormVisible={setIsFormVisible} />
         </Spacing>
 
         <Spacing m={{ t: "20px" }}>

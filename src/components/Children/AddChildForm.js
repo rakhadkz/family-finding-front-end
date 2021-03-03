@@ -1,5 +1,5 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -69,15 +69,15 @@ export const AddChildForm = ({
   setIsImportOpen,
 }) => {
   const history = useHistory();
-  const { register, handleSubmit, control, errors, setValue } = useForm();
-
-  useEffect(() => {
-    if (child) {
-      setValue("first_name", child.first_name);
-      setValue("last_name", child.last_name);
-      setValue("birthday", new Date(child.birthday));
-    }
-  }, [child]);
+  const { register, handleSubmit, control, errors } = useForm({
+    defaultValues: child
+      ? {
+          first_name: child.first_name,
+          last_name: child.last_name,
+          birthday: new Date(child.birthday),
+        }
+      : {},
+  });
 
   const [pending, setPending] = useState(false);
   const onSubmitHandle = (data) => {

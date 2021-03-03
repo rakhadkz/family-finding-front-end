@@ -168,17 +168,7 @@ export const Connections = () => {
       disqualify_reason: "",
       is_disqualified: false,
     })
-      .then(() => {
-        toast.success(`Contact is successfully allowed!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      })
+      .then(() => toast.success("Contact is successfully allowed!"))
       .finally(() => {
         currentConnection.disqualify_reason = "";
         currentConnection.is_disqualified = false;
@@ -377,7 +367,11 @@ export const Connections = () => {
                     id: currentConnection.contact.id,
                     ...data,
                   })
-                    .then(() => fetchConnections())
+                    .then(() => {
+                      toast.success("Connection successfully updated!");
+                      fetchConnections();
+                    })
+                    .catch(() => toast.error("Error. Not updated"))
                     .finally(() => setIsAddModalOpen(false));
                 } else {
                   await onAddContact(data).finally(() => fetchConnections());

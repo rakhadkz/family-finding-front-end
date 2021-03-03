@@ -1,5 +1,5 @@
 import Button, { ButtonGroup, LoadingButton } from "@atlaskit/button";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Box } from "../../../ui/atoms";
 import Select from "@atlaskit/select";
 import { WysiwygEditor } from "../../../WYSIWYG";
@@ -12,8 +12,11 @@ import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 import { AttachmentGroup, SelectInput } from "../../../ui/molecules";
 import {
   createSearchResultRequest,
+  updateSearchResultRequest,
   createSearchResultConnectionRequest,
   createSearchResultAttachmentRequest,
+  deleteSearchResultAttachmentRequest,
+  deleteSearchResultConnectionRequest,
 } from "../../../../api/searchResults/searchResultsRequests";
 import { toast } from "react-toastify";
 import { createAttachmentRequest } from "../../../../api/attachments/attachmentRequest";
@@ -23,23 +26,55 @@ import { useForm } from "react-hook-form";
 export const AddSearchResultForm = ({
   currentSearchResult,
   setIsFormVisible,
-  fetch,
+  setIsOpen,
 }) => {
   const {
     state: { child },
     connectionState,
+    fetchSearchResults: fetch,
   } = useContext(ChildContext);
   const child_id = child.id;
   const [upd, setUpd] = useState(0);
   const userId = getLocalStorageUser().id;
   const { control, handleSubmit } = useForm();
   const [options, setOptions] = useState([]);
-  const [description, setDescription] = useState("");
-  const [selectedSearchVector, setSelectedSearchVector] = useState(null);
+  const [description, setDescription] = useState(
+    currentSearchResult ? currentSearchResult.description : ""
+  );
+  const [selectedSearchVector, setSelectedSearchVector] = useState(
+    currentSearchResult && currentSearchResult.search_vector
+      ? {
+          label: currentSearchResult.search_vector?.name,
+          value: currentSearchResult.search_vector?.id,
+        }
+      : null
+  );
   const [pending, setPending] = useState(false);
   const [isFileUploadModalOpen, setIsFileUploadModalOpen] = useState(false);
   const [files, setFiles] = useState([]);
-  const [assignedConnections, setAssignedConnections] = useState([]);
+  const [currentFiles, setCurrentFiles] = useState(
+    currentSearchResult ? currentSearchResult.attachments : []
+  );
+  const [filesForDeleting, setFilesForDeleting] = useState([]);
+  const [assignedConnections, setAssignedConnections] = useState(
+    currentSearchResult && currentSearchResult.connections
+      ? currentSearchResult.connections.map(
+          ({
+            id,
+            child_contact: {
+              id: child_contact_id,
+              contact: { first_name, last_name },
+            },
+          }) => ({
+            label: `${first_name} ${last_name}`,
+            value: child_contact_id,
+            id: id,
+          })
+        )
+      : []
+  );
+  const currentAssignedConnections = useMemo(() => assignedConnections, []);
+  const [connectionsForDeleting, setConnectionsForDeleting] = useState([]);
   const [validationState, setValidationState] = useState("default");
   const connections = connectionState.connections.map((connection) => {
     if (connection && connection.contact) {
@@ -59,6 +94,23 @@ export const AddSearchResultForm = ({
     fetchSearchVectors();
   }, []);
 
+  const isObjectExist = (object) => {
+    for (const obj of assignedConnections || []) {
+      if (obj.value === object.value) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    setConnectionsForDeleting(
+      currentAssignedConnections
+        ?.filter((item) => !isObjectExist(item))
+        .map((item) => item.id)
+    );
+  }, [assignedConnections]);
+
   const fetchSearchVectors = () => {
     fetchSearchVectorsRequest({}).then((data) =>
       setOptions(data.map((item) => ({ label: item.name, value: item.id })))
@@ -66,23 +118,45 @@ export const AddSearchResultForm = ({
   };
 
   const onSubmitHandle = async (data) => {
-    if (!data.search_vector) {
+    if (!selectedSearchVector) {
       setValidationState("error");
       return;
     }
-    setPending(true);
-    const { id } = await createSearchResultRequest({
-      search_vector_id: data.search_vector.value,
-      description: description,
-      user_id: userId,
-      child_id: child_id,
-    });
-    if (assignedConnections) {
-      for (const connection of assignedConnections) {
-        connection &&
-          (await createSearchResultConnectionRequest(id, connection.value));
+    let currentId;
+    if (currentSearchResult) {
+      setPending(true);
+      currentId = currentSearchResult.id;
+      await updateSearchResultRequest(currentSearchResult.id, {
+        search_vector_id: selectedSearchVector.value,
+        description: description,
+      });
+      for (const id of connectionsForDeleting || []) {
+        await deleteSearchResultConnectionRequest(id);
       }
+      for (const id of filesForDeleting) {
+        await deleteSearchResultAttachmentRequest(id);
+      }
+    } else {
+      setPending(true);
+      const { id } = await createSearchResultRequest({
+        search_vector_id: selectedSearchVector.value,
+        description: description,
+        user_id: userId,
+        child_id: child_id,
+      });
+      currentId = id;
     }
+    await createSearchResultConnections(currentId);
+    await createSearchResultAttachments(currentId);
+    await fetch();
+    toast.success(
+      currentSearchResult ? "Updated successfully!" : "Created successfully!"
+    );
+    setPending(false);
+    clearForm();
+  };
+
+  const createSearchResultAttachments = async (id) => {
     if (files) {
       for (const file of files) {
         const {
@@ -111,24 +185,35 @@ export const AddSearchResultForm = ({
         await createSearchResultAttachmentRequest(id, attachment.id);
       }
     }
-    await fetch();
-    toast.success("Created successfully!");
-    setPending(false);
-    clearForm();
+  };
+
+  const createSearchResultConnections = async (id) => {
+    if (assignedConnections) {
+      for (const connection of assignedConnections) {
+        if (connection) {
+          try {
+            await createSearchResultConnectionRequest(id, connection.value);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+    }
   };
 
   const clearForm = () => {
+    if (setIsOpen) {
+      setIsOpen(false);
+      setCurrentFiles([]);
+    } else {
+      setIsFormVisible(false);
+    }
     files.forEach((file) => file.remove());
     setSelectedSearchVector(null);
     setAssignedConnections([]);
     setFiles([]);
     setUpd(upd + 1);
-    setIsFormVisible(false);
   };
-
-  useEffect(() => {
-    console.log("FILES UPDATED: ", files);
-  }, [files]);
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandle)}>
@@ -149,6 +234,7 @@ export const AddSearchResultForm = ({
       <WysiwygEditor
         withMention={false}
         onChange={(tex, raw, html) => setDescription(html)}
+        defaultValue={description}
         upd={upd}
       />
       <Select
@@ -159,11 +245,33 @@ export const AddSearchResultForm = ({
         value={assignedConnections}
         onChange={(e) => setAssignedConnections(e)}
         styles={{
-          control: (base) => ({ ...base, width: 400, marginBottom: 10 }),
+          control: (base) => ({
+            ...base,
+            width: 400,
+            marginBottom: 10,
+          }),
+          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
         }}
         options={connections}
         placeholder="Choose a Connection(s)"
       />
+      {currentFiles.length > 0 && (
+        <div style={{ marginBottom: 15 }}>
+          <AttachmentGroup
+            data={currentFiles.map((f, i) => ({
+              file_name: `${f.attachment.file_name} ${f.attachment.file_format}`,
+              file_format: f.attachment.file_format,
+              onClick: () => {
+                setCurrentFiles((prev) =>
+                  prev.filter((file) => file.id !== f.id)
+                );
+                setFilesForDeleting((prev) => [...prev, f.id]);
+              },
+            }))}
+            isRemovable
+          />
+        </div>
+      )}
       <Box d="flex" justify="space-between">
         <ButtonGroup>
           <LoadingButton

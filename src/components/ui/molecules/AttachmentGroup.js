@@ -23,6 +23,7 @@ export const AttachmentGroup = ({ data, isRemovable = false }) => {
       ))}
       {data.length > MAX_VISIBLE && (
         <Popup
+          zIndex={99999}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           content={() => (

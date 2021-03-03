@@ -14,7 +14,8 @@ export function ModalDialog({
   isLoading = false,
   isDisabled = false,
   shouldCloseOnOverlayClick = true,
-  shouldCloseOnEscapePress = true
+  shouldCloseOnEscapePress = true,
+  height = null,
 }) {
   const close = () => setIsOpen(false);
   return (
@@ -23,10 +24,18 @@ export function ModalDialog({
         {isOpen && (
           <Modal
             width={width}
-            actions={hasActions && [
-              { text: positiveLabel, onClick: onClick, isLoading, isDisabled },
-              { text: negativeLabel, onClick: close },
-            ]}
+            height={height}
+            actions={
+              hasActions && [
+                {
+                  text: positiveLabel,
+                  onClick: onClick,
+                  isLoading,
+                  isDisabled,
+                },
+                { text: negativeLabel, onClick: close },
+              ]
+            }
             onClose={close}
             heading={heading}
             appearance={null}

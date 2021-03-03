@@ -12,6 +12,32 @@ export const createSearchResultRequest = (data) => {
   });
 };
 
+export const updateSearchResultRequest = (id, data) => {
+  return request({
+    endpoint: "family_searches/" + id,
+    method: "PUT",
+    data: {
+      family_search: {
+        ...data,
+      },
+    },
+  });
+};
+
+export const deleteSearchResultAttachmentRequest = (id) => {
+  return request({
+    endpoint: "family_search_attachments/" + id,
+    method: "DELETE",
+  });
+};
+
+export const deleteSearchResultConnectionRequest = (id) => {
+  return request({
+    endpoint: "family_search_connections/" + id,
+    method: "DELETE",
+  });
+};
+
 export const createSearchResultConnectionRequest = (
   family_search_id,
   child_contact_id

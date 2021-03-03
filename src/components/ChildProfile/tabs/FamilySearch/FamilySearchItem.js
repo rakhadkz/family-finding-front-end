@@ -3,37 +3,8 @@ import { Box, Spacing, Title } from "../../../ui/atoms";
 import { StyledLabel } from "../../ChildInformation";
 import { useState } from "react";
 import { AvatarGroup, AttachmentGroup } from "../../../ui/molecules";
-
-const attachments = [
-  {
-    file_name: "document.docx",
-    file_format: "docx",
-  },
-  {
-    file_name: "presentation.ppt",
-    file_format: "ppt",
-  },
-  {
-    file_name: "table.xls",
-    file_format: "xls",
-  },
-  {
-    file_name: "avatar.png",
-    file_format: "png",
-  },
-  {
-    file_name: "video.mp4",
-    file_format: "mp4",
-  },
-  {
-    file_name: "list_of_students.xls",
-    file_format: "xls",
-  },
-  {
-    file_name: "information.docx",
-    file_format: "docx",
-  },
-];
+import { ModalDialog } from "../../../ui/common";
+import { AddSearchResultForm } from "./AddSearchResultForm";
 
 const months = [
   "January",
@@ -51,8 +22,16 @@ const months = [
 ];
 
 export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
-  let date = new Date(item.created_at);
-  console.log(!noMeta, !noEdit, item.attachments);
+  const {
+    created_at,
+    description,
+    user,
+    attachments,
+    connections,
+    search_vector,
+  } = item;
+  let date = new Date(created_at);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   return (
     <Box d="flex" mt="5px">
       <Box d="flex" direction="column">
@@ -61,22 +40,26 @@ export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
         <span>{date.getFullYear()}</span>
       </Box>
       <div style={{ marginLeft: "16px", width: "100%" }}>
-        <p dangerouslySetInnerHTML={{ __html: item.description }}></p>
+        <p dangerouslySetInnerHTML={{ __html: description }}></p>
         {!noMeta && (
           <Box mt="11px" d="flex">
             <ButtonGroup>
               <AvatarGroup
-                data={item.child_contacts.map(
-                  ({ contact: { first_name, last_name } }) => ({
+                data={connections.map(
+                  ({
+                    child_contact: {
+                      contact: { first_name, last_name },
+                    },
+                  }) => ({
                     name: first_name + " " + last_name,
                   })
                 )}
               />
               <AttachmentGroup
-                data={item.attachments.map((item) => ({
-                  ...item,
+                data={attachments.map(({ attachment }) => ({
+                  ...attachment,
                   onClick: () => {
-                    window.open(item.file_url, "_blank");
+                    window.open(attachment.file_url, "_blank");
                   },
                 }))}
               />
@@ -85,13 +68,38 @@ export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
         )}
         <Box d="flex" justify="space-between" align="baseline" mt="10px">
           <StyledLabel>
-            Found via {item.search_vector?.name} by{" "}
-            {`${item.user?.first_name} ${item.user?.last_name}`}
+            Found via {search_vector.name} by{" "}
+            {`${user.first_name} ${user.last_name}`}
           </StyledLabel>
           {!noEdit && (
-            <Button appearance="link" spacing="none">
-              Edit Result
-            </Button>
+            <>
+              <ButtonGroup>
+                <Button appearance="link" spacing="compact">
+                  Remove
+                </Button>
+                <Button
+                  appearance="link"
+                  spacing="compact"
+                  onClick={() => setIsEditOpen(true)}
+                >
+                  Edit Result
+                </Button>
+              </ButtonGroup>
+              <ModalDialog
+                isOpen={isEditOpen}
+                setIsOpen={setIsEditOpen}
+                width="large"
+                hasActions={false}
+                body={
+                  <div style={{ margin: "20px 0" }}>
+                    <AddSearchResultForm
+                      currentSearchResult={item}
+                      setIsOpen={setIsEditOpen}
+                    />
+                  </div>
+                }
+              />
+            </>
           )}
         </Box>
         <Spacing
@@ -102,36 +110,3 @@ export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
     </Box>
   );
 };
-
-const RANDOM_USERS = [
-  {
-    email: "example@email.com",
-    key: 1,
-    name: "Shyngys Rakhad",
-    href: "#",
-  },
-  {
-    email: "example@email.com",
-    key: 2,
-    name: "Lorem Ipsum",
-    href: "#",
-  },
-  {
-    email: "example@email.com",
-    key: 3,
-    name: "Olzhas Rakhad",
-    href: "#",
-  },
-  {
-    email: "example@email.com",
-    key: 4,
-    name: "Miras Rakhad",
-    href: "#",
-  },
-  {
-    email: "example@email.com",
-    key: 5,
-    name: "Steve Jobs",
-    href: "#",
-  },
-];

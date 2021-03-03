@@ -27,10 +27,9 @@ export default function FilePicker({
   const handleSubmit = (files, allFiles) => {
     setPending(true);
     if (setFiles) {
-      setFiles(allFiles);
+      setFiles((prev) => (prev ? prev.concat(allFiles) : allFiles));
       setPending(false);
       setIsOpen(false);
-      console.log("fsdfsdfs");
     } else {
       allFiles.forEach(async (f, index) => {
         const {
