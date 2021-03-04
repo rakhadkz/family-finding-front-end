@@ -19,9 +19,14 @@ import {
   deleteSearchResultConnectionRequest,
 } from "../../../../api/searchResults/searchResultsRequests";
 import { toast } from "react-toastify";
-import { createAttachmentRequest } from "../../../../api/attachments/attachmentRequest";
+import {
+  createAttachmentRequest,
+  createChildAttachmentRequest,
+  createConnectionAttachmentRequest,
+} from "../../../../api/attachments/attachmentRequest";
 import { uploadRequest } from "../../../../api/cloudinary";
 import { useForm } from "react-hook-form";
+import styled from "styled-components";
 
 export const AddSearchResultForm = ({
   currentSearchResult,
@@ -32,6 +37,7 @@ export const AddSearchResultForm = ({
     state: { child },
     connectionState,
     fetchSearchResults: fetch,
+    fetchAttachments,
   } = useContext(ChildContext);
   const child_id = child.id;
   const [upd, setUpd] = useState(0);
@@ -153,6 +159,7 @@ export const AddSearchResultForm = ({
       currentSearchResult ? "Updated successfully!" : "Created successfully!"
     );
     setPending(false);
+    fetchAttachments();
     clearForm();
   };
 
@@ -182,7 +189,31 @@ export const AddSearchResultForm = ({
             user_id: userId,
           },
         });
+        await createChildAttachmentRequest({
+          child_attachment: {
+            child_id: child_id,
+            attachment_id: attachment.id,
+          },
+        });
+        createAttachmentConnections(attachment.id);
         await createSearchResultAttachmentRequest(id, attachment.id);
+      }
+    }
+  };
+
+  const createAttachmentConnections = async (attachment_id) => {
+    if (assignedConnections) {
+      for (const connection of assignedConnections) {
+        if (connection) {
+          try {
+            await createSearchResultConnectionRequest(
+              attachment_id,
+              connection.value
+            );
+          } catch (e) {
+            console.log(e);
+          }
+        }
       }
     }
   };
@@ -217,7 +248,7 @@ export const AddSearchResultForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandle)}>
-      <SelectInput
+      <StyledSelectInput
         className="input"
         name="search_vector"
         options={options}
@@ -329,3 +360,7 @@ export const AddSearchResultForm = ({
     </form>
   );
 };
+
+const StyledSelectInput = styled(SelectInput)`
+  z-index: 5;
+`;
