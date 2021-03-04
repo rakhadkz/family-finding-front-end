@@ -32,7 +32,7 @@ function EmailSettings() {
     authenticateDomain({
       domain: {
         name: newDomainName,
-        organization_id: user.selectedOrganization.value.id,
+        organization_id: user.selectedOrganization.value.organization.id,
       },
     })
       .then(() => {
