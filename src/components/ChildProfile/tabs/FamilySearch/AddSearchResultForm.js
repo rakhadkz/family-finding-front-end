@@ -27,7 +27,6 @@ import {
 import { uploadRequest } from "../../../../api/cloudinary";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import "./searchVectorSelect.css";
 
 export const AddSearchResultForm = ({
   currentSearchResult,
@@ -363,8 +362,5 @@ export const AddSearchResultForm = ({
 };
 
 const StyledSelectInput = styled(SelectInput)`
-  .some__menu {
-    background-color: white;
-    z-index: 1000;
-  }
+  z-index: 5;
 `;
