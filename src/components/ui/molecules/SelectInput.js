@@ -27,6 +27,7 @@ export const SelectInput = (props) => {
     marginX = "0px",
     marginY = "8px",
     validationState = "default",
+    className,
   } = props;
 
   return (
@@ -52,6 +53,7 @@ export const SelectInput = (props) => {
               props.onChange(value);
               myOnChange && myOnChange(value);
             }}
+            className={className}
           />
         )}
         width={width}
