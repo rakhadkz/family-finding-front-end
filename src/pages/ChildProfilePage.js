@@ -14,7 +14,7 @@ import React, {
   useCallback,
   useEffect,
   useReducer,
-  useState,
+  useState
 } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -22,20 +22,23 @@ import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
 import {
   createChildUserRequest,
   fetchChildrenRequest,
+  fetchChildSiblings,
   fetchChildUsersRequest,
   fetchConnectionsRequest,
   fetchFamilyTreeRequest,
-  removeChildUserRequest,
+  removeChildUserRequest
 } from "../api/children";
 import {
   fetchCommunicationTemplateRequest,
-  sendCommunicationTemplateToUserRequest,
+  sendCommunicationTemplateToUserRequest
 } from "../api/communicationTemplates";
 import {
   ChildInformation,
   ChildTabs,
-  RelativesList,
+  RelativesList
 } from "../components/ChildProfile";
+import { PossibleSiblingsList } from "../components/ChildProfile/PossibleSiblingsList";
+import { SiblingsList } from "../components/ChildProfile/SiblingsList";
 import { AddChildForm } from "../components/Children";
 import { Box, Label, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog } from "../components/ui/common";
@@ -50,7 +53,7 @@ import {
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
   fetchAttachmentsSuccess,
-  initialState as attachmentInitialState,
+  initialState as attachmentInitialState
 } from "../reducers/attachment";
 import {
   childProfileReducer,
@@ -59,33 +62,33 @@ import {
   fetchChildSuccess,
   fetchChildUsersFailure,
   fetchChildUsersSuccess,
-  initialState,
+  initialState
 } from "../reducers/childProfile";
 import {
   commentReducer,
   fetchCommentsFailure,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  initialState as commentInitialState,
+  initialState as commentInitialState
 } from "../reducers/comment";
 import {
   connectionReducer,
   fetchConnectionsFailure,
   fetchConnectionsSuccess,
-  initialState as connectionInitialState,
+  initialState as connectionInitialState
 } from "../reducers/connection";
 import {
   familyTreeReducer,
   fetchFamilyTreeFailure,
   fetchFamilyTreeSuccess,
-  initialState as familyTreeInitialState,
+  initialState as familyTreeInitialState
 } from "../reducers/familyTree";
 import {
-  searchResultReducer,
-  initialState as searchResultInitialState,
+  fetchSearchResultsFailure,
   fetchSearchResultsRequest,
   fetchSearchResultsSuccess,
-  fetchSearchResultsFailure,
+  initialState as searchResultInitialState,
+  searchResultReducer
 } from "../reducers/searchResult";
 import { authURL } from "../utils/request";
 import { Preloader } from "./Preloader";
@@ -97,6 +100,7 @@ export function ChildProfilePage(props) {
   const id = props.match.params.id;
   const user = getLocalStorageUser();
   const [templates, setTemplates] = useState([]);
+  const [siblings, setSiblings] = useState({ siblings: [], possible: [] });
   const [templateType, setTemplateType] = useState("");
   const [templatePending, setTemplatePending] = useState(false);
   const [templateHtml, setTemplateHtml] = useState("");
@@ -141,6 +145,7 @@ export function ChildProfilePage(props) {
     fetchChildProfile();
     fetchFamilyTree();
     fetchTemplates();
+    fetchChildSiblings(id).then(setSiblings);
     fetchComments();
     fetchAttachments();
     fetchSearchResults();
@@ -426,6 +431,7 @@ export function ChildProfilePage(props) {
         attachmentDispatch,
         fetchConnections,
         fetchFamilyTree,
+        fetchChildSiblings,
         fetchComments,
         fetchAttachments,
         fetchSearchResults,
@@ -540,6 +546,12 @@ export function ChildProfilePage(props) {
           </Spacing>
           <Spacing m={{ t: "22px" }}>
             <RelativesList relatives={connectionState.connections || []} />
+          </Spacing>
+          <Spacing m={{ t: "22px" }}>
+            <SiblingsList siblings={siblings.siblings} />
+          </Spacing>
+          <Spacing m={{ t: "22px" }}>
+            <PossibleSiblingsList siblings={siblings.possible} />
           </Spacing>
           <Spacing m={{ t: "16px" }}>
             <Box d="flex">
