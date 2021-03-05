@@ -83,8 +83,19 @@ function EmailSettings() {
                       </div>
                       {Object.keys(email?.dns).map((key) => {
                         return (
-                          <Box d="flex" align="center" justify="center">
-                            <div style={{ textAlign: "left",width:100, marginRight: 20 }}>
+                          <Box
+                            d="flex"
+                            align="center"
+                            justify="center"
+                            style={{ marginBottom: 10 }}
+                          >
+                            <div
+                              style={{
+                                textAlign: "left",
+                                width: 100,
+                                marginRight: 20,
+                              }}
+                            >
                               {key.toUpperCase()}
                             </div>
                             <div style={{ marginRight: 20 }}>
@@ -101,7 +112,7 @@ function EmailSettings() {
                               />
                             </div>
 
-                            <div style={{ marginRight: 20 }}>
+                            <div style={{ marginRight: 20, marginTop: -15 }}>
                               <Label htmlFor={"host"}>Host</Label>
                               <Textfield
                                 style={{ width: 200 }}
@@ -109,7 +120,7 @@ function EmailSettings() {
                                 value={email?.dns[key]?.host}
                               />
                             </div>
-                            <div style={{ marginRight: 10 }}>
+                            <div style={{ marginRight: 10, marginTop: -15 }}>
                               <Label htmlFor={"data"}>Data</Label>
                               <Textfield
                                 style={{ width: 250 }}
