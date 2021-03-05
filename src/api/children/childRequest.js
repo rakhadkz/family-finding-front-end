@@ -131,3 +131,11 @@ export const denyChildUserRequest = (user_id, child_id) => {
     }
   })
 }
+
+
+export const fetchChildSiblings = (id) => {
+  return request({
+    endpoint: `siblingships/${id}?view=extended`,
+    method: "GET",
+  });
+};

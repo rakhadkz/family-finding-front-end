@@ -48,7 +48,7 @@ function PhoneSettings() {
         toast.success("Changed successfully!");
       })
       .catch(() => {
-        toast.success("Catched error!");
+        toast.error("Catched error!");
       })
       .finally(() => {
         setIsModalOpen(false);
