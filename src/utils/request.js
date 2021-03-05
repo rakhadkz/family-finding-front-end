@@ -8,6 +8,7 @@ export const request = ({
   method,
   meta = false,
   isV1 = true,
+  thirdParty = false
 }) => {
   const token = getToken();
 

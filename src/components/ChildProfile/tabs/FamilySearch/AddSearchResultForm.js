@@ -4,7 +4,6 @@ import { Box } from "../../../ui/atoms";
 import Select from "@atlaskit/select";
 import { WysiwygEditor } from "../../../WYSIWYG";
 import DocumentIcon from "@atlaskit/icon/glyph/document";
-import { fetchSearchVectorsRequest } from "../../../../api/searchVectors/searchVectorsRequests";
 import { ModalDialog } from "../../../ui/common";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 import FilePicker from "../Attachments/FilePicker";
@@ -27,6 +26,7 @@ export const AddSearchResultForm = ({
   currentSearchResult,
   setIsFormVisible,
   setIsOpen,
+  vectors,
 }) => {
   const {
     state: { child },
@@ -37,7 +37,7 @@ export const AddSearchResultForm = ({
   const [upd, setUpd] = useState(0);
   const userId = getLocalStorageUser().id;
   const { control, handleSubmit } = useForm();
-  const [options, setOptions] = useState([]);
+  const [blocks, setBlocks] = useState([]);
   const [description, setDescription] = useState(
     currentSearchResult ? currentSearchResult.description : ""
   );
@@ -90,10 +90,6 @@ export const AddSearchResultForm = ({
     return null;
   });
 
-  useEffect(() => {
-    fetchSearchVectors();
-  }, []);
-
   const isObjectExist = (object) => {
     for (const obj of assignedConnections || []) {
       if (obj.value === object.value) {
@@ -111,12 +107,6 @@ export const AddSearchResultForm = ({
     );
   }, [assignedConnections]);
 
-  const fetchSearchVectors = () => {
-    fetchSearchVectorsRequest({}).then((data) =>
-      setOptions(data.map((item) => ({ label: item.name, value: item.id })))
-    );
-  };
-
   const onSubmitHandle = async (data) => {
     if (!selectedSearchVector) {
       setValidationState("error");
@@ -128,7 +118,8 @@ export const AddSearchResultForm = ({
       currentId = currentSearchResult.id;
       await updateSearchResultRequest(currentSearchResult.id, {
         search_vector_id: selectedSearchVector.value,
-        description: description,
+        description,
+        blocks: JSON.stringify(blocks),
       });
       for (const id of connectionsForDeleting || []) {
         await deleteSearchResultConnectionRequest(id);
@@ -140,7 +131,8 @@ export const AddSearchResultForm = ({
       setPending(true);
       const { id } = await createSearchResultRequest({
         search_vector_id: selectedSearchVector.value,
-        description: description,
+        description,
+        blocks: JSON.stringify(blocks),
         user_id: userId,
         child_id: child_id,
       });
@@ -212,15 +204,20 @@ export const AddSearchResultForm = ({
     setSelectedSearchVector(null);
     setAssignedConnections([]);
     setFiles([]);
+    setBlocks([]);
     setUpd(upd + 1);
   };
+
+  useEffect(() => {
+    console.log(blocks);
+  }, [blocks]);
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandle)}>
       <SelectInput
         className="input"
         name="search_vector"
-        options={options}
+        options={vectors}
         myValue={selectedSearchVector}
         myOnChange={(e) => {
           setSelectedSearchVector(e);
@@ -233,7 +230,16 @@ export const AddSearchResultForm = ({
       />
       <WysiwygEditor
         withMention={false}
-        onChange={(tex, raw, html) => setDescription(html)}
+        onChange={(tex, raw, html) => {
+          setBlocks(
+            raw?.blocks?.map(({ text, type, inlineStyleRanges }) => ({
+              text,
+              type,
+              inlineStyleRanges,
+            }))
+          );
+          setDescription(html);
+        }}
         defaultValue={description}
         upd={upd}
       />

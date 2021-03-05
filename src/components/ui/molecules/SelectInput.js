@@ -43,8 +43,11 @@ export const SelectInput = (props) => {
             validationState={validationState}
             menuPlacement={menuPlacement}
             control={control}
-            name={name}
             inputId={id}
+            menuPortalTarget={document.body}
+            styles={{
+              menuPortal: (base) => ({ ...base, zIndex: 999999 }),
+            }}
             options={options}
             defaultValue={defaultValue}
             value={myValue}

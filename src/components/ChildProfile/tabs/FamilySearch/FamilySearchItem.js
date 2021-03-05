@@ -6,7 +6,7 @@ import { AvatarGroup, AttachmentGroup } from "../../../ui/molecules";
 import { ModalDialog } from "../../../ui/common";
 import { AddSearchResultForm } from "./AddSearchResultForm";
 
-const months = [
+export const months = [
   "January",
   "February",
   "March",
@@ -21,7 +21,7 @@ const months = [
   "December",
 ];
 
-export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
+export const FamilySearchItem = ({ item, noEdit, noMeta, vectors }) => {
   const {
     created_at,
     description,
@@ -93,6 +93,7 @@ export const FamilySearchItem = ({ item, noEdit, noMeta }) => {
                 body={
                   <div style={{ margin: "20px 0" }}>
                     <AddSearchResultForm
+                      vectors={vectors}
                       currentSearchResult={item}
                       setIsOpen={setIsEditOpen}
                     />
