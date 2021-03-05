@@ -19,7 +19,7 @@
   position: relative;
 }
 
-h1 {
+.login-container h1 {
   padding-right: 100px;
   padding-top: 100px;
   padding-left: 100px;
@@ -28,7 +28,7 @@ h1 {
   color: white;
 }
 
-p {
+.login-container p {
   padding-right: 100px;
   padding-left: 100px;
   z-index: 222;
