@@ -38,8 +38,15 @@ const templatesSentTableData = (data, setToggled, toggled) => {
             key: "opened",
             content: (
               <Tag
-                text={item?.opened?.toUpperCase() || "PENDING"}
-                color={colors[item?.opened] || "yellow"}
+                text={
+                  item?.opened?.toUpperCase() ||
+                  (item?.communication_template?.template_type === "Letter"
+                    ? "GENERATED"
+                    : "PENDING")
+                }
+                color={colors[item?.opened] || (item?.communication_template?.template_type === "Letter"
+                ? "green"
+                : "yellow")}
               />
             ),
           },

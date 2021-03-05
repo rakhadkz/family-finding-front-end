@@ -84,11 +84,12 @@ function EmailSettings() {
                       {Object.keys(email?.dns).map((key) => {
                         return (
                           <Box d="flex" align="center" justify="center">
+                            <div style={{ textAlign: "left",width:100, marginRight: 20 }}>
+                              {key.toUpperCase()}
+                            </div>
                             <div style={{ marginRight: 20 }}>
-                              <div style={{ textAlign: "center" }}>
-                                {key.toUpperCase()}
-                              </div>
                               <Tag
+                                isRemovable={false}
                                 text={
                                   email?.dns[key]?.valid
                                     ? "CONFIRMED"
