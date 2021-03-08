@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 import styled from "styled-components";
-import { Rectangle, Spacing, Title } from "../ui/atoms";
+import { Box, Rectangle, Spacing, Title } from "../ui/atoms";
 import { SiblingsItem } from "./SiblingsItem";
 
-export const SiblingsList = memo(({ siblings }) => {
+export const SiblingsList = memo(({ siblings, openModal }) => {
   return (
     <Rectangle p="14px 26px 14px 26px">
       <Title size="14px">Siblings</Title>
@@ -12,6 +12,9 @@ export const SiblingsList = memo(({ siblings }) => {
           {siblings.map((siblings) => (
             <SiblingsItem sibling={siblings} />
           ))}
+          <Box d="flex" justify="center" align="center">
+          
+          </Box>
         </SiblingsListContainer>
       </Spacing>
     </Rectangle>

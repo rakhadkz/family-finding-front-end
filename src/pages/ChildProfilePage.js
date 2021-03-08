@@ -20,6 +20,7 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
 import {
+  createChildSiblingsRequest,
   createChildUserRequest,
   fetchChildrenRequest,
   fetchChildSiblings,
@@ -55,6 +56,7 @@ import {
   fetchAttachmentsSuccess,
   initialState as attachmentInitialState
 } from "../reducers/attachment";
+import { childReducer } from "../reducers/child";
 import {
   childProfileReducer,
   fetchChildFailure,
@@ -111,12 +113,20 @@ export function ChildProfilePage(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [assignedUsers, setAssignedUsers] = useState(null);
+  const [children, setChildren] = useState([]);
+  const [selectedChildren, setSelectedChildren] = useState(null);
   const [validationState, setValidationState] = useState("default");
   const [buttonPending, setButtonPending] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [isOpenChildSelect, setIsOpenChildSelect] = useState(false);
   const history = useHistory();
 
   const [state, dispatch] = useReducer(childProfileReducer, initialState);
+  const [childrenState, dispatchChildren] = useReducer(
+    childReducer,
+    initialState
+  );
+
   const [connectionState, connectionDispatch] = useReducer(
     connectionReducer,
     connectionInitialState
@@ -142,10 +152,11 @@ export function ChildProfilePage(props) {
 
   useEffect(() => {
     dispatch(fetchChildRequest());
+    fetchChildrenRequest({}).then(setChildren);
     fetchChildProfile();
     fetchFamilyTree();
     fetchTemplates();
-    fetchChildSiblings(id).then(setSiblings);
+    fetchSiblings();
     fetchComments();
     fetchAttachments();
     fetchSearchResults();
@@ -183,6 +194,19 @@ export function ChildProfilePage(props) {
       );
     setTemplatePreview(text);
   }, [templateHtml, templateUser, state.child]);
+
+  const fetchSiblings = () => fetchChildSiblings(id).then(setSiblings);
+
+  const createSiblings = (sibling_id) => {
+    const data = {
+      siblingship: {
+        child_id: id,
+        sibling_id,
+      },
+    };
+
+    return createChildSiblingsRequest(data).then(fetchSiblings);
+  };
 
   const fetchTemplates = () => {
     fetchCommunicationTemplateRequest().then((data) => {
@@ -276,6 +300,25 @@ export function ChildProfilePage(props) {
           searchResultDispatch(fetchSearchResultsSuccess(data.family_searches))
       )
       .catch((e) => attachmentDispatch(fetchSearchResultsFailure(e.message)));
+  };
+
+  const handleChildrenSelect = async () => {
+    console.log("SELECTED CHILDREN", selectedChildren);
+    let promises = [];
+    for (let i = 0; i < selectedChildren?.length; i++) {
+      const sibling_id = selectedChildren && selectedChildren[i]?.value;
+      if (sibling_id) {
+        promises.push(createSiblings(sibling_id));
+      }
+    }
+
+    Promise.all(promises)
+      .then(() => toast.success("Successfully created!"))
+      .catch(() => toast.error("Happened error!"))
+      .finally(() => {
+        setIsOpenChildSelect(false)
+        fetchSiblings()
+      });
   };
 
   const handleTemplateSendSubmit = async () => {
@@ -417,6 +460,8 @@ export function ChildProfilePage(props) {
       .catch((e) => console.log(e));
   };
 
+  console.log("CHILDREn", childrenState);
+
   return (
     <ChildContext.Provider
       value={{
@@ -483,6 +528,12 @@ export function ChildProfilePage(props) {
                     >
                       Assign
                     </Button>
+                    <Button
+                      onClick={() => setIsOpenChildSelect(true)}
+                      appearance="primary"
+                    >
+                      Siblings
+                    </Button>
                   </ButtonGroup>
                   <ModalDialog
                     isOpen={isOpen}
@@ -548,10 +599,56 @@ export function ChildProfilePage(props) {
             <RelativesList relatives={connectionState.connections || []} />
           </Spacing>
           <Spacing m={{ t: "22px" }}>
-            <SiblingsList siblings={siblings.siblings} />
+            <SiblingsList
+              openModal={() => setIsOpenChildSelect(true)}
+              siblings={siblings.siblings}
+            />
+            <ModalDialog
+              isOpen={isOpenChildSelect}
+              setIsOpen={setIsOpenChildSelect}
+              heading="Select children"
+              positiveLabel="Select"
+              onClick={() => handleChildrenSelect()}
+              width="small"
+              isLoading={buttonPending}
+              isDisabled={!selectedChildren}
+              body={
+                <>
+                  <Select
+                    className="multi-select"
+                    classNamePrefix="react-select"
+                    isMulti
+                    menuPortalTarget={document.body}
+                    value={selectedChildren}
+                    validationState={validationState}
+                    onChange={(e) => {
+                      setSelectedChildren(e);
+                    }}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                    options={children
+                      ?.filter(
+                        (child) =>
+                          !siblings?.siblings
+                            ?.map(({ sibling }) => sibling.id)
+                            .includes(child.id) && child.id != id
+                      )
+                      .map((child) => ({
+                        value: child.id,
+                        label: `${child?.first_name} ${child?.last_name}`,
+                      }))}
+                    placeholder="Select children"
+                  />
+                </>
+              }
+            />
           </Spacing>
           <Spacing m={{ t: "22px" }}>
-            <PossibleSiblingsList siblings={siblings.possible} />
+            <PossibleSiblingsList
+              createSiblings={createSiblings}
+              siblings={siblings.possible}
+            />
           </Spacing>
           <Spacing m={{ t: "16px" }}>
             <Box d="flex">

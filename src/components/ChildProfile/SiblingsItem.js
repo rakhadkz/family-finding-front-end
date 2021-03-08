@@ -1,10 +1,11 @@
+import Button from "@atlaskit/button";
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Box, Label, Spacing } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 
-export const SiblingsItem = ({ sibling }) => {
+export const SiblingsItem = ({ sibling, onAdd }) => {
   return (
     <Spacing m={{ l: "10px", b: "22px" }}>
       <Box d="flex" align="center">
@@ -19,6 +20,15 @@ export const SiblingsItem = ({ sibling }) => {
             }`}</Text>
           </Link>
         </Spacing>
+        {onAdd ? (
+          <Button
+            onClick={onAdd}
+            appearance="primary"
+            style={{ borderRadius: 200, marginLeft: 5, marginRight: 25 }}
+          >
+            +
+          </Button>
+        ) : null}
       </Box>
     </Spacing>
   );

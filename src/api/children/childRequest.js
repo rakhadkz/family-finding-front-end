@@ -139,3 +139,11 @@ export const fetchChildSiblings = (id) => {
     method: "GET",
   });
 };
+
+export const createChildSiblingsRequest = (data) => {
+  return request({
+    endpoint: `siblingships`,
+    method: "POST",
+    data
+  });
+};
