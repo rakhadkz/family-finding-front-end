@@ -147,3 +147,11 @@ export const createChildSiblingsRequest = (data) => {
     data
   });
 };
+
+export const removeChildSiblingsRequest = (id) => {
+  return request({
+    endpoint: `siblingships/${id}`,
+    method: "DELETE",
+
+  });
+};

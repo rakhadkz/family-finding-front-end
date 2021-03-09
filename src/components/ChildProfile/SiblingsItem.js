@@ -1,25 +1,35 @@
 import Button from "@atlaskit/button";
 import React from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Box, Label, Spacing } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
+import { Rounded } from "../ui/molecules/Rounded";
 
-export const SiblingsItem = ({ sibling, onAdd }) => {
+export const SiblingsItem = ({
+  sibling,
+  onAdd,
+  onDelete,
+  visibleRemove = false,
+}) => {
   return (
     <Spacing m={{ l: "10px", b: "22px" }}>
       <Box d="flex" align="center">
-        <Avatar
-          name={`${sibling?.sibling?.first_name} ${sibling?.sibling?.last_name}`}
+        <Rounded
+          onClick={() => window.open(`${sibling?.id}`)}
+          onDelete={onDelete}
+          visibleRemove={visibleRemove}
+          content={
+            <>
+              <Avatar
+                size="large"
+                name={`${sibling?.first_name} ${sibling?.last_name}`}
+              />
+              <span style={{ marginLeft: "5px", color: "#455670" }}>
+                {sibling?.first_name} {sibling?.last_name}
+              </span>
+            </>
+          }
         />
-        <Spacing m={{ l: "17px" }}>
-          <StyledLabel>{sibling?.sibling?.permanency_goal}</StyledLabel>
-          <Link onClick={() => window.open(`${sibling?.sibling?.id}`)}>
-            <Text>{`${sibling?.sibling?.first_name || ""} ${
-              sibling?.sibling?.last_name || ""
-            }`}</Text>
-          </Link>
-        </Spacing>
         {onAdd ? (
           <Button
             onClick={onAdd}

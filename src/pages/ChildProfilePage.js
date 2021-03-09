@@ -4,6 +4,7 @@ import EmailIcon from "@atlaskit/icon/glyph/email";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
 import MobileIcon from "@atlaskit/icon/glyph/mobile";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
+import PeopleIcon from "@atlaskit/icon/glyph/people";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
 import Select from "@atlaskit/select";
 import Tag from "@atlaskit/tag";
@@ -27,6 +28,7 @@ import {
   fetchChildUsersRequest,
   fetchConnectionsRequest,
   fetchFamilyTreeRequest,
+  removeChildSiblingsRequest,
   removeChildUserRequest
 } from "../api/children";
 import {
@@ -41,7 +43,7 @@ import {
 import { PossibleSiblingsList } from "../components/ChildProfile/PossibleSiblingsList";
 import { SiblingsList } from "../components/ChildProfile/SiblingsList";
 import { AddChildForm } from "../components/Children";
-import { Box, Label, Spacing, Title } from "../components/ui/atoms";
+import { Box, Label, Rectangle, Spacing, Title } from "../components/ui/atoms";
 import { ModalDialog } from "../components/ui/common";
 import { MyBreadcrumbs } from "../components/ui/common/MyBreadcrumbs";
 import { AvatarGroup } from "../components/ui/molecules/AvatarGroup";
@@ -302,6 +304,15 @@ export function ChildProfilePage(props) {
       .catch((e) => attachmentDispatch(fetchSearchResultsFailure(e.message)));
   };
 
+  const onRemoveSiblingship = async (id) => {
+    removeChildSiblingsRequest(id)
+      .then(() => toast.success("Successfully removed!"))
+      .catch(() => toast.error("Happened error!"))
+      .finally(() => {
+        fetchSiblings();
+      });
+  };
+
   const handleChildrenSelect = async () => {
     console.log("SELECTED CHILDREN", selectedChildren);
     let promises = [];
@@ -316,8 +327,8 @@ export function ChildProfilePage(props) {
       .then(() => toast.success("Successfully created!"))
       .catch(() => toast.error("Happened error!"))
       .finally(() => {
-        setIsOpenChildSelect(false)
-        fetchSiblings()
+        setIsOpenChildSelect(false);
+        fetchSiblings();
       });
   };
 
@@ -531,6 +542,7 @@ export function ChildProfilePage(props) {
                     <Button
                       onClick={() => setIsOpenChildSelect(true)}
                       appearance="primary"
+                      iconBefore={<PeopleIcon />}
                     >
                       Siblings
                     </Button>
@@ -595,14 +607,26 @@ export function ChildProfilePage(props) {
               setIsOpenEdit={setIsOpenEdit}
             />
           </Spacing>
+          <Box d="flex">
+            <Spacing style={{width: '50%'}} m={{ t: "22px", r: '20px' }}>
+              <RelativesList relatives={connectionState.connections || []} />
+            </Spacing>
+            <Spacing m={{ t: "22px" }} style={{width: '50%'}}>
+              <Rectangle p="14px 26px 14px 26px">
+                <SiblingsList
+                  onRemoveSiblingship={onRemoveSiblingship}
+                  openModal={() => setIsOpenChildSelect(true)}
+                  childId={id}
+                  siblings={siblings.siblings}
+                />
+                <PossibleSiblingsList
+                  createSiblings={createSiblings}
+                  siblings={siblings.possible}
+                />
+              </Rectangle>
+            </Spacing>
+          </Box>
           <Spacing m={{ t: "22px" }}>
-            <RelativesList relatives={connectionState.connections || []} />
-          </Spacing>
-          <Spacing m={{ t: "22px" }}>
-            <SiblingsList
-              openModal={() => setIsOpenChildSelect(true)}
-              siblings={siblings.siblings}
-            />
             <ModalDialog
               isOpen={isOpenChildSelect}
               setIsOpen={setIsOpenChildSelect}
@@ -642,12 +666,6 @@ export function ChildProfilePage(props) {
                   />
                 </>
               }
-            />
-          </Spacing>
-          <Spacing m={{ t: "22px" }}>
-            <PossibleSiblingsList
-              createSiblings={createSiblings}
-              siblings={siblings.possible}
             />
           </Spacing>
           <Spacing m={{ t: "16px" }}>
