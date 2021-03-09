@@ -20,7 +20,7 @@ export const LoginForm = ({ onSubmit }) => {
   const onSubmitHandle = (data) => {
     setPending(true);
     onSubmit(data, history).finally(() => {
-      setPending(true);
+      setPending(false);
       fetchMe();
     });
   };
