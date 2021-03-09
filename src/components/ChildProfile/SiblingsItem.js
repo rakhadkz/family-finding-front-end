@@ -27,18 +27,21 @@ export const SiblingsItem = ({
               <span style={{ marginLeft: "5px", color: "#455670" }}>
                 {sibling?.first_name} {sibling?.last_name}
               </span>
+              {onAdd ? (
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAdd();
+                  }}
+                  appearance="primary"
+                  style={{ borderRadius: 20, marginLeft: 10 }}
+                >
+                  +
+                </Button>
+              ) : null}
             </>
           }
         />
-        {onAdd ? (
-          <Button
-            onClick={onAdd}
-            appearance="primary"
-            style={{ borderRadius: 200, marginLeft: 5, marginRight: 25 }}
-          >
-            +
-          </Button>
-        ) : null}
       </Box>
     </Spacing>
   );

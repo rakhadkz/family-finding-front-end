@@ -6,7 +6,7 @@ import { SiblingsItem } from "./SiblingsItem";
 export const PossibleSiblingsList = memo(({ siblings, createSiblings }) => {
   return (
     <Spacing m="20px 0px 0px 0px">
-      <Title size="14px">Possible siblings</Title>
+      {siblings?.length ? <Title size="14px">Possible siblings</Title> : null}
       <Spacing m={{ t: "8px" }}>
         <SiblingsListContainer>
           {siblings.map((siblings) => (
