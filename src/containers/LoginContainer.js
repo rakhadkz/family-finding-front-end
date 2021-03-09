@@ -5,7 +5,6 @@ import frame from "./../assets/Frame.svg";
 import logo from "./../assets/app_logo.jpg";
 import loginImage from "./../assets/loginImage.jpg";
 import app_logo from "./../assets/app_logo.jpg";
-import "./some.css";
 import styled from "styled-components";
 
 function LoginContainer({ children }) {
