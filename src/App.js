@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Redirect,
   Route,
-  Switch
+  Switch,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,7 +27,7 @@ import {
   RESOURCES,
   SEARCHVECTOR,
   SETTINGS,
-  USERS
+  USERS,
 } from "./helpers/routes";
 import {
   ActionItemsPage,
@@ -48,7 +48,7 @@ import {
   ResourcesPage,
   SearchVectorsPage,
   SettingsPage,
-  UsersPage
+  UsersPage,
 } from "./pages";
 import { AccessDenied } from "./pages/AccessDenied";
 import ContactsSettingPage from "./pages/ContactsSettingPage";
