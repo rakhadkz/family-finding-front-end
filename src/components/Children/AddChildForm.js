@@ -5,61 +5,11 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Box, Form } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
-
-const permanency_goal_options = [
-  {
-    value: "return_to_parent",
-    label: "Return to Parent(s) (Reunification)",
-  },
-  {
-    value: "adoption",
-    label: "Adoption",
-  },
-  {
-    value: "permanent_legal_custody",
-    label: "Permanent Legal Custody (PLC)",
-  },
-  {
-    value: "permanent_placement",
-    label: "Permanent Placement with a Fit and Willing Relative",
-  },
-  {
-    value: "appla",
-    label: "Another Planned Permanent Living Arrangement (APPLA)",
-  },
-];
-
-const gender_options = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-];
-
-const race_options = [
-  {
-    value: "american_indian_or_alaska_native",
-    label: "American Indian or Alaska Native",
-  },
-  {
-    value: "asian",
-    label: "Asian",
-  },
-  {
-    value: "black_or_african_american",
-    label: "Black or African American",
-  },
-  {
-    value: "hispanic_or_latino",
-    label: "Hispanic or Latino",
-  },
-  {
-    value: "native_hawaiian_or_other_pacific_islander",
-    label: "Native Hawaiian or Other Pacific Islander",
-  },
-  {
-    value: "white",
-    label: "White",
-  },
-];
+import {
+  sex_options,
+  race_options,
+  permanency_goal_options,
+} from "../../helpers";
 
 export const AddChildForm = ({
   onSubmit,
@@ -159,14 +109,14 @@ export const AddChildForm = ({
         />
         <SelectInput
           defaultValue={
-            child?.gender && getObjectByValue(gender_options, child.gender)
+            child?.gender && getObjectByValue(sex_options, child.gender)
           }
           width="100%"
           name="gender"
           control={control}
           error={errors.gender}
-          label="Gender"
-          options={gender_options}
+          label="Sex"
+          options={sex_options}
         />
         <SelectInput
           defaultValue={
