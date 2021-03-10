@@ -6,6 +6,7 @@ import { states } from "../../content/states.data";
 import { getObjectByValue } from "../Children";
 import { Box, Form, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
+import { sex_options, race_options } from "../../helpers";
 
 export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
   const { register, handleSubmit, control, errors, watch } = useForm({
@@ -16,6 +17,8 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
           relationship: contact.relationship,
           email: contact.email,
           phone: contact.phone,
+          sex: contact.sex,
+          race: contact.race,
           address: contact.address,
           address_2: contact.address_2,
           city: contact.city,
@@ -31,7 +34,14 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
     setPending(true);
 
     console.log(data);
-    const { state, relationship, relationship_other, ...rest } = data;
+    const {
+      state,
+      relationship,
+      sex,
+      race,
+      relationship_other,
+      ...rest
+    } = data;
 
     let submitData = rest;
 
@@ -43,6 +53,14 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
         relationship.value === "Other"
           ? relationship_other
           : relationship.value;
+    }
+
+    if (sex?.value) {
+      submitData.sex = sex.value;
+    }
+
+    if (race?.value) {
+      submitData.race = race.value;
     }
 
     onSubmit(submitData);
@@ -122,6 +140,28 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             error={errors.phone}
             label="Phone"
             type={"phone"}
+          />
+          <SelectInput
+            marginX="8px"
+            defaultValue={
+              contact?.sex && getObjectByValue(sex_options, contact.sex)
+            }
+            name="sex"
+            control={control}
+            error={errors.sex}
+            label="Sex"
+            options={sex_options}
+          />
+          <SelectInput
+            marginX="8px"
+            defaultValue={
+              contact?.race && getObjectByValue(race_options, contact.race)
+            }
+            name="race"
+            control={control}
+            error={errors.race}
+            label="Race"
+            options={race_options}
           />
           <TextInput
             marginX="8px"
