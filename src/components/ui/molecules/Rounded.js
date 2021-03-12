@@ -16,14 +16,15 @@ export const Rounded = ({
       {content}
       {visibleRemove && (
         <Button
+          spacing="none"
           onClick={(e) => {
             e.stopPropagation();
             setIsOpen(true);
           }}
-          appearance="warning"
-          style={{ borderRadius: 20, marginLeft: 10 }}
+          appearance="subtle"
+          style={{ borderRadius: 20, marginLeft: 15, padding: "3px 9px" }}
         >
-          X
+          ✕
         </Button>
       )}
       <ModalDialog
@@ -46,7 +47,7 @@ export const Rounded = ({
 export const Container = styled.div`
   display: flex;
   align-items: center;
-  padding: 0px 5px 0px 0px;
+  padding: 5px 10px;
   border-radius: 30px;
   border: 1px solid #c1c7d0;
   transition: 0.2s;
