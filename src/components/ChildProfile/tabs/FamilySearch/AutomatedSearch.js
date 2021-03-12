@@ -9,6 +9,7 @@ import Spinner from "@atlaskit/spinner";
 import { months } from "./";
 import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 import { StyledLabel } from "../../ChildInformation";
+import { prisonRequest } from "../../../../api/searchVectors/searchVectorsRequests";
 
 export function AutomatedSearch({ vectors }) {
   const { control, errors, handleSubmit } = useForm();
@@ -24,10 +25,10 @@ export function AutomatedSearch({ vectors }) {
       (item) => item.id === data.connection.value
     );
     console.log(user);
-    setTimeout(() => {
-      console.log(contact);
-      const response = [
-        {
+    prisonRequest(contact.first_name, contact.last_name).then((e) => {
+      console.log(e.InmateLocator);
+      setResults(
+        e?.InmateLocator.map((item) => ({
           attachments: [],
           connections: [
             {
@@ -42,67 +43,18 @@ export function AutomatedSearch({ vectors }) {
           search_vector: {
             name: data.search_vector.label,
           },
-          description: getData(contact),
+          description: getData({
+            first_name: item.nameFirst,
+            last_name: item.nameLast,
+            sex: item.sex,
+            age: item.age,
+            race: item.race,
+          }),
           user: { first_name: "ACME", last_name: "County" },
-        },
-        {
-          attachments: [],
-          connections: [
-            {
-              child_contact: {
-                contact: {
-                  first_name: contact?.first_name,
-                  last_name: contact?.last_name,
-                },
-              },
-            },
-          ],
-          search_vector: {
-            name: data.search_vector.label,
-          },
-          description: getData(contact),
-          user: { first_name: "ACME", last_name: "County" },
-        },
-        {
-          attachments: [],
-          connections: [
-            {
-              child_contact: {
-                contact: {
-                  first_name: contact?.first_name,
-                  last_name: contact?.last_name,
-                },
-              },
-            },
-          ],
-          search_vector: {
-            name: data.search_vector.label,
-          },
-          description: getData(contact),
-          user: { first_name: "ACME", last_name: "County" },
-        },
-        {
-          attachments: [],
-          connections: [
-            {
-              child_contact: {
-                contact: {
-                  first_name: contact?.first_name,
-                  last_name: contact?.last_name,
-                },
-              },
-            },
-          ],
-          search_vector: {
-            name: data.search_vector.label,
-          },
-          description: getData(contact),
-          user: { first_name: "ACME", last_name: "County" },
-        },
-      ];
-      setResults(response);
-      setPending(false);
-    }, 2000);
+        }))
+      );
+    });
+    setPending(false);
   };
   return (
     <Spacing p={{ b: "16px" }}>
@@ -200,58 +152,6 @@ const Item = ({ data }) => {
   );
 };
 
-const race_options = [
-  {
-    value: "american_indian_or_alaska_native",
-    label: "American Indian or Alaska Native",
-  },
-  {
-    value: "asian",
-    label: "Asian",
-  },
-  {
-    value: "black_or_african_american",
-    label: "Black or African American",
-  },
-  {
-    value: "hispanic_or_latino",
-    label: "Hispanic or Latino",
-  },
-  {
-    value: "native_hawaiian_or_other_pacific_islander",
-    label: "Native Hawaiian or Other Pacific Islander",
-  },
-  {
-    value: "white",
-    label: "White",
-  },
-];
-
-function getRandomItem(arr) {
-  // get random index value
-  const randomIndex = Math.floor(Math.random() * arr.length);
-
-  // get random item
-  const item = arr[randomIndex];
-
-  return item;
-}
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-}
-
 const getData = (contact) => {
-  return `<p>First Name: <strong>${
-    contact?.first_name
-  }</strong></p><p>Last Name: <strong>${
-    contact?.last_name
-  }</strong></p><p>Age: <strong>${getRandomInt(
-    25,
-    45
-  )}</strong></p><p>Race: <strong>${
-    getRandomItem(race_options).label
-  }</strong></p>`;
+  return `<p>First Name: <strong>${contact?.first_name}</strong></p><p>Last Name: <strong>${contact?.last_name}</strong></p><p>Age: <strong>${contact.age}</strong></p><p>Race: <strong>${contact.race}</strong></p><p>Sex: <strong>${contact.sex}</strong></p>`;
 };
