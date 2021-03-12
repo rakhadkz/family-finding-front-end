@@ -15,6 +15,7 @@ export function FamilySearchTab() {
   const [vectors, setVectors] = useState([]);
   const {
     searchResultState: { searchResults },
+    fetchSearchResults,
   } = useContext(ChildContext);
 
   useEffect(() => {
@@ -55,7 +56,13 @@ export function FamilySearchTab() {
             setIsOpen={setIsAutomatedOpen}
             heading="Run Automated Search"
             hasActions={false}
-            body={<AutomatedSearch vectors={vectors} />}
+            body={
+              <AutomatedSearch
+                vectors={vectors}
+                fetch={fetchSearchResults}
+                setIsOpen={setIsAutomatedOpen}
+              />
+            }
           />
         </Box>
         <Spacing

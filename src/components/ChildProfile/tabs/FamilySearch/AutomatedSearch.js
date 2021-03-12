@@ -5,56 +5,48 @@ import { ChildContext } from "../../../../pages/ChildProfilePage";
 import { Preloader } from "../../../../pages/Preloader";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { AvatarGroup, SelectInput } from "../../../ui/molecules";
-import Spinner from "@atlaskit/spinner";
 import { months } from "./";
 import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 import { StyledLabel } from "../../ChildInformation";
-import { prisonRequest } from "../../../../api/searchVectors/searchVectorsRequests";
+import {
+  automatedSearchResultRequest,
+  createSearchResultConnectionRequest,
+  createSearchResultRequest,
+} from "../../../../api/searchResults/searchResultsRequests";
 
-export function AutomatedSearch({ vectors }) {
+export function AutomatedSearch({ vectors, fetch, setIsOpen }) {
   const { control, errors, handleSubmit } = useForm();
   const {
+    state: {
+      child: { id: child_id },
+    },
     connectionState: { connections },
   } = useContext(ChildContext);
-  const { first_name, last_name } = getLocalStorageUser();
-  const [results, setResults] = useState([]);
+  const { id: user_id } = getLocalStorageUser();
   const [pending, setPending] = useState(false);
-  const onHandle = (data) => {
+  const onHandle = async (data) => {
     setPending(true);
-    const { contact } = connections.find(
-      (item) => item.id === data.connection.value
+    const {
+      contact: { first_name, last_name },
+    } = connections.find((item) => item.id === data.connection.value);
+    const { id: family_search_id } = await createSearchResultRequest({
+      search_vector_id: data.search_vector.value,
+      user_id,
+      child_id,
+    });
+    await createSearchResultConnectionRequest(
+      family_search_id,
+      data.connection.value
     );
-    prisonRequest(contact.first_name, contact.last_name)
-      .then((e) => {
-        console.log(e.InmateLocator);
-        setResults(
-          e?.InmateLocator.map((item) => ({
-            attachments: [],
-            connections: [
-              {
-                child_contact: {
-                  contact: {
-                    first_name: contact?.first_name,
-                    last_name: contact?.last_name,
-                  },
-                },
-              },
-            ],
-            search_vector: {
-              name: data.search_vector.label,
-            },
-            description: getData({
-              first_name: item.nameFirst,
-              last_name: item.nameLast,
-              sex: item.sex,
-              age: item.age,
-              race: item.race,
-            }),
-            user: { first_name, last_name },
-          }))
-        );
-      })
-      .finally(() => setPending(false));
+    await automatedSearchResultRequest({
+      task: "bop",
+      first_name,
+      last_name,
+      family_search_id,
+    });
+    await fetch();
+    setPending(false);
+    setIsOpen(false);
   };
   return (
     <Spacing p={{ b: "16px" }}>
@@ -86,23 +78,11 @@ export function AutomatedSearch({ vectors }) {
             control={control}
             label="Select Connection"
           />
-          <Button type="submit" appearance="primary">
+          <Button type="submit" appearance="primary" isDisabled={pending}>
             Run Now
           </Button>
         </Box>
       </form>
-      {pending && (
-        <div style={{ margin: "30px 0px" }}>
-          <Preloader />
-        </div>
-      )}
-      {!pending && results.length > 0 && (
-        <div style={{ marginTop: 20 }}>
-          {results.map((item) => (
-            <Item data={item} />
-          ))}
-        </div>
-      )}
     </Spacing>
   );
 }
@@ -153,5 +133,5 @@ const Item = ({ data }) => {
 };
 
 const getData = (contact) => {
-  return `<p>First Name: <strong>${contact?.first_name}</strong></p><p>Last Name: <strong>${contact?.last_name}</strong></p><p>Age: <strong>${contact.age}</strong></p><p>Race: <strong>${contact.race}</strong></p><p>Sex: <strong>${contact.sex}</strong></p>`;
+  return `<p>First Name: <strong>${contact.nameFirst}</strong></p><p>Last Name: <strong>${contact.nameLast}</strong></p><p>Age: <strong>${contact.age}</strong></p><p>Race: <strong>${contact.race}</strong></p><p>Sex: <strong>${contact.sex}</strong></p>`;
 };
