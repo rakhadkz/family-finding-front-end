@@ -25,36 +25,37 @@ export function AutomatedSearch({ vectors }) {
       (item) => item.id === data.connection.value
     );
     console.log(user);
-    prisonRequest(contact.first_name, contact.last_name).then((e) => {
-      console.log(e.InmateLocator);
-      setResults(
-        e?.InmateLocator.map((item) => ({
-          attachments: [],
-          connections: [
-            {
-              child_contact: {
-                contact: {
-                  first_name: contact?.first_name,
-                  last_name: contact?.last_name,
+    prisonRequest(contact.first_name, contact.last_name)
+      .then((e) => {
+        console.log(e.InmateLocator);
+        setResults(
+          e?.InmateLocator.map((item) => ({
+            attachments: [],
+            connections: [
+              {
+                child_contact: {
+                  contact: {
+                    first_name: contact?.first_name,
+                    last_name: contact?.last_name,
+                  },
                 },
               },
+            ],
+            search_vector: {
+              name: data.search_vector.label,
             },
-          ],
-          search_vector: {
-            name: data.search_vector.label,
-          },
-          description: getData({
-            first_name: item.nameFirst,
-            last_name: item.nameLast,
-            sex: item.sex,
-            age: item.age,
-            race: item.race,
-          }),
-          user: { first_name: "ACME", last_name: "County" },
-        }))
-      );
-    });
-    setPending(false);
+            description: getData({
+              first_name: item.nameFirst,
+              last_name: item.nameLast,
+              sex: item.sex,
+              age: item.age,
+              race: item.race,
+            }),
+            user: { first_name: "ACME", last_name: "County" },
+          }))
+        );
+      })
+      .finally(() => setPending(false));
   };
   return (
     <Spacing p={{ b: "16px" }}>
