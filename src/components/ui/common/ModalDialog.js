@@ -17,7 +17,10 @@ export function ModalDialog({
   shouldCloseOnEscapePress = true,
   height = null,
 }) {
-  const close = () => setIsOpen(false);
+  const close = (e) => {
+    e.stopPropagation()
+    setIsOpen(false);
+  }
   return (
     <>
       <ModalTransition>

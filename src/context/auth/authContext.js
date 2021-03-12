@@ -61,7 +61,13 @@ export const AuthProvider = (props) => {
     }
   };
 
-  const login = React.useCallback((form) => auth.login(form).then(setUser), []);
+  const login = React.useCallback(
+    (form) =>
+      auth.login(form).then((user) => {
+        user?.email && setUser(user);
+      }),
+    []
+  );
 
   const sign = React.useCallback((form) => auth.signup(form), []);
 

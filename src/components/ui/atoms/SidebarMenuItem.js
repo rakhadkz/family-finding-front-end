@@ -8,7 +8,7 @@ export const SidebarMenuItem = styled.div`
     background: none;
     width: 100%;
     text-align: left;
-    padding: 0px 16px;
+    padding: 0px 0px 0px 16px;
     color: #42526e;
     font-family: Helvetica;
     font-style: normal;

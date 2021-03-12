@@ -9,7 +9,7 @@ export const RelativeItem = ({ relative }) => {
   return (
     <Tooltip content={<RelativeTooltip relative={relative?.contact} />}>
       <Spacing m={{ l: "10px", b: "22px" }}>
-        <Box d="flex" align="center">
+        <Box d="flex" align="center" >
           <Avatar name={`${relative?.contact?.first_name} ${relative?.contact?.last_name}`}/>
           <Spacing m={{ l: "17px" }}>
             <StyledLabel>

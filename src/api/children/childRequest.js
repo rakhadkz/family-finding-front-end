@@ -139,3 +139,19 @@ export const fetchChildSiblings = (id) => {
     method: "GET",
   });
 };
+
+export const createChildSiblingsRequest = (data) => {
+  return request({
+    endpoint: `siblingships`,
+    method: "POST",
+    data
+  });
+};
+
+export const removeChildSiblingsRequest = (id) => {
+  return request({
+    endpoint: `siblingships/${id}`,
+    method: "DELETE",
+
+  });
+};
