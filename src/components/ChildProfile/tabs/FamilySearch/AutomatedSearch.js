@@ -16,7 +16,7 @@ export function AutomatedSearch({ vectors }) {
   const {
     connectionState: { connections },
   } = useContext(ChildContext);
-  const { user } = getLocalStorageUser();
+  const { first_name, last_name } = getLocalStorageUser();
   const [results, setResults] = useState([]);
   const [pending, setPending] = useState(false);
   const onHandle = (data) => {
@@ -24,7 +24,6 @@ export function AutomatedSearch({ vectors }) {
     const { contact } = connections.find(
       (item) => item.id === data.connection.value
     );
-    console.log(user);
     prisonRequest(contact.first_name, contact.last_name)
       .then((e) => {
         console.log(e.InmateLocator);
@@ -51,7 +50,7 @@ export function AutomatedSearch({ vectors }) {
               age: item.age,
               race: item.race,
             }),
-            user: { first_name: "ACME", last_name: "County" },
+            user: { first_name, last_name },
           }))
         );
       })
