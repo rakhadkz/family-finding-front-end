@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import {
   createAttachmentRequest,
   createChildAttachmentRequest,
-  createConnectionAttachmentRequest,
+  removeAttachmentRequest,
 } from "../../../../api/attachments/attachmentRequest";
 import { uploadRequest } from "../../../../api/cloudinary";
 import { useForm } from "react-hook-form";
@@ -41,8 +41,33 @@ export const AddSearchResultForm = ({
   } = useContext(ChildContext);
   const child_id = child.id;
   const [upd, setUpd] = useState(0);
-  const userId = getLocalStorageUser().id;
-  const { control, handleSubmit } = useForm();
+  const user_id = getLocalStorageUser().id;
+  const { control, handleSubmit, errors, reset } = useForm({
+    defaultValues: {
+      search_vector:
+        currentSearchResult && currentSearchResult.search_vector
+          ? {
+              label: currentSearchResult.search_vector.name,
+              value: currentSearchResult.search_vector.id,
+            }
+          : null,
+      connection:
+        currentSearchResult && currentSearchResult.connection
+          ? {
+              label: `${currentSearchResult.connection.contact.first_name} ${currentSearchResult.connection.contact.last_name}`,
+              value: currentSearchResult.connection.id,
+            }
+          : null,
+    },
+  });
+  const [selectedConnection, setSelectedConnection] = useState(
+    currentSearchResult && currentSearchResult.connection
+      ? {
+          label: `${currentSearchResult.connection.contact.first_name} ${currentSearchResult.connection.contact.last_name}`,
+          value: currentSearchResult.connection.id,
+        }
+      : null
+  );
   const [blocks, setBlocks] = useState([]);
   const [description, setDescription] = useState(
     currentSearchResult ? currentSearchResult.description : ""
@@ -81,7 +106,6 @@ export const AddSearchResultForm = ({
   );
   const currentAssignedConnections = useMemo(() => assignedConnections, []);
   const [connectionsForDeleting, setConnectionsForDeleting] = useState([]);
-  const [validationState, setValidationState] = useState("default");
   const connections = connectionState.connections.map((connection) => {
     if (connection && connection.contact) {
       const {
@@ -113,34 +137,37 @@ export const AddSearchResultForm = ({
     );
   }, [assignedConnections]);
 
-  const onSubmitHandle = async (data) => {
-    if (!selectedSearchVector) {
-      setValidationState("error");
-      return;
-    }
+  const onSubmitHandle = async ({
+    search_vector: { value: search_vector_id },
+    connection: { value: child_contact_id },
+  }) => {
     let currentId;
     if (currentSearchResult) {
       setPending(true);
       currentId = currentSearchResult.id;
       await updateSearchResultRequest(currentSearchResult.id, {
-        search_vector_id: selectedSearchVector.value,
+        search_vector_id,
+        child_contact_id,
         description,
         blocks: JSON.stringify(blocks),
       });
       for (const id of connectionsForDeleting || []) {
         await deleteSearchResultConnectionRequest(id);
       }
-      for (const id of filesForDeleting) {
-        await deleteSearchResultAttachmentRequest(id);
+      for (const { sr_attachment_id, attachment_id } of filesForDeleting) {
+        await deleteSearchResultAttachmentRequest(sr_attachment_id);
+        await removeAttachmentRequest(attachment_id);
       }
     } else {
       setPending(true);
       const { id } = await createSearchResultRequest({
-        search_vector_id: selectedSearchVector.value,
+        search_vector_id,
         description,
+        child_contact_id,
+        date_completed: new Date(),
         blocks: JSON.stringify(blocks),
-        user_id: userId,
-        child_id: child_id,
+        user_id,
+        child_id,
       });
       currentId = id;
     }
@@ -150,9 +177,9 @@ export const AddSearchResultForm = ({
     toast.success(
       currentSearchResult ? "Updated successfully!" : "Created successfully!"
     );
-    setPending(false);
     fetchAttachments();
     clearForm();
+    setPending(false);
   };
 
   const createSearchResultAttachments = async (id) => {
@@ -178,7 +205,7 @@ export const AddSearchResultForm = ({
             file_id: public_id,
             file_size: bytes,
             file_format: format,
-            user_id: userId,
+            user_id,
           },
         });
         await createChildAttachmentRequest({
@@ -231,8 +258,10 @@ export const AddSearchResultForm = ({
     } else {
       setIsFormVisible(false);
     }
+    reset();
     files.forEach((file) => file.remove());
     setSelectedSearchVector(null);
+    setSelectedConnection(null);
     setAssignedConnections([]);
     setFiles([]);
     setBlocks([]);
@@ -245,20 +274,33 @@ export const AddSearchResultForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandle)}>
-      <StyledSelectInput
-        className="input"
-        name="search_vector"
-        options={vectors}
-        myValue={selectedSearchVector}
-        myOnChange={(e) => {
-          setSelectedSearchVector(e);
-          setValidationState("default");
-        }}
-        control={control}
-        label="Search Vector"
-        placeholder="Select search vector"
-        validationState={validationState}
-      />
+      <Box d="flex" mt="10px">
+        <SelectInput
+          register={{ required: true }}
+          error={errors.search_vector}
+          marginY="0px"
+          className="input"
+          name="search_vector"
+          options={vectors}
+          control={control}
+          label="Select Search Vector"
+          myValue={selectedSearchVector}
+          myOnChange={setSelectedSearchVector}
+        />
+        <SelectInput
+          marginX="10px"
+          register={{ required: true }}
+          error={errors.connection}
+          marginY="0px"
+          className="input"
+          name="connection"
+          options={connections}
+          control={control}
+          label="Select Connection"
+          myValue={selectedConnection}
+          myOnChange={setSelectedConnection}
+        />
+      </Box>
       <WysiwygEditor
         withMention={false}
         onChange={(tex, raw, html) => {
@@ -302,7 +344,10 @@ export const AddSearchResultForm = ({
                 setCurrentFiles((prev) =>
                   prev.filter((file) => file.id !== f.id)
                 );
-                setFilesForDeleting((prev) => [...prev, f.id]);
+                setFilesForDeleting((prev) => [
+                  ...prev,
+                  { attachment_id: f.attachment_id, sr_attachment_id: f.id },
+                ]);
               },
             }))}
             isRemovable
@@ -317,7 +362,7 @@ export const AddSearchResultForm = ({
             isLoading={pending}
             isDisabled={pending}
           >
-            Add Search Result
+            {currentSearchResult ? "Update" : "Add"} Search Result
           </LoadingButton>
           <Button
             appearance="subtle"
@@ -356,7 +401,7 @@ export const AddSearchResultForm = ({
           hasActions={false}
           body={
             <FilePicker
-              user_id={userId}
+              user_id={user_id}
               setIsOpen={setIsFileUploadModalOpen}
               setFiles={setFiles}
             />
@@ -366,7 +411,3 @@ export const AddSearchResultForm = ({
     </form>
   );
 };
-
-const StyledSelectInput = styled(SelectInput)`
-  z-index: 5;
-`;

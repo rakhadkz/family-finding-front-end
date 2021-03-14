@@ -5,7 +5,6 @@ import AttachmentIcon from "@atlaskit/icon/glyph/attachment";
 import CommentIcon from "@atlaskit/icon/glyph/comment";
 import EditorCloseIcon from "@atlaskit/icon/glyph/editor/close";
 import EditorDoneIcon from "@atlaskit/icon/glyph/editor/done";
-import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
 import styled from "styled-components";
 import { updateConnectionRequest } from "../api/childContact";
 import { Box, Spacing } from "../components/ui/atoms";
@@ -13,6 +12,9 @@ import { Avatar } from "../components/ui/molecules/Avatar";
 import { FitScore } from "../components/ui/molecules";
 import Tooltip from "@atlaskit/tooltip";
 import { DisqualifyTooltip } from "../components/ChildProfile/tabs/Connections/DisqualifyTooltip";
+import Can from "../accessControl/Can";
+import { CONNECTIONS } from "../helpers";
+import { ACTIONS } from "../accessControl/actions";
 export const SmallText = styled.div`
   font-family: Helvetica;
   font-style: normal;
@@ -204,48 +206,53 @@ export const confirmedConnectionRows = (
             {
               key: "actions",
               content: (
-                <div align="center">
-                  {item.is_placed ? (
-                    <ButtonGroup>
-                      <Button onClick={onEdit}>Edit</Button>
-                      <Button onClick={() => onPlacementUpdate(false)}>
-                        Remove Placement
-                      </Button>
-                    </ButtonGroup>
-                  ) : item.is_disqualified ? (
-                    <ButtonGroup>
-                      <Button onClick={onEdit}>Edit</Button>
-                      <Button onClick={() => onConfirmUpdate(false)}>
-                        Unconfirm
-                      </Button>
-                    </ButtonGroup>
-                  ) : (
-                    <ButtonGroup>
-                      <Button onClick={onEdit}>Edit</Button>
-                      <Button onClick={() => onConfirmUpdate(false)}>
-                        Unconfirm
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          setIsDisModalOpen(true);
-                          setCurrentConnection(item);
-                        }}
-                      >
-                        Disqualify
-                      </Button>
-                      {!existPlaced && (
-                        <Button
-                          onClick={() => {
-                            setIsPlaceModalOpen(true);
-                            setCurrentConnection(item);
-                          }}
-                        >
-                          Place
-                        </Button>
+                <Can
+                  perform={`${CONNECTIONS}:${ACTIONS.EDIT}`}
+                  yes={() => (
+                    <div align="center">
+                      {item.is_placed ? (
+                        <ButtonGroup>
+                          <Button onClick={onEdit}>Edit</Button>
+                          <Button onClick={() => onPlacementUpdate(false)}>
+                            Remove Placement
+                          </Button>
+                        </ButtonGroup>
+                      ) : item.is_disqualified ? (
+                        <ButtonGroup>
+                          <Button onClick={onEdit}>Edit</Button>
+                          <Button onClick={() => onConfirmUpdate(false)}>
+                            Unconfirm
+                          </Button>
+                        </ButtonGroup>
+                      ) : (
+                        <ButtonGroup>
+                          <Button onClick={onEdit}>Edit</Button>
+                          <Button onClick={() => onConfirmUpdate(false)}>
+                            Unconfirm
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setIsDisModalOpen(true);
+                              setCurrentConnection(item);
+                            }}
+                          >
+                            Disqualify
+                          </Button>
+                          {!existPlaced && (
+                            <Button
+                              onClick={() => {
+                                setIsPlaceModalOpen(true);
+                                setCurrentConnection(item);
+                              }}
+                            >
+                              Place
+                            </Button>
+                          )}
+                        </ButtonGroup>
                       )}
-                    </ButtonGroup>
+                    </div>
                   )}
-                </div>
+                />
               ),
             },
           ],

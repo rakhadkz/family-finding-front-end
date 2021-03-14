@@ -5,6 +5,12 @@ import { useState } from "react";
 import { AvatarGroup, AttachmentGroup } from "../../../ui/molecules";
 import { ModalDialog } from "../../../ui/common";
 import { AddSearchResultForm } from "./AddSearchResultForm";
+import Badge from "@atlaskit/badge";
+import Can from "../../../../accessControl/Can";
+import { FAMILY_SEARCH } from "../../../../helpers";
+import { ACTIONS } from "../../../../accessControl/actions";
+import { updateSearchResultRequest } from "../../../../api/searchResults/searchResultsRequests";
+import { toast } from "react-toastify";
 
 export const months = [
   "January",
@@ -21,25 +27,57 @@ export const months = [
   "December",
 ];
 
-export const FamilySearchItem = ({ item, noEdit, noMeta, vectors }) => {
+export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
   const {
+    id,
     created_at,
     description,
     user,
     attachments,
     connections,
     search_vector,
+    date_completed,
+    date_accepted,
+    date_rejected,
   } = item;
   let date = new Date(created_at);
   const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const onAccept = () => {
+    updateSearchResultRequest(id, {
+      date_accepted: new Date(),
+      date_rejected: null,
+      date_completed: new Date(),
+    })
+      .then(() => {
+        toast.success("Search Result is accepted!");
+        fetch();
+      })
+      .catch(() => toast.error("Couldn't accept"));
+  };
+
+  const onReject = () => {
+    updateSearchResultRequest(id, {
+      date_accepted: null,
+      date_rejected: new Date(),
+      date_completed: new Date(),
+    })
+      .then(() => {
+        toast.success("Search Result is rejected!");
+        fetch();
+      })
+      .catch(() => toast.error("Couldn't reject"));
+  };
+
   return (
     <Box d="flex" mt="5px">
-      <Box d="flex" direction="column">
+      <Box d="flex" direction="column" w="75px">
         <Title>{date.getDate()}</Title>
         <span>{months[date.getMonth()]}</span>
         <span>{date.getFullYear()}</span>
       </Box>
       <div style={{ marginLeft: "16px", width: "100%" }}>
+        {!date_completed && <Badge appearance="added">Pending</Badge>}
         <p dangerouslySetInnerHTML={{ __html: description }}></p>
         {!noMeta && (
           <Box mt="11px" d="flex">
@@ -74,16 +112,53 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors }) => {
           {!noEdit && (
             <>
               <ButtonGroup>
-                <Button appearance="link" spacing="compact">
-                  Remove
-                </Button>
-                <Button
-                  appearance="link"
-                  spacing="compact"
-                  onClick={() => setIsEditOpen(true)}
-                >
-                  Edit Result
-                </Button>
+                <Can
+                  perform={`${FAMILY_SEARCH}:${ACTIONS.EDIT}`}
+                  authorId={user.id}
+                  yes={() => (
+                    <Button
+                      appearance="link"
+                      spacing="compact"
+                      onClick={() => setIsEditOpen(true)}
+                      isDisabled={search_vector.in_continuous_search}
+                      title={
+                        search_vector.in_continuous_search &&
+                        "Cannot edit automated Search Result"
+                      }
+                    >
+                      Edit Result
+                    </Button>
+                  )}
+                />
+                <Can
+                  perform={`${FAMILY_SEARCH}:${ACTIONS.ACCEPT}`}
+                  yes={() => (
+                    <Button
+                      appearance="link"
+                      spacing="compact"
+                      onClick={() => onAccept()}
+                      isDisabled={date_accepted !== null}
+                      title={
+                        search_vector.in_continuous_search &&
+                        "Cannot accept accepted Search Result"
+                      }
+                    >
+                      Accept
+                    </Button>
+                  )}
+                />
+                <Can
+                  perform={`${FAMILY_SEARCH}:${ACTIONS.REJECT}`}
+                  yes={() => (
+                    <Button
+                      appearance="link"
+                      spacing="compact"
+                      onClick={() => onReject()}
+                    >
+                      Reject
+                    </Button>
+                  )}
+                />
               </ButtonGroup>
               <ModalDialog
                 isOpen={isEditOpen}

@@ -13,3 +13,5 @@ export const COMMUNICATION_TEMPLATES = "communications-templates";
 export const REPORTS = "reports";
 export const ATTACHMENTS = "attachments";
 export const RESOURCES = "resources";
+export const CONNECTIONS = "connections";
+export const FAMILY_SEARCH = "family_search";

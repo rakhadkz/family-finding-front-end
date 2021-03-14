@@ -3,19 +3,15 @@ import {
   ATTACHMENTS,
   CHILDREN,
   COMMUNICATION_TEMPLATES,
-
-
-
-
-
-  CONTACTS, ORGANIZATIONS,
+  CONTACTS,
+  ORGANIZATIONS,
   REPORTS,
-
-
-
-  RESOURCES, SEARCHVECTOR,
+  RESOURCES,
+  SEARCHVECTOR,
   SETTINGS,
-  USERS
+  USERS,
+  CONNECTIONS,
+  FAMILY_SEARCH,
 } from "../helpers";
 import { ACTIONS } from "./actions";
 
@@ -32,6 +28,10 @@ const rules = {
     ],
     dynamic: {
       "attachments:REMOVE": ({ userId, authorId }) => {
+        if (!userId || !authorId) return false;
+        return userId === authorId;
+      },
+      "family_search:EDIT": ({ userId, authorId }) => {
         if (!userId || !authorId) return false;
         return userId === authorId;
       },
@@ -55,6 +55,13 @@ const rules = {
       `${COMMUNICATION_TEMPLATES}:${ACTIONS.VISIT}`,
       `${REPORTS}:${ACTIONS.VISIT}`,
       `${RESOURCES}:${ACTIONS.VISIT}`,
+      `${CONNECTIONS}:${ACTIONS.EDIT}`,
+      `${CONNECTIONS}:${ACTIONS.CONFIRM}`,
+      `${CONNECTIONS}:${ACTIONS.DISQUALIFY}`,
+      `${CONNECTIONS}:${ACTIONS.PLACE}`,
+      `${FAMILY_SEARCH}:${ACTIONS.EDIT}`,
+      `${FAMILY_SEARCH}:${ACTIONS.ACCEPT}`,
+      `${FAMILY_SEARCH}:${ACTIONS.REJECT}`,
     ],
   },
   admin: {
@@ -82,6 +89,13 @@ const rules = {
       `${RESOURCES}:${ACTIONS.VISIT}`,
       `${CONTACTS}:${ACTIONS.VISIT}`,
       `${CONTACTS}:${ACTIONS.EDIT}`,
+      `${CONNECTIONS}:${ACTIONS.EDIT}`,
+      `${CONNECTIONS}:${ACTIONS.CONFIRM}`,
+      `${CONNECTIONS}:${ACTIONS.DISQUALIFY}`,
+      `${CONNECTIONS}:${ACTIONS.PLACE}`,
+      `${FAMILY_SEARCH}:${ACTIONS.EDIT}`,
+      `${FAMILY_SEARCH}:${ACTIONS.ACCEPT}`,
+      `${FAMILY_SEARCH}:${ACTIONS.REJECT}`,
     ],
   },
   super_admin: {

@@ -1,11 +1,13 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
 import AttachmentIcon from "@atlaskit/icon/glyph/attachment";
-import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
 import EmailIcon from "@atlaskit/icon/glyph/email";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import React from "react";
+import { ACTIONS } from "../accessControl/actions";
+import Can from "../accessControl/Can";
 import { Box, Spacing } from "../components/ui/atoms";
 import { Avatar } from "../components/ui/molecules/Avatar";
+import { CONNECTIONS } from "../helpers";
 
 export const possibleConnectionRows = (
   data,
@@ -86,26 +88,31 @@ export const possibleConnectionRows = (
             {
               key: "actions",
               content: (
-                <div align="center">
-                  <ButtonGroup>
-                    <Button
-                      onClick={() => {
-                        setCurrentConnection(item);
-                        setIsAddModalOpen(true);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setCurrentConnection(item);
-                        setIsConfirmModalOpen(true);
-                      }}
-                    >
-                      Confirm
-                    </Button>
-                  </ButtonGroup>
-                </div>
+                <Can
+                  perform={`${CONNECTIONS}:${ACTIONS.EDIT}`}
+                  yes={() => (
+                    <div align="center">
+                      <ButtonGroup>
+                        <Button
+                          onClick={() => {
+                            setCurrentConnection(item);
+                            setIsAddModalOpen(true);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setCurrentConnection(item);
+                            setIsConfirmModalOpen(true);
+                          }}
+                        >
+                          Confirm
+                        </Button>
+                      </ButtonGroup>
+                    </div>
+                  )}
+                />
               ),
             },
           ],
