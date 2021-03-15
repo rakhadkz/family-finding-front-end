@@ -42,6 +42,7 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
     updated_at,
   } = item;
   let date = new Date(created_at);
+  let date_updated = new Date(updated_at);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   const onAccept = () => {
@@ -78,7 +79,14 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
         <span>{date.getFullYear()}</span>
       </Box>
       <div style={{ marginLeft: "16px", width: "100%" }}>
-        {!date_completed && <Badge appearance="added">Pending</Badge>}
+        <p>
+          {search_vector.name} by {`${user.first_name} ${user.last_name}`}
+          {!date_completed && (
+            <span style={{ marginLeft: 8 }}>
+              <Badge appearance="added">Pending</Badge>
+            </span>
+          )}
+        </p>
         <p dangerouslySetInnerHTML={{ __html: description }}></p>
         {!noMeta && (
           <Box mt="11px" d="flex">
@@ -107,9 +115,10 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
         )}
         <Box d="flex" justify="space-between" align="baseline" mt="10px">
           <StyledLabel>
-            Found via {search_vector.name} by{" "}
-            {`${user.first_name} ${user.last_name}`}
-            <span>Last updated: {updated_at}</span>
+            <b>
+              Updated on {date_updated.toDateString()},{" "}
+              {date_updated.getHours()}:{date_updated.getMinutes()}
+            </b>
           </StyledLabel>
           {!noEdit && (
             <>
@@ -122,11 +131,6 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
                       appearance="link"
                       spacing="compact"
                       onClick={() => setIsEditOpen(true)}
-                      isDisabled={search_vector.in_continuous_search}
-                      title={
-                        search_vector.in_continuous_search &&
-                        "Cannot edit automated Search Result"
-                      }
                     >
                       Edit Result
                     </Button>

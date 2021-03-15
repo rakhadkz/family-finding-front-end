@@ -25,7 +25,6 @@ import {
 } from "../../../../api/attachments/attachmentRequest";
 import { uploadRequest } from "../../../../api/cloudinary";
 import { useForm } from "react-hook-form";
-import styled from "styled-components";
 
 export const AddSearchResultForm = ({
   currentSearchResult,
@@ -148,7 +147,9 @@ export const AddSearchResultForm = ({
       await updateSearchResultRequest(currentSearchResult.id, {
         search_vector_id,
         child_contact_id,
-        description,
+        description: currentSearchResult
+          ? currentSearchResult.description
+          : description,
         blocks: JSON.stringify(blocks),
       });
       for (const id of connectionsForDeleting || []) {
@@ -301,21 +302,31 @@ export const AddSearchResultForm = ({
           myOnChange={setSelectedConnection}
         />
       </Box>
-      <WysiwygEditor
-        withMention={false}
-        onChange={(tex, raw, html) => {
-          setBlocks(
-            raw?.blocks?.map(({ text, type, inlineStyleRanges }) => ({
-              text,
-              type,
-              inlineStyleRanges,
-            }))
-          );
-          setDescription(html);
-        }}
-        defaultValue={description}
-        upd={upd}
-      />
+      {currentSearchResult?.search_vector?.in_continuous_search ? (
+        <p
+          dangerouslySetInnerHTML={{ __html: currentSearchResult.description }}
+          style={{ marginBottom: 10 }}
+        ></p>
+      ) : (
+        <div>
+          <WysiwygEditor
+            withMention={false}
+            onChange={(tex, raw, html) => {
+              setBlocks(
+                raw?.blocks?.map(({ text, type, inlineStyleRanges }) => ({
+                  text,
+                  type,
+                  inlineStyleRanges,
+                }))
+              );
+              setDescription(html);
+            }}
+            defaultValue={description}
+            upd={upd}
+          />
+        </div>
+      )}
+
       <Select
         className="multi-select"
         classNamePrefix="react-select"
