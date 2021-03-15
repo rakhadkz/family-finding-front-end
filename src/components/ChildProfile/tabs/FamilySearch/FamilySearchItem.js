@@ -39,6 +39,7 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
     date_completed,
     date_accepted,
     date_rejected,
+    updated_at,
   } = item;
   let date = new Date(created_at);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -108,6 +109,7 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
           <StyledLabel>
             Found via {search_vector.name} by{" "}
             {`${user.first_name} ${user.last_name}`}
+            <span>Last updated: {updated_at}</span>
           </StyledLabel>
           {!noEdit && (
             <>
