@@ -116,7 +116,7 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
         <Box d="flex" justify="space-between" align="baseline" mt="10px">
           <StyledLabel>
             <b>
-              Updated on {date_updated.toDateString()},{" "}
+              Updated on {date_updated.toDateString()} at{" "}
               {date_updated.getHours()}:{date_updated.getMinutes()}
             </b>
           </StyledLabel>
