@@ -1,4 +1,5 @@
-import { ButtonGroup } from "@atlaskit/button";
+import Badge from "@atlaskit/badge";
+import Button, { ButtonGroup } from "@atlaskit/button";
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
@@ -10,38 +11,36 @@ import {
   fetchAlertsFailure,
   fetchAlertsRequest,
   fetchAlertsSuccess,
-  initialState as alertInitialState,
+  initialState as alertInitialState
 } from "../../../../reducers/alertLinks";
 import {
   attachmentReducer,
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
   fetchAttachmentsSuccess,
-  initialState as attachmentInitialState,
+  initialState as attachmentInitialState
 } from "../../../../reducers/attachment";
 import {
   commentReducer,
   fetchCommentsFailure,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  initialState as commentInitialState,
+  initialState as commentInitialState
 } from "../../../../reducers/comment";
 import {
   fetchTemplatesFailure,
   fetchTemplatesRequest,
-  fetchTemplatesSuccess,
+  fetchTemplatesSuccess
 } from "../../../../reducers/template/templateActions";
 import {
   templateInitialState,
-  templateReducer,
+  templateReducer
 } from "../../../../reducers/template/templateReducer";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { Rounded } from "../../../ui/molecules/Rounded";
 import { ConnectionTabs } from "./ConnectionTabs";
-import Button from "@atlaskit/button";
-import Badge from "@atlaskit/badge";
 
 export const ConnectionContext = React.createContext();
 
@@ -140,6 +139,8 @@ const ConnectionModal = ({
       .catch((e) => e && templateDispatch(fetchTemplatesFailure(e.message)));
   };
 
+  console.log("CURRENT CONNECTION", currentConnection);
+
   return (
     <ConnectionContext.Provider
       value={{
@@ -220,19 +221,31 @@ const ConnectionModal = ({
             <Box mb="20px" w="200px" style={{ fontWeight: "700" }}>
               Email:
               <Box style={{ fontWeight: "500" }}>
-                {currentConnection?.contact?.email}
+                {currentConnection?.contact?.communications
+                  ?.filter((cm) => cm.communication_type === "email")
+                  .map((cm) => (
+                    <div style={{ width: 200 }}>{cm.value}</div>
+                  ))}
               </Box>
             </Box>
             <Box mb="20px" w="200px" style={{ fontWeight: "700" }}>
               Address:{" "}
               <Box style={{ fontWeight: "500" }}>
-                {currentConnection?.contact?.address}
+                {currentConnection?.contact?.communications
+                  ?.filter((cm) => cm.communication_type === "address")
+                  .map((cm) => (
+                    <div style={{ width: 200 }}>{cm.value}</div>
+                  ))}
               </Box>
             </Box>
             <Box mb="0px" w="200px" style={{ fontWeight: "700" }}>
               Phone:
               <Box style={{ fontWeight: "500" }}>
-                {currentConnection?.contact?.phone}
+                {currentConnection?.contact?.communications
+                  ?.filter((cm) => cm.communication_type === "phone")
+                  .map((cm) => (
+                    <div style={{ width: 200 }}>{cm.value}</div>
+                  ))}
               </Box>
             </Box>
             <Box mb="0px" w="200px" style={{ fontWeight: "700" }}>

@@ -20,7 +20,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
           // phone: contact.phone,
           sex: contact.sex,
           race: contact.race,
-          address: contact.address,
+          // address: contact.address,
           // address_2: contact.address_2,
           city: contact.city,
           birthday: new Date(contact.birthday),
@@ -29,6 +29,13 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
       : {},
   });
   const [pending, setPending] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [phonesList, setPhonesList] = useState([]);
+  const [emailsList, setEmailsList] = useState([]);
+  const [addressesList, setAddressesList] = useState([]);
+  const [currentPhone, setCurrentPhone] = useState("");
+  const [currentEmail, setCurrentEmail] = useState("");
+  const [currentAddress, setCurrentAddress] = useState("");
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
@@ -64,7 +71,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
       submitData.race = race.value;
     }
 
-    onSubmit(submitData);
+    onSubmit(submitData, emailsList, phonesList, addressesList);
   };
 
   return (
@@ -164,15 +171,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Race"
             options={race_options}
           />
-          <TextInput
-            marginX="8px"
-            className="input"
-            name={"address"}
-            register={register({ required: false })}
-            control={control}
-            error={errors.address}
-            label="Address"
-          />
+
           {/* <TextInput
             marginX="8px"
             className="input"
@@ -213,42 +212,168 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Zip"
           />
 
-          <Box d="flex" align="center" justify="center">
-            <div style={{ width: 200 }}>
-              <Label htmlFor={"phone"}>Phone number</Label>
-              <Textfield name="phone" />
-            </div>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              appearance="primary"
-              style={{
-                borderRadius: 20,
-                marginLeft: 5,
-                marginRight: 8,
-                marginTop: 17,
-              }}
-            >
-              +
-            </Button>
-          </Box>
+          {contact ? null : (
+            <>
+              <Box d="flex" justify="center" style={{ marginTop: 7 }}>
+                <div style={{ width: 200 }}>
+                  <Label htmlFor={"address"}>Address</Label>
+                  <Textfield
+                    name="address"
+                    value={currentAddress}
+                    onChange={(e) => setCurrentAddress(e.target.value)}
+                  />
+                  <div style={{ marginBottom: 5 }} />
+                  {addressesList.map((address, index) => (
+                    <Box d="flex" align="center">
+                      <div style={{ width: 130, marginLeft: 5 }}>{address}</div>{" "}
+                      <Button
+                        spacing="none"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setAddressesList(
+                            addressesList.filter(
+                              (_, removeIndex) => removeIndex !== index
+                            )
+                          );
+                        }}
+                        appearance="subtle"
+                        style={{
+                          borderRadius: 20,
+                          marginLeft: 15,
+                          padding: "3px 9px",
+                        }}
+                      >
+                        ✕
+                      </Button>
+                    </Box>
+                  ))}
+                </div>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setAddressesList([...addressesList, currentAddress]);
+                    setCurrentAddress("");
+                  }}
+                  appearance="primary"
+                  style={{
+                    borderRadius: 20,
+                    marginLeft: 5,
+                    marginRight: 8,
+                    marginTop: 25,
+                  }}
+                >
+                  +
+                </Button>
+              </Box>
 
-          <Box d="flex" align="center" justify="center">
-            <div style={{ margin: "0px 8px", width: 200 }}>
-              <Label htmlFor={"email"}>Email</Label>
-              <Textfield name="email" />
-            </div>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              appearance="primary"
-              style={{ borderRadius: 20, marginTop: 17 }}
-            >
-              +
-            </Button>
-          </Box>
+              <Box d="flex" justify="center">
+                <div style={{ width: 200 }}>
+                  <Label htmlFor={"phone"}>Phone number</Label>
+                  <Textfield
+                    name="phone"
+                    value={currentPhone}
+                    onChange={(e) => setCurrentPhone(e.target.value)}
+                  />
+                  <div style={{ marginBottom: 5 }} />
+                  {phonesList.map((phone, index) => (
+                    <Box d="flex" align="center">
+                      <div style={{ width: 130, marginLeft: 5 }}>{phone}</div>{" "}
+                      <Button
+                        spacing="none"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPhonesList(
+                            phonesList.filter(
+                              (_, removeIndex) => removeIndex !== index
+                            )
+                          );
+                        }}
+                        appearance="subtle"
+                        style={{
+                          borderRadius: 20,
+                          marginLeft: 15,
+                          padding: "3px 9px",
+                        }}
+                      >
+                        ✕
+                      </Button>
+                    </Box>
+                  ))}
+                </div>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPhonesList([...phonesList, currentPhone]);
+                    setCurrentPhone("");
+                  }}
+                  appearance="primary"
+                  style={{
+                    borderRadius: 20,
+                    marginLeft: 5,
+                    marginRight: 8,
+                    marginTop: 25,
+                  }}
+                >
+                  +
+                </Button>
+              </Box>
+              <div style={{ marginBottom: 5 }} />
+              <Box d="flex" justify="center">
+                <div style={{ margin: "0px 8px", width: 200 }}>
+                  <Label htmlFor={"email"}>Email</Label>
+                  <Textfield
+                    value={currentEmail}
+                    name="email"
+                    onChange={(e) => setCurrentEmail(e.target.value)}
+                  />
+
+                  {emailsList.map((email, index) => (
+                    <Box d="flex" align="center">
+                      <div
+                        style={{
+                          minWidth: 180,
+                          marginLeft: 5,
+                          overflow: "scroll",
+                        }}
+                      >
+                        {email}
+                      </div>{" "}
+                      <Button
+                        spacing="none"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEmailsList(
+                            emailsList.filter(
+                              (_, removeIndex) => removeIndex !== index
+                            )
+                          );
+                        }}
+                        appearance="subtle"
+                        style={{
+                          borderRadius: 20,
+                          marginLeft: 15,
+                          padding: "3px 9px",
+                        }}
+                      >
+                        ✕
+                      </Button>
+                    </Box>
+                  ))}
+                </div>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEmailsList([...emailsList, currentEmail]);
+                    setCurrentEmail("");
+                  }}
+                  appearance="primary"
+                  style={{ borderRadius: 20, marginTop: 25 }}
+                >
+                  +
+                </Button>
+              </Box>
+            </>
+          )}
 
           {relationship?.value === "Other" ? (
             <TextInput
