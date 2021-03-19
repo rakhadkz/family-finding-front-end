@@ -1,12 +1,13 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
+import Textfield from "@atlaskit/textfield";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { relationshipOptions } from "../../content/relationshipOptions.data";
 import { states } from "../../content/states.data";
+import { race_options, sex_options } from "../../helpers";
 import { getObjectByValue } from "../Children";
-import { Box, Form, Spacing } from "../ui/atoms";
+import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
-import { sex_options, race_options } from "../../helpers";
 
 export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
   const { register, handleSubmit, control, errors, watch } = useForm({
@@ -15,12 +16,12 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
           first_name: contact.first_name,
           last_name: contact.last_name,
           relationship: contact.relationship,
-          email: contact.email,
-          phone: contact.phone,
+          // email: contact.email,
+          // phone: contact.phone,
           sex: contact.sex,
           race: contact.race,
           address: contact.address,
-          address_2: contact.address_2,
+          // address_2: contact.address_2,
           city: contact.city,
           birthday: new Date(contact.birthday),
           zip: contact.zip,
@@ -109,7 +110,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Relationship"
             placeholder="Relationship"
           />
-          <TextInput
+          {/* <TextInput
             marginX="8px"
             className="input"
             name={"email"}
@@ -120,7 +121,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             control={control}
             error={errors.email}
             label="Email"
-          />
+          /> */}
           <DatepickerInput
             marginX="8px"
             name={"birthday"}
@@ -130,7 +131,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Birthday"
             placeholder="Select birthday"
           />
-          <TextInput
+          {/* <TextInput
             marginX="8px"
             name={"phone"}
             register={register({
@@ -140,7 +141,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             error={errors.phone}
             label="Phone"
             type={"phone"}
-          />
+          /> */}
           <SelectInput
             marginX="8px"
             defaultValue={
@@ -172,7 +173,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             error={errors.address}
             label="Address"
           />
-          <TextInput
+          {/* <TextInput
             marginX="8px"
             className="input"
             name={"address_2"}
@@ -180,7 +181,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             control={control}
             error={errors.address_2}
             label="Another Address"
-          />
+          /> */}
           <TextInput
             marginX="8px"
             name={"city"}
@@ -211,6 +212,43 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             error={errors.zip}
             label="Zip"
           />
+
+          <Box d="flex" align="center" justify="center">
+            <div style={{ width: 200 }}>
+              <Label htmlFor={"phone"}>Phone number</Label>
+              <Textfield name="phone" />
+            </div>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              appearance="primary"
+              style={{
+                borderRadius: 20,
+                marginLeft: 5,
+                marginRight: 8,
+                marginTop: 17,
+              }}
+            >
+              +
+            </Button>
+          </Box>
+
+          <Box d="flex" align="center" justify="center">
+            <div style={{ margin: "0px 8px", width: 200 }}>
+              <Label htmlFor={"email"}>Email</Label>
+              <Textfield name="email" />
+            </div>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              appearance="primary"
+              style={{ borderRadius: 20, marginTop: 17 }}
+            >
+              +
+            </Button>
+          </Box>
 
           {relationship?.value === "Other" ? (
             <TextInput
