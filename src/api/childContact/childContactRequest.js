@@ -115,3 +115,11 @@ export const updateContactRequest = ({id, ...rest}) => {
     }
   })
 }
+
+export const createCommunicationRequest = (data) => {
+  return request({
+    endpoint: "communications",
+    data,
+    method: "POST",
+  });
+};
