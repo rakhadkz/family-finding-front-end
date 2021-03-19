@@ -25,9 +25,6 @@ export function AutomatedSearch({ vectors, fetch, setIsOpen }) {
     connection: { value: child_contact_id },
   }) => {
     setPending(true);
-    const {
-      contact: { first_name, last_name },
-    } = connections.find((item) => item.id === child_contact_id);
     const { id: family_search_id } = await createSearchResultRequest({
       search_vector_id,
       child_contact_id,
@@ -35,9 +32,6 @@ export function AutomatedSearch({ vectors, fetch, setIsOpen }) {
       child_id,
     });
     await automatedSearchResultRequest({
-      task: "bop",
-      first_name,
-      last_name,
       family_search_id,
     });
     await fetch();
