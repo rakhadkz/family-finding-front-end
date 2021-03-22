@@ -12,7 +12,9 @@ import {
   createCommunicationRequest,
   createContactRequest,
   createTableChildContactRequest,
-  updateConnectionRequest,
+
+
+  removeCommunicationRequest, updateConnectionRequest,
   updateContactRequest
 } from "../../../../api/childContact";
 import {
@@ -126,6 +128,18 @@ export const Connections = () => {
             },
           })
         );
+      }
+    }
+
+    await Promise.all(promises);
+  };
+
+  const removeCommunications = async (removeIds) => {
+    console.log("REMOVE IDS", removeIds);
+    let promises = [];
+    for (let i = 0; i < removeIds?.length; i++) {
+      if (removeIds[i]) {
+        promises.push(removeCommunicationRequest(removeIds[i]));
       }
     }
 
@@ -421,7 +435,7 @@ export const Connections = () => {
               </Title>
             </Spacing>
             <AddContactForm
-              onSubmit={async (data, emails, phones, address) => {
+              onSubmit={async (data, emails, phones, address, removeIds) => {
                 console.log("DATA", data);
                 if (currentConnection) {
                   if (data.relationship) {
@@ -437,6 +451,20 @@ export const Connections = () => {
                     id: currentConnection.contact.id,
                     ...data,
                   })
+                    .then(async (res) => {
+                      if (emails?.length > 0) {
+                        await saveEmails(emails, res.id);
+                      }
+                      if (phones?.length > 0) {
+                        await savePhones(phones, res.id);
+                      }
+                      if (address?.length > 0) {
+                        await saveAddresses(address, res.id);
+                      }
+                      if (removeIds?.length > 0) {
+                        await removeCommunications(removeIds);
+                      }
+                    })
                     .then(() => {
                       toast.success("Connection successfully updated!");
                       fetchConnections();

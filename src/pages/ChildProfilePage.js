@@ -186,10 +186,7 @@ export function ChildProfilePage(props) {
         "{{child_name}}",
         `${state.child?.first_name} ${state.child?.last_name}`
       )
-      .replaceAll(
-        "{{contact_name}}",
-        `${firstUser?.contact?.first_name} ${firstUser?.contact?.last_name}`
-      )
+      .replaceAll("{{contact_name}}", `${firstUser?.fullName}`)
       .replaceAll(
         "{{orgranization_name}}",
         localStorage.getItem("organizationName")
@@ -358,23 +355,20 @@ export function ChildProfilePage(props) {
         "{{child_name}}",
         `${state.child?.first_name} ${state.child?.last_name}`
       )
-      .replaceAll(
-        "{{contact_name}}",
-        `${connection?.contact?.first_name} ${connection?.contact?.last_name}`
-      )
+      .replaceAll("{{contact_name}}", `${connection?.fullName}`)
       .replaceAll(
         "{{orgranization_name}}",
         localStorage.getItem("organizationName")
       );
     const body = {
-      email: connection?.contact?.email,
+      email: connection?.value,
       contact_id: connection?.contact?.id,
       template_id: templateId,
-      child_contact_id: connection.id,
+      child_contact_id: connection.child_contact_id,
       child_id: id,
       content: text,
       template_type: templateType,
-      phone: connection?.contact?.phone,
+      phone: connection?.value,
     };
     console.log(body);
 
@@ -608,10 +602,10 @@ export function ChildProfilePage(props) {
             />
           </Spacing>
           <Box d="flex">
-            <Spacing style={{width: '50%'}} m={{ t: "22px", r: '20px' }}>
+            <Spacing style={{ width: "50%" }} m={{ t: "22px", r: "20px" }}>
               <RelativesList relatives={connectionState.connections || []} />
             </Spacing>
-            <Spacing m={{ t: "22px" }} style={{width: '50%'}}>
+            <Spacing m={{ t: "22px" }} style={{ width: "50%" }}>
               <Rectangle p="14px 26px 14px 26px">
                 <SiblingsList
                   onRemoveSiblingship={onRemoveSiblingship}
@@ -729,10 +723,44 @@ export function ChildProfilePage(props) {
                     styles={{
                       menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                     }}
-                    options={connectionState.connections.map((item) => ({
-                      label: `${item?.contact?.first_name} ${item?.contact?.last_name}`,
-                      value: item,
-                    }))}
+                    options={
+                      templateType === "Letter"
+                        ? connectionState.connections.map((item) => ({
+                            label: `${item?.contact?.first_name} ${item?.contact?.last_name}`,
+                            value: {
+                              ...item,
+                              fullName: `${item?.contact?.first_name} ${item?.contact?.last_name}`,
+                            },
+                          }))
+                        : connectionState.connections
+                            .reduce(
+                              (a, { contact }) =>
+                                a.concat(
+                                  contact.communications
+                                    .filter((item) => {
+                                      if (templateType === "SMS") {
+                                        return (
+                                          item.communication_type === "phone"
+                                        );
+                                      } else if (templateType === "Email") {
+                                        return (
+                                          item.communication_type === "email"
+                                        );
+                                      }
+                                    })
+                                    .map((item) => ({
+                                      ...item,
+                                      fullName: `${contact?.first_name} ${contact?.last_name}`,
+                                      child_contact_id: contact?.id,
+                                    }))
+                                ),
+                              []
+                            )
+                            .map((item) => ({
+                              label: `${item?.fullName}  ${item?.value}`,
+                              value: item,
+                            }))
+                    }
                     placeholder="Choose contact"
                   />
                 </Spacing>

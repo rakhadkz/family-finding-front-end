@@ -9,6 +9,28 @@ import { getObjectByValue } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
 
+const DynamicDataItem = ({ filed, onClick }) => {
+  return (
+    <Box d="flex" align="center">
+      <div style={{ width: 180, marginLeft: 5, overflow: "scroll" }}>
+        {filed}
+      </div>{" "}
+      <Button
+        spacing="none"
+        onClick={onClick}
+        appearance="subtle"
+        style={{
+          borderRadius: 20,
+          marginLeft: 15,
+          padding: "3px 9px",
+        }}
+      >
+        ✕
+      </Button>
+    </Box>
+  );
+};
+
 export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
   const { register, handleSubmit, control, errors, watch } = useForm({
     defaultValues: contact
@@ -33,6 +55,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
   const [phonesList, setPhonesList] = useState([]);
   const [emailsList, setEmailsList] = useState([]);
   const [addressesList, setAddressesList] = useState([]);
+  const [removeIds, setRemoveIds] = useState([]);
   const [currentPhone, setCurrentPhone] = useState("");
   const [currentEmail, setCurrentEmail] = useState("");
   const [currentAddress, setCurrentAddress] = useState("");
@@ -71,7 +94,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
       submitData.race = race.value;
     }
 
-    onSubmit(submitData, emailsList, phonesList, addressesList);
+    onSubmit(submitData, emailsList, phonesList, addressesList, removeIds);
   };
 
   return (
@@ -212,168 +235,173 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Zip"
           />
 
-          {contact ? null : (
-            <>
-              <Box d="flex" justify="center" style={{ marginTop: 7 }}>
-                <div style={{ width: 200 }}>
-                  <Label htmlFor={"address"}>Address</Label>
-                  <Textfield
-                    name="address"
-                    value={currentAddress}
-                    onChange={(e) => setCurrentAddress(e.target.value)}
-                  />
-                  <div style={{ marginBottom: 5 }} />
-                  {addressesList.map((address, index) => (
-                    <Box d="flex" align="center">
-                      <div style={{ width: 130, marginLeft: 5 }}>{address}</div>{" "}
-                      <Button
-                        spacing="none"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setAddressesList(
-                            addressesList.filter(
-                              (_, removeIndex) => removeIndex !== index
-                            )
-                          );
-                        }}
-                        appearance="subtle"
-                        style={{
-                          borderRadius: 20,
-                          marginLeft: 15,
-                          padding: "3px 9px",
-                        }}
-                      >
-                        ✕
-                      </Button>
-                    </Box>
+          <>
+            <Box
+              d="flex"
+              justify="center"
+              style={{ marginTop: 7, marginLeft: 10 }}
+            >
+              <div style={{ width: 200 }}>
+                <Label htmlFor={"address"}>Address</Label>
+                <Textfield
+                  name="address"
+                  value={currentAddress}
+                  onChange={(e) => setCurrentAddress(e.target.value)}
+                />
+                <div style={{ marginBottom: 5 }} />
+                {contact?.communications
+                  ?.filter(
+                    (item) =>
+                      item.communication_type === "address" &&
+                      !removeIds.includes(item.id)
+                  )
+                  .map((item) => (
+                    <DynamicDataItem
+                      filed={item.value}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setRemoveIds([...removeIds, item.id]);
+                      }}
+                    />
                   ))}
-                </div>
-                <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setAddressesList([...addressesList, currentAddress]);
-                    setCurrentAddress("");
-                  }}
-                  appearance="primary"
-                  style={{
-                    borderRadius: 20,
-                    marginLeft: 5,
-                    marginRight: 8,
-                    marginTop: 25,
-                  }}
-                >
-                  +
-                </Button>
-              </Box>
+                {addressesList.map((address, index) => (
+                  <DynamicDataItem
+                    filed={address}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAddressesList(
+                        addressesList.filter(
+                          (_, removeIndex) => removeIndex !== index
+                        )
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAddressesList([...addressesList, currentAddress]);
+                  setCurrentAddress("");
+                }}
+                appearance="primary"
+                style={{
+                  borderRadius: 20,
+                  marginLeft: 5,
+                  marginRight: 8,
+                  marginTop: 25,
+                }}
+              >
+                +
+              </Button>
+            </Box>
 
-              <Box d="flex" justify="center">
-                <div style={{ width: 200 }}>
-                  <Label htmlFor={"phone"}>Phone number</Label>
-                  <Textfield
-                    name="phone"
-                    value={currentPhone}
-                    onChange={(e) => setCurrentPhone(e.target.value)}
-                  />
-                  <div style={{ marginBottom: 5 }} />
-                  {phonesList.map((phone, index) => (
-                    <Box d="flex" align="center">
-                      <div style={{ width: 130, marginLeft: 5 }}>{phone}</div>{" "}
-                      <Button
-                        spacing="none"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setPhonesList(
-                            phonesList.filter(
-                              (_, removeIndex) => removeIndex !== index
-                            )
-                          );
-                        }}
-                        appearance="subtle"
-                        style={{
-                          borderRadius: 20,
-                          marginLeft: 15,
-                          padding: "3px 9px",
-                        }}
-                      >
-                        ✕
-                      </Button>
-                    </Box>
+            <Box d="flex" justify="center">
+              <div style={{ width: 200 }}>
+                <Label htmlFor={"phone"}>Phone number</Label>
+                <Textfield
+                  name="phone"
+                  value={currentPhone}
+                  onChange={(e) => setCurrentPhone(e.target.value)}
+                />
+                <div style={{ marginBottom: 5 }} />
+                {contact?.communications
+                  ?.filter(
+                    (item) =>
+                      item.communication_type === "phone" &&
+                      !removeIds.includes(item.id)
+                  )
+                  .map((item) => (
+                    <DynamicDataItem
+                      filed={item.value}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setRemoveIds([...removeIds, item.id]);
+                      }}
+                    />
                   ))}
-                </div>
-                <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setPhonesList([...phonesList, currentPhone]);
-                    setCurrentPhone("");
-                  }}
-                  appearance="primary"
-                  style={{
-                    borderRadius: 20,
-                    marginLeft: 5,
-                    marginRight: 8,
-                    marginTop: 25,
-                  }}
-                >
-                  +
-                </Button>
-              </Box>
-              <div style={{ marginBottom: 5 }} />
-              <Box d="flex" justify="center">
-                <div style={{ margin: "0px 8px", width: 200 }}>
-                  <Label htmlFor={"email"}>Email</Label>
-                  <Textfield
-                    value={currentEmail}
-                    name="email"
-                    onChange={(e) => setCurrentEmail(e.target.value)}
+                {phonesList.map((phone, index) => (
+                  <DynamicDataItem
+                    filed={phone}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPhonesList(
+                        phonesList.filter(
+                          (_, removeIndex) => removeIndex !== index
+                        )
+                      );
+                    }}
                   />
-
-                  {emailsList.map((email, index) => (
-                    <Box d="flex" align="center">
-                      <div
-                        style={{
-                          minWidth: 180,
-                          marginLeft: 5,
-                          overflow: "scroll",
-                        }}
-                      >
-                        {email}
-                      </div>{" "}
-                      <Button
-                        spacing="none"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEmailsList(
-                            emailsList.filter(
-                              (_, removeIndex) => removeIndex !== index
-                            )
-                          );
-                        }}
-                        appearance="subtle"
-                        style={{
-                          borderRadius: 20,
-                          marginLeft: 15,
-                          padding: "3px 9px",
-                        }}
-                      >
-                        ✕
-                      </Button>
-                    </Box>
+                ))}
+              </div>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPhonesList([...phonesList, currentPhone]);
+                  setCurrentPhone("");
+                }}
+                appearance="primary"
+                style={{
+                  borderRadius: 20,
+                  marginLeft: 5,
+                  marginRight: 8,
+                  marginTop: 25,
+                }}
+              >
+                +
+              </Button>
+            </Box>
+            <div style={{ marginBottom: 5 }} />
+            <Box d="flex" justify="center">
+              <div style={{ margin: "0px 8px", width: 200 }}>
+                <Label htmlFor={"email"}>Email</Label>
+                <Textfield
+                  value={currentEmail}
+                  name="email"
+                  onChange={(e) => setCurrentEmail(e.target.value)}
+                />
+                {contact?.communications
+                  ?.filter(
+                    (item) =>
+                      item.communication_type === "email" &&
+                      !removeIds.includes(item.id)
+                  )
+                  .map((item) => (
+                    <DynamicDataItem
+                      filed={item.value}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setRemoveIds([...removeIds, item.id]);
+                      }}
+                    />
                   ))}
-                </div>
-                <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setEmailsList([...emailsList, currentEmail]);
-                    setCurrentEmail("");
-                  }}
-                  appearance="primary"
-                  style={{ borderRadius: 20, marginTop: 25 }}
-                >
-                  +
-                </Button>
-              </Box>
-            </>
-          )}
+                {emailsList.map((email, index) => (
+                  <DynamicDataItem
+                    filed={email}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEmailsList(
+                        emailsList.filter(
+                          (_, removeIndex) => removeIndex !== index
+                        )
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEmailsList([...emailsList, currentEmail]);
+                  setCurrentEmail("");
+                }}
+                appearance="primary"
+                style={{ borderRadius: 20, marginTop: 25 }}
+              >
+                +
+              </Button>
+            </Box>
+          </>
 
           {relationship?.value === "Other" ? (
             <TextInput
