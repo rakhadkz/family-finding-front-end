@@ -40,7 +40,7 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
     date_completed,
     date_accepted,
     date_rejected,
-    connection: { contact },
+    connection,
     updated_at,
   } = item;
   let date = new Date(created_at);
@@ -82,20 +82,22 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
       </Box>
       <div style={{ marginLeft: "16px", width: "100%" }}>
         <b>{search_vector.name}</b>
-        <div style={{ display: "flex", alignItems: "center", marginTop: 8 }}>
-          <Avatar
-            name={`${contact.first_name} ${contact.last_name}`}
-            size="medium"
-          />
-          <span
-            style={{ marginLeft: 8 }}
-          >{`${contact.first_name} ${contact.last_name}`}</span>
-          {!date_completed && (
-            <span style={{ marginLeft: 8 }}>
-              <Badge appearance="added">Pending</Badge>
-            </span>
-          )}
-        </div>
+        {connection && (
+          <div style={{ display: "flex", alignItems: "center", marginTop: 8 }}>
+            <Avatar
+              name={`${connection.contact.first_name} ${connection.contact.last_name}`}
+              size="medium"
+            />
+            <span
+              style={{ marginLeft: 8 }}
+            >{`${connection.contact.first_name} ${connection.contact.last_name}`}</span>
+            {!date_completed && (
+              <span style={{ marginLeft: 8 }}>
+                <Badge appearance="added">Pending</Badge>
+              </span>
+            )}
+          </div>
+        )}
         <div
           style={{
             marginTop: 10,
