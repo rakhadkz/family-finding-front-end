@@ -279,6 +279,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                 ))}
               </div>
               <Button
+                isDisabled={currentAddress?.length < 5}
                 onClick={(e) => {
                   e.stopPropagation();
                   setAddressesList([...addressesList, currentAddress]);
@@ -335,6 +336,9 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                 ))}
               </div>
               <Button
+                isDisabled={
+                  !currentPhone.match(/\(?\d{3}\)?-? *\d{3}-? *-?\d{4}/)
+                }
                 onClick={(e) => {
                   e.stopPropagation();
                   setPhonesList([...phonesList, currentPhone]);
@@ -390,6 +394,11 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                 ))}
               </div>
               <Button
+                isDisabled={
+                  !currentEmail.match(
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                  )
+                }
                 onClick={(e) => {
                   e.stopPropagation();
                   setEmailsList([...emailsList, currentEmail]);
