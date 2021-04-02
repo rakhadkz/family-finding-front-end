@@ -11,7 +11,7 @@ export const AlertsTab = () => {
   return (
     <Box mt="20px">
       {alerts?.map((alert) => (
-        <FamilySearchItem item={alert?.family_search} noEdit noMeta />
+        <FamilySearchItem item={alert} noEdit noMeta />
       ))}
     </Box>
   );
