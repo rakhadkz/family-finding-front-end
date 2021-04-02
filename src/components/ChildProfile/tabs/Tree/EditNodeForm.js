@@ -7,9 +7,9 @@ import { relationshipOptions } from "../../../../content/relationshipOptions.dat
 import { Box, Form, Spacing } from "../../../ui/atoms";
 import { SelectInput, TextInput } from "../../../ui/molecules";
 
-export const EditNodeForm = ({ initialContacts }) => {
+export const EditNodeForm = ({ initialContacts, selected }) => {
   const history = useHistory();
-  const { register, handleSubmit, control, errors, watch } = useForm();
+  const { register, handleSubmit, control, errors, watch } = useForm({});
   const [contacts, setContacts] = useState([]);
   const relationship = watch("relationship"); // you can supply default value as second argument
   const [pending, setPending] = useState(false);
@@ -62,24 +62,36 @@ export const EditNodeForm = ({ initialContacts }) => {
           </Button>
         </Box>
         <FormSection>
-          <SelectInput
-            menuPlacement="top"
-            name={"contact"}
-            id="contact"
-            register={{ required: true }}
-            control={control}
-            label="Contact"
-            options={contacts}
-          />
-          <SelectInput
-            menuPlacement="top"
-            name={"relationship"}
-            id="relationship"
-            register={{ required: true }}
-            control={control}
-            label="Relationship"
-            options={relationshipOptions}
-          />
+          {selected && (
+            <SelectInput
+              menuPlacement="top"
+              name={"contact"}
+              id="contact"
+              register={{ required: true }}
+              control={control}
+              label="Contact"
+              defaultValue={{
+                value: selected?.contactId,
+                label: selected?.Name,
+              }}
+              options={contacts}
+            />
+          )}
+          {selected && (
+            <SelectInput
+              menuPlacement="top"
+              name={"relationship"}
+              id="relationship"
+              register={{ required: true }}
+              control={control}
+              label="Relationship"
+              defaultValue={{
+                value: selected?.id,
+                label: selected?.Relationship,
+              }}
+              options={relationshipOptions}
+            />
+          )}
           {relationship?.value === "Other" && (
             <TextInput
               className="input"

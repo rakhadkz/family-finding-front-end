@@ -22,16 +22,21 @@ class Chart extends Component {
     this.state = {
       childId: props.childId,
       chart: null,
+      selectedChild: null,
     };
   }
 
   componentDidMount() {
     const { childId } = this.state;
+    const setStateForMethod = this.setState.bind(this);
     var editForm = function () {
       this.nodeId = null;
+      this.setStateForMethod = setStateForMethod;
     };
+    this.editForm = editForm;
 
     editForm.prototype.init = function (obj) {
+      console.log(obj);
       var that = this;
       this.obj = obj;
       this.editForm = document.getElementById("editForm");
@@ -42,6 +47,7 @@ class Chart extends Component {
 
       this.cancelButton.addEventListener("click", function () {
         that.hide();
+        that.setStateForMethod({ selectedChild: null });
       });
 
       this.saveButton.addEventListener("click", function () {
@@ -77,9 +83,8 @@ class Chart extends Component {
 
       this.editForm.style.display = "block";
       var node = chart.get(nodeId);
+      this.setStateForMethod({ selectedChild: node });
       console.log("NODE ", node, this.contactInput);
-      this.titleInput.value = node?.Relationship;
-      this.contactInput.defaultInputValue = node?.Name;
     };
 
     editForm.prototype.hide = function (showldUpdateTheNode) {
@@ -334,7 +339,10 @@ class Chart extends Component {
           style={{ height: "93vh", borderBottom: "1px solid #ccc" }}
           ref={this.divRef}
         ></div>
-        <EditNodeForm initialContacts={this.props.initialContacts} />
+        <EditNodeForm
+          initialContacts={this.props.initialContacts}
+          selected={this.state.selectedChild}
+        />
       </>
     );
   }
