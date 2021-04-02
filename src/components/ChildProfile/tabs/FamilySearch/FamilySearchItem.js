@@ -11,6 +11,7 @@ import { FAMILY_SEARCH } from "../../../../helpers";
 import { ACTIONS } from "../../../../accessControl/actions";
 import { updateSearchResultRequest } from "../../../../api/searchResults/searchResultsRequests";
 import { toast } from "react-toastify";
+import { Avatar } from "../../../ui/molecules/Avatar";
 
 export const months = [
   "January",
@@ -39,6 +40,7 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
     date_completed,
     date_accepted,
     date_rejected,
+    connection: { contact },
     updated_at,
   } = item;
   let date = new Date(created_at);
@@ -79,15 +81,30 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
         <span>{date.getFullYear()}</span>
       </Box>
       <div style={{ marginLeft: "16px", width: "100%" }}>
-        <p>
-          {search_vector.name} by {`${user.first_name} ${user.last_name}`}
+        <b>{search_vector.name}</b>
+        <div style={{ display: "flex", alignItems: "center", marginTop: 8 }}>
+          <Avatar
+            name={`${contact.first_name} ${contact.last_name}`}
+            size="medium"
+          />
+          <span
+            style={{ marginLeft: 8 }}
+          >{`${contact.first_name} ${contact.last_name}`}</span>
           {!date_completed && (
             <span style={{ marginLeft: 8 }}>
               <Badge appearance="added">Pending</Badge>
             </span>
           )}
-        </p>
-        <p dangerouslySetInnerHTML={{ __html: description }}></p>
+        </div>
+        <div
+          style={{
+            marginTop: 10,
+            maxHeight: 300,
+            overflow: "auto",
+          }}
+        >
+          <p dangerouslySetInnerHTML={{ __html: description }}></p>
+        </div>
         {!noMeta && (
           <Box mt="11px" d="flex">
             <ButtonGroup>
@@ -117,7 +134,8 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
           <StyledLabel>
             <b>
               Updated on {date_updated.toDateString()} at{" "}
-              {date_updated.getHours()}:{date_updated.getMinutes()}
+              {date_updated.getHours()}:{date_updated.getMinutes()} by{" "}
+              {user.first_name} {user.last_name}
             </b>
           </StyledLabel>
           {!noEdit && (
