@@ -9,6 +9,7 @@ import {
   automatedSearchResultRequest,
   createSearchResultRequest,
 } from "../../../../api/searchResults/searchResultsRequests";
+import { toast } from "react-toastify";
 
 export function AutomatedSearch({ vectors, fetch, setIsOpen }) {
   const { control, errors, handleSubmit } = useForm();
@@ -24,19 +25,24 @@ export function AutomatedSearch({ vectors, fetch, setIsOpen }) {
     search_vector: { value: search_vector_id },
     connection: { value: child_contact_id },
   }) => {
-    setPending(true);
-    const { id: family_search_id } = await createSearchResultRequest({
-      search_vector_id,
-      child_contact_id,
-      user_id,
-      child_id,
-    });
-    await automatedSearchResultRequest({
-      family_search_id,
-    });
-    await fetch();
-    setPending(false);
-    setIsOpen(false);
+    try {
+      setPending(true);
+      const { id: family_search_id } = await createSearchResultRequest({
+        search_vector_id,
+        child_contact_id,
+        user_id,
+        child_id,
+      });
+      await automatedSearchResultRequest({
+        family_search_id,
+      });
+    } catch (e) {
+      toast.error("Couldn't run automated task");
+    } finally {
+      await fetch();
+      setPending(false);
+      setIsOpen(false);
+    }
   };
   return (
     <Spacing p={{ b: "16px" }}>

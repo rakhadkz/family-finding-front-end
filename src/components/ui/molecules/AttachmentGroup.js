@@ -27,10 +27,12 @@ export const AttachmentGroup = ({ data, isRemovable = false }) => {
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           content={() => (
-            <OtherAttachments
-              attachments={data.slice(MAX_VISIBLE)}
-              isRemovable={isRemovable}
-            />
+            <div style={{ maxHeight: 200 }}>
+              <OtherAttachments
+                attachments={data.slice(MAX_VISIBLE)}
+                isRemovable={isRemovable}
+              />
+            </div>
           )}
           placement="bottom-start"
           trigger={(triggerProps) => (

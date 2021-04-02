@@ -54,20 +54,12 @@ export const createSearchResultConnectionRequest = (
   });
 };
 
-export const automatedSearchResultRequest = ({
-  task,
-  first_name,
-  last_name,
-  family_search_id,
-}) => {
+export const automatedSearchResultRequest = ({ family_search_id }) => {
   return request({
-    endpoint: "search_jobs/call_rake",
+    endpoint: "search_jobs/call_apify_task",
     method: "POST",
     data: {
       search_job: {
-        task,
-        first_name,
-        last_name,
         family_search_id,
       },
     },
