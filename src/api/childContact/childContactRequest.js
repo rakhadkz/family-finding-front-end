@@ -19,19 +19,19 @@ export const fetchConnectionsRequest = (params) => {
   });
 };
 
-export const removeConnectionAttachmentsRequest = id => {
+export const removeConnectionAttachmentsRequest = (id) => {
   return request({
     endpoint: "connection_attachments/" + id,
     method: "DELETE",
   });
-}
+};
 
 export const fetchAttachmentConnectionsRequest = (attachment_id) => {
   return request({
     endpoint: `attachments/${attachment_id}?view=connections`,
-    method: "GET"
+    method: "GET",
   });
-}
+};
 
 export const createChildContactRequest = (data) => {
   return request({
@@ -71,9 +71,9 @@ export const updateConnectionRequest = (id, data) => {
     method: "PUT",
     data: {
       child_contact: {
-        ...data
-      }
-    }
+        ...data,
+      },
+    },
   });
 };
 
@@ -83,11 +83,11 @@ export const updateFamilyTreeRequest = (id, data) => {
     method: "PUT",
     data: {
       child_tree_contact: {
-        ...data
-      }
-    }
+        ...data,
+      },
+    },
   });
-}
+};
 
 export const removeChildContactRequest = (contactId) => {
   return request({
@@ -104,14 +104,29 @@ export const createContactRequest = (data) => {
   });
 };
 
-export const updateContactRequest = ({id, ...rest}) => {
+export const updateContactRequest = ({ id, ...rest }) => {
   return request({
     endpoint: `contacts/${id}`,
-    method: 'PUT',
+    method: "PUT",
     data: {
       contact: {
-        ...rest
-      }
-    }
-  })
-}
+        ...rest,
+      },
+    },
+  });
+};
+
+export const createCommunicationRequest = (data) => {
+  return request({
+    endpoint: "communications",
+    data,
+    method: "POST",
+  });
+};
+
+export const removeCommunicationRequest = (id) => {
+  return request({
+    endpoint: `communications/${id}`,
+    method: "DELETE",
+  });
+};

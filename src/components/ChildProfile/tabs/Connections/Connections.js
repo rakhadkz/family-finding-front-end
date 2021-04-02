@@ -4,20 +4,25 @@ import AttachmentIcon from "@atlaskit/icon/glyph/attachment";
 import CommentIcon from "@atlaskit/icon/glyph/comment";
 import EmailIcon from "@atlaskit/icon/glyph/email";
 import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
+import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import {
+  createCommunicationRequest,
   createContactRequest,
   createTableChildContactRequest,
-  updateConnectionRequest,
-  updateContactRequest,
+
+
+  removeCommunicationRequest, updateConnectionRequest,
+  updateContactRequest
 } from "../../../../api/childContact";
 import {
   confirmedConnectionColumns,
-  possibleConnectionColumns,
+  possibleConnectionColumns
 } from "../../../../content/columns.data";
 import { confirmedConnectionRows } from "../../../../content/confirmedConnection.data";
+import { humanReadableDateFormat } from "../../../../content/date";
 import { possibleConnectionRows } from "../../../../content/possibleConnection.data";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
@@ -31,8 +36,6 @@ import { Avatar } from "../../../ui/molecules/Avatar";
 import { AddContactForm } from "../../AddContactForm";
 import ConnectionModal from "./ConnectionModal";
 import { DisqualifyModal, PlaceModal } from "./index";
-import moment from "moment";
-import { humanReadableDateFormat } from "../../../../content/date";
 
 export const SmallText = styled.div`
   font-family: Helvetica;
@@ -91,9 +94,90 @@ export const Connections = () => {
       .finally(() => setIsConfirmModalOpen(false));
   };
 
-  const onAddContact = async (data) => {
+  const saveEmails = async (emails, contactId) => {
+    console.log("EMAILS", emails);
+    let promises = [];
+    for (let i = 0; i < emails?.length; i++) {
+      if (emails[i]) {
+        promises.push(
+          createCommunicationRequest({
+            communication: {
+              communication_type: "email",
+              value: emails[i],
+              contact_id: contactId,
+            },
+          })
+        );
+      }
+    }
+
+    await Promise.all(promises);
+  };
+
+  const saveAddresses = async (address, contactId) => {
+    console.log("address", address);
+    let promises = [];
+    for (let i = 0; i < address?.length; i++) {
+      if (address[i]) {
+        promises.push(
+          createCommunicationRequest({
+            communication: {
+              communication_type: "address",
+              value: address[i],
+              contact_id: contactId,
+            },
+          })
+        );
+      }
+    }
+
+    await Promise.all(promises);
+  };
+
+  const removeCommunications = async (removeIds) => {
+    console.log("REMOVE IDS", removeIds);
+    let promises = [];
+    for (let i = 0; i < removeIds?.length; i++) {
+      if (removeIds[i]) {
+        promises.push(removeCommunicationRequest(removeIds[i]));
+      }
+    }
+
+    await Promise.all(promises);
+  };
+
+  const savePhones = async (phones, contactId) => {
+    console.log("PHONES", phones);
+    let promises = [];
+    for (let i = 0; i < phones?.length; i++) {
+      if (phones[i]) {
+        promises.push(
+          createCommunicationRequest({
+            communication: {
+              communication_type: "phone",
+              value: phones[i],
+              contact_id: contactId,
+            },
+          })
+        );
+      }
+    }
+
+    await Promise.all(promises);
+  };
+
+  const onAddContact = async (data, emails, phones, address) => {
     await createContactRequest(data)
-      .then((data) => {
+      .then(async (data) => {
+        if (emails?.length > 0) {
+          await saveEmails(emails, data.id);
+        }
+        if (phones?.length > 0) {
+          await savePhones(phones, data.id);
+        }
+        if (address?.length > 0) {
+          await saveAddresses(address, data.id);
+        }
         createTableChildContactRequest({
           child_id: id,
           contact_id: data.id,
@@ -351,7 +435,7 @@ export const Connections = () => {
               </Title>
             </Spacing>
             <AddContactForm
-              onSubmit={async (data) => {
+              onSubmit={async (data, emails, phones, address, removeIds) => {
                 console.log("DATA", data);
                 if (currentConnection) {
                   if (data.relationship) {
@@ -367,6 +451,20 @@ export const Connections = () => {
                     id: currentConnection.contact.id,
                     ...data,
                   })
+                    .then(async (res) => {
+                      if (emails?.length > 0) {
+                        await saveEmails(emails, res.id);
+                      }
+                      if (phones?.length > 0) {
+                        await savePhones(phones, res.id);
+                      }
+                      if (address?.length > 0) {
+                        await saveAddresses(address, res.id);
+                      }
+                      if (removeIds?.length > 0) {
+                        await removeCommunications(removeIds);
+                      }
+                    })
                     .then(() => {
                       toast.success("Connection successfully updated!");
                       fetchConnections();
@@ -374,7 +472,11 @@ export const Connections = () => {
                     .catch(() => toast.error("Error. Not updated"))
                     .finally(() => setIsAddModalOpen(false));
                 } else {
-                  await onAddContact(data).finally(() => fetchConnections());
+                  await onAddContact(data, emails, phones, address)
+                    .then((data) => {
+                      console.log(data);
+                    })
+                    .finally(() => fetchConnections());
                 }
               }}
               onCancel={() => setIsAddModalOpen(false)}

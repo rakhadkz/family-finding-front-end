@@ -1,12 +1,35 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
+import Textfield from "@atlaskit/textfield";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { relationshipOptions } from "../../content/relationshipOptions.data";
 import { states } from "../../content/states.data";
+import { race_options, sex_options } from "../../helpers";
 import { getObjectByValue } from "../Children";
-import { Box, Form, Spacing } from "../ui/atoms";
+import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
-import { sex_options, race_options } from "../../helpers";
+
+const DynamicDataItem = ({ filed, onClick }) => {
+  return (
+    <Box d="flex" align="center">
+      <div style={{ width: 180, marginLeft: 5, overflow: "scroll" }}>
+        {filed}
+      </div>{" "}
+      <Button
+        spacing="none"
+        onClick={onClick}
+        appearance="subtle"
+        style={{
+          borderRadius: 20,
+          marginLeft: 15,
+          padding: "3px 9px",
+        }}
+      >
+        ✕
+      </Button>
+    </Box>
+  );
+};
 
 export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
   const { register, handleSubmit, control, errors, watch } = useForm({
@@ -15,12 +38,12 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
           first_name: contact.first_name,
           last_name: contact.last_name,
           relationship: contact.relationship,
-          email: contact.email,
-          phone: contact.phone,
+          // email: contact.email,
+          // phone: contact.phone,
           sex: contact.sex,
           race: contact.race,
-          address: contact.address,
-          address_2: contact.address_2,
+          // address: contact.address,
+          // address_2: contact.address_2,
           city: contact.city,
           birthday: new Date(contact.birthday),
           zip: contact.zip,
@@ -28,6 +51,14 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
       : {},
   });
   const [pending, setPending] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [phonesList, setPhonesList] = useState([]);
+  const [emailsList, setEmailsList] = useState([]);
+  const [addressesList, setAddressesList] = useState([]);
+  const [removeIds, setRemoveIds] = useState([]);
+  const [currentPhone, setCurrentPhone] = useState("");
+  const [currentEmail, setCurrentEmail] = useState("");
+  const [currentAddress, setCurrentAddress] = useState("");
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
@@ -63,7 +94,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
       submitData.race = race.value;
     }
 
-    onSubmit(submitData);
+    onSubmit(submitData, emailsList, phonesList, addressesList, removeIds);
   };
 
   return (
@@ -109,7 +140,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Relationship"
             placeholder="Relationship"
           />
-          <TextInput
+          {/* <TextInput
             marginX="8px"
             className="input"
             name={"email"}
@@ -120,7 +151,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             control={control}
             error={errors.email}
             label="Email"
-          />
+          /> */}
           <DatepickerInput
             marginX="8px"
             name={"birthday"}
@@ -130,7 +161,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Birthday"
             placeholder="Select birthday"
           />
-          <TextInput
+          {/* <TextInput
             marginX="8px"
             name={"phone"}
             register={register({
@@ -140,7 +171,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             error={errors.phone}
             label="Phone"
             type={"phone"}
-          />
+          /> */}
           <SelectInput
             marginX="8px"
             defaultValue={
@@ -163,16 +194,8 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Race"
             options={race_options}
           />
-          <TextInput
-            marginX="8px"
-            className="input"
-            name={"address"}
-            register={register({ required: false })}
-            control={control}
-            error={errors.address}
-            label="Address"
-          />
-          <TextInput
+
+          {/* <TextInput
             marginX="8px"
             className="input"
             name={"address_2"}
@@ -180,7 +203,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             control={control}
             error={errors.address_2}
             label="Another Address"
-          />
+          /> */}
           <TextInput
             marginX="8px"
             name={"city"}
@@ -211,6 +234,174 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             error={errors.zip}
             label="Zip"
           />
+
+          <>
+            <Box
+              d="flex"
+              justify="center"
+              style={{ marginTop: 7, marginLeft: 10 }}
+            >
+              <div style={{ width: 200 }}>
+                <Label htmlFor={"address"}>Address</Label>
+                <Textfield
+                  name="address"
+                  value={currentAddress}
+                  onChange={(e) => setCurrentAddress(e.target.value)}
+                />
+                <div style={{ marginBottom: 5 }} />
+                {contact?.communications
+                  ?.filter(
+                    (item) =>
+                      item.communication_type === "address" &&
+                      !removeIds.includes(item.id)
+                  )
+                  .map((item) => (
+                    <DynamicDataItem
+                      filed={item.value}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setRemoveIds([...removeIds, item.id]);
+                      }}
+                    />
+                  ))}
+                {addressesList.map((address, index) => (
+                  <DynamicDataItem
+                    filed={address}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAddressesList(
+                        addressesList.filter(
+                          (_, removeIndex) => removeIndex !== index
+                        )
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAddressesList([...addressesList, currentAddress]);
+                  setCurrentAddress("");
+                }}
+                appearance="primary"
+                style={{
+                  borderRadius: 20,
+                  marginLeft: 5,
+                  marginRight: 8,
+                  marginTop: 25,
+                }}
+              >
+                +
+              </Button>
+            </Box>
+
+            <Box d="flex" justify="center">
+              <div style={{ width: 200 }}>
+                <Label htmlFor={"phone"}>Phone number</Label>
+                <Textfield
+                  name="phone"
+                  value={currentPhone}
+                  onChange={(e) => setCurrentPhone(e.target.value)}
+                />
+                <div style={{ marginBottom: 5 }} />
+                {contact?.communications
+                  ?.filter(
+                    (item) =>
+                      item.communication_type === "phone" &&
+                      !removeIds.includes(item.id)
+                  )
+                  .map((item) => (
+                    <DynamicDataItem
+                      filed={item.value}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setRemoveIds([...removeIds, item.id]);
+                      }}
+                    />
+                  ))}
+                {phonesList.map((phone, index) => (
+                  <DynamicDataItem
+                    filed={phone}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPhonesList(
+                        phonesList.filter(
+                          (_, removeIndex) => removeIndex !== index
+                        )
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPhonesList([...phonesList, currentPhone]);
+                  setCurrentPhone("");
+                }}
+                appearance="primary"
+                style={{
+                  borderRadius: 20,
+                  marginLeft: 5,
+                  marginRight: 8,
+                  marginTop: 25,
+                }}
+              >
+                +
+              </Button>
+            </Box>
+            <div style={{ marginBottom: 5 }} />
+            <Box d="flex" justify="center">
+              <div style={{ margin: "0px 8px", width: 200 }}>
+                <Label htmlFor={"email"}>Email</Label>
+                <Textfield
+                  value={currentEmail}
+                  name="email"
+                  onChange={(e) => setCurrentEmail(e.target.value)}
+                />
+                {contact?.communications
+                  ?.filter(
+                    (item) =>
+                      item.communication_type === "email" &&
+                      !removeIds.includes(item.id)
+                  )
+                  .map((item) => (
+                    <DynamicDataItem
+                      filed={item.value}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setRemoveIds([...removeIds, item.id]);
+                      }}
+                    />
+                  ))}
+                {emailsList.map((email, index) => (
+                  <DynamicDataItem
+                    filed={email}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEmailsList(
+                        emailsList.filter(
+                          (_, removeIndex) => removeIndex !== index
+                        )
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEmailsList([...emailsList, currentEmail]);
+                  setCurrentEmail("");
+                }}
+                appearance="primary"
+                style={{ borderRadius: 20, marginTop: 25 }}
+              >
+                +
+              </Button>
+            </Box>
+          </>
 
           {relationship?.value === "Other" ? (
             <TextInput
