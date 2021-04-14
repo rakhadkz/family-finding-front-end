@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { relationshipOptions } from "../../content/relationshipOptions.data";
 import { states } from "../../content/states.data";
 import { race_options, sex_options } from "../../helpers";
-import { getObjectByValue } from "../Children";
+import { getObjectByLabel } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
 
@@ -129,7 +129,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
           <SelectInput
             defaultValue={
               contact?.relationship &&
-              getObjectByValue(relationshipOptions, contact?.relationship)
+              getObjectByLabel(relationshipOptions, contact?.relationship)
             }
             marginX="8px"
             name={"relationship"}
@@ -175,7 +175,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
           <SelectInput
             marginX="8px"
             defaultValue={
-              contact?.sex && getObjectByValue(sex_options, contact.sex)
+              contact?.sex && getObjectByLabel(sex_options, contact.sex)
             }
             name="sex"
             control={control}
@@ -186,7 +186,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
           <SelectInput
             marginX="8px"
             defaultValue={
-              contact?.race && getObjectByValue(race_options, contact.race)
+              contact?.race && getObjectByLabel(race_options, contact.race)
             }
             name="race"
             control={control}

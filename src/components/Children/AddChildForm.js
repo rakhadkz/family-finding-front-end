@@ -1,5 +1,5 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,6 +17,7 @@ export const AddChildForm = ({
   setIsOpenEdit,
   fetch,
   setIsImportOpen,
+  schoolDistrictOptions = [],
 }) => {
   const history = useHistory();
   const { register, handleSubmit, control, errors } = useForm({
@@ -28,7 +29,6 @@ export const AddChildForm = ({
         }
       : {},
   });
-
   const [pending, setPending] = useState(false);
   const onSubmitHandle = (data) => {
     setPending(true);
@@ -40,6 +40,7 @@ export const AddChildForm = ({
       gender: data.gender?.value || null,
       race: data.race?.value || null,
       permanency_goal: data.permanency_goal?.value || null,
+      school_district_id: data.school_district_id?.value || null,
     })
       .then(() => {
         toast.success(
@@ -96,20 +97,33 @@ export const AddChildForm = ({
         />
         <SelectInput
           width="100%"
+          name="school_district_id"
+          defaultValue={
+            child?.school_district_id &&
+            getObjectByValue(schoolDistrictOptions, child?.school_district_id)
+          }
+          control={control}
+          error={errors.school_district_id}
+          label="School District"
+          placeholder="Select School District"
+          options={schoolDistrictOptions}
+        />
+        <SelectInput
+          width="100%"
           defaultValue={
             child?.permanency_goal &&
-            getObjectByValue(permanency_goal_options, child.permanency_goal)
+            getObjectByLabel(permanency_goal_options, child.permanency_goal)
           }
           name="permanency_goal"
           control={control}
           error={errors.permanency_goal}
           label="Permanency Goal"
-          placeholder="Choose status"
+          placeholder="Select status"
           options={permanency_goal_options}
         />
         <SelectInput
           defaultValue={
-            child?.gender && getObjectByValue(sex_options, child.gender)
+            child?.gender && getObjectByLabel(sex_options, child.gender)
           }
           width="100%"
           name="gender"
@@ -120,7 +134,7 @@ export const AddChildForm = ({
         />
         <SelectInput
           defaultValue={
-            child?.race && getObjectByValue(race_options, child.race)
+            child?.race && getObjectByLabel(race_options, child.race)
           }
           width="100%"
           name="race"
@@ -154,4 +168,7 @@ export const AddChildForm = ({
 };
 
 export const getObjectByValue = (array, value) =>
-  array.find((object) => object.label === value);
+  array.find((object) => object.value === value);
+
+export const getObjectByLabel = (array, label) =>
+  array.find((object) => object.label === label);

@@ -15,7 +15,7 @@ import React, {
   useCallback,
   useEffect,
   useReducer,
-  useState
+  useState,
 } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -28,17 +28,18 @@ import {
   fetchChildUsersRequest,
   fetchConnectionsRequest,
   fetchFamilyTreeRequest,
+  fetchSchoolDistrictsRequest,
   removeChildSiblingsRequest,
-  removeChildUserRequest
+  removeChildUserRequest,
 } from "../api/children";
 import {
   fetchCommunicationTemplateRequest,
-  sendCommunicationTemplateToUserRequest
+  sendCommunicationTemplateToUserRequest,
 } from "../api/communicationTemplates";
 import {
   ChildInformation,
   ChildTabs,
-  RelativesList
+  RelativesList,
 } from "../components/ChildProfile";
 import { PossibleSiblingsList } from "../components/ChildProfile/PossibleSiblingsList";
 import { SiblingsList } from "../components/ChildProfile/SiblingsList";
@@ -56,7 +57,7 @@ import {
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
   fetchAttachmentsSuccess,
-  initialState as attachmentInitialState
+  initialState as attachmentInitialState,
 } from "../reducers/attachment";
 import { childReducer } from "../reducers/child";
 import {
@@ -66,33 +67,33 @@ import {
   fetchChildSuccess,
   fetchChildUsersFailure,
   fetchChildUsersSuccess,
-  initialState
+  initialState,
 } from "../reducers/childProfile";
 import {
   commentReducer,
   fetchCommentsFailure,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  initialState as commentInitialState
+  initialState as commentInitialState,
 } from "../reducers/comment";
 import {
   connectionReducer,
   fetchConnectionsFailure,
   fetchConnectionsSuccess,
-  initialState as connectionInitialState
+  initialState as connectionInitialState,
 } from "../reducers/connection";
 import {
   familyTreeReducer,
   fetchFamilyTreeFailure,
   fetchFamilyTreeSuccess,
-  initialState as familyTreeInitialState
+  initialState as familyTreeInitialState,
 } from "../reducers/familyTree";
 import {
   fetchSearchResultsFailure,
   fetchSearchResultsRequest,
   fetchSearchResultsSuccess,
   initialState as searchResultInitialState,
-  searchResultReducer
+  searchResultReducer,
 } from "../reducers/searchResult";
 import { authURL } from "../utils/request";
 import { Preloader } from "./Preloader";
@@ -151,10 +152,12 @@ export function ChildProfilePage(props) {
   );
 
   const [currentCommentId, setCurrentCommentId] = useState(null);
+  const [schoolDistrictOptions, setSchoolDistrictsOptions] = useState([]);
 
   useEffect(() => {
     dispatch(fetchChildRequest());
-    fetchChildrenRequest({}).then(setChildren);
+    fetchSchoolDistricts();
+    fetchChildrenRequest({ view: "short" }).then(setChildren);
     fetchChildProfile();
     fetchFamilyTree();
     fetchTemplates();
@@ -299,6 +302,17 @@ export function ChildProfilePage(props) {
           searchResultDispatch(fetchSearchResultsSuccess(data.family_searches))
       )
       .catch((e) => attachmentDispatch(fetchSearchResultsFailure(e.message)));
+  };
+
+  const fetchSchoolDistricts = () => {
+    fetchSchoolDistrictsRequest().then((data) => {
+      setSchoolDistrictsOptions(
+        data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))
+      );
+    });
   };
 
   const onRemoveSiblingship = async (id) => {
@@ -509,6 +523,7 @@ export function ChildProfilePage(props) {
                     setIsOpenEdit={setIsOpenEdit}
                     child={state.child}
                     fetch={fetchChildProfile}
+                    schoolDistrictOptions={schoolDistrictOptions}
                   />
                 </Spacing>
               </Box>

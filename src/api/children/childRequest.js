@@ -14,38 +14,34 @@ export const fetchChildrenRequest = (params) => {
 
 export const fetchChildUsersRequest = (params) => {
   return request({
-    endpoint:
-      "children" +
-      (params.id ? `/${params.id}` : ``) + `?view=users`,
+    endpoint: "children" + (params.id ? `/${params.id}` : ``) + `?view=users`,
     method: "GET",
-  })
-}
+  });
+};
 
 export const fetchConnectionsRequest = (params) => {
   return request({
     endpoint:
-      "children" +
-      (params.id ? `/${params.id}` : ``) + `?view=contacts`,
+      "children" + (params.id ? `/${params.id}` : ``) + `?view=contacts`,
     method: "GET",
-  })
-}
+  });
+};
 
 export const fetchFamilyTreeRequest = (params) => {
   return request({
     endpoint:
-      "children" +
-      (params.id ? `/${params.id}` : ``) + `?view=family_tree`,
+      "children" + (params.id ? `/${params.id}` : ``) + `?view=family_tree`,
     method: "GET",
-  })
-}
+  });
+};
 
 export const fetchChildrenMeta = () => {
   return request({
     endpoint: "children",
     method: "GET",
     meta: true,
-  })
-}
+  });
+};
 
 export const fetchChildComments = (id) => {
   return request({
@@ -69,69 +65,68 @@ export const createChildRequest = (data) => {
   });
 };
 
-export const updateChildRequest = ({id, ...rest}) => {
+export const updateChildRequest = ({ id, ...rest }) => {
   return request({
     endpoint: `children/${id}`,
     method: "PUT",
     data: {
       child: {
-        ...rest
-      }
-    }
-  })
-}
+        ...rest,
+      },
+    },
+  });
+};
 
 export const createChildUserRequest = (data) => {
   return request({
     endpoint: "user_children",
     method: "POST",
     data,
-  })
-}
+  });
+};
 
 export const removeChildUserRequest = (id) => {
   return request({
     endpoint: `user_children/${id}`,
-    method: "DELETE"
-  })
-}
+    method: "DELETE",
+  });
+};
 
 export const updateChildUserRequest = (data) => {
   return request({
     endpoint: `user_children`,
     method: "PUT",
-    data
-  })
-}
+    data,
+  });
+};
 
 export const approveChildUserRequest = (user_id, child_id) => {
   return request({
     endpoint: "user_children",
     method: "PUT",
     data: {
-      "user_child": {
-        "user_id": user_id,
-        "child_id": child_id,
-        "date_approved": new Date()
-      }
-    }
-  })
-}
+      user_child: {
+        user_id: user_id,
+        child_id: child_id,
+        date_approved: new Date(),
+      },
+    },
+  });
+};
 
 export const denyChildUserRequest = (user_id, child_id) => {
   return request({
     endpoint: "user_children",
     method: "PUT",
     data: {
-      "user_child": {
-        "user_id": user_id,
-        "child_id": child_id,
-        "date_denied": new Date()
-      }
-    }
-  })
-}
-
+      user_child: {
+        user_id: user_id,
+        child_id: child_id,
+        date_denied: new Date(),
+      },
+    },
+  });
+};
 
 export const fetchChildSiblings = (id) => {
   return request({
@@ -144,7 +139,7 @@ export const createChildSiblingsRequest = (data) => {
   return request({
     endpoint: `siblingships`,
     method: "POST",
-    data
+    data,
   });
 };
 
@@ -152,6 +147,12 @@ export const removeChildSiblingsRequest = (id) => {
   return request({
     endpoint: `siblingships/${id}`,
     method: "DELETE",
+  });
+};
 
+export const fetchSchoolDistrictsRequest = () => {
+  return request({
+    endpoint: "school_districts",
+    method: "GET",
   });
 };
