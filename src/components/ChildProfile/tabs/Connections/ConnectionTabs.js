@@ -11,6 +11,8 @@ import { CommentsTab } from "./CommentsTab";
 import { ConnectionContext } from "./ConnectionModal";
 import TemplatesSentTab from "./TemplatesSentTab";
 import { AlertsTab } from "./AlertsTab";
+import { LinkScoreTab } from "../LinkScore/LinkScoreTab";
+import StarFilledIcon from "@atlaskit/icon/glyph/star-filled";
 
 export const ConnectionTabs = (props) => {
   const {
@@ -67,6 +69,17 @@ export const ConnectionTabs = (props) => {
         </Box>
       ),
       content: <AttachmentsTab connection={props.currentConnection} />,
+    },
+    {
+      label: (
+        <Box d="flex" align="center" justify="center">
+          <StarFilledIcon />
+          <Text style={{ fontSize: 15, paddingBottom: 10, paddingLeft: 5 }}>
+            Link Score
+          </Text>
+        </Box>
+      ),
+      content: <LinkScoreTab />,
     },
   ];
 

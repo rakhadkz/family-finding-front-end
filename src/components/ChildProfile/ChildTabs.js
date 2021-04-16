@@ -5,6 +5,7 @@ import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { CommentsTab } from "./tabs/Comments/CommentsTab";
 import { Connections } from "./tabs/Connections";
 import { FamilySearchTab } from "./tabs/FamilySearch/FamilySearchTab";
+import { LinkScoreTab } from "./tabs/LinkScore/LinkScoreTab";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
 export const ChildTabs = ({ currentCommentId }) => {

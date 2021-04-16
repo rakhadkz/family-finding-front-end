@@ -201,7 +201,15 @@ export const confirmedConnectionRows = (
             },
             {
               key: "link_score",
-              content: <FitScore score={4} />,
+              content: (
+                <FitScore
+                  score={
+                    item.link_score_overall > 0
+                      ? (5 * item.link_score_overall) / 100
+                      : 0
+                  }
+                />
+              ),
             },
             {
               key: "actions",
