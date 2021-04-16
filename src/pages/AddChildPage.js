@@ -1,6 +1,6 @@
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import PeopleIcon from "@atlaskit/icon/glyph/people";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dropzone from "react-dropzone-uploader";
 import { useHistory } from "react-router-dom";
 import Folder48Icon from "@atlaskit/icon-file-type/glyph/folder/48";
@@ -15,12 +15,14 @@ import {
 import { createChild } from "../context/children/childProvider";
 import { parse } from "papaparse";
 import { ImportChildren } from "../components/Children/ImportChildren";
+import { fetchSchoolDistrictsRequest } from "../api/children";
 
 export const AddChildPage = () => {
   const history = useHistory();
   const [isOpen, setIsOpen] = useState(false);
   const [children, setChildren] = useState([]);
   const [isImport, setIsImport] = useState();
+  const [schoolDistrictOptions, setSchoolDistrictsOptions] = useState([]);
   const handleChangeStatus = ({ meta, file }, status) => {
     console.log(status, meta, file);
   };
@@ -39,6 +41,21 @@ export const AddChildPage = () => {
       }
     });
   };
+
+  const fetchSchoolDistricts = () => {
+    fetchSchoolDistrictsRequest().then((data) => {
+      setSchoolDistrictsOptions(
+        data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))
+      );
+    });
+  };
+
+  useEffect(() => {
+    fetchSchoolDistricts();
+  }, []);
 
   return (
     <>
@@ -95,7 +112,11 @@ export const AddChildPage = () => {
               <BreadcrumbsItem text="Add Child" />
             </Breadcrumbs>
           </Spacing>
-          <AddChildForm onSubmit={createChild} setIsImportOpen={setIsOpen} />
+          <AddChildForm
+            onSubmit={createChild}
+            setIsImportOpen={setIsOpen}
+            schoolDistrictOptions={schoolDistrictOptions}
+          />
         </>
       )}
     </>
