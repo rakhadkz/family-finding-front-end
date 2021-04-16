@@ -19,7 +19,7 @@ export const ChildTabs = ({ currentCommentId }) => {
       content: <FamilyTreePage />,
     },
     {
-      label: "Family Search",
+      label: "Link Alerts",
       content: <FamilySearchTab />,
     },
     {

@@ -158,6 +158,7 @@ const ConnectionModal = ({
         commentState,
         templateState,
         linkScore,
+        currentConnection,
         fetchAlerts,
         fetchTemplates,
         fetchComments,
@@ -175,15 +176,12 @@ const ConnectionModal = ({
           width: 700,
         }}
       >
-        <Box d="flex" style={{ justifyContent: "space-between" }}>
+        <Box
+          d="flex"
+          style={{ justifyContent: "space-between", marginBottom: 20 }}
+        >
           <Box d="f">
-            <Box
-              w="150px"
-              d="flex"
-              direction="column"
-              align="center"
-              justify="center"
-            >
+            <Box w="130px" d="flex" direction="column">
               <Avatar
                 name={
                   currentConnection?.contact?.first_name +
@@ -199,21 +197,17 @@ const ConnectionModal = ({
                   size="28px"
                   style={{
                     fontWeight: "700",
-                    marginBottom: 15,
+                    marginBottom: 10,
                   }}
                 >
-                  {currentConnection?.contact?.first_name[0]?.toUpperCase() +
-                    currentConnection?.contact?.first_name?.substring(1)}{" "}
-                  {currentConnection?.contact?.last_name
-                    ? currentConnection?.contact?.last_name[0]?.toUpperCase() +
-                      currentConnection?.contact?.last_name?.substring(1)
-                    : ""}
+                  {currentConnection?.contact?.first_name}{" "}
+                  {currentConnection?.contact?.last_name}
                 </Title>
                 {currentConnection.is_disqualified ? (
                   <Badge appearance="important">{"DISQUALIFIED"}</Badge>
                 ) : null}
               </Box>
-              <Spacing m={{ t: "10px" }}>
+              <div style={{ marginBottom: 10 }}>
                 <FitScore
                   score={
                     currentConnection.link_score_overall > 0
@@ -221,7 +215,15 @@ const ConnectionModal = ({
                       : 0
                   }
                 />
-              </Spacing>
+              </div>
+              {currentConnection.is_disqualified ? (
+                <Button
+                  onClick={allowDisqualifiedConnection}
+                  appearance="warning"
+                >
+                  Remove Disqualification
+                </Button>
+              ) : null}
 
               <Spacing m={{ t: "10px" }}>
                 <Text style={{ fontSize: 15 }}>
@@ -231,54 +233,8 @@ const ConnectionModal = ({
             </Spacing>
           </Box>
         </Box>
-
-        <Spacing m="30px 40px">
-          <Box d="flex" w="500px" justify="space-between" wrap="wrap">
-            <Box mb="20px" w="200px" style={{ fontWeight: "700" }}>
-              Email:
-              <Box style={{ fontWeight: "500" }}>
-                {currentConnection?.contact?.communications
-                  ?.filter((cm) => cm.communication_type === "email")
-                  .map((cm) => (
-                    <div style={{ width: 200 }}>{cm.value}</div>
-                  ))}
-              </Box>
-            </Box>
-            <Box mb="20px" w="200px" style={{ fontWeight: "700" }}>
-              Address:{" "}
-              <Box style={{ fontWeight: "500" }}>
-                {currentConnection?.contact?.communications
-                  ?.filter((cm) => cm.communication_type === "address")
-                  .map((cm) => (
-                    <div style={{ width: 200 }}>{cm.value}</div>
-                  ))}
-              </Box>
-            </Box>
-            <Box mb="0px" w="200px" style={{ fontWeight: "700" }}>
-              Phone:
-              <Box style={{ fontWeight: "500" }}>
-                {currentConnection?.contact?.communications
-                  ?.filter((cm) => cm.communication_type === "phone")
-                  .map((cm) => (
-                    <div style={{ width: 200 }}>{cm.value}</div>
-                  ))}
-              </Box>
-            </Box>
-            <Box mb="0px" w="200px" style={{ fontWeight: "700" }}>
-              {currentConnection.is_disqualified ? (
-                <Box>
-                  <Button
-                    onClick={allowDisqualifiedConnection}
-                    appearance="warning"
-                  >
-                    Remove Disqualification
-                  </Button>
-                </Box>
-              ) : null}
-            </Box>
-          </Box>
-        </Spacing>
-        <Box d="flex">
+        <Title size="16px">Connected Children</Title>
+        <Box d="flex" mt="8px">
           <ButtonGroup>
             {children.map((child) => (
               <Rounded
@@ -298,7 +254,7 @@ const ConnectionModal = ({
             ))}
           </ButtonGroup>
         </Box>
-        <div style={{ width: 650 }}>
+        <div style={{ marginTop: 15, marginRight: 50 }}>
           <ConnectionTabs
             currentConnection={currentConnection}
             currentTab={currentTab}
