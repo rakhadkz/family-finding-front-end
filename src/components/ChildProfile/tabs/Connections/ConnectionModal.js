@@ -11,30 +11,30 @@ import {
   fetchAlertsFailure,
   fetchAlertsRequest,
   fetchAlertsSuccess,
-  initialState as alertInitialState
+  initialState as alertInitialState,
 } from "../../../../reducers/alertLinks";
 import {
   attachmentReducer,
   fetchAttachmentsFailure,
   fetchAttachmentsRequest,
   fetchAttachmentsSuccess,
-  initialState as attachmentInitialState
+  initialState as attachmentInitialState,
 } from "../../../../reducers/attachment";
 import {
   commentReducer,
   fetchCommentsFailure,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  initialState as commentInitialState
+  initialState as commentInitialState,
 } from "../../../../reducers/comment";
 import {
   fetchTemplatesFailure,
   fetchTemplatesRequest,
-  fetchTemplatesSuccess
+  fetchTemplatesSuccess,
 } from "../../../../reducers/template/templateActions";
 import {
   templateInitialState,
-  templateReducer
+  templateReducer,
 } from "../../../../reducers/template/templateReducer";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import { FitScore } from "../../../ui/molecules";
@@ -69,6 +69,7 @@ const ConnectionModal = ({
     templateInitialState
   );
   const [children, setChildren] = useState([]);
+  const [linkScore, setLinkScore] = useState({});
 
   const history = useHistory();
 
@@ -80,6 +81,7 @@ const ConnectionModal = ({
     fetchAttachments();
     fetchAlerts();
     fetchChildren();
+    fetchLinkScore();
   }, []);
 
   const fetchAlerts = () => {
@@ -139,6 +141,13 @@ const ConnectionModal = ({
       .catch((e) => e && templateDispatch(fetchTemplatesFailure(e.message)));
   };
 
+  const fetchLinkScore = () => {
+    fetchConnectionsRequest({
+      id: currentConnection.id,
+      view: "link_score",
+    }).then((data) => data && data.link_score && setLinkScore(data.link_score));
+  };
+
   console.log("CURRENT CONNECTION", currentConnection);
 
   return (
@@ -148,6 +157,7 @@ const ConnectionModal = ({
         attachmentState,
         commentState,
         templateState,
+        linkScore,
         fetchAlerts,
         fetchTemplates,
         fetchComments,
@@ -204,7 +214,13 @@ const ConnectionModal = ({
                 ) : null}
               </Box>
               <Spacing m={{ t: "10px" }}>
-                <FitScore score={Math.floor(Math.random() * 6)} />
+                <FitScore
+                  score={
+                    currentConnection.link_score_overall > 0
+                      ? (5 * currentConnection.link_score_overall) / 100
+                      : 0
+                  }
+                />
               </Spacing>
 
               <Spacing m={{ t: "10px" }}>
