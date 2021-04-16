@@ -8,15 +8,33 @@ export const ContactInfoTab = () => {
     <div style={{ paddingTop: 17 }}>
       <InfoItem>
         <b>Email:</b>
-        <span>{currentConnection?.contact.email}</span>
+        <span>
+          {currentConnection?.contact?.communications
+            ?.filter((cm) => cm.communication_type === "email")
+            .map((cm) => (
+              <div style={{ width: 200 }}>{cm.value}</div>
+            ))}
+        </span>
       </InfoItem>
       <InfoItem>
         <b>Address:</b>
-        <span>{currentConnection?.contact?.address?.address_1}</span>
+        <span>
+          {currentConnection?.contact?.communications
+            ?.filter((cm) => cm.communication_type === "address")
+            .map((cm) => (
+              <div style={{ width: 200 }}>{cm.value}</div>
+            ))}
+        </span>
       </InfoItem>
       <InfoItem>
         <b>Phone:</b>
-        <span>{currentConnection?.contact.phone}</span>
+        <span>
+          {currentConnection?.contact?.communications
+            ?.filter((cm) => cm.communication_type === "phone")
+            .map((cm) => (
+              <div style={{ width: 200 }}>{cm.value}</div>
+            ))}
+        </span>
       </InfoItem>
     </div>
   );
