@@ -1,6 +1,16 @@
-import React from "react";
-import SidebarLogo from "../../../assets/SidebarLogo.svg";
+import React, { memo } from "react";
+import ImagePlacholder from "../../../assets/image_placeholder.svg";
 
-export const Logo = ({ h = "50px" }) => {
-  return <img style={{ height: h }} alt="Logo" src={SidebarLogo} />;
+const InnerLogo = ({ link }) => {
+  return (
+    <img
+      style={{
+        height: "80px"
+      }}
+      alt="Logo"
+      src={link || ImagePlacholder}
+    />
+  );
 };
+
+export const Logo = memo(InnerLogo)

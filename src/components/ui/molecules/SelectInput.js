@@ -1,4 +1,3 @@
-import { Field } from "@atlaskit/form";
 import Select from "@atlaskit/select";
 import PropTypes from "prop-types";
 import React from "react";
@@ -13,6 +12,7 @@ export const SelectInput = (props) => {
     error,
     control,
     type,
+    id,
     placeholder = null,
     elemBeforeInput = null,
     elemAfterInput = null,
@@ -20,25 +20,50 @@ export const SelectInput = (props) => {
     label = null,
     isMulti = false,
     options,
+    defaultValue = null,
+    myValue,
+    myOnChange,
+    menuPlacement = "bottom",
+    marginX = "0px",
+    marginY = "8px",
+    validationState = "default",
+    className,
   } = props;
 
   return (
-    <Box w={`${width}px`} mr="35px">
+    <Box w={`${width}px`} mt={marginY} mb={marginY} ml={marginX} mr={marginX}>
       {label && <Label htmlFor={name}>{label}</Label>}
       <Controller
+        name={name}
         control={control}
         ref={{ register }}
-        isMulti={isMulti}
         rules={register}
-        name={name}
-        as={Select}
+        defaultValue={defaultValue}
+        render={(props) => (
+          <Select
+            validationState={validationState}
+            menuPlacement={menuPlacement}
+            control={control}
+            inputId={id}
+            menuPortalTarget={document.body}
+            styles={{
+              menuPortal: (base) => ({ ...base, zIndex: 999999 }),
+            }}
+            options={options}
+            defaultValue={defaultValue}
+            value={myValue}
+            onChange={(value) => {
+              props.onChange(value);
+              myOnChange && myOnChange(value);
+            }}
+            className={className}
+          />
+        )}
         width={width}
         elemAfterInput={elemAfterInput}
         placeholder={placeholder}
-        id={name}
         className="multi-select"
         classNamePrefix="react-select"
-        options={options}
       />
       {error && (
         <StyledTextError>

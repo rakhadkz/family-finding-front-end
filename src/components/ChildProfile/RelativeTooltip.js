@@ -1,26 +1,24 @@
-import Avatar from "@atlaskit/avatar";
 import { TooltipPrimitive } from "@atlaskit/tooltip";
 import React from "react";
 import styled from "styled-components";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
+import { Avatar } from "../ui/molecules/Avatar";
 
 export const RelativeTooltip = ({ relative }) => {
   return (
     <CustomTooltip>
       <Rectangle>
         <Box d="flex" align="flex-start">
-          <Avatar
-            appearance="circle"
-            src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
-            size="xlarge"
-          />
+          <Avatar name="Bekzat Makhanbet" size="large" />
           <Spacing m={{ l: "17px" }}>
-            <StyledLabel>Brother</StyledLabel>
-            <Title>Bekzat Makhanbet</Title>
-            <Text>650-496-0528</Text>
-            <Text>8ahmed.emad6@dankq.com</Text>
+            <StyledLabel>{relative?.relationship}</StyledLabel>
+            <Title>
+              {relative?.first_name} {relative?.last_name}
+            </Title>
+            <Text>{relative?.phone}</Text>
+            <Text>{relative?.email}</Text>
             <Spacing m={{ t: "16px" }}>
-              <Text>326 Thunder Road, LUNING, Nevada, 89420</Text>
+              <Text>{relative?.address}</Text>
             </Spacing>
           </Spacing>
         </Box>
@@ -48,7 +46,7 @@ const Text = styled.div`
   color: #172b4d;
 `;
 
-const CustomTooltip = styled(TooltipPrimitive)`
+export const CustomTooltip = styled(TooltipPrimitive)`
   background: white;
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);

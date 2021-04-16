@@ -24,18 +24,9 @@ const login = ({ email, password }) => {
 
   return loginRequest({ email, password })
     .then(handleUserResponse)
-    .catch((err) => {
-      console.log(err);
-      toast.error(errorStatuses[err.status] || "Uncaught error !", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
+    .catch((err) =>
+      toast.error(errorStatuses[err.status] || "Uncaught error !")
+    );
 };
 
 const reset = (data) => {
@@ -45,28 +36,8 @@ const reset = (data) => {
   };
 
   return resetRequest(data)
-    .then(() => {
-      toast.success("Check your inbox to reset your password!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    })
-    .catch((err) => {
-      toast.error(errorStatuses[err.status], {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
+    .then(() => toast.success("Check your inbox to reset your password!"))
+    .catch((err) => toast.error(errorStatuses[err.status]));
 };
 
 const newPassword = (data) => {
@@ -75,28 +46,8 @@ const newPassword = (data) => {
   };
 
   return newPasswordRequest(data)
-    .then(() => {
-      toast.success("Your password has been successfully updated!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    })
-    .catch((err) => {
-      toast.error(errorStatuses[err.status], {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
+    .then(() => toast.success("Your password has been successfully updated!"))
+    .catch((err) => toast.error(errorStatuses[err.status]));
 };
 
 const signup = (user) => {
@@ -105,21 +56,15 @@ const signup = (user) => {
     422: "User already exists !",
   };
 
-  return signupRequest(user).catch((err) => {
-    toast.error(errorStatuses[err.status], {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  });
+  return signupRequest(user)
+    .then(() => toast.success("User successfully created!"))
+    .catch((err) => toast.error(errorStatuses[err.status]));
 };
 
 const fetchMe = () => {
-  return fetchMeRequest().then(handleUserResponse).catch(logout);
+  return fetchMeRequest("extended")
+    .then(handleUserResponse)
+    .catch((e) => console.log("ERROR", e));
 };
 
 const fetchMeAsAdmin = (adminId) => {
@@ -127,7 +72,12 @@ const fetchMeAsAdmin = (adminId) => {
 };
 
 const logout = async () => {
-  window.localStorage.removeItem(localStorageKey);
+  await window.localStorage.removeItem(localStorageKey);
+  await window.localStorage.removeItem("user");
+};
+
+const getLocalStorageUser = () => {
+  return JSON.parse(window.localStorage.getItem("user"));
 };
 
 export {
@@ -139,4 +89,5 @@ export {
   newPassword,
   fetchMe,
   fetchMeAsAdmin,
+  getLocalStorageUser,
 };

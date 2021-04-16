@@ -5,6 +5,7 @@ import LockIcon from "@atlaskit/icon/glyph/lock";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import { useAuth } from "../../context/auth/authContext";
 import { FORGOT_PASSWORD } from "../../helpers";
 import { Form, Spacing } from "../ui/atoms";
 import { TextInput } from "../ui/molecules";
@@ -12,22 +13,28 @@ import { TextInput } from "../ui/molecules";
 export const LoginForm = ({ onSubmit }) => {
   const history = useHistory();
   const { register, handleSubmit, control, errors } = useForm();
+  const { fetchMe } = useAuth();
 
   const [pending, setPending] = useState(false);
 
   const onSubmitHandle = (data) => {
     setPending(true);
-    onSubmit(data)
-      .then(() => history.push(`/`))
-      .finally(() => setPending(false));
+    onSubmit(data, history).finally(() => {
+      setPending(false);
+      fetchMe();
+    });
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmitHandle)} noValidate>
+    <Form
+      style={{ width: "100%" }}
+      onSubmit={handleSubmit(onSubmitHandle)}
+      noValidate
+    >
       <FormSection>
         <TextInput
           name={"email"}
-          register={register({ required: true, minLength: 5 })}
+          register={register({ required: true, minLength: 4 })}
           control={control}
           error={errors.email}
           label="Email"

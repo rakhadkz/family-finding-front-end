@@ -1,5 +1,9 @@
 import { toast } from "react-toastify";
-import { deleteUsersRequest, fetchUsersRequest } from "../../api/user";
+import {
+  deleteOrganizationUserRequest,
+  deleteUsersRequest,
+  fetchUsersRequest,
+} from "../../api/user";
 import { localStorageKey } from "../../utils/requestHandler";
 
 const getToken = async () => {
@@ -11,17 +15,17 @@ const fetchUsers = (params) => {
     500: "Error on Server !",
   };
 
-  return fetchUsersRequest(params).catch((err) => {
-    toast.error(errorStatuses[err.status], {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  });
+  return fetchUsersRequest(params).catch((err) =>
+    toast.error(errorStatuses[err.status])
+  );
+};
+
+const deleteOrganizationUser = (id) => {
+  const errorStatuses = {
+    500: "Error on Server !",
+  };
+
+  return deleteOrganizationUserRequest(id).catch((err) => {});
 };
 
 const deleteUser = (userId) => {
@@ -29,17 +33,9 @@ const deleteUser = (userId) => {
     500: "Error on Server !",
   };
 
-  return deleteUsersRequest(userId).catch((err) => {
-    toast.error(errorStatuses[err.status], {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  });
+  return deleteUsersRequest(userId).catch((err) =>
+    toast.error(errorStatuses[err.status])
+  );
 };
 
-export { fetchUsers, deleteUser };
+export { fetchUsers, deleteUser, deleteOrganizationUser };

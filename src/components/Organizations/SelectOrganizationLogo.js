@@ -11,7 +11,7 @@ export const SelectOrganizationLogo = ({ onClick, control, register, setLogoUrl,
   const handleChange = (target) => {
     setPending(true);
     uploadRequest(target.files[0])
-      .then( payload => setLogoUrl(payload.public_id))   // console.log(payload)
+      .then( payload => setLogoUrl(payload.secure_url))   // console.log(payload)
       .catch(err => console.log(err))
       .finally(() => setPending(false));
     setLogo(URL.createObjectURL(target.files[0]));
@@ -62,7 +62,7 @@ const ButtonContentWrapper = styled.div`
   font-size: 14px;
 `;
 
-const InvisibleFileInput = styled.input`
+export const InvisibleFileInput = styled.input`
   opacity: 0;
   width: 100px;
   position: absolute;

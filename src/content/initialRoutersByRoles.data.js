@@ -1,5 +1,6 @@
 export const initialRoutesByRoles = {
   super_admin: "organizations",
-  admin: "organization_users",
+  admin: "action-items",
   user: "action-items",
+  manager: "action-items"
 };

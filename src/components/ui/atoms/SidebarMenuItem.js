@@ -8,7 +8,7 @@ export const SidebarMenuItem = styled.div`
     background: none;
     width: 100%;
     text-align: left;
-    padding: 0px 16px;
+    padding: 0px 0px 0px 16px;
     color: #42526e;
     font-family: Helvetica;
     font-style: normal;
@@ -23,11 +23,12 @@ export const SidebarMenuItem = styled.div`
     opacity: ${ifProp("disabled", "0.5", "unset")};
     pointer-events: ${ifProp("disabled", "none", "unset")};
 
-    &:hover,
+    &:hover, &:focus,
     &.active {
       color: #0052cc;
       background-color: rgba(9, 30, 66, 0.04);
       --icon-accent-color: #0052cc;
+      outline: none;
     }
   }
 `;

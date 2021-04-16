@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as auth from "./authProvider";
 
-const AuthContext = React.createContext();
+export const AuthContext = React.createContext();
 
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
@@ -21,22 +21,37 @@ export const AuthProvider = (props) => {
 
   const fetchMe = React.useCallback(
     () =>
-      auth.fetchMe().then(async (user) => {
-        if (user?.role === "admin") {
-          auth.fetchMeAsAdmin(user?.id).then(setUser);
-        } else setUser(user);
+      auth.fetchMe().then((user) => {
+        if (user) {
+          var selectedOrganization = null;
+          user.user_organizations.map((item) => {
+            if (
+              item.organization_id === user.organization_id &&
+              item.role === user.role
+            ) {
+              selectedOrganization = {
+                value: item,
+                label: item.organization.name,
+              };
+            }
+          });
+          setUser({
+            ...user,
+            selectedOrganization: selectedOrganization,
+          });
+        }
       }),
     []
   );
 
   useEffect(() => {
     if (isSignedIn) fetchMe();
-  }, [fetchMe, isSignedIn]);
+  }, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const isAuthorized = () => {
     const token = auth.getToken();
-
+    console.log("TOKEN", token);
     if (token) {
       setSignedIn(true);
       return true;
@@ -46,7 +61,13 @@ export const AuthProvider = (props) => {
     }
   };
 
-  const login = React.useCallback((form) => auth.login(form).then(setUser), []);
+  const login = React.useCallback(
+    (form) =>
+      auth.login(form).then((user) => {
+        user?.email && setUser(user);
+      }),
+    []
+  );
 
   const sign = React.useCallback((form) => auth.signup(form), []);
 

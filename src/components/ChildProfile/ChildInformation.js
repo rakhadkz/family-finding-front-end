@@ -1,53 +1,72 @@
-import Avatar from "@atlaskit/avatar";
-import React from "react";
+import Button from "@atlaskit/button";
+import moment from "moment";
+import React, { memo } from "react";
 import styled from "styled-components";
+import { humanReadableDateFormat } from "../../content/date";
 import { Box, Label, Rectangle, Spacing, Title } from "../ui/atoms";
+import { Avatar } from "../ui/molecules/Avatar";
+import EditorEditIcon from "@atlaskit/icon/glyph/editor/edit";
+import Can from "../../accessControl/Can";
+import { CHILDREN } from "../../helpers";
+import { ACTIONS } from "../../accessControl/actions";
 
-export const ChildInformation = ({ child }) => {
+export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
   return (
     <Rectangle>
-      <Box d="flex" justify="space-between">
-        <Box d="flex">
-          <Avatar
-            appearance="circle"
-            src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
-            size="large"
-          />
-          <Spacing m={{ l: "17px" }}>
-            <StyledLabel>Full name</StyledLabel>
-            <Title size="18px">{`${child.first_name} ${child.last_name}`}</Title>
-          </Spacing>
-        </Box>
-        <Spacing>
-          <StyledLabel>Birth date</StyledLabel>
-          <Text>{child.birthday}</Text>
+      <Box d="flex" mb="16px">
+        <Avatar name={`${child.first_name} ${child.last_name}`} />
+        <Spacing m={{ l: "17px" }}>
+          <StyledLabel>Full name</StyledLabel>
+          <Box d="flex" align="center">
+            <Title size="18px" style={{ marginRight: "5px" }}>
+              {child.first_name ? `${child.first_name} ${child.last_name}` : ""}
+            </Title>
+            <Can
+              perform={`${CHILDREN}:${ACTIONS.EDIT}`}
+              yes={() => (
+                <Button
+                  spacing="none"
+                  appearance="link"
+                  onClick={() => setIsOpenEdit(true)}
+                >
+                  <EditorEditIcon size="medium" />
+                </Button>
+              )}
+            />
+          </Box>
         </Spacing>
-        <Spacing>
+      </Box>
+      <Box d="flex" justify="space-between">
+        <Spacing m={{ l: "8px", r: "8px" }}>
+          <StyledLabel>Birth date</StyledLabel>
+          <Text>{moment(child.birthday).format(humanReadableDateFormat)}</Text>
+        </Spacing>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>Gender</StyledLabel>
           <Text>{child.gender}</Text>
         </Spacing>
-        <Spacing>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>Race</StyledLabel>
           <Text>{child.race}</Text>
         </Spacing>
-        <Spacing>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>Permanency goal</StyledLabel>
           <Text>{child.permanency_goal}</Text>
         </Spacing>
-        <Spacing>
+        <Spacing m={{ l: "8px", r: "8px" }}>
           <StyledLabel>System status</StyledLabel>
           <Text>{child.system_status}</Text>
         </Spacing>
-        <Spacing>
-          <StyledLabel>Matches</StyledLabel>
+        <Spacing m={{ l: "8px", r: "8px" }}>
+          <StyledLabel>Connections</StyledLabel>
           <Text>1</Text>
         </Spacing>
       </Box>
     </Rectangle>
   );
-};
+});
 
-const StyledLabel = styled(Label)`
+export const StyledLabel = styled(Label)`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;

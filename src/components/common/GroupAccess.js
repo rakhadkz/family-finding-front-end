@@ -1,7 +1,10 @@
 import { useAuth } from "../../context/auth/authContext";
+import { getLocalStorageUser } from "../../context/auth/authProvider";
 
 export const GroupAccess = ({ children, ...rest }) => {
-  const { user: currentUser } = useAuth();
+  const localStorageUser = getLocalStorageUser();
+  const { user } = useAuth();
+  const currentUser = user || localStorageUser;
   const currentGroupId = currentUser ? groupIdFromUser(currentUser.role) : null;
   if (("atLeast" in rest, ableToPassAtLeast(rest.atLeast, currentGroupId))) {
     return children;

@@ -34,3 +34,22 @@
   padding: 2px;
   border: 1px solid #215a88;
 }
+
+.chart-menu {
+  border-radius: 5px !important;
+  margin-right: -45px;
+  z-index: 3 !important;
+  border: 0.7px solid #7a7a7a;
+}
+
+.chart-menu div {
+  align-items: center;
+  display: flex;
+  border-radius: 5px;
+  border: 0px !important;
+  color: #42526E;
+}
+
+.chart-menu div span {
+  color: #42526E;
+}

@@ -1,5 +1,4 @@
 import Button from "@atlaskit/button";
-import { FormSection } from "@atlaskit/form";
 import SearchIcon from "@atlaskit/icon/glyph/search";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -11,20 +10,40 @@ import "@atlaskit/css-reset";
 import { TableWrapper } from "../ui/common";
 
 export const AddOrganizationForm = ({ setOrgRoles }) => {
-  const { register, handleSubmit, control, errors } = useForm();
-  const { fields, append, remove } = useFieldArray({
+  const { handleSubmit, control, errors, watch, setValue } = useForm();
+  const [roles, setRoles] = useState([
+    { label: "Organization admin", value: "admin" },
+    { label: "Organization manager", value: "manager" },
+    { label: "Organization user", value: "user" },
+  ]);
+  const [role, setRole] = useState(null);
+  const [organizations, setOrganizations] = useState([]);
+  const [organization, setOrganization] = useState(null);
+
+  const { fields, prepend, remove } = useFieldArray({
     control,
     name: "user_organizations",
   });
+  const superAdminOrganization = watch("organization");
 
-  const [organizations, setOrganizations] = useState([]);
+  const clearOrganization = () => {
+    setValue("organization", null, { shouldDirty: true });
+    setOrganization(null);
+  };
+
+  const clearRole = () => {
+    setValue("role", null, { shouldDirty: true });
+    setRole(null);
+  };
 
   const onAddOrganizationHandle = (data) => {
+    clearRole();
+    clearOrganization();
     fields.map(
       (item, index) =>
         item.organization.value === data.organization.value && remove(index)
     );
-    append({
+    prepend({
       organization: {
         label: data.organization?.label,
         value: data.organization?.value,
@@ -35,6 +54,22 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
       },
     });
   };
+
+  useEffect(() => {
+    clearRole();
+    const super_admin_role = [
+      {
+        label: "Super Admin",
+        value: "super_admin",
+      },
+      ...options,
+    ];
+    if (superAdminOrganization && superAdminOrganization?.value === 3) {
+      setRoles(super_admin_role);
+    } else {
+      setRoles(options);
+    }
+  }, [superAdminOrganization]);
 
   useEffect(() => {
     fetchOrganizations({ view: "short" }).then((items) => {
@@ -66,27 +101,33 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
         onSubmit={handleSubmit(onAddOrganizationHandle)}
         noValidate
       >
-        <FormSection>
-          <Spacing>
+        <Spacing m={{t: "8px"}}>
             <Box align="flex-end" d="flex">
               <SelectInput
+                marginY="0px"
                 className="input"
                 name="organization"
                 elemAfterInput={<SearchIcon />}
                 options={organizations}
-                ref={register({ required: true })}
+                register={{ required: true }}
                 control={control}
                 error={errors.organization}
+                myValue={organization}
+                myOnChange={setOrganization}
                 label="Organization"
                 placeholder="Choose organization"
               />
               <SelectInput
+                marginY="0px"
+                marginX="8px"
                 className="input"
                 name="role"
                 label="Role"
-                options={options}
                 register={{ required: true }}
+                options={roles}
                 control={control}
+                myOnChange={setRole}
+                myValue={role}
                 error={errors.role}
                 placeholder="Select a role"
               />
@@ -95,7 +136,6 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
               </Button>
             </Box>
           </Spacing>
-        </FormSection>
       </Form>
       <Spacing m={{ t: "33px" }}>
         <TableWrapper>
@@ -134,7 +174,6 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
 };
 
 const options = [
-  { label: "Super admin", value: "super_admin" },
   { label: "Organization admin", value: "admin" },
   { label: "Organization manager", value: "manager" },
   { label: "Organization user", value: "user" },

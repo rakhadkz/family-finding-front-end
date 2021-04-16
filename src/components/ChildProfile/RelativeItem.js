@@ -1,23 +1,23 @@
-import Avatar from "@atlaskit/avatar";
 import Tooltip from "@atlaskit/tooltip";
 import React from "react";
 import styled from "styled-components";
 import { Box, Label, Spacing } from "../ui/atoms";
+import { Avatar } from "../ui/molecules/Avatar";
 import { RelativeTooltip } from "./RelativeTooltip";
 
 export const RelativeItem = ({ relative }) => {
   return (
-    <Tooltip content={<RelativeTooltip />}>
+    <Tooltip content={<RelativeTooltip relative={relative?.contact} />}>
       <Spacing m={{ l: "10px", b: "22px" }}>
-        <Box d="flex" align="center">
-          <Avatar
-            appearance="circle"
-            src="https://pbs.twimg.com/profile_images/803832195970433027/aaoG6PJI_400x400.jpg"
-            size="large"
-          />
+        <Box d="flex" align="center" >
+          <Avatar name={`${relative?.contact?.first_name} ${relative?.contact?.last_name}`}/>
           <Spacing m={{ l: "17px" }}>
-            <StyledLabel>{relative.relationship}</StyledLabel>
-            <Text>{`${relative.contact.first_name} ${relative.contact.last_name}`}</Text>
+            <StyledLabel>
+              {relative?.contact?.relationship}
+            </StyledLabel>
+            <Text>{`${relative?.contact?.first_name || ""} ${
+              relative?.contact?.last_name || ""
+            }`}</Text>
           </Spacing>
         </Box>
       </Spacing>

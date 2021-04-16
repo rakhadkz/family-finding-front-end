@@ -1,22 +1,20 @@
-import Avatar from "@atlaskit/avatar";
-import Badge from "@atlaskit/badge";
 import React from "react";
 import styled from "styled-components";
-import { useAuth } from "../../../context/auth/authContext";
+import { getLocalStorageUser } from "../../../context/auth/authProvider";
+import { Avatar } from "../molecules/Avatar";
 
 export const SidebarUser = () => {
-  const { user } = useAuth();
-
+  const user = getLocalStorageUser();
   return (
-    <SidebarUserContainer>
-      <Avatar appearance="circle" src={user?.avatar} size="large" />
-      <UserBadgeContainer>
-        <Badge appearance="primary">{user?.badge}</Badge>
-      </UserBadgeContainer>
-      <UserNameText>
-        {user?.first_name} {user?.last_name}
-      </UserNameText>
-    </SidebarUserContainer>
+    user && (
+      <SidebarUserContainer>
+        <Avatar name={`${user.first_name} ${user.last_name}`} />
+        <UserNameText>
+          {user?.first_name[0].toUpperCase() + user?.first_name.substring(1)}{" "}
+          {user?.last_name[0].toUpperCase() + user?.last_name.substring(1)}
+        </UserNameText>
+      </SidebarUserContainer>
+    )
   );
 };
 
@@ -34,10 +32,4 @@ const UserNameText = styled.div`
   display: flex;
   align-items: center;
   margin-left: 9px;
-`;
-
-const UserBadgeContainer = styled.div`
-  position: absolute;
-  left: 55px;
-  margin-top: -15px;
 `;
