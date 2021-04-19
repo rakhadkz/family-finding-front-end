@@ -1,20 +1,20 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
-import EmailIcon from "@atlaskit/icon/glyph/email";
-import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import AttachmentIcon from "@atlaskit/icon/glyph/attachment";
 import CommentIcon from "@atlaskit/icon/glyph/comment";
 import EditorCloseIcon from "@atlaskit/icon/glyph/editor/close";
 import EditorDoneIcon from "@atlaskit/icon/glyph/editor/done";
-import styled from "styled-components";
-import { updateConnectionRequest } from "../api/childContact";
-import { Box, Spacing } from "../components/ui/atoms";
-import { Avatar } from "../components/ui/molecules/Avatar";
-import { FitScore } from "../components/ui/molecules";
+import EmailIcon from "@atlaskit/icon/glyph/email";
+import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import Tooltip from "@atlaskit/tooltip";
-import { DisqualifyTooltip } from "../components/ChildProfile/tabs/Connections/DisqualifyTooltip";
-import Can from "../accessControl/Can";
-import { CONNECTIONS } from "../helpers";
+import styled from "styled-components";
 import { ACTIONS } from "../accessControl/actions";
+import Can from "../accessControl/Can";
+import { updateConnectionRequest } from "../api/childContact";
+import { DisqualifyTooltip } from "../components/ChildProfile/tabs/Connections/DisqualifyTooltip";
+import { Box, Spacing } from "../components/ui/atoms";
+import { FitScore } from "../components/ui/molecules";
+import { Avatar } from "../components/ui/molecules/Avatar";
+import { CONNECTIONS } from "../helpers";
 export const SmallText = styled.div`
   font-family: Helvetica;
   font-style: normal;
@@ -156,7 +156,7 @@ export const confirmedConnectionRows = (
             },
             {
               key: "relationship",
-              content: item.relationship,
+              content: item?.contact?.relationship,
             },
             {
               key: "engagement",
