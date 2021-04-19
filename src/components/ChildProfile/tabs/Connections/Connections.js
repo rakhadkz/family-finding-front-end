@@ -12,19 +12,24 @@ import {
   createCommunicationRequest,
   createContactRequest,
   createTableChildContactRequest,
-
-
-  removeCommunicationRequest, updateConnectionRequest,
-  updateContactRequest
+  removeCommunicationRequest,
+  updateConnectionRequest,
+  updateContactRequest,
 } from "../../../../api/childContact";
 import {
+  automatedSearchResultRequest,
+  createSearchResultRequest,
+} from "../../../../api/searchResults/searchResultsRequests";
+import { fetchSearchVectorsRequest } from "../../../../api/searchVectors/searchVectorsRequests";
+import {
   confirmedConnectionColumns,
-  possibleConnectionColumns
+  possibleConnectionColumns,
 } from "../../../../content/columns.data";
 import { confirmedConnectionRows } from "../../../../content/confirmedConnection.data";
 import { humanReadableDateFormat } from "../../../../content/date";
 import { possibleConnectionRows } from "../../../../content/possibleConnection.data";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
+import { getLocalStorageUser } from "../../../../context/auth/authProvider";
 import { createChildContact } from "../../../../context/children/childProvider";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 import { fetchConnectionsRequest } from "../../../../reducers/connection";
@@ -76,22 +81,48 @@ export const Connections = () => {
   const placedConnection = connections.find((c) => c.is_placed);
   const placedContact = placedConnection?.contact;
   const [currentTab, setCurrentTab] = useState(null);
+  const { id: user_id } = getLocalStorageUser();
+  const [vectors, setVectors] = useState([]);
 
   useEffect(() => {
     fetchConnections();
+    fetchSearchVectors();
   }, []);
+
+  const fetchSearchVectors = () => {
+    fetchSearchVectorsRequest({}).then((data) =>
+      setVectors(
+        data.filter((item) => item.in_continuous_search).map((item) => item.id)
+      )
+    );
+  };
 
   const setPending = () => {
     connectionDispatch(fetchConnectionsRequest());
   };
 
-  const onConfirmUpdate = (connection_id, is_confirmed = true) => {
+  const onConfirmUpdate = async (child_contact_id, is_confirmed = true) => {
     setPending();
-    updateConnectionRequest(connection_id, {
-      is_confirmed: is_confirmed,
-    })
-      .then(() => fetchConnections())
-      .finally(() => setIsConfirmModalOpen(false));
+    try {
+      await updateConnectionRequest(child_contact_id, {
+        is_confirmed: is_confirmed,
+      });
+
+      for (let search_vector_id of vectors) {
+        const { id: family_search_id } = await createSearchResultRequest({
+          search_vector_id,
+          child_contact_id,
+          user_id,
+          child_id: id,
+        });
+        await automatedSearchResultRequest({
+          family_search_id,
+        });
+      }
+    } finally {
+      await fetchConnections();
+      setIsConfirmModalOpen(false);
+    }
   };
 
   const saveEmails = async (emails, contactId) => {
