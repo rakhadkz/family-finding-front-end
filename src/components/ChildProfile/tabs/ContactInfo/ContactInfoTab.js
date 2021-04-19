@@ -12,7 +12,7 @@ export const ContactInfoTab = () => {
           {currentConnection?.contact?.communications
             ?.filter((cm) => cm.communication_type === "email")
             .map((cm) => (
-              <div style={{ width: 200 }}>{cm.value}</div>
+              <div style={{ width: 400, marginBottom: 5 }}>{cm.value}</div>
             ))}
         </span>
       </InfoItem>
@@ -22,7 +22,7 @@ export const ContactInfoTab = () => {
           {currentConnection?.contact?.communications
             ?.filter((cm) => cm.communication_type === "address")
             .map((cm) => (
-              <div style={{ width: 200 }}>{cm.value}</div>
+              <div style={{ width: 400, marginBottom: 5 }}>{cm.value}</div>
             ))}
         </span>
       </InfoItem>
@@ -32,7 +32,7 @@ export const ContactInfoTab = () => {
           {currentConnection?.contact?.communications
             ?.filter((cm) => cm.communication_type === "phone")
             .map((cm) => (
-              <div style={{ width: 200 }}>{cm.value}</div>
+              <div style={{ width: 400, marginBottom: 5 }}>{cm.value}</div>
             ))}
         </span>
       </InfoItem>
