@@ -131,11 +131,11 @@ class Chart extends Component {
       OrgChart.templates.myTemplate
     );
     OrgChart.templates.yellow.node =
-      '<rect class="yellow-node" x="0" y="0" height="60" width="220" fill="#CEE9E9" stroke-width="0" stroke="#aeaeae" rx="30" ry="30"></rect>';
+      '<rect class="yellow-node" x="0" y="0" height="60" width="220" fill="#8F62AD" stroke-width="0" stroke="#aeaeae" rx="30" ry="30"></rect>';
     OrgChart.templates.yellow.field_0 =
-      '<text width="150" class="field_0" style="font-size: 14px;" fill="#172B4D" x="68" y="15" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_0" style="font-size: 14px;" fill="white" x="68" y="15" text-anchor="start">{val}</text>';
     OrgChart.templates.yellow.field_1 =
-      '<text width="150" class="field_1" style="font-size: 12px;" fill="#6B778C" x="68" y="33" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_1" style="font-size: 12px;" fill="white" x="68" y="33" text-anchor="start">{val}</text>';
 
     OrgChart.templates.yellow.img_0 =
       '<clipPath id="ulaImg2">' +
