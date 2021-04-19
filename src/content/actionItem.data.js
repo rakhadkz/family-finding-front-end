@@ -32,6 +32,7 @@ const actionItemTableData = (data, fetch, setTablePending, history) => {
                   <Avatar
                     name={item.child.first_name + " " + item.child.last_name}
                     size="medium"
+                    isChild
                   />
                   <Button
                     appearance="link"

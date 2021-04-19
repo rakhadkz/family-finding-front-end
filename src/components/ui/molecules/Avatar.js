@@ -1,12 +1,18 @@
 import ReactAvatar from "react-avatar";
 import Tooltip from "@atlaskit/tooltip";
+import { templateReducer } from "../../../reducers/template/templateReducer";
 
-export const Avatar = ({ name, size = "large", ratio = 2.5 }) => {
+export const Avatar = ({
+  name,
+  size = "large",
+  ratio = 2.5,
+  isChild = false,
+}) => {
   return (
     <Tooltip content={name}>
       <ReactAvatar
         name={name}
-        color="#c1c7d0"
+        color={isChild ? "#8F62AD" : "#c1c7d0"}
         fgColor="#FFFFFF"
         round
         size={calculate_size(size)}
