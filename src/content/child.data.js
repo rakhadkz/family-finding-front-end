@@ -28,10 +28,6 @@ const childTableData = (data, history, assignUser, isUser = true) =>
         content: <p align="left">{item.permanency_goal}</p>,
       },
       {
-        key: "continuous_search",
-        content: <p align="center">{item.continuous_search}</p>,
-      },
-      {
         key: "days_in_system",
         content: <p align="center">{item.days_in_system}</p>,
       },

@@ -103,11 +103,6 @@ export const childrenTableColumns = (isUser = true) => [
     width: 25,
   },
   {
-    key: "continuous_search",
-    content: <p align="center">Continuous Search</p>,
-    width: 15,
-  },
-  {
     key: "days_in_system",
     content: <p align="center">Days in system</p>,
     width: isUser ? 15 : 20,
