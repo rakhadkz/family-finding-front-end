@@ -12,11 +12,8 @@ function LoginContainer({ children }) {
     <Container>
       <Image>
         <Overlay />
-        <h1>Linking Lives</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
+        <h1>LinkingLives</h1>
+        <p></p>
       </Image>
       <Form>
         <Logo src={app_logo} />
@@ -38,6 +35,8 @@ const Container = styled.div`
     z-index: 222;
     position: relative;
     color: white;
+    font-size: 50px;
+    font-weight: bolder;
   }
   p {
     padding-right: 100px;

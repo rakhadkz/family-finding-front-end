@@ -244,6 +244,7 @@ const ConnectionModal = ({
                     <Avatar
                       size="small"
                       name={`${child.first_name} ${child.last_name}`}
+                      isChild
                     />
                     <span style={{ marginLeft: "5px", color: "#455670" }}>
                       {child.first_name} {child.last_name}

@@ -11,7 +11,7 @@ const childTableData = (data, history, assignUser, isUser = true) =>
         key: "full_name",
         content: (
           <Box d="flex" align="center">
-            <Avatar name={item.full_name} size="medium" ratio={0.4} />
+            <Avatar name={item.full_name} size="medium" ratio={0.4} isChild />
             <Button
               style={{ marginLeft: "8px" }}
               onClick={() => history.push("/children/" + item.id)}

@@ -23,6 +23,7 @@ export const SiblingsItem = ({
               <Avatar
                 size="small"
                 name={`${sibling?.first_name} ${sibling?.last_name}`}
+                isChild
               />
               <span style={{ marginLeft: "5px", color: "#455670" }}>
                 {sibling?.first_name} {sibling?.last_name}

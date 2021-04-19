@@ -14,7 +14,7 @@ export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
   return (
     <Rectangle>
       <Box d="flex" mb="16px">
-        <Avatar name={`${child.first_name} ${child.last_name}`} />
+        <Avatar name={`${child.first_name} ${child.last_name}`} isChild />
         <Spacing m={{ l: "17px" }}>
           <StyledLabel>Full name</StyledLabel>
           <Box d="flex" align="center">
