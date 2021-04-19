@@ -17,13 +17,13 @@ const constructTree = ({ firstName = "", lastName = "", contacts = [] }) => {
       id: item.id,
       tags: [
         "relatives",
-        sideRelatives.includes(item?.relationship) && "assistant",
+        sideRelatives.includes(item?.contact?.relationship) && "assistant",
       ],
       Name: `${item?.contact?.first_name || ""} ${
         item?.contact?.last_name || ""
       }`,
       contactId: item?.contact?.id,
-      Relationship: item?.relationship,
+      Relationship: item?.contact?.relationship,
       pid: item.parent_id || 0,
       Avatar:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT63VcFex7-_JFQOKCju4WMQHp3xHIxlBZUJA&usqp=CAU",

@@ -48,7 +48,7 @@ export const possibleConnectionRows = (
             },
             {
               key: "relationship",
-              content: item.relationship,
+              content: item?.contact?.relationship,
             },
             {
               key: "engagement",
