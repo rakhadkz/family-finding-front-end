@@ -17,9 +17,9 @@ export const RelativeTooltip = ({ relative }) => {
             </Title>
             <Text>{relative?.phone}</Text>
             <Text>{relative?.email}</Text>
-            <Spacing m={{ t: "16px" }}>
+            {/* <Spacing m={{ t: "16px" }}>
               <Text>{relative?.address}</Text>
-            </Spacing>
+            </Spacing> */}
           </Spacing>
         </Box>
       </Rectangle>
