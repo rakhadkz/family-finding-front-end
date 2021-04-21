@@ -479,8 +479,6 @@ export function ChildProfilePage(props) {
       .catch((e) => console.log(e));
   };
 
-  console.log("CHILDREn", childrenState);
-
   return (
     <ChildContext.Provider
       value={{
@@ -784,7 +782,6 @@ export function ChildProfilePage(props) {
                   classNamePrefix="react-select"
                   menuPortalTarget={document.body}
                   onChange={(e) => {
-                    console.log("EEE", e, state.child);
                     setTemplateId(e.value.id);
                     setTemplateHtml(
                       templateType === "SMS"
