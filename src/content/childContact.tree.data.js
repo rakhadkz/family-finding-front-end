@@ -1,6 +1,11 @@
 import { sideRelatives } from "./relationshipOptions.data";
 
-const constructTree = ({ firstName = "", lastName = "", contacts = [] }) => {
+const constructTree = ({
+  firstName = "",
+  lastName = "",
+  contacts = [],
+  connections = [],
+}) => {
   const nodes = [
     {
       id: 0,
@@ -24,6 +29,7 @@ const constructTree = ({ firstName = "", lastName = "", contacts = [] }) => {
       }`,
       contactId: item?.contact?.id,
       Relationship: item?.contact?.relationship,
+      stars: item?.link_score_overall,
       pid: item.parent_id || 0,
       Avatar:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT63VcFex7-_JFQOKCju4WMQHp3xHIxlBZUJA&usqp=CAU",
