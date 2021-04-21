@@ -24,4 +24,5 @@ export const PossibleSiblingsList = memo(({ siblings, createSiblings }) => {
 const SiblingsListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  min-height: 0px;
 `;

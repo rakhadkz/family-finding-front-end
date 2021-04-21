@@ -27,4 +27,7 @@ export const RelativesList = memo(({ relatives }) => {
 const RelativeListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  min-height: 20px;
+  max-height: 200px;
+  overflow: scroll;
 `;
