@@ -1,10 +1,6 @@
 import styled from "styled-components";
 
-export const ComponentWrapper = ({ children }) => (
-  <Wrapper>
-    {children}
-  </Wrapper>
-)
+export const ComponentWrapper = ({ children }) => <Wrapper>{children}</Wrapper>;
 
 const Wrapper = styled.div`
   display: block;

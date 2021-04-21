@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { removeChildContactRequest } from "../../../../api/childContact";
 import {
   createChildContact,
-  updateChildContact
+  updateChildContact,
 } from "../../../../context/children/childProvider";
 import { EditNodeForm } from "./EditNodeForm";
 import "./my-node.css";
@@ -242,7 +242,7 @@ class Chart extends Component {
       nodeBinding: {
         field_0: "Name",
         field_1: "Relationship",
-        field_2: function (sender, node) {
+        field_2: function (sender, node, aaa) {
           const rating = Math.floor(Math.random() * Math.floor(5));
           let returnRating = Array(5)
             .fill()
@@ -251,7 +251,9 @@ class Chart extends Component {
                 ? EMPTY_STAR(index * 22 + 65, 35)
                 : STAR(index * 22 + 65, 35)
             );
-
+          console.log("Rating1", sender);
+          console.log("Rating2", node);
+          console.log("Rating3", aaa);
           return returnRating;
         },
         img_0: "Avatar",

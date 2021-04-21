@@ -4,7 +4,9 @@ import { localStorageKey } from "../../../utils/requestHandler";
 
 export const SidebarTemplate = ({ sidebar }) => {
   return (
-    window.localStorage.getItem(localStorageKey) && <SidebarContainer>{sidebar}</SidebarContainer>
+    window.localStorage.getItem(localStorageKey) && (
+      <SidebarContainer>{sidebar}</SidebarContainer>
+    )
   );
 };
 
@@ -14,6 +16,6 @@ export const SidebarContainer = styled.div`
   position: sticky;
   top: 0;
   padding: 17px 16px;
-  height: 100vh;
+  height: 95vh;
   background-color: #f4f5f7;
 `;
