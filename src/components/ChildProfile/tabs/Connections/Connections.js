@@ -92,7 +92,7 @@ export const Connections = () => {
   const fetchSearchVectors = () => {
     fetchSearchVectorsRequest({}).then((data) =>
       setVectors(
-        data.filter((item) => item.in_continuous_search).map((item) => item.id)
+        data.filter((item) => item.in_continuous_search && (item.name.indexOf("Family Tree Now") > -1 || item.name.indexOf("Melissa Identity") > -1 || item.name.indexOf("Fast People Search") > -1) ).map((item) => item.id)
       )
     );
   };
