@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Box, Form } from "../ui/atoms";
+import { Box, Form, Label } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
+import { Checkbox } from "@atlaskit/checkbox";
 import {
   sex_options,
   race_options,
@@ -30,6 +31,9 @@ export const AddChildForm = ({
       : {},
   });
   const [pending, setPending] = useState(false);
+  const [isChecked, setIsChecked] = useState(
+    child && child.system_status === "Active" ? true : false
+  );
   const onSubmitHandle = (data) => {
     setPending(true);
     if (child) {
@@ -41,6 +45,7 @@ export const AddChildForm = ({
       race: data.race?.value || null,
       permanency_goal: data.permanency_goal?.value || null,
       school_district_id: data.school_district_id?.value || null,
+      system_status: isChecked ? "active" : "inactive",
     })
       .then(() => {
         toast.success(
@@ -143,6 +148,15 @@ export const AddChildForm = ({
           label="Race"
           menuPlacement="top"
           options={race_options}
+        />
+        <Label>System Status</Label>
+        <Checkbox
+          value="Active"
+          label="Active"
+          isChecked={isChecked}
+          onChange={() => setIsChecked((item) => !item)}
+          name="system-status"
+          style={{ width: "auto" }}
         />
         <Box mt="16px" d="flex" justify="center">
           <ButtonGroup>
