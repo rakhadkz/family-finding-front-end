@@ -14,7 +14,13 @@ import { getLocalStorageUser, reset } from "../context/auth/authProvider";
 import { deleteUser, fetchUsers } from "../context/user/userProvider";
 import { USERS } from "../helpers/routes";
 import { ACTIONS } from "../accessControl/actions";
-import { fetchUsersFailure, fetchUsersRequest, fetchUsersSuccess, userReducer, initialState } from "../reducers/user";
+import {
+  fetchUsersFailure,
+  fetchUsersRequest,
+  fetchUsersSuccess,
+  userReducer,
+  initialState,
+} from "../reducers/user";
 
 const AllUsers = ({ history, search, setSearch }) => (
   <>
@@ -45,9 +51,9 @@ const AllUsers = ({ history, search, setSearch }) => (
 
 const ConcreteUser = ({ state }) => {
   const history = useHistory();
-  const [ pending, setPending ] = useState(false);
-  const name = state.users[0]?.cells[0].content
-  const email = state.users[0]?.cells[1].content
+  const [pending, setPending] = useState(false);
+  const name = state.users[0]?.cells[0].content;
+  const email = state.users[0]?.cells[1].content;
 
   return (
     <>
@@ -77,14 +83,14 @@ export const UsersPage = (props) => {
   const head = usersTableColumns(user?.role);
   const id = props.match.params.id;
   const history = useHistory();
-  
-  const [ currentUser, setCurrentUser ] = useState(-1);
-  const [ isOpen, setIsOpen ] = useState(false);
-  const [ totalPage, setTotalPage ] = useState(null);
-  const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
-  const [ search, setSearch ] = useState(query.get("search") || "");
+
+  const [currentUser, setCurrentUser] = useState(-1);
+  const [isOpen, setIsOpen] = useState(false);
+  const [totalPage, setTotalPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
+  const [search, setSearch] = useState(query.get("search") || "");
   //const [ state, dispatch ] = useReducer(userReducer, initialState)
-  const [ state, dispatch ] = useReducer(userReducer, initialState)
+  const [state, dispatch] = useReducer(userReducer, initialState);
 
   const onDelete = (id) => {
     deleteUser(id).finally(() => {
@@ -94,9 +100,10 @@ export const UsersPage = (props) => {
   };
 
   useEffect(() => {
-    dispatch(fetchUsersRequest())
+    dispatch(fetchUsersRequest());
     const timer = setTimeout(fetchUsersFunc, search.length === 0 ? 0 : 1000);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, currentPage, search]);
 
   const fetchUsersFunc = () => {
@@ -106,25 +113,40 @@ export const UsersPage = (props) => {
       search: search,
       page: currentPage,
       meta: true,
-    }).then(response => {
-      if (response) {
-        let payload = []
-        if (id) {
-          payload = userTableData(response.data, user, setIsOpen, setCurrentUser)
-        } else {
-          setTotalPage(response.meta.num_pages);
-          payload = userTableData(response.data, user, setIsOpen, setCurrentUser, history)
+    })
+      .then((response) => {
+        if (response) {
+          let payload = [];
+          if (id) {
+            payload = userTableData(
+              response.data,
+              user,
+              setIsOpen,
+              setCurrentUser
+            );
+          } else {
+            setTotalPage(response.meta.num_pages);
+            payload = userTableData(
+              response.data,
+              user,
+              setIsOpen,
+              setCurrentUser,
+              history
+            );
+          }
+          dispatch(fetchUsersSuccess(payload));
         }
-        dispatch(fetchUsersSuccess(payload))
-      }
-    }).catch(e => dispatch(fetchUsersFailure(e.message)))
-  }
+      })
+      .catch((e) => dispatch(fetchUsersFailure(e.message)));
+  };
 
   return (
     <>
-      <Title>{user?.role !== "super_admin" && user.organization?.name} Users</Title>
+      <Title>
+        {user?.role !== "super_admin" && user.organization?.name} Users
+      </Title>
       {id ? (
-        <ConcreteUser state={state}/>
+        <ConcreteUser state={state} />
       ) : (
         <AllUsers history={history} search={search} setSearch={setSearch} />
       )}

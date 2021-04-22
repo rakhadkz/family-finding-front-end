@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { ErrorMessage } from "@atlaskit/form";
 import "@atlaskit/css-reset";
 import { createChildRequest } from "../../api/children";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 
 export const ImportChildren = ({
@@ -32,6 +32,7 @@ export const ImportChildren = ({
 
   useEffect(() => {
     children.map((child) => append(child));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children]);
 
   const onSubmit = (data) => {

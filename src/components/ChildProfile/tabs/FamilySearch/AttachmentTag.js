@@ -6,9 +6,7 @@ import ExcelSpreadsheet16Icon from "@atlaskit/icon-file-type/glyph/excel-spreads
 import Image16Icon from "@atlaskit/icon-file-type/glyph/image/16";
 import Video16Icon from "@atlaskit/icon-file-type/glyph/video/16";
 import { Rounded } from "../../../ui/molecules/Rounded";
-import EditorCloseIcon from "@atlaskit/icon/glyph/editor/close";
 import { Box } from "../../../ui/atoms";
-import Button from "@atlaskit/button";
 
 export const AttachmentTag = ({
   file_format,

@@ -82,6 +82,7 @@ const ConnectionModal = ({
     fetchAlerts();
     fetchChildren();
     fetchLinkScore();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAlerts = () => {

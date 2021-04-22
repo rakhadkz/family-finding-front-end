@@ -15,7 +15,7 @@ export const SiblingsList = memo(
                 visibleRemove={true}
                 onDelete={() => onRemoveSiblingship(siblings.id)}
                 sibling={
-                  childId == siblings.sibling.id
+                  childId === siblings.sibling.id
                     ? siblings.child
                     : siblings.sibling
                 }

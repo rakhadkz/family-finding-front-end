@@ -1,8 +1,7 @@
 import Tabs from "@atlaskit/tabs";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { AttachmentsTab } from "./AttachmentsTab";
 import { CommentsTab } from "./CommentsTab";
-import { ConnectionContext } from "./ConnectionModal";
 import TemplatesSentTab from "./TemplatesSentTab";
 import { AlertsTab } from "./AlertsTab";
 import { LinkScoreTab } from "../LinkScore/LinkScoreTab";

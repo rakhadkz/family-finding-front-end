@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useRef, useContext, useMemo } from "react";
 import { postCommentRequest } from "../../../../api/comments";
 import { Box, Spacing } from "../../../ui/atoms";

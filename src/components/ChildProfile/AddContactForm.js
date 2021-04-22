@@ -8,6 +8,7 @@ import { race_options, sex_options } from "../../helpers";
 import { getObjectByLabel } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
+import { Checkbox } from "@atlaskit/checkbox";
 
 const DynamicDataItem = ({ filed, onClick }) => {
   return (
@@ -31,7 +32,12 @@ const DynamicDataItem = ({ filed, onClick }) => {
   );
 };
 
-export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
+export const AddContactForm = ({
+  onSubmit,
+  onCancel,
+  contact,
+  is_confirmed,
+}) => {
   const { register, handleSubmit, control, errors, watch } = useForm({
     defaultValues: contact
       ? {
@@ -51,7 +57,6 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
       : {},
   });
   const [pending, setPending] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [phonesList, setPhonesList] = useState([]);
   const [emailsList, setEmailsList] = useState([]);
   const [addressesList, setAddressesList] = useState([]);
@@ -59,6 +64,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
   const [currentPhone, setCurrentPhone] = useState("");
   const [currentEmail, setCurrentEmail] = useState("");
   const [currentAddress, setCurrentAddress] = useState("");
+  const [isConfirmed, setIsConfirmed] = useState(is_confirmed || false);
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
@@ -93,6 +99,8 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
     if (race?.value) {
       submitData.race = race.value;
     }
+
+    submitData.is_confirmed = isConfirmed;
 
     onSubmit(submitData, emailsList, phonesList, addressesList, removeIds);
   };
@@ -426,6 +434,16 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             <div style={{ width: 250 }} />
           )}
         </Spacing>
+        <div style={{ marginLeft: 30 }}>
+          <Label>Status</Label>
+          <Checkbox
+            value="Confirmed"
+            label="Confirmed"
+            isChecked={isConfirmed}
+            onChange={() => setIsConfirmed((item) => !item)}
+            style={{ width: "auto" }}
+          />
+        </div>
         <Box d="flex" w="100%" justify="center" mb="20px">
           <ButtonGroup>
             <Button isDisabled={pending} type="submit" appearance="primary">

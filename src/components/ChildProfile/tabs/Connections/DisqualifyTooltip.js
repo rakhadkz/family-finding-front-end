@@ -1,15 +1,8 @@
 import React from "react";
-import { TooltipPrimitive } from "@atlaskit/tooltip";
-import styled from "styled-components";
-import { Box, Label, Rectangle, Spacing, Title } from "../../../ui/atoms";
+import { Box, Rectangle, Spacing, Title } from "../../../ui/atoms";
 import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { CustomTooltip } from "../../index";
-import Button from "@atlaskit/button";
-import AttachmentIcon from "@atlaskit/icon/glyph/attachment";
-import CommentIcon from "@atlaskit/icon/glyph/comment";
-import EmailIcon from "@atlaskit/icon/glyph/email";
-import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 export const DisqualifyTooltip = ({ contact, reason }) => {
   return (
     <CustomTooltip>
@@ -48,21 +41,3 @@ export const DisqualifyTooltip = ({ contact, reason }) => {
     </CustomTooltip>
   );
 };
-const StyledLabel = styled(Label)`
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 16px;
-  color: #6b778c;
-`;
-
-const Text = styled.div`
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  min-width: 119px;
-  color: #172b4d;
-`;
