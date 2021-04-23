@@ -1,11 +1,9 @@
-import { Box, Spacing, Title, Form, Label } from "../../../ui/atoms";
+import { Box, Spacing, Title, Form } from "../../../ui/atoms";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { TextInput, DatepickerInput } from "../../../ui/molecules";
-import { FormSection } from "@atlaskit/form";
+import { DatepickerInput } from "../../../ui/molecules";
 import { toast } from "react-toastify";
-import DatePicker from "react-date-picker";
 
 export const PlaceModal = ({
   contact,
@@ -15,7 +13,7 @@ export const PlaceModal = ({
   refresh,
   id,
 }) => {
-  const { register, handleSubmit, control, errors, watch, setValue } = useForm({
+  const { handleSubmit, control, errors } = useForm({
     defaultValues: initialValues,
   });
   const [pending, setPending] = useState(false);

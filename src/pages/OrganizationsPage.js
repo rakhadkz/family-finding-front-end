@@ -9,7 +9,13 @@ import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { organizationsTableColumns } from "../content/columns.data";
 import { organizationTableData } from "../content/organization.data";
 import { fetchOrganizations } from "../context/organization/organizationProvider";
-import { organizationReducer, initialState, fetchOrganizationsRequest, fetchOrganizationsSuccess, fetchOrganizationsFailure } from "../reducers/organization";
+import {
+  organizationReducer,
+  initialState,
+  fetchOrganizationsRequest,
+  fetchOrganizationsSuccess,
+  fetchOrganizationsFailure,
+} from "../reducers/organization";
 
 export const updateQueryParams = (currentPage, search) => {
   return `?page=${currentPage}${search ? `&search=${search}` : ``}`;
@@ -49,17 +55,21 @@ export const OrganizationsPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   const id = props.match.params.id;
   const history = useHistory();
-  
-  const [ totalPage, setTotalPage ] = useState(null);
-  const [ currentPage, setCurrentPage ] = useState(query.get("page") || 1);
-  const [ search, setSearch ] = useState(query.get("search") || "");
-  const [ state, dispatch ] = useReducer(organizationReducer, initialState)
+
+  const [totalPage, setTotalPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
+  const [search, setSearch] = useState(query.get("search") || "");
+  const [state, dispatch] = useReducer(organizationReducer, initialState);
 
   useEffect(() => {
     !id && history.push(updateQueryParams(currentPage, search));
-    dispatch(fetchOrganizationsRequest())
-    const timer = setTimeout(fetchOrganizationsFunc, search.length === 0 ? 0 : 1000);
+    dispatch(fetchOrganizationsRequest());
+    const timer = setTimeout(
+      fetchOrganizationsFunc,
+      search.length === 0 ? 0 : 1000
+    );
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, currentPage, search]);
 
   useEffect(() => {
@@ -72,19 +82,27 @@ export const OrganizationsPage = (props) => {
       page: currentPage,
       meta: true,
       search: search,
-    }).then(response => {
-      if (response) {
-        !id && setTotalPage(response.meta.num_pages);
-        dispatch(fetchOrganizationsSuccess(organizationTableData(response.data, history)))
-      }
-    }).catch(e => dispatch(fetchOrganizationsFailure(e.message)))
-  }
+    })
+      .then((response) => {
+        if (response) {
+          !id && setTotalPage(response.meta.num_pages);
+          dispatch(
+            fetchOrganizationsSuccess(
+              organizationTableData(response.data, history)
+            )
+          );
+        }
+      })
+      .catch((e) => dispatch(fetchOrganizationsFailure(e.message)));
+  };
 
   return (
     <>
       <Title>Organizations</Title>
       {id ? (
-        <ConcreteOrganization name={state.organizations[0]?.cells[0].content || ""} />
+        <ConcreteOrganization
+          name={state.organizations[0]?.cells[0].content || ""}
+        />
       ) : (
         <AllOrganizations
           history={history}

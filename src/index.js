@@ -8,7 +8,7 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <React.Fragment>
     <BrowserRouter>
       <AuthProvider>
         <OrganizationProvider>
@@ -16,7 +16,7 @@ ReactDOM.render(
         </OrganizationProvider>
       </AuthProvider>
     </BrowserRouter>
-  </React.StrictMode>,
+  </React.Fragment>,
   document.getElementById("root")
 );
 

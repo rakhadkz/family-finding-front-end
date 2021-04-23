@@ -25,7 +25,6 @@ import {
   initialState,
   fetchChildrenRequest,
 } from "../reducers/child";
-import { AvatarGroup } from "../components/ui/molecules/AvatarGroup";
 
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
@@ -46,6 +45,7 @@ export const ChildrenPage = (props) => {
       search?.length === 0 ? 0 : 1000
     );
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, search]);
 
   useEffect(() => {

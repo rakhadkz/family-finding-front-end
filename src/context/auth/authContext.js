@@ -24,7 +24,7 @@ export const AuthProvider = (props) => {
       auth.fetchMe().then((user) => {
         if (user) {
           var selectedOrganization = null;
-          user.user_organizations.map((item) => {
+          user.user_organizations.forEach((item) => {
             if (
               item.organization_id === user.organization_id &&
               item.role === user.role
@@ -46,6 +46,7 @@ export const AuthProvider = (props) => {
 
   useEffect(() => {
     if (isSignedIn) fetchMe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

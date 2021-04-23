@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Select from "@atlaskit/select";
 import PropTypes from "prop-types";
 import React from "react";

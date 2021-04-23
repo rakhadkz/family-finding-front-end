@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Button, { ButtonGroup } from "@atlaskit/button";
 import "@atlaskit/css-reset";
 import EmailIcon from "@atlaskit/icon/glyph/email";
@@ -9,7 +10,6 @@ import WatchIcon from "@atlaskit/icon/glyph/watch";
 import Select from "@atlaskit/select";
 import Tag from "@atlaskit/tag";
 import TagGroup from "@atlaskit/tag-group";
-import { Text } from "@chakra-ui/react";
 import React, {
   memo,
   useCallback,
@@ -59,7 +59,6 @@ import {
   fetchAttachmentsSuccess,
   initialState as attachmentInitialState,
 } from "../reducers/attachment";
-import { childReducer } from "../reducers/child";
 import {
   childProfileReducer,
   fetchChildFailure,
@@ -101,7 +100,6 @@ import { Preloader } from "./Preloader";
 export const ChildContext = React.createContext();
 
 export function ChildProfilePage(props) {
-  const comment_id = new URLSearchParams(props.location.search).get("comment");
   const id = props.match.params.id;
   const user = getLocalStorageUser();
   const [templates, setTemplates] = useState([]);
@@ -125,10 +123,6 @@ export function ChildProfilePage(props) {
   const history = useHistory();
 
   const [state, dispatch] = useReducer(childProfileReducer, initialState);
-  const [childrenState, dispatchChildren] = useReducer(
-    childReducer,
-    initialState
-  );
 
   const [connectionState, connectionDispatch] = useReducer(
     connectionReducer,
@@ -663,7 +657,7 @@ export function ChildProfilePage(props) {
                         (child) =>
                           !siblings?.siblings
                             ?.map(({ sibling }) => sibling.id)
-                            .includes(child.id) && child.id != id
+                            .includes(child.id) && child.id !== id
                       )
                       .map((child) => ({
                         value: child.id,
@@ -760,6 +754,7 @@ export function ChildProfilePage(props) {
                                           item.communication_type === "email"
                                         );
                                       }
+                                      return false;
                                     })
                                     .map((item) => ({
                                       ...item,
@@ -800,10 +795,10 @@ export function ChildProfilePage(props) {
                 <Spacing style={{ marginTop: 15, marginBottom: 15 }}>
                   <Label>Template Preview</Label>
                 </Spacing>
-                <Text
+                <p
                   style={{ paddingLeft: 10, paddingRight: 10 }}
                   dangerouslySetInnerHTML={{ __html: templatePreview }}
-                />
+                ></p>
                 {/* <Spacing m={{ t: "20px" }}>
                   {dynamicVariables.map((variable) => {
                     const inputName = variable.substring(

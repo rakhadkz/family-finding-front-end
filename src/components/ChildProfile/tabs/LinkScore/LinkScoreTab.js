@@ -32,7 +32,7 @@ const Category = ({ name, score = null }) => {
       }}
     >
       <Title size="16px">{name}</Title>
-      {score != null && score > 0 && <CheckIcon primaryColor="green" />}
+      {score != null && score > 0 && <CheckIcon primaryColor={G300} />}
       {score != null && score <= 0 && <CrossIcon primaryColor={R400} />}
       {score == null && <QuestionIcon />}
     </div>

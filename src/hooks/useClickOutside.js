@@ -1,10 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
-export const useClickOutside = (
-  insideRefs,
-  isVisible,
-  onClose,
-) => {
+export const useClickOutside = (insideRefs, isVisible, onClose) => {
   useEffect(() => {
     const handleWindowClick = (event) => {
       const someRefContainTarget = insideRefs
@@ -21,13 +17,14 @@ export const useClickOutside = (
     };
 
     if (isVisible) {
-      window.addEventListener('click', handleWindowClick);
+      window.addEventListener("click", handleWindowClick);
     }
 
     return () => {
       if (isVisible) {
-        window.removeEventListener('click', handleWindowClick);
+        window.removeEventListener("click", handleWindowClick);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible, onClose]);
 };

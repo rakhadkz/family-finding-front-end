@@ -60,13 +60,6 @@ export const confirmedConnectionRows = (
         }).then(() => fetchConnections());
       };
 
-      const onConfirmUpdate = (is_confirmed = true) => {
-        setPending();
-        updateConnectionRequest(item.id, {
-          is_confirmed: is_confirmed,
-        }).then(() => fetchConnections());
-      };
-
       const onEdit = () => {
         setCurrentConnection(item);
         setIsAddModalOpen(true);
@@ -228,16 +221,10 @@ export const confirmedConnectionRows = (
                       ) : item.is_disqualified ? (
                         <ButtonGroup>
                           <Button onClick={onEdit}>Edit</Button>
-                          <Button onClick={() => onConfirmUpdate(false)}>
-                            Unconfirm
-                          </Button>
                         </ButtonGroup>
                       ) : (
                         <ButtonGroup>
                           <Button onClick={onEdit}>Edit</Button>
-                          <Button onClick={() => onConfirmUpdate(false)}>
-                            Unconfirm
-                          </Button>
                           <Button
                             onClick={() => {
                               setIsDisModalOpen(true);

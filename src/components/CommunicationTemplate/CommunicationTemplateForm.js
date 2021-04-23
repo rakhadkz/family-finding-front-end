@@ -31,11 +31,7 @@ export const CommunicationTemplateForm = React.forwardRef(
     const { register, handleSubmit, control, errors } = useForm({
       defaultValues: initialValues,
     });
-    const [orgRoles, setOrgRoles] = useState([]);
-    const [upd, setUpd] = useState(1);
-    const [text, setText] = useState("");
     const [htmlText, setHtmlText] = useState("");
-    const [rawData, setRawData] = useState("");
     const [pending, setPending] = useState(false);
 
     const onSubmitHandle = (data) => {
@@ -99,12 +95,9 @@ export const CommunicationTemplateForm = React.forwardRef(
               <Label>Content of template</Label>
             </Spacing>
             <WysiwygEditor
-              upd={upd}
               withMention={false}
               defaultValue={initialValues?.content}
               onChange={(tex, raw, html) => {
-                setText(tex);
-                setRawData(raw);
                 setHtmlText(html);
               }}
             />
