@@ -4,11 +4,11 @@ import {
   deleteUsersRequest,
   fetchUsersRequest,
 } from "../../api/user";
-import { localStorageKey } from "../../utils/requestHandler";
+//import { localStorageKey } from "../../utils/requestHandler";
 
-const getToken = async () => {
-  return window.localStorage.getItem(localStorageKey);
-};
+// const getToken = async () => {
+//   return window.localStorage.getItem(localStorageKey);
+// };
 
 const fetchUsers = (params) => {
   const errorStatuses = {
@@ -21,11 +21,7 @@ const fetchUsers = (params) => {
 };
 
 const deleteOrganizationUser = (id) => {
-  const errorStatuses = {
-    500: "Error on Server !",
-  };
-
-  return deleteOrganizationUserRequest(id).catch((err) => {});
+  return deleteOrganizationUserRequest(id).catch(() => {});
 };
 
 const deleteUser = (userId) => {

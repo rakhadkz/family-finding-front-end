@@ -5,7 +5,6 @@ import { AttachmentsPage } from "./tabs/Attachments/AttachmentsPage";
 import { CommentsTab } from "./tabs/Comments/CommentsTab";
 import { Connections } from "./tabs/Connections";
 import { FamilySearchTab } from "./tabs/FamilySearch/FamilySearchTab";
-import { LinkScoreTab } from "./tabs/LinkScore/LinkScoreTab";
 import { FamilyTreePage } from "./tabs/Tree/FamilyTreePage";
 
 export const ChildTabs = ({ currentCommentId }) => {
@@ -48,6 +47,7 @@ export const ChildTabs = ({ currentCommentId }) => {
         .indexOf(label);
       if (index > -1) setCurrent(index);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.hash.length]);
 
   const selectTab = (tab, index) => {

@@ -1,9 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect, useMemo, useContext } from "react";
 import styled from "styled-components";
 import { Box, Spacing, Title } from "../../../ui/atoms";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import { CommentsForm } from "./CommentsForm";
-import { useClickOutside } from "../../../../hooks/index";
 import {
   postCommentRequest,
   updateCommentRequest,
@@ -12,7 +12,6 @@ import {
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { useAuth } from "../../../../context/auth/authContext";
 import { ModalDialog } from "../../../ui/common";
-import { useMentions } from "./CommentsContext";
 import moment from "moment";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
 

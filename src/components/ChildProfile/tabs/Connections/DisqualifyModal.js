@@ -1,4 +1,4 @@
-import { Box, Spacing, Title, Form, Label } from "../../../ui/atoms";
+import { Box, Spacing, Title, Form } from "../../../ui/atoms";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,7 +13,7 @@ export const DisqualifyModal = ({
   refresh,
   id,
 }) => {
-  const { register, handleSubmit, control, errors, watch, setValue } = useForm({
+  const { register, handleSubmit, control, errors } = useForm({
     defaultValues: initialValues,
   });
   const [pending, setPending] = useState(false);

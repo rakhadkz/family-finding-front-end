@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useRef, useLayoutEffect } from "react";
 
 const isBrowser = typeof window !== `undefined`;

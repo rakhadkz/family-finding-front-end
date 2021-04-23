@@ -5,7 +5,7 @@ import NotificationIcon from "@atlaskit/icon/glyph/notification-direct";
 import React from "react";
 import { ACTIONS } from "../accessControl/actions";
 import Can from "../accessControl/Can";
-import { Box, Spacing } from "../components/ui/atoms";
+import { Box, Label, Spacing } from "../components/ui/atoms";
 import { Avatar } from "../components/ui/molecules/Avatar";
 import { CONNECTIONS } from "../helpers";
 
@@ -33,7 +33,7 @@ export const possibleConnectionRows = (
                     size="medium"
                     ratio={0.4}
                   />
-                  <Box d="flex" align="center">
+                  <Box d="flex" direction="flex" align="baseline">
                     <Button
                       appearance="link"
                       spacing="none"
@@ -42,6 +42,11 @@ export const possibleConnectionRows = (
                     >
                       {`${item.contact.first_name} ${item.contact.last_name}`}
                     </Button>
+                    {item.linked_connection && (
+                      <Label
+                        style={{ marginLeft: 8 }}
+                      >{`${item.linked_connection.first_name} ${item.linked_connection.last_name}`}</Label>
+                    )}
                   </Box>
                 </Box>
               ),

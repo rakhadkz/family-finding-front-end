@@ -1,18 +1,11 @@
 import Button from "@atlaskit/button";
-import EmojiAddIcon from "@atlaskit/icon/glyph/emoji-add";
 import React, { useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
-import {
-  createChildUserRequest,
-  updateChildUserRequest,
-} from "../api/children";
 import { Box, Spacing, Title } from "../components/ui/atoms";
 import { Table } from "../components/ui/common/Table";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { searchVectorTableData } from "../content/searchVector.data";
 import { searchVectorsTableColumns } from "../content/columns.data";
-import { getLocalStorageUser } from "../context/auth/authProvider";
 import {
   fetchSearchVectors,
   createSearchVector,
@@ -48,6 +41,7 @@ export const SearchVectorsPage = (props) => {
     history.push(updateQueryParams(currentPage, search));
     const timer = setTimeout(() => fetch(), search?.length === 0 ? 0 : 1000);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, search]);
 
   useEffect(() => {

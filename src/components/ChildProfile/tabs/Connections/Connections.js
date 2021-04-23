@@ -87,6 +87,7 @@ export const Connections = () => {
   useEffect(() => {
     fetchConnections();
     fetchSearchVectors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchSearchVectors = () => {
@@ -469,15 +470,17 @@ export const Connections = () => {
               onSubmit={async (data, emails, phones, address, removeIds) => {
                 console.log("DATA", data);
                 if (currentConnection) {
-                  if (data.relationship) {
+                  if (data.relationship || data.is_confirmed !== null) {
                     await updateConnectionRequest(currentConnection.id, {
-                      relationship: data.relationship,
+                      relationship: data.relationship || null,
+                      is_confirmed: data.is_confirmed,
                     }).then(() => {
                       fetchConnections();
                       fetchFamilyTree();
                     });
                     //TODO Add update Family Tree Update Request to immediately create a new necessary node
                   }
+                  delete data.is_confirmed;
                   await updateContactRequest({
                     id: currentConnection.contact.id,
                     ...data,
@@ -512,6 +515,7 @@ export const Connections = () => {
               }}
               onCancel={() => setIsAddModalOpen(false)}
               contact={currentConnection?.contact}
+              is_confirmed={currentConnection?.is_confirmed}
             />
           </Box>
         }

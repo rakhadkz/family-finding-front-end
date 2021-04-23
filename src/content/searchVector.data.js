@@ -1,7 +1,4 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
-import { Box } from "../components/ui/atoms";
-import Lozenge from "@atlaskit/lozenge";
-import { Avatar } from "../components/ui/molecules/Avatar";
 import CrossIcon from "@atlaskit/icon/glyph/cross";
 import EditIcon from "@atlaskit/icon/glyph/edit";
 import Can from "../accessControl/Can";
@@ -31,10 +28,6 @@ const searchVectorTableData = (
           ></p>
         ),
       },
-      // {
-      //   key: "in_continuous_search",
-      //   content: <p align="left">{item.in_continuous_search ? "Yes" : "No"}</p>,
-      // },
       {
         key: "priority",
         content: <p align="center">{`${Math.floor(Math.random() * 6)}`}</p>,

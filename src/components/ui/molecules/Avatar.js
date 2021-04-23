@@ -1,6 +1,5 @@
 import ReactAvatar from "react-avatar";
 import Tooltip from "@atlaskit/tooltip";
-import { templateReducer } from "../../../reducers/template/templateReducer";
 
 export const Avatar = ({
   name,

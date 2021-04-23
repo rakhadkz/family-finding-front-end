@@ -1,5 +1,4 @@
-import { useState, useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import {
@@ -103,10 +102,6 @@ export const FamilyTreePage = () => {
 
   return (
     <Wrapper>
-      {/* <Box d="flex" direction="row-reverse">
-        <Button appearance="primary">Print</Button>
-        <Button appearance="primary">Export</Button>
-      </Box> */}
       <Spacing m={{ b: "20px" }}>
         <OrgChart
           childId={id}
@@ -115,14 +110,6 @@ export const FamilyTreePage = () => {
           refreshContacts={refreshContacts}
         />
       </Spacing>
-      {/* <Spacing m={{ b: "20px" }}>
-        <Box d="flex" justify="space-between">
-          <Title size={"16px"}>Contact List</Title>
-          <Button appearance="warning" onClick={() => setIsAddModalOpen(true)}>
-            Add Contact
-          </Button>
-        </Box>
-      </Spacing> */}
       <ModalDialog
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
