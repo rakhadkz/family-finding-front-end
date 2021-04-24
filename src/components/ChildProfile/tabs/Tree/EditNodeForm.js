@@ -12,7 +12,6 @@ export const EditNodeForm = ({ initialContacts, selected }) => {
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   useEffect(() => {
-    console.log("initialContacts", initialContacts);
     const options = initialContacts
       .filter(({ contact }) => !!contact)
       .map(({ contact: item }) => ({
@@ -21,10 +20,6 @@ export const EditNodeForm = ({ initialContacts, selected }) => {
       }));
     setContacts(options);
   }, [initialContacts]);
-
-  useEffect(() => {
-    console.log(contacts);
-  }, [contacts]);
 
   const onSubmitHandle = (data) => {
     localStorage.setItem("selectValue", JSON.stringify({ ...data }));

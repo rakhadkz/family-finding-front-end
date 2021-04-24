@@ -9,10 +9,9 @@ export const SiblingsItem = ({
   onAdd,
   onDelete,
   visibleRemove = false,
-  key,
 }) => {
   return (
-    <Spacing m={{ l: "10px", b: "22px" }} key={key}>
+    <Spacing m={{ l: "10px", b: "22px" }}>
       <Box d="flex" align="center">
         <Rounded
           onClick={() => window.open(`${sibling?.id}`)}

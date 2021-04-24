@@ -10,16 +10,18 @@ export const SiblingsList = memo(
         <Title size="14px">Siblings</Title>
         <Spacing m={{ t: "8px" }}>
           <SiblingsListContainer>
-            {siblings.map((siblings) => (
-              <SiblingsItem
-                visibleRemove={true}
-                onDelete={() => onRemoveSiblingship(siblings.id)}
-                sibling={
-                  childId === siblings.sibling.id
-                    ? siblings.child
-                    : siblings.sibling
-                }
-              />
+            {siblings.map((siblings, index) => (
+              <div key={index}>
+                <SiblingsItem
+                  visibleRemove={true}
+                  onDelete={() => onRemoveSiblingship(siblings.id)}
+                  sibling={
+                    childId === siblings.sibling.id
+                      ? siblings.child
+                      : siblings.sibling
+                  }
+                />
+              </div>
             ))}
             <Box d="flex" justify="center" align="center"></Box>
           </SiblingsListContainer>

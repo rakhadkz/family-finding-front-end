@@ -98,8 +98,6 @@ export const FamilyTreePage = () => {
       .finally(() => setIsAddModalOpen(false));
   };
 
-  console.log("CONTACTS", constructed_tree);
-
   return (
     <Wrapper>
       <Spacing m={{ b: "20px" }}>

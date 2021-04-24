@@ -308,7 +308,13 @@ export const Connections = () => {
                     size="slarge"
                   />
                   <Spacing m={{ t: "20px" }}>
-                    <FitScore score={3} />
+                    <FitScore
+                      score={
+                        placedConnection.link_score_overall > 0
+                          ? (5 * placedConnection.link_score_overall) / 100
+                          : 0
+                      }
+                    />
                   </Spacing>
                   <p>Link Score</p>
                 </Box>

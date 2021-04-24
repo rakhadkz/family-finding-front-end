@@ -37,13 +37,13 @@ const userTableData = (
             <p>{item.organization?.name}</p>
           ))
         : null,
-      item.user_organizations?.map((item) =>
+      item.user_organizations?.map((item, index) =>
         role !== "super_admin" ? (
           item.organization_id === organization_id && (
-            <p>{role_label(item.role)}</p>
+            <p key={index}>{role_label(item.role)}</p>
           )
         ) : (
-          <p>{role_label(item.role)}</p>
+          <p key={index}>{role_label(item.role)}</p>
         )
       ),
       <Can

@@ -10,62 +10,58 @@ import CrossCircleIcon from "@atlaskit/icon/glyph/cross-circle";
 import { createActionItemRequest } from "../api/actionItems";
 import { Avatar } from "../components/ui/molecules/Avatar";
 
-const actionItemTableData = (data, fetch, setTablePending, history) => {
-  console.log(data);
-  return data.map(function (item, index) {
-    return {
-      key: index,
-      cells: [
-        {
-          key: "title",
-          content: item.title,
-        },
-        {
-          key: "description",
-          content: item.description,
-        },
-        item.child
-          ? {
-              key: "child",
-              content: (
-                <Box d="flex" align="center">
-                  <Avatar
-                    name={item.child.first_name + " " + item.child.last_name}
-                    size="medium"
-                    isChild
-                  />
-                  <Button
-                    appearance="link"
-                    onClick={() => history.push(`children/${item.child.id}`)}
-                  >
-                    {item.child.first_name + " " + item.child.last_name}
-                  </Button>
-                </Box>
-              ),
-            }
-          : {
-              key: "child",
-              content: "",
-            },
-        {
-          key: "resolve",
-          content: (
-            <div align="center">
-              <Action
-                type={item.action_type}
-                id={item.id}
-                fetch={fetch}
-                user_id={item.related_user_id}
-                child_id={item.child_id}
-                setPending={setTablePending}
-              />
-            </div>
-          ),
-        },
-      ],
-    };
-  });
-};
+const actionItemTableData = (data, fetch, setTablePending, history) =>
+  data.map((item, index) => ({
+    key: index,
+    cells: [
+      {
+        key: "title",
+        content: item.title,
+      },
+      {
+        key: "description",
+        content: item.description,
+      },
+      item.child
+        ? {
+            key: "child",
+            content: (
+              <Box d="flex" align="center">
+                <Avatar
+                  name={item.child.first_name + " " + item.child.last_name}
+                  size="medium"
+                  isChild
+                />
+                <Button
+                  appearance="link"
+                  onClick={() => history.push(`children/${item.child.id}`)}
+                >
+                  {item.child.first_name + " " + item.child.last_name}
+                </Button>
+              </Box>
+            ),
+          }
+        : {
+            key: "child",
+            content: "",
+          },
+      {
+        key: "resolve",
+        content: (
+          <div align="center">
+            <Action
+              type={item.action_type}
+              id={item.id}
+              fetch={fetch}
+              user_id={item.related_user_id}
+              child_id={item.child_id}
+              setPending={setTablePending}
+            />
+          </div>
+        ),
+      },
+    ],
+  }));
 
 const Action = ({ type, id, fetch, user_id, child_id, setPending }) => {
   const [isOpen, setIsOpen] = useState(false);

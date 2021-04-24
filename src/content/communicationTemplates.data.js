@@ -47,12 +47,6 @@ const communicationTemplatesData = (
                           (type) => type.label === item.template_type
                         ),
                       });
-                      console.log("WSSSSSS", {
-                        ...item,
-                        template_type: TEMPLATE_TYPES.find(
-                          (type) => type.label === item.template_type
-                        ),
-                      });
                     }}
                     height="32px"
                     width="32px"

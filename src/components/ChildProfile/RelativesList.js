@@ -15,8 +15,10 @@ export const RelativesList = memo(({ relatives }) => {
       <Title size="14px">Parents / Guardians</Title>
       <Spacing m={{ t: "8px" }}>
         <RelativeListContainer>
-          {childParents.map((relative) => (
-            <RelativeItem relative={relative} />
+          {childParents.map((relative, index) => (
+            <div key={index}>
+              <RelativeItem relative={relative} />
+            </div>
           ))}
         </RelativeListContainer>
       </Spacing>
