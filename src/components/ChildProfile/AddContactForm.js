@@ -65,12 +65,17 @@ export const AddContactForm = ({
   const [currentEmail, setCurrentEmail] = useState("");
   const [currentAddress, setCurrentAddress] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(is_confirmed || false);
+  const [isVerifiedEmployment, setIsVerifiedEmployment] = useState(
+    contact.verified_employment || false
+  );
+  const [accessToTransportation, setAccessToTransportation] = useState(
+    contact.access_to_transportation || false
+  );
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
     setPending(true);
 
-    console.log(data);
     const {
       state,
       relationship,
@@ -101,6 +106,10 @@ export const AddContactForm = ({
     }
 
     submitData.is_confirmed = isConfirmed;
+    submitData.access_to_transportation = accessToTransportation;
+    submitData.verified_employment = isVerifiedEmployment;
+
+    console.log("inside: ", submitData);
 
     onSubmit(submitData, emailsList, phonesList, addressesList, removeIds);
   };
@@ -434,13 +443,32 @@ export const AddContactForm = ({
             <div style={{ width: 250 }} />
           )}
         </Spacing>
-        <div style={{ marginLeft: 30 }}>
-          <Label>Status</Label>
+        <div
+          style={{
+            marginBottom: 10,
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
+        >
           <Checkbox
-            value="Confirmed"
+            value="confirmed"
             label="Confirmed"
             isChecked={isConfirmed}
             onChange={() => setIsConfirmed((item) => !item)}
+            style={{ width: "auto" }}
+          />
+          <Checkbox
+            value="verified_employment"
+            label="Verified Employment"
+            isChecked={isVerifiedEmployment}
+            onChange={() => setIsVerifiedEmployment((item) => !item)}
+            style={{ width: "auto" }}
+          />
+          <Checkbox
+            value="access_to_transportation"
+            label="Has Access to Transportation"
+            isChecked={accessToTransportation}
+            onChange={() => setAccessToTransportation((item) => !item)}
             style={{ width: "auto" }}
           />
         </div>

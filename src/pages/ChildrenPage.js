@@ -29,16 +29,17 @@ import {
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   const user = getLocalStorageUser();
-  const head = childrenTableColumns(user?.role === "user");
   const history = useHistory();
 
   const [totalPage, setTotalPage] = useState(null);
   const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
   const [search, setSearch] = useState(query.get("search") || "");
   const [state, dispatch] = useReducer(childReducer, initialState);
+  const [sort, setSort] = useState("");
+  const head = childrenTableColumns(user?.role === "user", sort, setSort);
 
   useEffect(() => {
-    history.push(updateQueryParams(currentPage, search));
+    history.push(updateQueryParams(currentPage, search, sort));
     dispatch(fetchChildrenRequest());
     const timer = setTimeout(
       fetchChildrenFunc,
@@ -46,7 +47,7 @@ export const ChildrenPage = (props) => {
     );
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, search]);
+  }, [currentPage, search, sort]);
 
   useEffect(() => {
     search.length > 0 && setCurrentPage(1);
@@ -95,7 +96,8 @@ export const ChildrenPage = (props) => {
       view: "table",
       page: currentPage,
       meta: true,
-      search: search,
+      search,
+      sort,
     })
       .then((response) => {
         if (response) {

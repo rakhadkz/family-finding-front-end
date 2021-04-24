@@ -49,9 +49,9 @@ export const DisqualifyModal = ({
               placeholder="Add a reason..."
               width={500}
               name={"disqualify_reason"}
-              register={register({ required: false })}
+              register={register({ required: true })}
               control={control}
-              error={errors.city}
+              error={errors.disqualify_reason}
               label={`Please fill in the reason for disqualification of ${
                 contact?.first_name + " " + contact?.last_name
               }`}

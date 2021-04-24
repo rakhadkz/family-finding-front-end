@@ -404,14 +404,10 @@ class MentionWysiwygEditor extends React.Component {
             />
             <StyledEmojiSelectWrapper>
               <EmojiSelect
-                // className={emojiStyles}
                 onOpen={() => {
-                  console.log("ONOPEN ON EMOJI!");
                   this.props.setSuggestions && this.props.setSuggestions(10);
                 }}
                 onClose={() => {
-                  console.log("ONCLOSE ON EMOJI!");
-
                   this.props.setSuggestions && this.props.setSuggestions(0);
                 }}
               />

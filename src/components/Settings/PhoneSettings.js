@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import {
   fetchPhoneNumbers,
   fetchPhoneSettings,
-  purchasePhone
+  purchasePhone,
 } from "../../api/settings";
 import { useAuth } from "../../context/auth/authContext";
 import { Box, Label, Spacing } from "../ui/atoms";
@@ -38,7 +38,7 @@ function PhoneSettings() {
 
   const handlePhoneChange = () => {
     console.log(selectedPhone, user);
-    setFetching(true)
+    setFetching(true);
     purchasePhone({
       phone: selectedPhone.value,
       friendly_name: selectedPhone.label,
@@ -53,11 +53,9 @@ function PhoneSettings() {
       .finally(() => {
         setIsModalOpen(false);
         fetchPhone();
-        setFetching(false)
+        setFetching(false);
       });
   };
-
-  console.log("PHONNEE", phone);
 
   return (
     <div>
@@ -67,7 +65,7 @@ function PhoneSettings() {
             <Label htmlFor={"phone"}>Your current phone</Label>
             <Textfield
               style={{ width: 350 }}
-              disabled={true}
+              isDisabled={true}
               name={"phone"}
               value={phone?.phone || `+13238706031`}
             />

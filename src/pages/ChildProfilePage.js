@@ -176,7 +176,6 @@ export function ChildProfilePage(props) {
   }, [templateType]);
 
   useEffect(() => {
-    console.log("TEmplate User", templateUser);
     const firstUser = templateUser && templateUser[0]?.value;
     const text = templateHtml
       .replaceAll(
@@ -475,6 +474,7 @@ export function ChildProfilePage(props) {
 
   return (
     <ChildContext.Provider
+      key={1}
       value={{
         state,
         commentState,

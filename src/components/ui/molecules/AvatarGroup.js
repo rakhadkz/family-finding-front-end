@@ -11,8 +11,8 @@ export const AvatarGroup = ({ data }) => {
   return (
     <div w="100%" style={{ display: "flex" }}>
       {data &&
-        data.slice(0, MAX_VISIBLE).map((item) => (
-          <div style={{ marginRight: "2px" }}>
+        data.slice(0, MAX_VISIBLE).map((item, index) => (
+          <div style={{ marginRight: "2px" }} key={index}>
             <Avatar size="medium" name={item.name} />
           </div>
         ))}

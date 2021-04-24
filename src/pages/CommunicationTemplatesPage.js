@@ -85,8 +85,6 @@ export const CommunicationTemplatesPage = (props) => {
     return () => clearTimeout(timer);
   }, [id, refresh, currentPage, search]);
 
-  console.log(currentTemplate);
-
   return (
     <>
       <Title>Communication Templates</Title>

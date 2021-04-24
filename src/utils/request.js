@@ -31,7 +31,6 @@ export const request = ({
         if (response.ok) {
           const res = await response.json();
           const data = meta ? res : res.data;
-          console.log(`Response data from ${endpoint}`, data);
           return data;
         } else {
           return Promise.reject(response);
@@ -71,7 +70,6 @@ export const request2 = ({
         if (response.ok) {
           const res = await response.json();
           const data = meta ? res : res;
-          console.log(`Response data from ${endpoint}`, data);
           return data;
         } else {
           return Promise.reject(response);

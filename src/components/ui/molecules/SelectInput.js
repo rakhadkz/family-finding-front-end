@@ -37,7 +37,6 @@ export const SelectInput = (props) => {
       <Controller
         name={name}
         control={control}
-        ref={{ register }}
         rules={register}
         defaultValue={defaultValue}
         render={(props) => (
@@ -76,14 +75,14 @@ export const SelectInput = (props) => {
 };
 
 SelectInput.propTypes = {
-  name: PropTypes.string.isRequired,
-  register: PropTypes.any.isRequired,
-  errors: PropTypes.any.isRequired,
-  control: PropTypes.any.isRequired,
+  name: PropTypes.string,
+  register: PropTypes.any,
+  errors: PropTypes.any,
+  control: PropTypes.any,
   elemBeforeInput: PropTypes.node,
   elemAfterInput: PropTypes.node,
   placeholder: PropTypes.string,
   type: PropTypes.string,
-  width: PropTypes.number,
+  width: PropTypes.any,
   label: PropTypes.node,
 };
