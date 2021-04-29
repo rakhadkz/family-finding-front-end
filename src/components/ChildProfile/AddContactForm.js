@@ -464,6 +464,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
         )}
         {isDisqualified && (
           <TextInput
+            width="100%"
             name="disqualify_reason"
             register={register({ required: isDisqualified })}
             control={control}
@@ -481,7 +482,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
             placeholder="Select Date"
           />
         )}
-        <Box d="flex" w="100%" justify="center" mb="20px">
+        <Box d="flex" w="100%" justify="center" mb="40px" mt="20px">
           <ButtonGroup>
             <Button isDisabled={pending} type="submit" appearance="primary">
               Save
