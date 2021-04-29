@@ -7,11 +7,12 @@ import {
 } from "../../../../api/childContact";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
-import { Spacing } from "../../../ui/atoms";
+import { Spacing, Title } from "../../../ui/atoms";
 import { ModalDialog } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
 import OrgChart from "./mychart";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
+import { Drawer } from "@chakra-ui/modal";
 
 export const FamilyTreePage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -108,20 +109,28 @@ export const FamilyTreePage = () => {
           refreshContacts={refreshContacts}
         />
       </Spacing>
+      <Drawer
+        onClose={() => setIsAddModalOpen(false)}
+        isOpen={isAddModalOpen}
+        width="wide"
+      ></Drawer>
       <ModalDialog
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
         heading="Add Contact"
         appearance={null}
         body={
-          <AddContactForm
-            onSubmit={async (data) => {
-              console.log("DATA", data);
-              await onAddContact(data).finally(() => refreshContacts());
-              console.log("FETCHING");
-            }}
-            onCancel={() => setIsAddModalOpen(false)}
-          />
+          <div style={{ paddingRight: 40, paddingTop: 10 }}>
+            <Title>Add Connection</Title>
+            <AddContactForm
+              onSubmit={async (data) => {
+                console.log("DATA", data);
+                await onAddContact(data).finally(() => refreshContacts());
+                console.log("FETCHING");
+              }}
+              onCancel={() => setIsAddModalOpen(false)}
+            />
+          </div>
         }
         hasActions={false}
       />

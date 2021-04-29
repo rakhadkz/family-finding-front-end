@@ -9,6 +9,9 @@ import { getObjectByLabel } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
 import { Checkbox } from "@atlaskit/checkbox";
+import AddIcon from "@atlaskit/icon/glyph/add";
+import { B400 } from "@atlaskit/theme/colors";
+import styled from "styled-components";
 
 const DynamicDataItem = ({ filed, onClick }) => {
   return (
@@ -32,27 +35,22 @@ const DynamicDataItem = ({ filed, onClick }) => {
   );
 };
 
-export const AddContactForm = ({
-  onSubmit,
-  onCancel,
-  contact,
-  is_confirmed,
-}) => {
+export const AddContactForm = ({ onSubmit, onCancel, contact, connection }) => {
   const { register, handleSubmit, control, errors, watch } = useForm({
     defaultValues: contact
       ? {
           first_name: contact.first_name,
           last_name: contact.last_name,
           relationship: contact.relationship,
-          // email: contact.email,
-          // phone: contact.phone,
           sex: contact.sex,
           race: contact.race,
-          // address: contact.address,
-          // address_2: contact.address_2,
           city: contact.city,
           birthday: new Date(contact.birthday),
           zip: contact.zip,
+          disqualify_reason:
+            connection && connection.is_disqualified
+              ? connection.disqualify_reason
+              : null,
         }
       : {},
   });
@@ -64,13 +62,19 @@ export const AddContactForm = ({
   const [currentPhone, setCurrentPhone] = useState("");
   const [currentEmail, setCurrentEmail] = useState("");
   const [currentAddress, setCurrentAddress] = useState("");
-  const [isConfirmed, setIsConfirmed] = useState(is_confirmed || false);
+  const [isConfirmed, setIsConfirmed] = useState(
+    connection?.is_confirmed || false
+  );
   const [isVerifiedEmployment, setIsVerifiedEmployment] = useState(
     contact?.verified_employment || false
   );
   const [accessToTransportation, setAccessToTransportation] = useState(
     contact?.access_to_transportation || false
   );
+  const [isDisqualified, setIsDisqualified] = useState(
+    connection?.is_disqualified || false
+  );
+  const [isPlaced, setIsPlaced] = useState(connection?.is_placed || false);
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
@@ -108,6 +112,8 @@ export const AddContactForm = ({
     submitData.is_confirmed = isConfirmed;
     submitData.access_to_transportation = accessToTransportation;
     submitData.verified_employment = isVerifiedEmployment;
+    submitData.is_placed = isPlaced;
+    submitData.is_disqualified = isDisqualified;
 
     console.log("inside: ", submitData);
 
@@ -122,11 +128,10 @@ export const AddContactForm = ({
           style={{
             display: "flex",
             flexWrap: "wrap",
-            justifyContent: "center",
+            justifyContent: "space-between",
           }}
         >
           <TextInput
-            marginX="8px"
             className="input"
             name={"first_name"}
             register={register({ required: true })}
@@ -135,7 +140,6 @@ export const AddContactForm = ({
             label="First name"
           />
           <TextInput
-            marginX="8px"
             className="input"
             name={"last_name"}
             register={register({ required: false })}
@@ -148,7 +152,6 @@ export const AddContactForm = ({
               contact?.relationship &&
               getObjectByLabel(relationshipOptions, contact?.relationship)
             }
-            marginX="8px"
             name={"relationship"}
             register={{ required: false }}
             control={control}
@@ -157,20 +160,7 @@ export const AddContactForm = ({
             label="Relationship"
             placeholder="Relationship"
           />
-          {/* <TextInput
-            marginX="8px"
-            className="input"
-            name={"email"}
-            register={register({
-              required: false,
-              pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-            })}
-            control={control}
-            error={errors.email}
-            label="Email"
-          /> */}
           <DatepickerInput
-            marginX="8px"
             name={"birthday"}
             register={{ required: false }}
             control={control}
@@ -178,19 +168,7 @@ export const AddContactForm = ({
             label="Birthday"
             placeholder="Select birthday"
           />
-          {/* <TextInput
-            marginX="8px"
-            name={"phone"}
-            register={register({
-              required: false,
-            })}
-            control={control}
-            error={errors.phone}
-            label="Phone"
-            type={"phone"}
-          /> */}
           <SelectInput
-            marginX="8px"
             defaultValue={
               contact?.sex && getObjectByLabel(sex_options, contact.sex)
             }
@@ -201,7 +179,6 @@ export const AddContactForm = ({
             options={sex_options}
           />
           <SelectInput
-            marginX="8px"
             defaultValue={
               contact?.race && getObjectByLabel(race_options, contact.race)
             }
@@ -211,18 +188,7 @@ export const AddContactForm = ({
             label="Race"
             options={race_options}
           />
-
-          {/* <TextInput
-            marginX="8px"
-            className="input"
-            name={"address_2"}
-            register={register({ required: false })}
-            control={control}
-            error={errors.address_2}
-            label="Another Address"
-          /> */}
           <TextInput
-            marginX="8px"
             name={"city"}
             register={register({ required: false })}
             control={control}
@@ -233,7 +199,6 @@ export const AddContactForm = ({
             defaultValue={
               contact?.state && { label: contact?.state, value: contact?.state }
             }
-            marginX="8px"
             menuPlacement="top"
             name={"state"}
             register={{ required: false }}
@@ -244,7 +209,7 @@ export const AddContactForm = ({
             placeholder="Choose State"
           />
           <TextInput
-            marginX="8px"
+            width={210}
             name={"zip"}
             register={register({ required: false })}
             control={control}
@@ -252,186 +217,188 @@ export const AddContactForm = ({
             label="Zip"
           />
 
-          <>
-            <Box
-              d="flex"
-              justify="center"
-              style={{ marginTop: 7, marginLeft: 10 }}
+          <CommunicationContainer>
+            <div className="communication-address">
+              <Label htmlFor={"address"}>Address</Label>
+              <Textfield
+                name="address"
+                value={currentAddress}
+                onChange={(e) => setCurrentAddress(e.target.value)}
+              />
+              <div style={{ marginBottom: 5 }} />
+              {contact?.communications
+                ?.filter(
+                  (item) =>
+                    item.communication_type === "address" &&
+                    !removeIds.includes(item.id)
+                )
+                .map((item) => (
+                  <DynamicDataItem
+                    filed={item.value}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setRemoveIds([...removeIds, item.id]);
+                    }}
+                  />
+                ))}
+              {addressesList.map((address, index) => (
+                <DynamicDataItem
+                  filed={address}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setAddressesList(
+                      addressesList.filter(
+                        (_, removeIndex) => removeIndex !== index
+                      )
+                    );
+                  }}
+                />
+              ))}
+            </div>
+            <Button
+              isDisabled={currentAddress?.length < 5}
+              onClick={(e) => {
+                e.stopPropagation();
+                setAddressesList([...addressesList, currentAddress]);
+                setCurrentAddress("");
+              }}
+              appearance="subtle"
+              spacing="none"
+              style={buttonStyle}
             >
-              <div style={{ width: 200 }}>
-                <Label htmlFor={"address"}>Address</Label>
-                <Textfield
-                  name="address"
-                  value={currentAddress}
-                  onChange={(e) => setCurrentAddress(e.target.value)}
-                />
-                <div style={{ marginBottom: 5 }} />
-                {contact?.communications
-                  ?.filter(
-                    (item) =>
-                      item.communication_type === "address" &&
-                      !removeIds.includes(item.id)
-                  )
-                  .map((item) => (
-                    <DynamicDataItem
-                      filed={item.value}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setRemoveIds([...removeIds, item.id]);
-                      }}
-                    />
-                  ))}
-                {addressesList.map((address, index) => (
-                  <DynamicDataItem
-                    filed={address}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setAddressesList(
-                        addressesList.filter(
-                          (_, removeIndex) => removeIndex !== index
-                        )
-                      );
-                    }}
-                  />
-                ))}
-              </div>
-              <Button
-                isDisabled={currentAddress?.length < 5}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setAddressesList([...addressesList, currentAddress]);
-                  setCurrentAddress("");
-                }}
-                appearance="primary"
-                style={{
-                  borderRadius: 20,
-                  marginLeft: 5,
-                  marginRight: 8,
-                  marginTop: 25,
-                }}
-              >
-                +
-              </Button>
-            </Box>
+              <AddIcon
+                size="small"
+                primaryColor={!(currentAddress?.length < 5) && B400}
+              />
+            </Button>
+          </CommunicationContainer>
 
-            <Box d="flex" justify="center">
-              <div style={{ width: 200 }}>
-                <Label htmlFor={"phone"}>Phone number</Label>
-                <Textfield
-                  name="phone"
-                  value={currentPhone}
-                  onChange={(e) => setCurrentPhone(e.target.value)}
-                />
-                <div style={{ marginBottom: 5 }} />
-                {contact?.communications
-                  ?.filter(
-                    (item) =>
-                      item.communication_type === "phone" &&
-                      !removeIds.includes(item.id)
-                  )
-                  .map((item) => (
-                    <DynamicDataItem
-                      filed={item.value}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setRemoveIds([...removeIds, item.id]);
-                      }}
-                    />
-                  ))}
-                {phonesList.map((phone, index) => (
+          <CommunicationContainer>
+            <div className="communication-phone">
+              <Label htmlFor={"phone"}>Phone number</Label>
+              <Textfield
+                name="phone"
+                value={currentPhone}
+                onChange={(e) => setCurrentPhone(e.target.value)}
+              />
+              <div style={{ marginBottom: 5 }} />
+              {contact?.communications
+                ?.filter(
+                  (item) =>
+                    item.communication_type === "phone" &&
+                    !removeIds.includes(item.id)
+                )
+                .map((item) => (
                   <DynamicDataItem
-                    filed={phone}
+                    filed={item.value}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setPhonesList(
-                        phonesList.filter(
-                          (_, removeIndex) => removeIndex !== index
-                        )
-                      );
+                      setRemoveIds([...removeIds, item.id]);
                     }}
                   />
                 ))}
-              </div>
-              <Button
-                isDisabled={
-                  !currentPhone.match(/\(?\d{3}\)?-? *\d{3}-? *-?\d{4}/)
+              {phonesList.map((phone, index) => (
+                <DynamicDataItem
+                  filed={phone}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPhonesList(
+                      phonesList.filter(
+                        (_, removeIndex) => removeIndex !== index
+                      )
+                    );
+                  }}
+                />
+              ))}
+            </div>
+            <Button
+              isDisabled={
+                !currentPhone.match(/\(?\d{3}\)?-? *\d{3}-? *-?\d{4}/)
+              }
+              onClick={(e) => {
+                e.stopPropagation();
+                setPhonesList([...phonesList, currentPhone]);
+                setCurrentPhone("");
+              }}
+              appearance="subtle"
+              spacing="none"
+              style={buttonStyle}
+            >
+              <AddIcon
+                size="small"
+                primaryColor={
+                  currentPhone.match(/\(?\d{3}\)?-? *\d{3}-? *-?\d{4}/) && B400
                 }
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPhonesList([...phonesList, currentPhone]);
-                  setCurrentPhone("");
-                }}
-                appearance="primary"
-                style={{
-                  borderRadius: 20,
-                  marginLeft: 5,
-                  marginRight: 8,
-                  marginTop: 25,
-                }}
-              >
-                +
-              </Button>
-            </Box>
-            <div style={{ marginBottom: 5 }} />
-            <Box d="flex" justify="center">
-              <div style={{ margin: "0px 8px", width: 200 }}>
-                <Label htmlFor={"email"}>Email</Label>
-                <Textfield
-                  value={currentEmail}
-                  name="email"
-                  onChange={(e) => setCurrentEmail(e.target.value)}
-                />
-                {contact?.communications
-                  ?.filter(
-                    (item) =>
-                      item.communication_type === "email" &&
-                      !removeIds.includes(item.id)
-                  )
-                  .map((item) => (
-                    <DynamicDataItem
-                      filed={item.value}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setRemoveIds([...removeIds, item.id]);
-                      }}
-                    />
-                  ))}
-                {emailsList.map((email, index) => (
+              />
+            </Button>
+          </CommunicationContainer>
+
+          <CommunicationContainer>
+            <div className="communication-email">
+              <Label htmlFor={"email"}>Email</Label>
+              <Textfield
+                value={currentEmail}
+                name="email"
+                onChange={(e) => setCurrentEmail(e.target.value)}
+              />
+              <div style={{ marginBottom: 5 }} />
+              {contact?.communications
+                ?.filter(
+                  (item) =>
+                    item.communication_type === "email" &&
+                    !removeIds.includes(item.id)
+                )
+                .map((item) => (
                   <DynamicDataItem
-                    filed={email}
+                    filed={item.value}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setEmailsList(
-                        emailsList.filter(
-                          (_, removeIndex) => removeIndex !== index
-                        )
-                      );
+                      setRemoveIds([...removeIds, item.id]);
                     }}
                   />
                 ))}
-              </div>
-              <Button
-                isDisabled={
-                  !currentEmail.match(
+              {emailsList.map((email, index) => (
+                <DynamicDataItem
+                  filed={email}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEmailsList(
+                      emailsList.filter(
+                        (_, removeIndex) => removeIndex !== index
+                      )
+                    );
+                  }}
+                />
+              ))}
+            </div>
+            <Button
+              isDisabled={
+                !currentEmail.match(
+                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                )
+              }
+              onClick={(e) => {
+                e.stopPropagation();
+                setEmailsList([...emailsList, currentEmail]);
+                setCurrentEmail("");
+              }}
+              appearance="subtle"
+              spacing="none"
+              style={buttonStyle}
+            >
+              <AddIcon
+                size="small"
+                primaryColor={
+                  currentEmail.match(
                     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                  )
+                  ) && B400
                 }
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setEmailsList([...emailsList, currentEmail]);
-                  setCurrentEmail("");
-                }}
-                appearance="primary"
-                style={{ borderRadius: 20, marginTop: 25 }}
-              >
-                +
-              </Button>
-            </Box>
-          </>
+              />
+            </Button>
+          </CommunicationContainer>
 
           {relationship?.value === "Other" ? (
             <TextInput
-              marginX="8px"
               className="input"
               name={"relationship_other"}
               register={register({ required: false })}
@@ -440,7 +407,7 @@ export const AddContactForm = ({
               label="Relationship name"
             />
           ) : (
-            <div style={{ width: 250 }} />
+            <div style={{ width: 240 }} />
           )}
         </Spacing>
         <div
@@ -451,8 +418,8 @@ export const AddContactForm = ({
           }}
         >
           <Checkbox
-            value="confirmed"
-            label="Confirmed"
+            value="linked"
+            label="Linked"
             isChecked={isConfirmed}
             onChange={() => setIsConfirmed((item) => !item)}
             style={{ width: "auto" }}
@@ -472,6 +439,37 @@ export const AddContactForm = ({
             style={{ width: "auto" }}
           />
         </div>
+        <div
+          style={{
+            marginBottom: 10,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Checkbox
+            value="disqualified"
+            label="Disqualified"
+            isChecked={isDisqualified}
+            onChange={() => setIsDisqualified((item) => !item)}
+            style={{ width: "auto" }}
+          />
+          <Checkbox
+            value="placed"
+            label="Placed"
+            isChecked={isPlaced}
+            onChange={() => setIsPlaced((item) => !item)}
+            style={{ width: "auto" }}
+          />
+        </div>
+        {isDisqualified && (
+          <TextInput
+            name="disqualify_reason"
+            register={register({ required: isDisqualified })}
+            control={control}
+            error={errors.disqualify_reason}
+            label="Disqualify Reason"
+          />
+        )}
         <Box d="flex" w="100%" justify="center" mb="20px">
           <ButtonGroup>
             <Button isDisabled={pending} type="submit" appearance="primary">
@@ -484,3 +482,24 @@ export const AddContactForm = ({
     </>
   );
 };
+
+const buttonStyle = {
+  borderRadius: 30,
+  padding: "3px 5px",
+  marginTop: 10,
+};
+
+const CommunicationContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 240px;
+
+  div:first-child {
+    width: 210px;
+  }
+  .communication-address {
+    width: 210px;
+    margin-block: 8px;
+  }
+`;
