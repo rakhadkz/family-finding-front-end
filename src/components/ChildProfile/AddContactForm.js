@@ -66,10 +66,10 @@ export const AddContactForm = ({
   const [currentAddress, setCurrentAddress] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(is_confirmed || false);
   const [isVerifiedEmployment, setIsVerifiedEmployment] = useState(
-    contact.verified_employment || false
+    contact?.verified_employment || false
   );
   const [accessToTransportation, setAccessToTransportation] = useState(
-    contact.access_to_transportation || false
+    contact?.access_to_transportation || false
   );
   const relationship = watch("relationship"); // you can supply default value as second argument
 

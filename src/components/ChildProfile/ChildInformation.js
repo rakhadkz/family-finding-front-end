@@ -54,12 +54,8 @@ export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
           <Text>{child.permanency_goal}</Text>
         </Spacing>
         <Spacing m={{ l: "8px", r: "8px" }}>
-          <StyledLabel>System status</StyledLabel>
+          <StyledLabel>Status</StyledLabel>
           <Text>{child.system_status}</Text>
-        </Spacing>
-        <Spacing m={{ l: "8px", r: "8px" }}>
-          <StyledLabel>Connections</StyledLabel>
-          <Text>1</Text>
         </Spacing>
       </Box>
     </Rectangle>

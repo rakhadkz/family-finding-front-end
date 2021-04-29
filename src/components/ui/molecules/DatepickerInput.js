@@ -66,6 +66,9 @@ const StyledLabel = styled(Label)`
 `;
 
 const StyledDatePicker = styled(DatePicker)`
+  .react-date-picker__calendar {
+    z-index: 99999;
+  }
   .react-date-picker__wrapper {
     border-color: #dfe1e6 !important;
     border-radius: 3px !important;
