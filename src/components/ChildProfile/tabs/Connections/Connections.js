@@ -482,6 +482,7 @@ export const Connections = () => {
                     disqualify_reason: data.is_disqualified
                       ? data.disqualify_reason
                       : null,
+                    placed_date: data.is_placed ? data.placed_date : null,
                   }).then(() => {
                     fetchConnections();
                     fetchFamilyTree();
@@ -492,6 +493,7 @@ export const Connections = () => {
                 delete data.is_disqualified;
                 delete data.is_placed;
                 delete data.disqualify_reason;
+                delete data.placed_date;
                 await updateContactRequest({
                   id: currentConnection.contact.id,
                   ...data,

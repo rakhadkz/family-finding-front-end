@@ -47,10 +47,8 @@ export const AddContactForm = ({ onSubmit, onCancel, contact, connection }) => {
           city: contact.city,
           birthday: new Date(contact.birthday),
           zip: contact.zip,
-          disqualify_reason:
-            connection && connection.is_disqualified
-              ? connection.disqualify_reason
-              : null,
+          disqualify_reason: connection?.disqualify_reason,
+          placed_date: new Date(connection?.placed_date),
         }
       : {},
   });
@@ -468,6 +466,16 @@ export const AddContactForm = ({ onSubmit, onCancel, contact, connection }) => {
             control={control}
             error={errors.disqualify_reason}
             label="Disqualify Reason"
+          />
+        )}
+        {isPlaced && (
+          <DatepickerInput
+            name="placed_date"
+            register={{ required: isPlaced }}
+            control={control}
+            error={errors.placed_date}
+            label="Placed Date"
+            placeholder="Select Date"
           />
         )}
         <Box d="flex" w="100%" justify="center" mb="20px">
