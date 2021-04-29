@@ -225,14 +225,6 @@ export const confirmedConnectionRows = (
                       ) : (
                         <ButtonGroup>
                           <Button onClick={onEdit}>Edit</Button>
-                          <Button
-                            onClick={() => {
-                              setIsDisModalOpen(true);
-                              setCurrentConnection(item);
-                            }}
-                          >
-                            Disqualify
-                          </Button>
                           {!existPlaced && (
                             <Button
                               onClick={() => {

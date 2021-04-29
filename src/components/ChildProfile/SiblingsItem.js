@@ -3,6 +3,8 @@ import React from "react";
 import { Box, Spacing } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 import { Rounded } from "../ui/molecules/Rounded";
+import AddIcon from "@atlaskit/icon/glyph/add";
+import { B400 } from "@atlaskit/theme/colors";
 
 export const SiblingsItem = ({
   sibling,
@@ -33,10 +35,15 @@ export const SiblingsItem = ({
                     e.stopPropagation();
                     onAdd();
                   }}
-                  appearance="primary"
-                  style={{ borderRadius: 20, marginLeft: 10 }}
+                  appearance="subtle"
+                  spacing="none"
+                  style={{
+                    borderRadius: 30,
+                    marginLeft: 15,
+                    padding: "3px 5px",
+                  }}
                 >
-                  +
+                  <AddIcon size="small" primaryColor={B400} />
                 </Button>
               ) : null}
             </>
