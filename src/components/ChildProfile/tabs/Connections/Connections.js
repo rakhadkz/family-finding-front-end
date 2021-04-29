@@ -527,7 +527,6 @@ export const Connections = () => {
               }
             }}
             onCancel={() => setIsAddModalOpen(false)}
-            contact={currentConnection?.contact}
             connection={currentConnection}
           />
         </div>

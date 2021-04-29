@@ -35,7 +35,8 @@ const DynamicDataItem = ({ filed, onClick }) => {
   );
 };
 
-export const AddContactForm = ({ onSubmit, onCancel, contact, connection }) => {
+export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
+  const contact = connection?.contact;
   const { register, handleSubmit, control, errors, watch } = useForm({
     defaultValues: contact
       ? {
@@ -437,28 +438,30 @@ export const AddContactForm = ({ onSubmit, onCancel, contact, connection }) => {
             style={{ width: "auto" }}
           />
         </div>
-        <div
-          style={{
-            marginBottom: 10,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Checkbox
-            value="disqualified"
-            label="Disqualified"
-            isChecked={isDisqualified}
-            onChange={() => setIsDisqualified((item) => !item)}
-            style={{ width: "auto" }}
-          />
-          <Checkbox
-            value="placed"
-            label="Placed"
-            isChecked={isPlaced}
-            onChange={() => setIsPlaced((item) => !item)}
-            style={{ width: "auto" }}
-          />
-        </div>
+        {connection && (
+          <div
+            style={{
+              marginBottom: 10,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Checkbox
+              value="disqualified"
+              label="Disqualified"
+              isChecked={isDisqualified}
+              onChange={() => setIsDisqualified((item) => !item)}
+              style={{ width: "auto" }}
+            />
+            <Checkbox
+              value="placed"
+              label="Placed"
+              isChecked={isPlaced}
+              onChange={() => setIsPlaced((item) => !item)}
+              style={{ width: "auto" }}
+            />
+          </div>
+        )}
         {isDisqualified && (
           <TextInput
             name="disqualify_reason"
