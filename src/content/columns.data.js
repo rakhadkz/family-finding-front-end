@@ -118,7 +118,7 @@ export const childrenTableColumns = (isUser = true, sort, setSort = null) => [
           })
         }
       >
-        Days in system {sort === "days_in_system_asc" && "⬆"}
+        Days in LinkingLives {sort === "days_in_system_asc" && "⬆"}
         {sort === "days_in_system_desc" && "⬇"}
       </p>
     ),

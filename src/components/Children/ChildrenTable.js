@@ -23,7 +23,7 @@ const columns = [
   },
   {
     key: "days_in_system",
-    content: "Days in system",
+    content: "Days in LinkingLives",
     width: 12,
   },
   {

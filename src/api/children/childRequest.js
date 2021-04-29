@@ -1,12 +1,19 @@
 import { request } from "../../utils/request";
 
 export const fetchChildrenRequest = (params) => {
-  const { view = "", page = "", search = "", meta = false, sort = "" } = params;
+  const {
+    view = "",
+    page = "",
+    search = "",
+    meta = false,
+    sort = "",
+    filter,
+  } = params;
   return request({
     endpoint:
       "children" +
       (params.id ? `/${params.id}` : ``) +
-      `?view=${view}&page=${page}&search=${search}&sort=${sort}`,
+      `?view=${view}&page=${page}&search=${search}&sort=${sort}&filter=${filter}`,
     method: "GET",
     meta: meta,
   });
