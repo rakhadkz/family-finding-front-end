@@ -139,28 +139,33 @@ const SidebarInner = () => {
           />
         </Spacing>
 
-        {SIDEBAR_ITEMS(user?.role === "super_admin").map((item) => (
-          <Can
-            perform={item.perform}
-            yes={() => (
-              <SidebarMenuItem key={item.to}>
-                <Link to={item.to}>
-                  {item.icon()}
-                  <Spacing m={{ l: "15px" }}>{item.title}</Spacing>
-                </Link>
-              </SidebarMenuItem>
-            )}
-          />
-        ))}
-        <SidebarMenuItem>
-          <Link
+        {SIDEBAR_ITEMS(user?.role === "super_admin").map(
+          (item, index) =>
+            item.to && (
+              <div key={index}>
+                <Can
+                  perform={item.perform}
+                  yes={() => (
+                    <SidebarMenuItem>
+                      <Link to={item.to}>
+                        {item.icon()}
+                        <Spacing m={{ l: "15px" }}>{item.title}</Spacing>
+                      </Link>
+                    </SidebarMenuItem>
+                  )}
+                />
+              </div>
+            )
+        )}
+        <SidebarMenuItem key={32}>
+          <button
             onClick={() => {
               logout();
             }}
           >
             <Signout />
             <Spacing m={{ l: "15px" }}>Log Out</Spacing>
-          </Link>
+          </button>
         </SidebarMenuItem>
       </Box>
       <SidebarUser />

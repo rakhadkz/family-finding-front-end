@@ -1,5 +1,4 @@
-import { useState, useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import {
@@ -8,11 +7,12 @@ import {
 } from "../../../../api/childContact";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { createChildContact } from "../../../../context/children/childProvider";
-import { Spacing } from "../../../ui/atoms";
+import { Spacing, Title } from "../../../ui/atoms";
 import { ModalDialog } from "../../../ui/common";
 import { AddContactForm } from "../../AddContactForm";
 import OrgChart from "./mychart";
 import { ChildContext } from "../../../../pages/ChildProfilePage";
+import { Drawer } from "@chakra-ui/modal";
 
 export const FamilyTreePage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -99,14 +99,8 @@ export const FamilyTreePage = () => {
       .finally(() => setIsAddModalOpen(false));
   };
 
-  console.log("CONTACTS", constructed_tree);
-
   return (
     <Wrapper>
-      {/* <Box d="flex" direction="row-reverse">
-        <Button appearance="primary">Print</Button>
-        <Button appearance="primary">Export</Button>
-      </Box> */}
       <Spacing m={{ b: "20px" }}>
         <OrgChart
           childId={id}
@@ -115,28 +109,28 @@ export const FamilyTreePage = () => {
           refreshContacts={refreshContacts}
         />
       </Spacing>
-      {/* <Spacing m={{ b: "20px" }}>
-        <Box d="flex" justify="space-between">
-          <Title size={"16px"}>Contact List</Title>
-          <Button appearance="warning" onClick={() => setIsAddModalOpen(true)}>
-            Add Contact
-          </Button>
-        </Box>
-      </Spacing> */}
+      <Drawer
+        onClose={() => setIsAddModalOpen(false)}
+        isOpen={isAddModalOpen}
+        width="wide"
+      ></Drawer>
       <ModalDialog
         isOpen={isAddModalOpen}
         setIsOpen={setIsAddModalOpen}
         heading="Add Contact"
         appearance={null}
         body={
-          <AddContactForm
-            onSubmit={async (data) => {
-              console.log("DATA", data);
-              await onAddContact(data).finally(() => refreshContacts());
-              console.log("FETCHING");
-            }}
-            onCancel={() => setIsAddModalOpen(false)}
-          />
+          <div style={{ paddingRight: 40, paddingTop: 10 }}>
+            <Title>Add Connection</Title>
+            <AddContactForm
+              onSubmit={async (data) => {
+                console.log("DATA", data);
+                await onAddContact(data).finally(() => refreshContacts());
+                console.log("FETCHING");
+              }}
+              onCancel={() => setIsAddModalOpen(false)}
+            />
+          </div>
         }
         hasActions={false}
       />

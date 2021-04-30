@@ -1,8 +1,7 @@
 import OfficeBuilding from "@atlaskit/icon/glyph/comment";
 import React, { memo } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Can from "../../../accessControl/Can";
-import { updateUserRequest } from "../../../api/user/userRequest";
 import { useAuth } from "../../../context/auth/authContext";
 import { Box, SidebarMenuItem, Spacing } from "../atoms";
 
@@ -16,20 +15,7 @@ const SIDEBAR_ITEMS = (isSuperAdmin = false) => [
 ];
 
 const SidebarInner = () => {
-  const { logout, user, fetchMe } = useAuth();
-  const history = useHistory();
-  const setCurrentOrganization = async (data) => {
-    console.log(data);
-    localStorage.setItem("organizationName", data?.organization?.name);
-    await updateUserRequest(user.id, {
-      user: {
-        organization_id: data.organization_id,
-        role: data.role,
-      },
-    });
-    await fetchMe();
-    history.push("/");
-  };
+  const { user } = useAuth();
 
   return (
     <Box
@@ -40,19 +26,22 @@ const SidebarInner = () => {
       h="100%"
     >
       <Box>
-        {SIDEBAR_ITEMS(user?.role === "super_admin").map((item) => (
-          <Can
-            perform={item.perform}
-            yes={() => (
-              <SidebarMenuItem key={item.to}>
-                <Link to={item.to}>
-                  {item.icon()}
-                  <Spacing m={{ l: "15px" }}>{item.title}</Spacing>
-                </Link>
-              </SidebarMenuItem>
-            )}
-          />
-        ))}
+        {SIDEBAR_ITEMS(user?.role === "super_admin").map(
+          (item, index) =>
+            item.to && (
+              <Can
+                perform={item.perform}
+                yes={() => (
+                  <SidebarMenuItem key={index}>
+                    <Link to={item.to}>
+                      {item.icon()}
+                      <Spacing m={{ l: "15px" }}>{item.title}</Spacing>
+                    </Link>
+                  </SidebarMenuItem>
+                )}
+              />
+            )
+        )}
       </Box>
     </Box>
   );

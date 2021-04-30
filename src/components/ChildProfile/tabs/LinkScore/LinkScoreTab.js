@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import CheckIcon from "@atlaskit/icon/glyph/check";
-import CrossIcon from "@atlaskit/icon/glyph/cross";
+import ArrowDownIcon from "@atlaskit/icon/glyph/arrow-down";
+import ArrowUpIcon from "@atlaskit/icon/glyph/arrow-up";
 import QuestionIcon from "@atlaskit/icon/glyph/question";
 import { G300 } from "@atlaskit/theme/colors";
 import { R400 } from "@atlaskit/theme/colors";
@@ -32,8 +32,8 @@ const Category = ({ name, score = null }) => {
       }}
     >
       <Title size="16px">{name}</Title>
-      {score != null && score > 0 && <CheckIcon primaryColor="green" />}
-      {score != null && score <= 0 && <CrossIcon primaryColor={R400} />}
+      {score != null && score > 0 && <ArrowUpIcon primaryColor={G300} />}
+      {score != null && score <= 0 && <ArrowDownIcon primaryColor={R400} />}
       {score == null && <QuestionIcon />}
     </div>
   );

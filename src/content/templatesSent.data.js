@@ -3,7 +3,6 @@ import ArrowDownIcon from "@atlaskit/icon/glyph/arrow-down";
 import ArrowUpIcon from "@atlaskit/icon/glyph/arrow-up";
 import PdfIcon from "@atlaskit/icon/glyph/pdf";
 import { SimpleTag as Tag } from "@atlaskit/tag";
-import { Text } from "@chakra-ui/react";
 import moment from "moment";
 import { ACTIONS } from "../accessControl/actions";
 import Can from "../accessControl/Can";
@@ -44,9 +43,12 @@ const templatesSentTableData = (data, setToggled, toggled) => {
                     ? "GENERATED"
                     : "PENDING")
                 }
-                color={colors[item?.opened] || (item?.communication_template?.template_type === "Letter"
-                ? "green"
-                : "yellow")}
+                color={
+                  colors[item?.opened] ||
+                  (item?.communication_template?.template_type === "Letter"
+                    ? "green"
+                    : "yellow")
+                }
               />
             ),
           },
@@ -88,11 +90,11 @@ const templatesSentTableData = (data, setToggled, toggled) => {
                     >
                       Get as PDF
                     </Button>{" "}
-                    <Text
+                    <p
                       dangerouslySetInnerHTML={{
                         __html: `<div style="padding: 10px"><b>Content</b>: <br /> <div style="padding:10px">${item?.content}</div></div>`,
                       }}
-                    />
+                    ></p>
                   </div>
                 ),
                 colSpan: 5,

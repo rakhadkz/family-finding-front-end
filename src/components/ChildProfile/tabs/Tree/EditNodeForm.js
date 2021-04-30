@@ -2,20 +2,16 @@ import Button from "@atlaskit/button";
 import { FormSection } from "@atlaskit/form";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
 import { relationshipOptions } from "../../../../content/relationshipOptions.data";
 import { Box, Form, Spacing } from "../../../ui/atoms";
 import { SelectInput, TextInput } from "../../../ui/molecules";
 
 export const EditNodeForm = ({ initialContacts, selected }) => {
-  const history = useHistory();
   const { register, handleSubmit, control, errors, watch } = useForm({});
   const [contacts, setContacts] = useState([]);
   const relationship = watch("relationship"); // you can supply default value as second argument
-  const [pending, setPending] = useState(false);
 
   useEffect(() => {
-    console.log("initialContacts", initialContacts);
     const options = initialContacts
       .filter(({ contact }) => !!contact)
       .map(({ contact: item }) => ({
@@ -24,10 +20,6 @@ export const EditNodeForm = ({ initialContacts, selected }) => {
       }));
     setContacts(options);
   }, [initialContacts]);
-
-  useEffect(() => {
-    console.log(contacts);
-  }, [contacts]);
 
   const onSubmitHandle = (data) => {
     localStorage.setItem("selectValue", JSON.stringify({ ...data }));
@@ -103,12 +95,7 @@ export const EditNodeForm = ({ initialContacts, selected }) => {
             />
           )}
           <Spacing m={{ t: "10px" }}>
-            <Button
-              isDisabled={pending}
-              type="submit"
-              id="save"
-              appearance="primary"
-            >
+            <Button type="submit" id="save" appearance="primary">
               Save
             </Button>
           </Spacing>

@@ -2,7 +2,6 @@ import Button from "@atlaskit/button";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
 import { Box, Form } from "../ui/atoms";
 import { TextInput } from "../ui/molecules";
 import { AddOrganizationForm } from "./AddOrganizationForm";

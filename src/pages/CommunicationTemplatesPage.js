@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Button from "@atlaskit/button";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -83,8 +84,6 @@ export const CommunicationTemplatesPage = (props) => {
     );
     return () => clearTimeout(timer);
   }, [id, refresh, currentPage, search]);
-
-  console.log(currentTemplate);
 
   return (
     <>

@@ -9,11 +9,13 @@ export const PossibleSiblingsList = memo(({ siblings, createSiblings }) => {
       {siblings?.length ? <Title size="14px">Possible siblings</Title> : null}
       <Spacing m={{ t: "8px" }}>
         <SiblingsListContainer>
-          {siblings.map((siblings) => (
-            <SiblingsItem
-              onAdd={() => createSiblings(siblings?.sibling.id)}
-              sibling={siblings?.sibling}
-            />
+          {siblings.map((siblings, index) => (
+            <div key={index}>
+              <SiblingsItem
+                onAdd={() => createSiblings(siblings?.sibling.id)}
+                sibling={siblings?.sibling}
+              />
+            </div>
           ))}
         </SiblingsListContainer>
       </Spacing>

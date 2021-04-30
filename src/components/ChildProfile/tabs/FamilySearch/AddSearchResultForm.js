@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Button, { ButtonGroup, LoadingButton } from "@atlaskit/button";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Box } from "../../../ui/atoms";
@@ -269,10 +270,6 @@ export const AddSearchResultForm = ({
     setUpd(upd + 1);
   };
 
-  useEffect(() => {
-    console.log(blocks);
-  }, [blocks]);
-
   return (
     <form onSubmit={handleSubmit(onSubmitHandle)}>
       <Box d="flex" mt="10px">
@@ -285,7 +282,7 @@ export const AddSearchResultForm = ({
           options={vectors}
           control={control}
           label="Select Search Vector"
-          myValue={selectedSearchVector}
+          myValue={selectedSearchVector || null}
           myOnChange={setSelectedSearchVector}
         />
         <SelectInput
@@ -298,7 +295,7 @@ export const AddSearchResultForm = ({
           options={connections}
           control={control}
           label="Select Connection"
-          myValue={selectedConnection}
+          myValue={selectedConnection || null}
           myOnChange={setSelectedConnection}
         />
       </Box>

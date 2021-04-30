@@ -1,9 +1,10 @@
 import Button from "@atlaskit/button";
 import React from "react";
-import styled from "styled-components";
-import { Box, Label, Spacing } from "../ui/atoms";
+import { Box, Spacing } from "../ui/atoms";
 import { Avatar } from "../ui/molecules/Avatar";
 import { Rounded } from "../ui/molecules/Rounded";
+import AddIcon from "@atlaskit/icon/glyph/add";
+import { B400 } from "@atlaskit/theme/colors";
 
 export const SiblingsItem = ({
   sibling,
@@ -34,10 +35,15 @@ export const SiblingsItem = ({
                     e.stopPropagation();
                     onAdd();
                   }}
-                  appearance="primary"
-                  style={{ borderRadius: 20, marginLeft: 10 }}
+                  appearance="subtle"
+                  spacing="none"
+                  style={{
+                    borderRadius: 30,
+                    marginLeft: 15,
+                    padding: "3px 5px",
+                  }}
                 >
-                  +
+                  <AddIcon size="small" primaryColor={B400} />
                 </Button>
               ) : null}
             </>
@@ -47,22 +53,3 @@ export const SiblingsItem = ({
     </Spacing>
   );
 };
-
-const StyledLabel = styled(Label)`
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 16px;
-  color: #6b778c;
-`;
-
-const Text = styled.div`
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  min-width: 119px;
-  color: #172b4d;
-`;

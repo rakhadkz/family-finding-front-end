@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, Box, Spacing } from "../../../ui/atoms";
 import { FormSection } from "@atlaskit/form";
 import Button from "@atlaskit/button";

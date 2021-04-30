@@ -36,8 +36,9 @@ export const DatepickerInput = (props) => {
         ref={register}
         rules={register}
         name={name}
-        value={value}
+        value={value || null}
         as={StyledDatePicker}
+        defaultValue={null}
         width={width}
         elemAfterInput={elemAfterInput}
         placeholder={placeholder}
@@ -65,6 +66,9 @@ const StyledLabel = styled(Label)`
 `;
 
 const StyledDatePicker = styled(DatePicker)`
+  .react-date-picker__calendar {
+    z-index: 99999;
+  }
   .react-date-picker__wrapper {
     border-color: #dfe1e6 !important;
     border-radius: 3px !important;
@@ -83,14 +87,14 @@ const StyledDatePicker = styled(DatePicker)`
 `;
 
 DatepickerInput.propTypes = {
-  name: PropTypes.string.isRequired,
-  register: PropTypes.any.isRequired,
-  errors: PropTypes.any.isRequired,
+  name: PropTypes.string,
+  register: PropTypes.any,
+  errors: PropTypes.any,
   control: PropTypes.any.isRequired,
   elemBeforeInput: PropTypes.node,
   elemAfterInput: PropTypes.node,
   placeholder: PropTypes.string,
   type: PropTypes.string,
-  width: PropTypes.number,
+  width: PropTypes.any,
   label: PropTypes.node,
 };

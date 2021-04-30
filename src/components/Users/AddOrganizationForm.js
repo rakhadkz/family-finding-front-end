@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Button from "@atlaskit/button";
 import SearchIcon from "@atlaskit/icon/glyph/search";
 import React, { useEffect, useState } from "react";
@@ -101,41 +102,41 @@ export const AddOrganizationForm = ({ setOrgRoles }) => {
         onSubmit={handleSubmit(onAddOrganizationHandle)}
         noValidate
       >
-        <Spacing m={{t: "8px"}}>
-            <Box align="flex-end" d="flex">
-              <SelectInput
-                marginY="0px"
-                className="input"
-                name="organization"
-                elemAfterInput={<SearchIcon />}
-                options={organizations}
-                register={{ required: true }}
-                control={control}
-                error={errors.organization}
-                myValue={organization}
-                myOnChange={setOrganization}
-                label="Organization"
-                placeholder="Choose organization"
-              />
-              <SelectInput
-                marginY="0px"
-                marginX="8px"
-                className="input"
-                name="role"
-                label="Role"
-                register={{ required: true }}
-                options={roles}
-                control={control}
-                myOnChange={setRole}
-                myValue={role}
-                error={errors.role}
-                placeholder="Select a role"
-              />
-              <Button type="submit" appearance="primary">
-                Add
-              </Button>
-            </Box>
-          </Spacing>
+        <Spacing m={{ t: "8px" }}>
+          <Box align="flex-end" d="flex">
+            <SelectInput
+              marginY="0px"
+              className="input"
+              name="organization"
+              elemAfterInput={<SearchIcon />}
+              options={organizations}
+              register={{ required: true }}
+              control={control}
+              error={errors.organization}
+              myValue={organization}
+              myOnChange={setOrganization}
+              label="Organization"
+              placeholder="Choose organization"
+            />
+            <SelectInput
+              marginY="0px"
+              marginX="8px"
+              className="input"
+              name="role"
+              label="Role"
+              register={{ required: true }}
+              options={roles}
+              control={control}
+              myOnChange={setRole}
+              myValue={role}
+              error={errors.role}
+              placeholder="Select a role"
+            />
+            <Button type="submit" appearance="primary">
+              Add
+            </Button>
+          </Box>
+        </Spacing>
       </Form>
       <Spacing m={{ t: "33px" }}>
         <TableWrapper>

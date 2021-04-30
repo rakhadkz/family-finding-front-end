@@ -87,20 +87,13 @@ export const Connections = () => {
   useEffect(() => {
     fetchConnections();
     fetchSearchVectors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchSearchVectors = () => {
     fetchSearchVectorsRequest({}).then((data) =>
       setVectors(
-        data
-          .filter(
-            (item) =>
-              item.in_continuous_search &&
-              (item.name.indexOf("Family Tree Now") > -1 ||
-                item.name.indexOf("Melissa Identity") > -1 ||
-                item.name.indexOf("Fast People Search") > -1)
-          )
-          .map((item) => item.id)
+        data.filter((item) => item.in_continuous_search).map((item) => item.id)
       )
     );
   };
@@ -318,7 +311,13 @@ export const Connections = () => {
                     size="slarge"
                   />
                   <Spacing m={{ t: "20px" }}>
-                    <FitScore score={3} />
+                    <FitScore
+                      score={
+                        placedConnection.link_score_overall > 0
+                          ? (5 * placedConnection.link_score_overall) / 100
+                          : 0
+                      }
+                    />
                   </Spacing>
                   <p>Link Score</p>
                 </Box>
@@ -464,70 +463,77 @@ export const Connections = () => {
         />
       </Drawer>
 
-      <ModalDialog
+      <Drawer
+        onClose={() => setIsAddModalOpen(false)}
         isOpen={isAddModalOpen}
-        setIsOpen={setIsAddModalOpen}
-        appearance={null}
-        width="medium"
-        body={
-          <Box d="flex" direction="column" align="center">
-            <Spacing m={{ t: "17px" }}>
-              <Title>
-                {currentConnection ? "Edit Connection" : "Add Connection"}
-              </Title>
-            </Spacing>
-            <AddContactForm
-              onSubmit={async (data, emails, phones, address, removeIds) => {
-                console.log("DATA", data);
-                if (currentConnection) {
-                  if (data.relationship) {
-                    await updateConnectionRequest(currentConnection.id, {
-                      relationship: data.relationship,
-                    }).then(() => {
-                      fetchConnections();
-                      fetchFamilyTree();
-                    });
-                    //TODO Add update Family Tree Update Request to immediately create a new necessary node
-                  }
-                  await updateContactRequest({
-                    id: currentConnection.contact.id,
-                    ...data,
-                  })
-                    .then(async (res) => {
-                      if (emails?.length > 0) {
-                        await saveEmails(emails, res.id);
-                      }
-                      if (phones?.length > 0) {
-                        await savePhones(phones, res.id);
-                      }
-                      if (address?.length > 0) {
-                        await saveAddresses(address, res.id);
-                      }
-                      if (removeIds?.length > 0) {
-                        await removeCommunications(removeIds);
-                      }
-                    })
-                    .then(() => {
-                      toast.success("Connection successfully updated!");
-                      fetchConnections();
-                    })
-                    .catch(() => toast.error("Error. Not updated"))
-                    .finally(() => setIsAddModalOpen(false));
-                } else {
-                  await onAddContact(data, emails, phones, address)
-                    .then((data) => {
-                      console.log(data);
-                    })
-                    .finally(() => fetchConnections());
+        width="wide"
+      >
+        <div style={{ paddingRight: 40, paddingTop: 10 }}>
+          <Title>
+            {currentConnection ? "Edit Connection" : "Add Connection"}
+          </Title>
+          <AddContactForm
+            onSubmit={async (data, emails, phones, address, removeIds) => {
+              console.log("DATA", data);
+              if (currentConnection) {
+                if (data.relationship || data.is_confirmed !== null) {
+                  await updateConnectionRequest(currentConnection.id, {
+                    relationship: data.relationship || null,
+                    is_confirmed: data.is_confirmed,
+                    is_disqualified: data.is_disqualified,
+                    is_placed: data.is_placed,
+                    disqualify_reason: data.is_disqualified
+                      ? data.disqualify_reason
+                      : null,
+                    placed_date: data.is_placed ? data.placed_date : null,
+                  }).then(() => {
+                    fetchConnections();
+                    fetchFamilyTree();
+                  });
+                  //TODO Add update Family Tree Update Request to immediately create a new necessary node
                 }
-              }}
-              onCancel={() => setIsAddModalOpen(false)}
-              contact={currentConnection?.contact}
-            />
-          </Box>
-        }
-        hasActions={false}
-      />
+                delete data.is_confirmed;
+                delete data.is_disqualified;
+                delete data.is_placed;
+                delete data.disqualify_reason;
+                delete data.placed_date;
+                await updateContactRequest({
+                  id: currentConnection.contact.id,
+                  ...data,
+                })
+                  .then(async (res) => {
+                    if (emails?.length > 0) {
+                      await saveEmails(emails, res.id);
+                    }
+                    if (phones?.length > 0) {
+                      await savePhones(phones, res.id);
+                    }
+                    if (address?.length > 0) {
+                      await saveAddresses(address, res.id);
+                    }
+                    if (removeIds?.length > 0) {
+                      await removeCommunications(removeIds);
+                    }
+                  })
+                  .then(() => {
+                    toast.success("Connection successfully updated!");
+                    fetchConnections();
+                  })
+                  .catch(() => toast.error("Error. Not updated"))
+                  .finally(() => setIsAddModalOpen(false));
+              } else {
+                await onAddContact(data, emails, phones, address)
+                  .then((data) => {
+                    console.log(data);
+                  })
+                  .finally(() => fetchConnections());
+              }
+            }}
+            onCancel={() => setIsAddModalOpen(false)}
+            connection={currentConnection}
+          />
+        </div>
+      </Drawer>
 
       <ModalDialog
         isOpen={isConfirmModalOpen}

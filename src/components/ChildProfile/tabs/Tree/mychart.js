@@ -243,7 +243,9 @@ class Chart extends Component {
         field_0: "Name",
         field_1: "Relationship",
         field_2: function (sender, node, aaa) {
-          const rating = Math.floor(Math.random() * Math.floor(5));
+          const rating = Math.floor(
+            aaa && aaa.stars > 0 ? (5 * aaa.stars) / 100 : 0
+          );
           let returnRating = Array(5)
             .fill()
             .map((_, index) =>
@@ -251,9 +253,6 @@ class Chart extends Component {
                 ? EMPTY_STAR(index * 22 + 65, 35)
                 : STAR(index * 22 + 65, 35)
             );
-          console.log("Rating1", sender);
-          console.log("Rating2", node);
-          console.log("Rating3", aaa);
           return returnRating;
         },
         img_0: "Avatar",

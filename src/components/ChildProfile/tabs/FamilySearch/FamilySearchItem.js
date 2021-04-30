@@ -39,6 +39,7 @@ export const FamilySearchItem = ({ item, noEdit, noMeta, vectors, fetch }) => {
     search_vector,
     date_completed,
     date_accepted,
+    // eslint-disable-next-line no-unused-vars
     date_rejected,
     connection,
     updated_at,

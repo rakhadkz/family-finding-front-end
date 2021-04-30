@@ -53,7 +53,7 @@ export const TextInput = (props) => {
         type={type || name}
         width={width}
         isCompact
-        disabled={disabled}
+        isDisabled={disabled}
         {...rest}
       />
       {error && (
@@ -70,14 +70,14 @@ const StyledTextField = styled(Textfield)`
 `;
 
 TextInput.propTypes = {
-  name: PropTypes.string.isRequired,
-  register: PropTypes.any.isRequired,
-  errors: PropTypes.any.isRequired,
-  control: PropTypes.any.isRequired,
+  name: PropTypes.string,
+  register: PropTypes.any,
+  errors: PropTypes.any,
+  control: PropTypes.any,
   elemBeforeInput: PropTypes.node,
   placeholder: PropTypes.string,
   type: PropTypes.string,
-  width: PropTypes.number,
+  width: PropTypes.any,
   height: PropTypes.number,
   label: PropTypes.node,
   className: PropTypes.string,

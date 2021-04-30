@@ -2,13 +2,14 @@ import Button from "@atlaskit/button";
 import EmojiAddIcon from "@atlaskit/icon/glyph/emoji-add";
 import React, { useEffect, useReducer, useState } from "react";
 import { useHistory } from "react-router-dom";
+import Toggle from "@atlaskit/toggle";
 import Can from "../accessControl/Can";
 import { createActionItemRequest } from "../api/actionItems/actionItemRequest";
 import {
   createChildUserRequest,
   updateChildUserRequest,
 } from "../api/children";
-import { Box, Spacing, Title } from "../components/ui/atoms";
+import { Box, Label, Spacing, Title } from "../components/ui/atoms";
 import { Table } from "../components/ui/common/Table";
 import { SearchBar } from "../components/ui/molecules/SearchBar";
 import { childTableData } from "../content/child.data";
@@ -25,28 +26,31 @@ import {
   initialState,
   fetchChildrenRequest,
 } from "../reducers/child";
-import { AvatarGroup } from "../components/ui/molecules/AvatarGroup";
 
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
   const user = getLocalStorageUser();
-  const head = childrenTableColumns(user?.role === "user");
   const history = useHistory();
 
   const [totalPage, setTotalPage] = useState(null);
   const [currentPage, setCurrentPage] = useState(query.get("page") || 1);
   const [search, setSearch] = useState(query.get("search") || "");
   const [state, dispatch] = useReducer(childReducer, initialState);
+  const [sort, setSort] = useState("");
+  const [filterAssigned, setFilterAssigned] = useState(false);
+  const [filterActive, setFilterActive] = useState(false);
+  const head = childrenTableColumns(user?.role === "user", sort, setSort);
 
   useEffect(() => {
-    history.push(updateQueryParams(currentPage, search));
+    history.push(updateQueryParams(currentPage, search, sort, getFilter()));
     dispatch(fetchChildrenRequest());
     const timer = setTimeout(
       fetchChildrenFunc,
       search?.length === 0 ? 0 : 1000
     );
     return () => clearTimeout(timer);
-  }, [currentPage, search]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, search, sort, filterAssigned, filterActive]);
 
   useEffect(() => {
     search.length > 0 && setCurrentPage(1);
@@ -90,12 +94,22 @@ export const ChildrenPage = (props) => {
     }
   };
 
+  const getFilter = () => {
+    let filter = "";
+    if (filterActive) filter += "active";
+    if (filterAssigned) filter += filter === "" ? "assigned" : ",assigned";
+    return filter;
+  };
+
   const fetchChildrenFunc = () => {
+    const filter = getFilter();
     fetchChildren({
       view: "table",
       page: currentPage,
       meta: true,
-      search: search,
+      search,
+      sort,
+      filter,
     })
       .then((response) => {
         if (response) {
@@ -115,6 +129,30 @@ export const ChildrenPage = (props) => {
       .catch((e) => dispatch(fetchChildrenFailure(e.message)));
   };
 
+  const ActiveToggle = () => (
+    <Box d="flex" direction="column" align="flex-start">
+      <Label htmlFor="active-toggle">Only Active Children </Label>
+      <Toggle
+        id="active-toggle"
+        onChange={() => setFilterActive((prev) => !prev)}
+        isChecked={filterActive}
+      />
+    </Box>
+  );
+
+  const AssignedToggle = () => (
+    <Box d="flex" direction="column" align="flex-start">
+      <Label style={{ padding: 0 }} htmlFor="assigned-toggle">
+        Only Assigned Children{" "}
+      </Label>
+      <Toggle
+        id="assigned-toggle"
+        onChange={() => setFilterAssigned((prev) => !prev)}
+        isChecked={filterAssigned}
+      />
+    </Box>
+  );
+
   return (
     <>
       <Title>Children</Title>
@@ -124,6 +162,8 @@ export const ChildrenPage = (props) => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+          <AssignedToggle />
+          <ActiveToggle />
           <Can
             perform={`${CHILDREN}:${PERFORMS.ADD}`}
             yes={() => (

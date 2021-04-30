@@ -9,7 +9,6 @@ export const fetchSearchResultsRequest = () => {
 };
 
 export const fetchSearchResultsSuccess = (data) => {
-  console.log("DATA: ", data);
   return {
     type: FETCH_SEARCH_RESULTS_SUCCESS,
     payload: data,

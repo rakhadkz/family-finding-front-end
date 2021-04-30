@@ -1,3 +1,5 @@
+/* eslint-disable no-dupe-class-members */
+/* eslint-disable no-unused-vars */
 import Button from "@atlaskit/button";
 import QuoteIcon from "@atlaskit/icon/glyph/quote";
 import Editor from "@draft-js-plugins/editor";
@@ -351,7 +353,7 @@ class MentionWysiwygEditor extends React.Component {
 
   suspendSuggestions = (event) => {
     if (this.props.setSuggestions !== undefined) {
-      if (event.which == 13 || event.keyCode == 13) {
+      if (event.which === 13 || event.keyCode === 13) {
         this.props.setSuggestions(0);
         return false;
       }
@@ -402,14 +404,10 @@ class MentionWysiwygEditor extends React.Component {
             />
             <StyledEmojiSelectWrapper>
               <EmojiSelect
-                // className={emojiStyles}
                 onOpen={() => {
-                  console.log("ONOPEN ON EMOJI!");
                   this.props.setSuggestions && this.props.setSuggestions(10);
                 }}
                 onClose={() => {
-                  console.log("ONCLOSE ON EMOJI!");
-
                   this.props.setSuggestions && this.props.setSuggestions(0);
                 }}
               />

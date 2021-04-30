@@ -6,10 +6,6 @@ import EditorItalicIcon from "@atlaskit/icon/glyph/editor/italic";
 import EditorStrikethroughIcon from "@atlaskit/icon/glyph/editor/strikethrough";
 import EditorBulletListIcon from "@atlaskit/icon/glyph/editor/bullet-list";
 import EditorNumberListIcon from "@atlaskit/icon/glyph/editor/number-list";
-import MediaServicesTextIcon from "@atlaskit/icon/glyph/media-services/text";
-import EditorTextStyleIcon from "@atlaskit/icon/glyph/editor/text-style";
-import ChevronDownIcon from "@atlaskit/icon/glyph/chevron-down";
-import LinkIcon from "@atlaskit/icon/glyph/link";
 import Button from "@atlaskit/button";
 import styled from "styled-components";
 
@@ -22,8 +18,6 @@ const Toolbar = (props) => {
     onAddLink,
     onBulletPointsClick,
     onOrderedPointsClick,
-    onFontSizeClick,
-    toggleBlockType,
   } = props;
 
   return (

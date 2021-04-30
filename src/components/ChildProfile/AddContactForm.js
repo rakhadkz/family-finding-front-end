@@ -10,6 +10,9 @@ import { race_options, sex_options } from "../../helpers";
 import { getObjectByLabel } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
+import AddIcon from "@atlaskit/icon/glyph/add";
+import { B400 } from "@atlaskit/theme/colors";
+import styled from "styled-components";
 
 const DynamicDataItem = ({ filed, isCurrent = false, onClick }) => {
   return (
@@ -36,27 +39,25 @@ const DynamicDataItem = ({ filed, isCurrent = false, onClick }) => {
   );
 };
 
-export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
+export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
+  const contact = connection?.contact;
   const { register, handleSubmit, control, errors, watch } = useForm({
     defaultValues: contact
       ? {
-          first_name: contact.first_name,
-          last_name: contact.last_name,
-          relationship: contact.relationship,
-          // email: contact.email,
-          // phone: contact.phone,
-          sex: contact.sex,
-          race: contact.race,
-          // address: contact.address,
-          // address_2: contact.address_2,
-          city: contact.city,
-          birthday: new Date(contact.birthday),
-          zip: contact.zip,
+          first_name: contact?.first_name,
+          last_name: contact?.last_name,
+          relationship: contact?.relationship,
+          sex: contact?.sex,
+          race: contact?.race,
+          city: contact?.city,
+          birthday: new Date(contact?.birthday),
+          zip: contact?.zip,
+          disqualify_reason: connection?.disqualify_reason,
+          placed_date: new Date(connection?.placed_date),
         }
       : {},
   });
   const [pending, setPending] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [phonesList, setPhonesList] = useState([]);
   const [emailsList, setEmailsList] = useState([]);
   const [addressesList, setAddressesList] = useState([]);
@@ -67,12 +68,24 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
   const [isCurrentEmail, setIsCurrentEmail] = useState(false);
   const [currentAddress, setCurrentAddress] = useState("");
   const [isCurrentAddress, setIsCurrentAddress] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(
+    connection?.is_confirmed || false
+  );
+  const [isVerifiedEmployment, setIsVerifiedEmployment] = useState(
+    contact?.verified_employment || false
+  );
+  const [accessToTransportation, setAccessToTransportation] = useState(
+    contact?.access_to_transportation || false
+  );
+  const [isDisqualified, setIsDisqualified] = useState(
+    connection?.is_disqualified || false
+  );
+  const [isPlaced, setIsPlaced] = useState(connection?.is_placed || false);
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
     setPending(true);
 
-    console.log(data);
     const {
       state,
       relationship,
@@ -102,6 +115,14 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
       submitData.race = race.value;
     }
 
+    submitData.is_confirmed = isConfirmed;
+    submitData.access_to_transportation = accessToTransportation;
+    submitData.verified_employment = isVerifiedEmployment;
+    submitData.is_placed = isPlaced;
+    submitData.is_disqualified = isDisqualified;
+
+    console.log("inside: ", submitData);
+
     onSubmit(submitData, emailsList, phonesList, addressesList, removeIds);
   };
 
@@ -113,11 +134,10 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
           style={{
             display: "flex",
             flexWrap: "wrap",
-            justifyContent: "center",
+            justifyContent: "space-between",
           }}
         >
           <TextInput
-            marginX="8px"
             className="input"
             name={"first_name"}
             register={register({ required: true })}
@@ -126,7 +146,6 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="First name"
           />
           <TextInput
-            marginX="8px"
             className="input"
             name={"last_name"}
             register={register({ required: false })}
@@ -139,7 +158,6 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
               contact?.relationship &&
               getObjectByLabel(relationshipOptions, contact?.relationship)
             }
-            marginX="8px"
             name={"relationship"}
             register={{ required: false }}
             control={control}
@@ -148,20 +166,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Relationship"
             placeholder="Relationship"
           />
-          {/* <TextInput
-            marginX="8px"
-            className="input"
-            name={"email"}
-            register={register({
-              required: false,
-              pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-            })}
-            control={control}
-            error={errors.email}
-            label="Email"
-          /> */}
           <DatepickerInput
-            marginX="8px"
             name={"birthday"}
             register={{ required: false }}
             control={control}
@@ -169,19 +174,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Birthday"
             placeholder="Select birthday"
           />
-          {/* <TextInput
-            marginX="8px"
-            name={"phone"}
-            register={register({
-              required: false,
-            })}
-            control={control}
-            error={errors.phone}
-            label="Phone"
-            type={"phone"}
-          /> */}
           <SelectInput
-            marginX="8px"
             defaultValue={
               contact?.sex && getObjectByLabel(sex_options, contact.sex)
             }
@@ -192,7 +185,6 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             options={sex_options}
           />
           <SelectInput
-            marginX="8px"
             defaultValue={
               contact?.race && getObjectByLabel(race_options, contact.race)
             }
@@ -202,18 +194,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             label="Race"
             options={race_options}
           />
-
-          {/* <TextInput
-            marginX="8px"
-            className="input"
-            name={"address_2"}
-            register={register({ required: false })}
-            control={control}
-            error={errors.address_2}
-            label="Another Address"
-          /> */}
           <TextInput
-            marginX="8px"
             name={"city"}
             register={register({ required: false })}
             control={control}
@@ -224,7 +205,6 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             defaultValue={
               contact?.state && { label: contact?.state, value: contact?.state }
             }
-            marginX="8px"
             menuPlacement="top"
             name={"state"}
             register={{ required: false }}
@@ -235,7 +215,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
             placeholder="Choose State"
           />
           <TextInput
-            marginX="8px"
+            width={210}
             name={"zip"}
             register={register({ required: false })}
             control={control}
@@ -287,11 +267,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                     isCurrent={address.isCurrentAddress}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setAddressesList(
-                        addressesList.filter(
-                          (_, removeIndex) => removeIndex !== index
-                        )
-                      );
+                      setRemoveIds([...removeIds, address.id]);
                     }}
                   />
                 ))}
@@ -358,11 +334,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                     isCurrent={phone.isCurrentPhone}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setPhonesList(
-                        phonesList.filter(
-                          (_, removeIndex) => removeIndex !== index
-                        )
-                      );
+                      setRemoveIds([...removeIds, phone.id]);
                     }}
                   />
                 ))}
@@ -392,8 +364,12 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
               </Button>
             </Box>
             <div style={{ marginBottom: 5 }} />
-            <Box d="flex" justify="center">
-              <div style={{ margin: "0px 8px", width: 200 }}>
+            <Box
+              d="flex"
+              justify="center"
+              style={{ marginTop: 7, marginLeft: 0 }}
+            >
+              <div style={{ width: 200 }}>
                 <Label htmlFor={"email"}>Email</Label>
                 <Textfield
                   value={currentEmail}
@@ -430,11 +406,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                     isCurrent={email.isCurrentEmail}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setEmailsList(
-                        emailsList.filter(
-                          (_, removeIndex) => removeIndex !== index
-                        )
-                      );
+                      setRemoveIds([...removeIds, email.id]);
                     }}
                   />
                 ))}
@@ -455,7 +427,12 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   setIsCurrentEmail(false);
                 }}
                 appearance="primary"
-                style={{ borderRadius: 20, marginTop: 25 }}
+                style={{
+                  borderRadius: 20,
+                  marginLeft: 5,
+                  marginRight: 8,
+                  marginTop: 25,
+                }}
               >
                 +
               </Button>
@@ -464,7 +441,6 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
 
           {relationship?.value === "Other" ? (
             <TextInput
-              marginX="8px"
               className="input"
               name={"relationship_other"}
               register={register({ required: false })}
@@ -473,10 +449,83 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
               label="Relationship name"
             />
           ) : (
-            <div style={{ width: 250 }} />
+            <div style={{ width: 240 }} />
           )}
         </Spacing>
-        <Box d="flex" w="100%" justify="center" mb="20px">
+        <div
+          style={{
+            marginBottom: 10,
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <Checkbox
+            value="linked"
+            label="Linked"
+            isChecked={isConfirmed}
+            onChange={() => setIsConfirmed((item) => !item)}
+            style={{ width: "auto" }}
+          />
+          <Checkbox
+            value="verified_employment"
+            label="Verified Employment"
+            isChecked={isVerifiedEmployment}
+            onChange={() => setIsVerifiedEmployment((item) => !item)}
+            style={{ width: "auto" }}
+          />
+          <Checkbox
+            value="access_to_transportation"
+            label="Has Access to Transportation"
+            isChecked={accessToTransportation}
+            onChange={() => setAccessToTransportation((item) => !item)}
+            style={{ width: "auto" }}
+          />
+        </div>
+        {connection && (
+          <div
+            style={{
+              marginBottom: 10,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Checkbox
+              value="disqualified"
+              label="Disqualified"
+              isChecked={isDisqualified}
+              onChange={() => setIsDisqualified((item) => !item)}
+              style={{ width: "auto" }}
+            />
+            <Checkbox
+              value="placed"
+              label="Placed"
+              isChecked={isPlaced}
+              onChange={() => setIsPlaced((item) => !item)}
+              style={{ width: "auto" }}
+            />
+          </div>
+        )}
+        {isDisqualified && (
+          <TextInput
+            width="100%"
+            name="disqualify_reason"
+            register={register({ required: isDisqualified })}
+            control={control}
+            error={errors.disqualify_reason}
+            label="Disqualify Reason"
+          />
+        )}
+        {isPlaced && (
+          <DatepickerInput
+            name="placed_date"
+            register={{ required: isPlaced }}
+            control={control}
+            error={errors.placed_date}
+            label="Placed Date"
+            placeholder="Select Date"
+          />
+        )}
+        <Box d="flex" w="100%" justify="center" mb="40px" mt="20px">
           <ButtonGroup>
             <Button isDisabled={pending} type="submit" appearance="primary">
               Save
@@ -488,3 +537,24 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
     </>
   );
 };
+
+const buttonStyle = {
+  borderRadius: 30,
+  padding: "3px 5px",
+  marginTop: 10,
+};
+
+const CommunicationContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 240px;
+
+  div:first-child {
+    width: 210px;
+  }
+  .communication-address {
+    width: 210px;
+    margin-block: 8px;
+  }
+`;
