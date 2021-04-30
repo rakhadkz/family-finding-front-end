@@ -92,7 +92,15 @@ export const Connections = () => {
   const fetchSearchVectors = () => {
     fetchSearchVectorsRequest({}).then((data) =>
       setVectors(
-        data.filter((item) => item.in_continuous_search && (item.name.indexOf("Family Tree Now") > -1 || item.name.indexOf("Melissa Identity") > -1 || item.name.indexOf("Fast People Search") > -1) ).map((item) => item.id)
+        data
+          .filter(
+            (item) =>
+              item.in_continuous_search &&
+              (item.name.indexOf("Family Tree Now") > -1 ||
+                item.name.indexOf("Melissa Identity") > -1 ||
+                item.name.indexOf("Fast People Search") > -1)
+          )
+          .map((item) => item.id)
       )
     );
   };
@@ -134,7 +142,8 @@ export const Connections = () => {
           createCommunicationRequest({
             communication: {
               communication_type: "email",
-              value: emails[i],
+              value: emails[i].currentEmail,
+              is_current: emails[i].isCurrentEmail,
               contact_id: contactId,
             },
           })
@@ -154,7 +163,8 @@ export const Connections = () => {
           createCommunicationRequest({
             communication: {
               communication_type: "address",
-              value: address[i],
+              value: address[i].currentAddress,
+              is_current: address[i].isCurrentAddress,
               contact_id: contactId,
             },
           })
@@ -186,7 +196,8 @@ export const Connections = () => {
           createCommunicationRequest({
             communication: {
               communication_type: "phone",
-              value: phones[i],
+              value: phones[i].currentPhone,
+              is_current: phones[i].isCurrentPhone,
               contact_id: contactId,
             },
           })

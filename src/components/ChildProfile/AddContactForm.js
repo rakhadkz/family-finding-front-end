@@ -1,5 +1,7 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
+import Checkbox from "@atlaskit/checkbox";
 import Textfield from "@atlaskit/textfield";
+import Tooltip from "@atlaskit/tooltip";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { relationshipOptions } from "../../content/relationshipOptions.data";
@@ -9,9 +11,12 @@ import { getObjectByLabel } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
 
-const DynamicDataItem = ({ filed, onClick }) => {
+const DynamicDataItem = ({ filed, isCurrent = false, onClick }) => {
   return (
     <Box d="flex" align="center">
+      <Tooltip content="Is current">
+        <Checkbox isDisabled={true} isChecked={isCurrent} />
+      </Tooltip>
       <div style={{ width: 180, marginLeft: 5, overflow: "scroll" }}>
         {filed}
       </div>{" "}
@@ -57,8 +62,11 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
   const [addressesList, setAddressesList] = useState([]);
   const [removeIds, setRemoveIds] = useState([]);
   const [currentPhone, setCurrentPhone] = useState("");
+  const [isCurrentPhone, setIsCurrentPhone] = useState(false);
   const [currentEmail, setCurrentEmail] = useState("");
+  const [isCurrentEmail, setIsCurrentEmail] = useState(false);
   const [currentAddress, setCurrentAddress] = useState("");
+  const [isCurrentAddress, setIsCurrentAddress] = useState(false);
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
@@ -247,6 +255,14 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   name="address"
                   value={currentAddress}
                   onChange={(e) => setCurrentAddress(e.target.value)}
+                  elemAfterInput={
+                    <Tooltip content="Is current address">
+                      <Checkbox
+                        isChecked={isCurrentAddress}
+                        onChange={() => setIsCurrentAddress((item) => !item)}
+                      />
+                    </Tooltip>
+                  }
                 />
                 <div style={{ marginBottom: 5 }} />
                 {contact?.communications
@@ -258,6 +274,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   .map((item) => (
                     <DynamicDataItem
                       filed={item.value}
+                      isCurrent={item.is_current}
                       onClick={(e) => {
                         e.stopPropagation();
                         setRemoveIds([...removeIds, item.id]);
@@ -266,7 +283,8 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   ))}
                 {addressesList.map((address, index) => (
                   <DynamicDataItem
-                    filed={address}
+                    filed={address.currentAddress}
+                    isCurrent={address.isCurrentAddress}
                     onClick={(e) => {
                       e.stopPropagation();
                       setAddressesList(
@@ -282,8 +300,12 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                 isDisabled={currentAddress?.length < 5}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setAddressesList([...addressesList, currentAddress]);
+                  setAddressesList([
+                    ...addressesList,
+                    { currentAddress, isCurrentAddress },
+                  ]);
                   setCurrentAddress("");
+                  setIsCurrentAddress(false);
                 }}
                 appearance="primary"
                 style={{
@@ -304,6 +326,14 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   name="phone"
                   value={currentPhone}
                   onChange={(e) => setCurrentPhone(e.target.value)}
+                  elemAfterInput={
+                    <Tooltip content="Is current phone">
+                      <Checkbox
+                        isChecked={isCurrentPhone}
+                        onChange={() => setIsCurrentPhone((item) => !item)}
+                      />
+                    </Tooltip>
+                  }
                 />
                 <div style={{ marginBottom: 5 }} />
                 {contact?.communications
@@ -315,6 +345,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   .map((item) => (
                     <DynamicDataItem
                       filed={item.value}
+                      isCurrent={item.is_current}
                       onClick={(e) => {
                         e.stopPropagation();
                         setRemoveIds([...removeIds, item.id]);
@@ -323,7 +354,8 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   ))}
                 {phonesList.map((phone, index) => (
                   <DynamicDataItem
-                    filed={phone}
+                    filed={phone.currentPhone}
+                    isCurrent={phone.isCurrentPhone}
                     onClick={(e) => {
                       e.stopPropagation();
                       setPhonesList(
@@ -341,8 +373,12 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                 }
                 onClick={(e) => {
                   e.stopPropagation();
-                  setPhonesList([...phonesList, currentPhone]);
+                  setPhonesList([
+                    ...phonesList,
+                    { currentPhone, isCurrentPhone },
+                  ]);
                   setCurrentPhone("");
+                  setIsCurrentPhone(false);
                 }}
                 appearance="primary"
                 style={{
@@ -363,6 +399,14 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   value={currentEmail}
                   name="email"
                   onChange={(e) => setCurrentEmail(e.target.value)}
+                  elemAfterInput={
+                    <Tooltip content="Is current email">
+                      <Checkbox
+                        isChecked={isCurrentEmail}
+                        onChange={() => setIsCurrentEmail((item) => !item)}
+                      />
+                    </Tooltip>
+                  }
                 />
                 {contact?.communications
                   ?.filter(
@@ -373,6 +417,7 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   .map((item) => (
                     <DynamicDataItem
                       filed={item.value}
+                      isCurrent={item.is_current}
                       onClick={(e) => {
                         e.stopPropagation();
                         setRemoveIds([...removeIds, item.id]);
@@ -381,7 +426,8 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                   ))}
                 {emailsList.map((email, index) => (
                   <DynamicDataItem
-                    filed={email}
+                    filed={email.currentEmail}
+                    isCurrent={email.isCurrentEmail}
                     onClick={(e) => {
                       e.stopPropagation();
                       setEmailsList(
@@ -401,8 +447,12 @@ export const AddContactForm = ({ onSubmit, onCancel, contact }) => {
                 }
                 onClick={(e) => {
                   e.stopPropagation();
-                  setEmailsList([...emailsList, currentEmail]);
+                  setEmailsList([
+                    ...emailsList,
+                    { currentEmail, isCurrentEmail },
+                  ]);
                   setCurrentEmail("");
+                  setIsCurrentEmail(false);
                 }}
                 appearance="primary"
                 style={{ borderRadius: 20, marginTop: 25 }}
