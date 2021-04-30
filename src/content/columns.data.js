@@ -91,7 +91,7 @@ export const usersTableColumns = (role = "user") => {
   return columns1.concat(columns2);
 };
 
-export const childrenTableColumns = (isUser = true) => [
+export const childrenTableColumns = (isUser = true, sort, setSort = null) => [
   {
     key: "full_name",
     content: "Full Name",
@@ -104,12 +104,46 @@ export const childrenTableColumns = (isUser = true) => [
   },
   {
     key: "days_in_system",
-    content: <p align="center">Days in system</p>,
+    content: (
+      <p
+        align="center"
+        style={{ cursor: "pointer" }}
+        onClick={() =>
+          setSort &&
+          setSort((item) => {
+            if (item === "days_in_system_asc") {
+              return "days_in_system_desc";
+            }
+            return "days_in_system_asc";
+          })
+        }
+      >
+        Days in LinkingLives {sort === "days_in_system_asc" && "⬆"}
+        {sort === "days_in_system_desc" && "⬇"}
+      </p>
+    ),
     width: isUser ? 15 : 20,
   },
   {
     key: "connections",
-    content: <p align="center">Connections</p>,
+    content: (
+      <p
+        align="center"
+        style={{ cursor: "pointer" }}
+        onClick={() =>
+          setSort &&
+          setSort((item) => {
+            if (item === "connections_asc") {
+              return "connections_desc";
+            }
+            return "connections_asc";
+          })
+        }
+      >
+        Connections {sort === "connections_asc" && "⬆"}
+        {sort === "connections_desc" && "⬇"}
+      </p>
+    ),
     width: isUser ? 15 : 20,
   },
   isUser && {

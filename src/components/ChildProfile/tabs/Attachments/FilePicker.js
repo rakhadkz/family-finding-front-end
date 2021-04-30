@@ -80,11 +80,13 @@ export default function FilePicker({
         }
         PreviewComponent={DropzonePreview}
         LayoutComponent={(e) => (
-          <DropzoneLayout
-            {...e}
-            setIsOpen={setIsOpen}
-            setClosable={setClosable}
-          />
+          <div key={1}>
+            <DropzoneLayout
+              {...e}
+              setIsOpen={setIsOpen}
+              setClosable={setClosable}
+            />
+          </div>
         )}
         onChangeStatus={handleChangeStatus}
         onSubmit={handleSubmit}

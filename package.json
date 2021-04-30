@@ -24,6 +24,7 @@
     "@atlaskit/tag": "^11.0.6",
     "@atlaskit/tag-group": "^10.0.4",
     "@atlaskit/textfield": "^4.0.9",
+    "@atlaskit/toggle": "^12.0.5",
     "@atlaskit/tooltip": "^17.1.2",
     "@balkangraph/orgchart.js": "^7.6.14",
     "@chakra-ui/react": "^1.1.1",

@@ -176,7 +176,6 @@ export function ChildProfilePage(props) {
   }, [templateType]);
 
   useEffect(() => {
-    console.log("TEmplate User", templateUser);
     const firstUser = templateUser && templateUser[0]?.value;
     const text = templateHtml
       .replaceAll(
@@ -374,7 +373,7 @@ export function ChildProfilePage(props) {
       template_id: templateId,
       child_contact_id: connection.child_contact_id,
       child_id: id,
-      content: text,
+      content: `<div>${text}</div>`,
       template_type: templateType,
       phone: connection?.value,
     };
@@ -475,6 +474,7 @@ export function ChildProfilePage(props) {
 
   return (
     <ChildContext.Provider
+      key={1}
       value={{
         state,
         commentState,
@@ -765,7 +765,7 @@ export function ChildProfilePage(props) {
                               []
                             )
                             .map((item) => ({
-                              label: `${item?.fullName}  ${item?.value}`,
+                              label: `${item?.is_current ? '(Current)':''} ${item?.fullName}  ${item?.value}`,
                               value: item,
                             }))
                     }

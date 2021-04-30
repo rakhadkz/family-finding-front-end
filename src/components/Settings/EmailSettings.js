@@ -48,8 +48,6 @@ function EmailSettings() {
       });
   };
 
-  console.log("EMAIL", email);
-
   return (
     <div>
       <Spacing m="30px 10px">
@@ -64,7 +62,7 @@ function EmailSettings() {
                 <Label htmlFor={"domain"}>Authenticated domain name</Label>
                 <Textfield
                   style={{ width: 350 }}
-                  disabled={true}
+                  isDisabled={true}
                   name={"domain"}
                   value={email?.domain || "Don`t have a domain name"}
                 />

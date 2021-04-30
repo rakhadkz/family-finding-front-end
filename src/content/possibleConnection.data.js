@@ -112,7 +112,7 @@ export const possibleConnectionRows = (
                             setIsConfirmModalOpen(true);
                           }}
                         >
-                          Confirm
+                          Link
                         </Button>
                       </ButtonGroup>
                     </div>

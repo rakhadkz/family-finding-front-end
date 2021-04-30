@@ -9,7 +9,11 @@ export const FitScore = ({ score }) => {
       {Array(5)
         .fill()
         .map((_, index) =>
-          index <= score - 1 ? <StarFilledIcon /> : <StarIcon />
+          index <= score - 1 ? (
+            <StarFilledIcon key={index} />
+          ) : (
+            <StarIcon key={index} />
+          )
         )}
     </Box>
   );

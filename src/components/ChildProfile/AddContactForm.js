@@ -1,5 +1,7 @@
 import Button, { ButtonGroup } from "@atlaskit/button";
+import Checkbox from "@atlaskit/checkbox";
 import Textfield from "@atlaskit/textfield";
+import Tooltip from "@atlaskit/tooltip";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { relationshipOptions } from "../../content/relationshipOptions.data";
@@ -8,11 +10,16 @@ import { race_options, sex_options } from "../../helpers";
 import { getObjectByLabel } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
-import { Checkbox } from "@atlaskit/checkbox";
+import AddIcon from "@atlaskit/icon/glyph/add";
+import { B400 } from "@atlaskit/theme/colors";
+import styled from "styled-components";
 
-const DynamicDataItem = ({ filed, onClick }) => {
+const DynamicDataItem = ({ filed, isCurrent = false, onClick }) => {
   return (
     <Box d="flex" align="center">
+      <Tooltip content="Is current">
+        <Checkbox isDisabled={true} isChecked={isCurrent} />
+      </Tooltip>
       <div style={{ width: 180, marginLeft: 5, overflow: "scroll" }}>
         {filed}
       </div>{" "}
@@ -32,27 +39,21 @@ const DynamicDataItem = ({ filed, onClick }) => {
   );
 };
 
-export const AddContactForm = ({
-  onSubmit,
-  onCancel,
-  contact,
-  is_confirmed,
-}) => {
+export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
+  const contact = connection?.contact;
   const { register, handleSubmit, control, errors, watch } = useForm({
     defaultValues: contact
       ? {
-          first_name: contact.first_name,
-          last_name: contact.last_name,
-          relationship: contact.relationship,
-          // email: contact.email,
-          // phone: contact.phone,
-          sex: contact.sex,
-          race: contact.race,
-          // address: contact.address,
-          // address_2: contact.address_2,
-          city: contact.city,
-          birthday: new Date(contact.birthday),
-          zip: contact.zip,
+          first_name: contact?.first_name,
+          last_name: contact?.last_name,
+          relationship: contact?.relationship,
+          sex: contact?.sex,
+          race: contact?.race,
+          city: contact?.city,
+          birthday: new Date(contact?.birthday),
+          zip: contact?.zip,
+          disqualify_reason: connection?.disqualify_reason,
+          placed_date: new Date(connection?.placed_date),
         }
       : {},
   });
@@ -62,15 +63,29 @@ export const AddContactForm = ({
   const [addressesList, setAddressesList] = useState([]);
   const [removeIds, setRemoveIds] = useState([]);
   const [currentPhone, setCurrentPhone] = useState("");
+  const [isCurrentPhone, setIsCurrentPhone] = useState(false);
   const [currentEmail, setCurrentEmail] = useState("");
+  const [isCurrentEmail, setIsCurrentEmail] = useState(false);
   const [currentAddress, setCurrentAddress] = useState("");
-  const [isConfirmed, setIsConfirmed] = useState(is_confirmed || false);
+  const [isCurrentAddress, setIsCurrentAddress] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(
+    connection?.is_confirmed || false
+  );
+  const [isVerifiedEmployment, setIsVerifiedEmployment] = useState(
+    contact?.verified_employment || false
+  );
+  const [accessToTransportation, setAccessToTransportation] = useState(
+    contact?.access_to_transportation || false
+  );
+  const [isDisqualified, setIsDisqualified] = useState(
+    connection?.is_disqualified || false
+  );
+  const [isPlaced, setIsPlaced] = useState(connection?.is_placed || false);
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
     setPending(true);
 
-    console.log(data);
     const {
       state,
       relationship,
@@ -101,6 +116,12 @@ export const AddContactForm = ({
     }
 
     submitData.is_confirmed = isConfirmed;
+    submitData.access_to_transportation = accessToTransportation;
+    submitData.verified_employment = isVerifiedEmployment;
+    submitData.is_placed = isPlaced;
+    submitData.is_disqualified = isDisqualified;
+
+    console.log("inside: ", submitData);
 
     onSubmit(submitData, emailsList, phonesList, addressesList, removeIds);
   };
@@ -113,11 +134,10 @@ export const AddContactForm = ({
           style={{
             display: "flex",
             flexWrap: "wrap",
-            justifyContent: "center",
+            justifyContent: "space-between",
           }}
         >
           <TextInput
-            marginX="8px"
             className="input"
             name={"first_name"}
             register={register({ required: true })}
@@ -126,7 +146,6 @@ export const AddContactForm = ({
             label="First name"
           />
           <TextInput
-            marginX="8px"
             className="input"
             name={"last_name"}
             register={register({ required: false })}
@@ -139,7 +158,6 @@ export const AddContactForm = ({
               contact?.relationship &&
               getObjectByLabel(relationshipOptions, contact?.relationship)
             }
-            marginX="8px"
             name={"relationship"}
             register={{ required: false }}
             control={control}
@@ -148,20 +166,7 @@ export const AddContactForm = ({
             label="Relationship"
             placeholder="Relationship"
           />
-          {/* <TextInput
-            marginX="8px"
-            className="input"
-            name={"email"}
-            register={register({
-              required: false,
-              pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-            })}
-            control={control}
-            error={errors.email}
-            label="Email"
-          /> */}
           <DatepickerInput
-            marginX="8px"
             name={"birthday"}
             register={{ required: false }}
             control={control}
@@ -169,19 +174,7 @@ export const AddContactForm = ({
             label="Birthday"
             placeholder="Select birthday"
           />
-          {/* <TextInput
-            marginX="8px"
-            name={"phone"}
-            register={register({
-              required: false,
-            })}
-            control={control}
-            error={errors.phone}
-            label="Phone"
-            type={"phone"}
-          /> */}
           <SelectInput
-            marginX="8px"
             defaultValue={
               contact?.sex && getObjectByLabel(sex_options, contact.sex)
             }
@@ -192,7 +185,6 @@ export const AddContactForm = ({
             options={sex_options}
           />
           <SelectInput
-            marginX="8px"
             defaultValue={
               contact?.race && getObjectByLabel(race_options, contact.race)
             }
@@ -202,18 +194,7 @@ export const AddContactForm = ({
             label="Race"
             options={race_options}
           />
-
-          {/* <TextInput
-            marginX="8px"
-            className="input"
-            name={"address_2"}
-            register={register({ required: false })}
-            control={control}
-            error={errors.address_2}
-            label="Another Address"
-          /> */}
           <TextInput
-            marginX="8px"
             name={"city"}
             register={register({ required: false })}
             control={control}
@@ -224,7 +205,6 @@ export const AddContactForm = ({
             defaultValue={
               contact?.state && { label: contact?.state, value: contact?.state }
             }
-            marginX="8px"
             menuPlacement="top"
             name={"state"}
             register={{ required: false }}
@@ -235,7 +215,7 @@ export const AddContactForm = ({
             placeholder="Choose State"
           />
           <TextInput
-            marginX="8px"
+            width={210}
             name={"zip"}
             register={register({ required: false })}
             control={control}
@@ -255,6 +235,14 @@ export const AddContactForm = ({
                   name="address"
                   value={currentAddress}
                   onChange={(e) => setCurrentAddress(e.target.value)}
+                  elemAfterInput={
+                    <Tooltip content="Is current address">
+                      <Checkbox
+                        isChecked={isCurrentAddress}
+                        onChange={() => setIsCurrentAddress((item) => !item)}
+                      />
+                    </Tooltip>
+                  }
                 />
                 <div style={{ marginBottom: 5 }} />
                 {contact?.communications
@@ -266,6 +254,7 @@ export const AddContactForm = ({
                   .map((item) => (
                     <DynamicDataItem
                       filed={item.value}
+                      isCurrent={item.is_current}
                       onClick={(e) => {
                         e.stopPropagation();
                         setRemoveIds([...removeIds, item.id]);
@@ -274,14 +263,11 @@ export const AddContactForm = ({
                   ))}
                 {addressesList.map((address, index) => (
                   <DynamicDataItem
-                    filed={address}
+                    filed={address.currentAddress}
+                    isCurrent={address.isCurrentAddress}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setAddressesList(
-                        addressesList.filter(
-                          (_, removeIndex) => removeIndex !== index
-                        )
-                      );
+                      setRemoveIds([...removeIds, address.id]);
                     }}
                   />
                 ))}
@@ -290,8 +276,12 @@ export const AddContactForm = ({
                 isDisabled={currentAddress?.length < 5}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setAddressesList([...addressesList, currentAddress]);
+                  setAddressesList([
+                    ...addressesList,
+                    { currentAddress, isCurrentAddress },
+                  ]);
                   setCurrentAddress("");
+                  setIsCurrentAddress(false);
                 }}
                 appearance="primary"
                 style={{
@@ -312,6 +302,14 @@ export const AddContactForm = ({
                   name="phone"
                   value={currentPhone}
                   onChange={(e) => setCurrentPhone(e.target.value)}
+                  elemAfterInput={
+                    <Tooltip content="Is current phone">
+                      <Checkbox
+                        isChecked={isCurrentPhone}
+                        onChange={() => setIsCurrentPhone((item) => !item)}
+                      />
+                    </Tooltip>
+                  }
                 />
                 <div style={{ marginBottom: 5 }} />
                 {contact?.communications
@@ -323,6 +321,7 @@ export const AddContactForm = ({
                   .map((item) => (
                     <DynamicDataItem
                       filed={item.value}
+                      isCurrent={item.is_current}
                       onClick={(e) => {
                         e.stopPropagation();
                         setRemoveIds([...removeIds, item.id]);
@@ -331,14 +330,11 @@ export const AddContactForm = ({
                   ))}
                 {phonesList.map((phone, index) => (
                   <DynamicDataItem
-                    filed={phone}
+                    filed={phone.currentPhone}
+                    isCurrent={phone.isCurrentPhone}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setPhonesList(
-                        phonesList.filter(
-                          (_, removeIndex) => removeIndex !== index
-                        )
-                      );
+                      setRemoveIds([...removeIds, phone.id]);
                     }}
                   />
                 ))}
@@ -349,8 +345,12 @@ export const AddContactForm = ({
                 }
                 onClick={(e) => {
                   e.stopPropagation();
-                  setPhonesList([...phonesList, currentPhone]);
+                  setPhonesList([
+                    ...phonesList,
+                    { currentPhone, isCurrentPhone },
+                  ]);
                   setCurrentPhone("");
+                  setIsCurrentPhone(false);
                 }}
                 appearance="primary"
                 style={{
@@ -364,13 +364,25 @@ export const AddContactForm = ({
               </Button>
             </Box>
             <div style={{ marginBottom: 5 }} />
-            <Box d="flex" justify="center">
-              <div style={{ margin: "0px 8px", width: 200 }}>
+            <Box
+              d="flex"
+              justify="center"
+              style={{ marginTop: 7, marginLeft: 0 }}
+            >
+              <div style={{ width: 200 }}>
                 <Label htmlFor={"email"}>Email</Label>
                 <Textfield
                   value={currentEmail}
                   name="email"
                   onChange={(e) => setCurrentEmail(e.target.value)}
+                  elemAfterInput={
+                    <Tooltip content="Is current email">
+                      <Checkbox
+                        isChecked={isCurrentEmail}
+                        onChange={() => setIsCurrentEmail((item) => !item)}
+                      />
+                    </Tooltip>
+                  }
                 />
                 {contact?.communications
                   ?.filter(
@@ -381,6 +393,7 @@ export const AddContactForm = ({
                   .map((item) => (
                     <DynamicDataItem
                       filed={item.value}
+                      isCurrent={item.is_current}
                       onClick={(e) => {
                         e.stopPropagation();
                         setRemoveIds([...removeIds, item.id]);
@@ -389,14 +402,11 @@ export const AddContactForm = ({
                   ))}
                 {emailsList.map((email, index) => (
                   <DynamicDataItem
-                    filed={email}
+                    filed={email.currentEmail}
+                    isCurrent={email.isCurrentEmail}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setEmailsList(
-                        emailsList.filter(
-                          (_, removeIndex) => removeIndex !== index
-                        )
-                      );
+                      setRemoveIds([...removeIds, email.id]);
                     }}
                   />
                 ))}
@@ -409,11 +419,20 @@ export const AddContactForm = ({
                 }
                 onClick={(e) => {
                   e.stopPropagation();
-                  setEmailsList([...emailsList, currentEmail]);
+                  setEmailsList([
+                    ...emailsList,
+                    { currentEmail, isCurrentEmail },
+                  ]);
                   setCurrentEmail("");
+                  setIsCurrentEmail(false);
                 }}
                 appearance="primary"
-                style={{ borderRadius: 20, marginTop: 25 }}
+                style={{
+                  borderRadius: 20,
+                  marginLeft: 5,
+                  marginRight: 8,
+                  marginTop: 25,
+                }}
               >
                 +
               </Button>
@@ -422,7 +441,6 @@ export const AddContactForm = ({
 
           {relationship?.value === "Other" ? (
             <TextInput
-              marginX="8px"
               className="input"
               name={"relationship_other"}
               register={register({ required: false })}
@@ -431,20 +449,83 @@ export const AddContactForm = ({
               label="Relationship name"
             />
           ) : (
-            <div style={{ width: 250 }} />
+            <div style={{ width: 240 }} />
           )}
         </Spacing>
-        <div style={{ marginLeft: 30 }}>
-          <Label>Status</Label>
+        <div
+          style={{
+            marginBottom: 10,
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
+        >
           <Checkbox
-            value="Confirmed"
-            label="Confirmed"
+            value="linked"
+            label="Linked"
             isChecked={isConfirmed}
             onChange={() => setIsConfirmed((item) => !item)}
             style={{ width: "auto" }}
           />
+          <Checkbox
+            value="verified_employment"
+            label="Verified Employment"
+            isChecked={isVerifiedEmployment}
+            onChange={() => setIsVerifiedEmployment((item) => !item)}
+            style={{ width: "auto" }}
+          />
+          <Checkbox
+            value="access_to_transportation"
+            label="Has Access to Transportation"
+            isChecked={accessToTransportation}
+            onChange={() => setAccessToTransportation((item) => !item)}
+            style={{ width: "auto" }}
+          />
         </div>
-        <Box d="flex" w="100%" justify="center" mb="20px">
+        {connection && (
+          <div
+            style={{
+              marginBottom: 10,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Checkbox
+              value="disqualified"
+              label="Disqualified"
+              isChecked={isDisqualified}
+              onChange={() => setIsDisqualified((item) => !item)}
+              style={{ width: "auto" }}
+            />
+            <Checkbox
+              value="placed"
+              label="Placed"
+              isChecked={isPlaced}
+              onChange={() => setIsPlaced((item) => !item)}
+              style={{ width: "auto" }}
+            />
+          </div>
+        )}
+        {isDisqualified && (
+          <TextInput
+            width="100%"
+            name="disqualify_reason"
+            register={register({ required: isDisqualified })}
+            control={control}
+            error={errors.disqualify_reason}
+            label="Disqualify Reason"
+          />
+        )}
+        {isPlaced && (
+          <DatepickerInput
+            name="placed_date"
+            register={{ required: isPlaced }}
+            control={control}
+            error={errors.placed_date}
+            label="Placed Date"
+            placeholder="Select Date"
+          />
+        )}
+        <Box d="flex" w="100%" justify="center" mb="40px" mt="20px">
           <ButtonGroup>
             <Button isDisabled={pending} type="submit" appearance="primary">
               Save
@@ -456,3 +537,24 @@ export const AddContactForm = ({
     </>
   );
 };
+
+const buttonStyle = {
+  borderRadius: 30,
+  padding: "3px 5px",
+  marginTop: 10,
+};
+
+const CommunicationContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 240px;
+
+  div:first-child {
+    width: 210px;
+  }
+  .communication-address {
+    width: 210px;
+    margin-block: 8px;
+  }
+`;

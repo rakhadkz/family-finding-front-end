@@ -57,8 +57,6 @@ export const CommunicationTemplateForm = React.forwardRef(
         .finally(() => setPending(false));
     };
 
-    console.log("INITIAALLLL", initialValues);
-
     return (
       <>
         <Form
