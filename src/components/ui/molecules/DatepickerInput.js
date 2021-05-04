@@ -1,4 +1,3 @@
-import DatePicker from "react-date-picker";
 import PropTypes from "prop-types";
 import React from "react";
 import { Controller } from "react-hook-form";
@@ -6,6 +5,7 @@ import { formErrors } from "../../../helpers/formErrors";
 import { Box, Label, StyledTextError } from "../atoms";
 import styled from "styled-components";
 import CalendarIcon from "@atlaskit/icon/glyph/calendar";
+import { DatePicker } from "@atlaskit/datetime-picker";
 
 export const DatepickerInput = (props) => {
   const {
@@ -18,7 +18,7 @@ export const DatepickerInput = (props) => {
     width = 240,
     label = null,
     marginX = "0px",
-    marginY = "8px",
+    marginY = "5px",
     value,
   } = props;
   return (
@@ -37,7 +37,7 @@ export const DatepickerInput = (props) => {
         rules={register}
         name={name}
         value={value || null}
-        as={StyledDatePicker}
+        as={DatePicker}
         defaultValue={null}
         width={width}
         elemAfterInput={elemAfterInput}
@@ -63,27 +63,6 @@ const StyledBox = styled(Box)`
 const StyledLabel = styled(Label)`
   margin-bottom: 4px;
   margin-top: 4px;
-`;
-
-const StyledDatePicker = styled(DatePicker)`
-  .react-date-picker__calendar {
-    z-index: 99999;
-  }
-  .react-date-picker__wrapper {
-    border-color: #dfe1e6 !important;
-    border-radius: 3px !important;
-    border-width: 2px !important;
-    border-style: solid !important;
-  }
-  .react-date-picker__calendar {
-    background: red;
-  }
-  .react-date-picker__button__icon {
-    stroke: #172b4d;
-    color: #172b4d;
-  }
-  background-color: transparent;
-  min-height: 36px;
 `;
 
 DatepickerInput.propTypes = {
