@@ -10,9 +10,7 @@ import { race_options, sex_options } from "../../helpers";
 import { getObjectByLabel } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
-import AddIcon from "@atlaskit/icon/glyph/add";
-import { B400 } from "@atlaskit/theme/colors";
-import styled from "styled-components";
+//import styled from "styled-components";
 
 const DynamicDataItem = ({ filed, isCurrent = false, onClick }) => {
   return (
@@ -540,23 +538,23 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
   );
 };
 
-const buttonStyle = {
-  borderRadius: 30,
-  padding: "3px 5px",
-  marginTop: 10,
-};
+// const buttonStyle = {
+//   borderRadius: 30,
+//   padding: "3px 5px",
+//   marginTop: 10,
+// };
 
-const CommunicationContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 240px;
+// const CommunicationContainer = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   width: 240px;
 
-  div:first-child {
-    width: 210px;
-  }
-  .communication-address {
-    width: 210px;
-    margin-block: 8px;
-  }
-`;
+//   div:first-child {
+//     width: 210px;
+//   }
+//   .communication-address {
+//     width: 210px;
+//     margin-block: 8px;
+//   }
+// `;
