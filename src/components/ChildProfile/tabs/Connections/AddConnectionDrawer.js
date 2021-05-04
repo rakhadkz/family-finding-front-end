@@ -39,7 +39,7 @@ function AddConnectionDrawer({
   const handleContactSelect = async (contact) => {
     setIsLoading(true);
     await createChildContact(contact);
-    setIsAddModalOpen(false)
+    setIsAddModalOpen(false);
     setIsLoading(false);
   };
 
@@ -127,7 +127,7 @@ function AddConnectionDrawer({
                           )}`}
                         </Text>
                       </Spacing>
-                      <Button onClick={handleContactSelect}>
+                      <Button onClick={() => handleContactSelect(item)}>
                         <AddIcon size="small" primaryColor={B400} />
                       </Button>
                     </Box>
@@ -155,6 +155,7 @@ function AddConnectionDrawer({
                   await onAddContact(data, emails, phones, address)
                     .then((data) => {
                       console.log(data);
+                      setIsAddModalOpen(false);
                     })
                     .finally(() => fetchConnections());
                 }}
