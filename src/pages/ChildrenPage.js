@@ -38,7 +38,7 @@ export const ChildrenPage = (props) => {
   const [state, dispatch] = useReducer(childReducer, initialState);
   const [sort, setSort] = useState("");
   const [filterAssigned, setFilterAssigned] = useState(false);
-  const [filterActive, setFilterActive] = useState(false);
+  const [filterActive, setFilterActive] = useState(true);
   const head = childrenTableColumns(user?.role === "user", sort, setSort);
 
   useEffect(() => {
