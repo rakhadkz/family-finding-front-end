@@ -39,6 +39,7 @@ import { Table } from "../../../ui/common/Table";
 import { FitScore } from "../../../ui/molecules";
 import { Avatar } from "../../../ui/molecules/Avatar";
 import { AddContactForm } from "../../AddContactForm";
+import AddConnectionDrawer from "./AddConnectionDrawer";
 import ConnectionModal from "./ConnectionModal";
 import { DisqualifyModal, PlaceModal } from "./index";
 
@@ -73,6 +74,7 @@ export const Connections = () => {
   } = useContext(ChildContext);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDisModalOpen, setIsDisModalOpen] = useState(false);
   const [isPlaceModalOpen, setIsPlaceModalOpen] = useState(false);
   const { id } = state.child;
@@ -213,67 +215,72 @@ export const Connections = () => {
         if (address?.length > 0) {
           await saveAddresses(address, data.id);
         }
-        createTableChildContactRequest({
-          child_id: id,
-          contact_id: data.id,
-        })
-          .then(async () => {
-            if (data.relationship) {
-              const { parent } = relationshipOptions.find(
-                (item) => item.value === data.relationship
-              );
-              console.log("PARENT", parent);
-              if (
-                data.relationship === "Mother" ||
-                data.relationship === "Father"
-              ) {
-                await createChildContact({
-                  child_tree_contact: {
-                    child_id: id,
-                    parent_id: 0,
-                    contact_id: data.id,
-                    relationship: data.relationship,
-                  },
-                });
-              } else if (parent) {
-                let parentNode = constructed_tree.find((item) => {
-                  console.log(item);
-                  return item.Relationship === parent;
-                });
-                console.log("PARENT NODE", parentNode);
-
-                if (!parentNode) {
-                  if (parent === "Child") {
-                    parentNode = { id: 0 };
-                  } else {
-                    parentNode = await createChildContact({
-                      child_tree_contact: {
-                        child_id: id,
-                        parent_id: 0,
-                        relationship: parent,
-                      },
-                    });
-                  }
-                }
-
-                await createChildContact({
-                  child_tree_contact: {
-                    child_id: id,
-                    parent_id: parentNode.id,
-                    contact_id: data.id,
-                    relationship: data.relationship,
-                  },
-                });
-              }
-            }
-            toast.success("Contact successfully created!");
-          })
-          .finally(() => {
-            fetchConnections();
-            setIsAddModalOpen(false);
-          });
+        await createChildContactMethod(data);
       })
       .finally(() => setIsAddModalOpen(false));
+  };
+
+  const createChildContactMethod = async (data) => {
+    createTableChildContactRequest({
+      child_id: id,
+      contact_id: data.id,
+    })
+      .then(async () => {
+        await handleCreatedContact(data);
+        toast.success("Contact successfully created!");
+      })
+      .finally(() => {
+        fetchConnections();
+        setIsAddModalOpen(false);
+      });
+  };
+
+  const handleCreatedContact = async (data) => {
+    if (data.relationship) {
+      const { parent } = relationshipOptions.find(
+        (item) => item.value === data.relationship
+      );
+      console.log("PARENT", parent);
+      if (data.relationship === "Mother" || data.relationship === "Father") {
+        await createChildContact({
+          child_tree_contact: {
+            child_id: id,
+            parent_id: 0,
+            contact_id: data.id,
+            relationship: data.relationship,
+          },
+        });
+      } else if (parent) {
+        let parentNode = constructed_tree.find((item) => {
+          console.log(item);
+          return item.Relationship === parent;
+        });
+        console.log("PARENT NODE", parentNode);
+
+        if (!parentNode) {
+          if (parent === "Child") {
+            parentNode = { id: 0 };
+          } else {
+            parentNode = await createChildContact({
+              child_tree_contact: {
+                child_id: id,
+                parent_id: 0,
+                relationship: parent,
+              },
+            });
+          }
+        }
+
+        await createChildContact({
+          child_tree_contact: {
+            child_id: id,
+            parent_id: parentNode.id,
+            contact_id: data.id,
+            relationship: data.relationship,
+          },
+        });
+      }
+    }
   };
 
   const openModal = (tab, connection = placedConnection) => {
@@ -410,7 +417,7 @@ export const Connections = () => {
           style={{ marginBottom: "10px" }}
           onClick={() => {
             setCurrentConnection(null);
-            setIsAddModalOpen(true);
+            setIsCreateModalOpen(true);
           }}
         >
           Add Connection
@@ -462,6 +469,16 @@ export const Connections = () => {
           allowDisqualifiedConnection={allowDisqualifiedConnection}
         />
       </Drawer>
+
+      {isCreateModalOpen && (
+        <AddConnectionDrawer
+          createChildContact={createChildContactMethod}
+          isAddModalOpen={isCreateModalOpen}
+          setIsAddModalOpen={setIsCreateModalOpen}
+          onAddContact={onAddContact}
+          fetchConnections={fetchConnections}
+        />
+      )}
 
       <Drawer
         onClose={() => setIsAddModalOpen(false)}
