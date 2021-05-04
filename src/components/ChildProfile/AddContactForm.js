@@ -50,10 +50,12 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
           sex: contact?.sex,
           race: contact?.race,
           city: contact?.city,
-          birthday: new Date(contact?.birthday),
+          birthday: contact?.birthday ? new Date(contact?.birthday) : null,
           zip: contact?.zip,
           disqualify_reason: connection?.disqualify_reason,
-          placed_date: new Date(connection?.placed_date),
+          placed_date: connection?.placed_date
+            ? new Date(connection?.placed_date)
+            : null,
         }
       : {},
   });
