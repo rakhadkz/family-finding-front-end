@@ -18,7 +18,7 @@ export const ChildInformation = memo(({ child, setIsOpenEdit }) => {
         <Spacing m={{ l: "17px" }}>
           <StyledLabel>Full name</StyledLabel>
           <Box d="flex" align="center">
-            <Title size="18px" style={{ marginRight: "5px" }}>
+            <Title size="20px" style={{ marginRight: "5px" }}>
               {child.first_name ? `${child.first_name} ${child.last_name}` : ""}
             </Title>
             <Can
@@ -66,7 +66,7 @@ export const StyledLabel = styled(Label)`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 16px;
   color: #6b778c;
 `;
@@ -75,7 +75,7 @@ const Text = styled.div`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
   color: #172b4d;
 `;

@@ -6,7 +6,7 @@ export const Title = memo(styled.div`
   font-family: Helvetica;
   font-style: normal;
   font-weight: bold;
-  font-size: ${prop("size", "20px")};
+  font-size: ${prop("size", "22px")};
   line-height: 24px;
   color: #172B4D;
 `);

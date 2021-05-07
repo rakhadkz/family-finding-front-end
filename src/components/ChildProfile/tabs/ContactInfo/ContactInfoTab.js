@@ -45,7 +45,7 @@ const InfoItem = styled.div`
   margin: 13px 0;
   span,
   b {
-    font-size: 15px;
+    font-size: 17px;
   }
   b {
     margin-right: 15px;

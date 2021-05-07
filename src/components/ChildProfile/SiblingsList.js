@@ -7,7 +7,7 @@ export const SiblingsList = memo(
   ({ siblings, childId, onRemoveSiblingship }) => {
     return (
       <Spacing>
-        <Title size="14px">Siblings</Title>
+        <Title size="16px">Siblings</Title>
         <Spacing m={{ t: "8px" }}>
           <SiblingsListContainer>
             {siblings.map((siblings, index) => (
