@@ -31,7 +31,7 @@ const Category = ({ name, score = null }) => {
         marginBottom: 20,
       }}
     >
-      <Title size="16px">{name}</Title>
+      <Title size="18px">{name}</Title>
       {score != null && score > 0 && <ArrowUpIcon primaryColor={G300} />}
       {score != null && score <= 0 && <ArrowDownIcon primaryColor={R400} />}
       {score == null && <QuestionIcon />}

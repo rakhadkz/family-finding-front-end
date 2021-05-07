@@ -215,7 +215,6 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
             placeholder="Choose State"
           />
           <TextInput
-            width={210}
             name={"zip"}
             register={register({ required: false })}
             control={control}
@@ -456,7 +455,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
           style={{
             marginBottom: 10,
             display: "flex",
-            justifyContent: "space-evenly",
+            justifyContent: "space-between",
           }}
         >
           <Checkbox
@@ -482,49 +481,56 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
           />
         </div>
         {connection && (
-          <div
-            style={{
-              marginBottom: 10,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Checkbox
-              value="disqualified"
-              label="Disqualified"
-              isChecked={isDisqualified}
-              onChange={() => setIsDisqualified((item) => !item)}
-              style={{ width: "auto" }}
-            />
-            <Checkbox
-              value="placed"
-              label="Placed"
-              isChecked={isPlaced}
-              onChange={() => setIsPlaced((item) => !item)}
-              style={{ width: "auto" }}
-            />
-          </div>
+          <>
+            <div
+              style={{
+                marginBottom: 10,
+              }}
+            >
+              {isDisqualified && (
+                <TextInput
+                  width="100%"
+                  name="disqualify_reason"
+                  register={register({ required: isDisqualified })}
+                  control={control}
+                  error={errors.disqualify_reason}
+                  label="Disqualify Reason"
+                />
+              )}
+              <Checkbox
+                value="disqualified"
+                label="Disqualified"
+                isChecked={isDisqualified}
+                onChange={() => setIsDisqualified((item) => !item)}
+                style={{ width: "auto" }}
+              />
+            </div>
+            <div
+              style={{
+                marginBottom: 10,
+              }}
+            >
+              {isPlaced && (
+                <DatepickerInput
+                  name="placed_date"
+                  register={{ required: isPlaced }}
+                  control={control}
+                  error={errors.placed_date}
+                  label="Placed Date"
+                  placeholder="Select Date"
+                />
+              )}{" "}
+              <Checkbox
+                value="placed"
+                label="Placed"
+                isChecked={isPlaced}
+                onChange={() => setIsPlaced((item) => !item)}
+                style={{ width: "auto" }}
+              />
+            </div>
+          </>
         )}
-        {isDisqualified && (
-          <TextInput
-            width="100%"
-            name="disqualify_reason"
-            register={register({ required: isDisqualified })}
-            control={control}
-            error={errors.disqualify_reason}
-            label="Disqualify Reason"
-          />
-        )}
-        {isPlaced && (
-          <DatepickerInput
-            name="placed_date"
-            register={{ required: isPlaced }}
-            control={control}
-            error={errors.placed_date}
-            label="Placed Date"
-            placeholder="Select Date"
-          />
-        )}
+
         <Box d="flex" w="100%" justify="center" mb="40px" mt="20px">
           <ButtonGroup>
             <Button isDisabled={pending} type="submit" appearance="primary">

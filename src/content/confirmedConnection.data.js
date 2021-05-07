@@ -19,7 +19,7 @@ export const SmallText = styled.div`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 25px;
   color: #172b4d;
 `;
@@ -28,7 +28,7 @@ export const StyledButton = styled(Button)`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 25px;
   color: #172b4d;
 `;

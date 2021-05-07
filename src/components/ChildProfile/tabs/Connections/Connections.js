@@ -47,7 +47,7 @@ export const SmallText = styled.div`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 25px;
   color: #172b4d;
 `;
@@ -56,7 +56,7 @@ export const StyledButton = styled(Button)`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 25px;
   color: #172b4d;
 `;
@@ -329,7 +329,7 @@ export const Connections = () => {
                   <p>Link Score</p>
                 </Box>
                 <Box d="flex" direction="column">
-                  <Title size="18px">{`${placedContact.first_name} ${placedContact.last_name}`}</Title>
+                  <Title size="20px">{`${placedContact.first_name} ${placedContact.last_name}`}</Title>
                   <span>{placedConnection.relationship}</span>
                   {placedConnection.placed_date && (
                     <span style={{ marginRight: "0px" }}>

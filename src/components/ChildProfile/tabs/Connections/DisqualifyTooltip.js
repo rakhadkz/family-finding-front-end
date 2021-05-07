@@ -20,7 +20,7 @@ export const DisqualifyTooltip = ({ contact, reason }) => {
               <p>Link Score</p>
             </Box>
             <Box>
-              <Title size="18px">{`${contact?.first_name} ${contact?.last_name}`}</Title>
+              <Title size="20px">{`${contact?.first_name} ${contact?.last_name}`}</Title>
               <span>{contact?.relationship}</span>
               <Box mt="12px">
                 <Box d="f">

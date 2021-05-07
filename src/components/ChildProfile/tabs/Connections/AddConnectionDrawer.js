@@ -12,6 +12,8 @@ import styled from "styled-components";
 import moment from "moment";
 import AddIcon from "@atlaskit/icon/glyph/arrow-right";
 import { B400 } from "@atlaskit/theme/colors";
+import { SiblingsItem } from "../../SiblingsItem";
+import { Rounded } from "../../../ui/molecules/Rounded";
 
 function AddConnectionDrawer({
   isAddModalOpen,
@@ -20,7 +22,6 @@ function AddConnectionDrawer({
   fetchConnections,
   createChildContact,
 }) {
-  console.log("UHUHU", isAddModalOpen);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -97,40 +98,81 @@ function AddConnectionDrawer({
                 style={{
                   maxHeight: 450,
                   overflow: "scroll",
-                  border: "1px solid black",
-                  borderRadius: 15,
+                  border: "1px solid #CCC",
+                  borderRadius: 4,
                   padding: 15,
                   boxSizing: "border-box",
                 }}
               >
                 {contacts.map((item) => (
-                  <Spacing m={{ l: "10px", b: "22px" }}>
+                  <Spacing m={{ l: "10px", b: "22px" }} style={{paddingBottom: 10, borderBottom: '1px solid #ccc'}}>
                     <Box d="flex" align="center">
                       <Avatar name={`${item?.first_name} ${item?.last_name}`} />
-                      <Spacing m={{ l: "17px" }}>
-                        <StyledLabel>
-                          {item?.city}, {item?.state}
-                        </StyledLabel>
+                      <Spacing m={{ l: "17px" }} style={{ minWidth: 250 }}>
                         <Text>{`${item?.first_name || ""} ${
                           item?.last_name || ""
                         }`}</Text>
-                      </Spacing>
-                      <Spacing m={{ l: "17px" }}>
+                        <StyledLabel>
+                          {item?.city}, {item?.state}
+                        </StyledLabel>{" "}
                         <StyledLabel>
                           {moment(item?.birthday).format("MM/DD/YYYY")}
-                        </StyledLabel>
-                        <Text>
+                        </StyledLabel>{" "}
+                        <StyledLabel>
                           Age:{" "}
                           {`${Math.floor(
                             (Date.now() - new Date(item?.birthday)) /
                               31536000000
                           )}`}
-                        </Text>
+                        </StyledLabel>
                       </Spacing>
+                      <Spacing m={{ l: "17px" }}></Spacing>
                       <Button onClick={() => handleContactSelect(item)}>
                         <AddIcon size="small" primaryColor={B400} />
                       </Button>
                     </Box>
+                    <div style={{ marginTop: 15 }} />
+                    {item?.child_contacts?.length > 0 && (
+                      <StyledLabel>Associated children: </StyledLabel>
+                    )}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {item?.child_contacts &&
+                        item?.child_contacts[0]?.children.map((child) => (
+                          <div
+                            style={{
+                              minWidth: 200,
+                              maxWidth: 200,
+                              overflow: "scroll",
+                              marginRight: 10,
+                            }}
+                          >
+                            <Rounded
+                              content={
+                                <>
+                                  <Avatar
+                                    size="small"
+                                    name={`${child?.first_name} ${child?.last_name}`}
+                                    isChild
+                                  />
+                                  <span
+                                    style={{
+                                      marginLeft: "5px",
+                                      color: "#455670",
+                                    }}
+                                  >
+                                    {child?.first_name} {child?.last_name}
+                                  </span>
+                                </>
+                              }
+                            />
+                          </div>
+                        ))}
+                    </div>
                   </Spacing>
                 ))}
               </div>
@@ -148,7 +190,6 @@ function AddConnectionDrawer({
 
           {activeStep === 2 && (
             <>
-              <Title>{"Add Connection"}</Title>
               <AddContactForm
                 onSubmit={async (data, emails, phones, address, removeIds) => {
                   console.log("DATA", data);
@@ -178,7 +219,7 @@ const Text = styled.div`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
   min-width: 119px;
   color: #172b4d;

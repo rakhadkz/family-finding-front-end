@@ -2,7 +2,7 @@ import { request } from "../../utils/request";
 
 export const fetchContactsRequest = (firstName = "", lastName = "") => {
   return request({
-    endpoint: `contacts?first_name=${firstName}&last_name=${lastName}`,
+    endpoint: `contacts?first_name=${firstName}&last_name=${lastName}&view=extended`,
     method: "GET",
   });
 };

@@ -5,7 +5,7 @@ export const Label = styled.label`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 16px;
   color: #6b778c;
 `;
