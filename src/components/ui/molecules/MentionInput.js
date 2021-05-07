@@ -166,7 +166,7 @@ const StyledListItem = styled.li`
 const StyledList = styled.ul`
   width: "50px";
   background-color: #fff;
-  font-size: 14px;
+  font-size: 16px;
   max-height: 200px;
   overflow: auto;
   margin: 0 auto;
@@ -188,13 +188,13 @@ const StyledTextField = styled(Textfield)`
   border-radius: 3px;
   transition: 0.3s ease-in-out;
   padding: 9px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.42857143;
   color: #333;
   border: 1px solid #dedede;
   &::placeholder {
     color: #a4b0be;
-    font-size: 14px;
+    font-size: 16px;
   }
 `;
 

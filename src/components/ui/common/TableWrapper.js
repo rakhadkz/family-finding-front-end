@@ -6,7 +6,7 @@ export const TableWrapper = styled.div`
       color: #6b778c;
       font-style: normal;
       font-weight: normal;
-      font-size: 12px;
+      font-size: 14px;
       line-height: 16px;
     }
 
@@ -15,7 +15,7 @@ export const TableWrapper = styled.div`
       padding-bottom: 10px;
       font-style: normal;
       font-weight: normal;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 20px;
       color: #172b4d;
     }

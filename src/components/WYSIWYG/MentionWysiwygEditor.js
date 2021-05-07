@@ -469,7 +469,7 @@ const EditorContainer = styled.div`
 const Editors = styled.div`
   border: 1px transparent solid;
   // padding: 1.5em 2em 2.75em 2em;
-  font-size: 14px;
+  font-size: 16px;
   /* letter-spacing: 1.2px; */
   border-radius: 6px;
   text-align: left;

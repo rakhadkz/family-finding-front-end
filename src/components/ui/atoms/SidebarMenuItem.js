@@ -13,7 +13,7 @@ export const SidebarMenuItem = styled.div`
     font-family: Helvetica;
     font-style: normal;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 16px;
     height: 40px;
     border-radius: 3px;
     text-decoration: none;
