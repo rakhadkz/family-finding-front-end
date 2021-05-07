@@ -16,7 +16,7 @@ export const Avatar = ({
         round
         size={calculate_size(size)}
         textSizeRatio={ratio}
-        textMarginRatio={0.17}
+        textMarginRatio={0.2}
       />
     </Tooltip>
   );
@@ -25,20 +25,20 @@ export const Avatar = ({
 const calculate_size = (size_name) => {
   switch (size_name) {
     case "xsmall":
-      return "16px";
+      return "18px";
     case "small":
       return "24px";
     case "medium":
-      return "32px";
+      return "36px";
     case "large":
-      return "40px";
+      return "48px";
     case "slarge":
-      return "50px";
+      return "56px";
     case "xlarge":
-      return "96px";
+      return "102px";
     case "xxlarge":
-      return "128px";
+      return "134px";
     default:
-      return "32px";
+      return "34px";
   }
 };
