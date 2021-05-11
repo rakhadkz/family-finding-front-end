@@ -27,7 +27,7 @@ export const AddChildForm = ({
           first_name: child.first_name,
           last_name: child.last_name,
           birthday: new Date(child.birthday),
-          date_entered_foster_care: new Date(child.date_entered_foster_care)
+          date_entered_foster_care: child.date_entered_foster_care ? new Date(child.date_entered_foster_care) : null
         }
       : {},
   });
