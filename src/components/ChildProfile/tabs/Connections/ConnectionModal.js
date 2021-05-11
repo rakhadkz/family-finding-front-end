@@ -204,7 +204,7 @@ const ConnectionModal = ({
                   {currentConnection?.contact?.first_name}{" "}
                   {currentConnection?.contact?.last_name}
                 </Title>
-                {currentConnection.is_disqualified ? (
+                {currentConnection.status === 'disqualified' ? (
                   <Badge appearance="important">{"DISQUALIFIED"}</Badge>
                 ) : null}
               </Box>
@@ -217,7 +217,7 @@ const ConnectionModal = ({
                   }
                 />
               </div>
-              {currentConnection.is_disqualified ? (
+              {currentConnection.status === 'disqualified' ? (
                 <Button
                   onClick={allowDisqualifiedConnection}
                   appearance="warning"

@@ -80,7 +80,7 @@ export const Connections = () => {
   const { id } = state.child;
   const { connections } = connectionState;
   const { constructed_tree } = familyTreeState;
-  const placedConnection = connections.find((c) => c.is_placed);
+  const placedConnection = connections.find((c) => c.status === 'placed');
   const placedContact = placedConnection?.contact;
   const [currentTab, setCurrentTab] = useState(null);
   const { id: user_id } = getLocalStorageUser();
@@ -292,12 +292,12 @@ export const Connections = () => {
   const allowDisqualifiedConnection = () => {
     updateConnectionRequest(currentConnection.id, {
       disqualify_reason: "",
-      is_disqualified: false,
+      status: '',
     })
       .then(() => toast.success("Contact is successfully allowed!"))
       .finally(() => {
         currentConnection.disqualify_reason = "";
-        currentConnection.is_disqualified = false;
+        currentConnection.status = '';
         fetchConnections();
       });
   };
@@ -497,12 +497,13 @@ export const Connections = () => {
                   await updateConnectionRequest(currentConnection.id, {
                     relationship: data.relationship || null,
                     is_confirmed: data.is_confirmed,
-                    is_disqualified: data.is_disqualified,
-                    is_placed: data.is_placed,
-                    disqualify_reason: data.is_disqualified
+                    status: data.status,
+                    // is_disqualified: data.is_disqualified,
+                    // is_placed: data.is_placed,
+                    disqualify_reason: data.status === 'disqualified'
                       ? data.disqualify_reason
                       : null,
-                    placed_date: data.is_placed ? data.placed_date : null,
+                    placed_date: data.status === 'placed' ? data.placed_date : null,
                   }).then(() => {
                     fetchConnections();
                     fetchFamilyTree();
@@ -510,8 +511,7 @@ export const Connections = () => {
                   //TODO Add update Family Tree Update Request to immediately create a new necessary node
                 }
                 delete data.is_confirmed;
-                delete data.is_disqualified;
-                delete data.is_placed;
+                delete data.status;
                 delete data.disqualify_reason;
                 delete data.placed_date;
                 await updateContactRequest({

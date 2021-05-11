@@ -21,7 +21,7 @@ export const DisqualifyModal = ({
   const onSubmitHandle = (data) => {
     setPending(true);
     console.log(data);
-    onSubmit(id, { ...data, is_disqualified: true })
+    onSubmit(id, { ...data, status: 'disqualified' })
       .then(() => {
         toast.success(`Contact is successfully disqualified!`, {
           position: "top-center",
