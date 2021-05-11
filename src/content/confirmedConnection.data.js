@@ -43,11 +43,11 @@ export const confirmedConnectionRows = (
   setIsDisModalOpen,
   setIsPlaceModalOpen
 ) => {
-  const existPlaced = data.find((c) => c.is_placed);
+  const existPlaced = data.find((c) => c.status === 'placed');
   return data
     .filter((item) => item?.is_confirmed)
-    .sort((item1, item2) => item1?.is_disqualified - item2?.is_disqualified)
-    .sort((item1, item2) => item2?.is_placed - item1?.is_placed)
+    .sort((item1, item2) => item1?.status === 'disqualified' - item2?.status === 'disqualified')
+    .sort((item1, item2) => item2?.status === 'placed' - item1?.status === 'placed')
     .map((item, index) => {
       const onPlacementUpdate = (is_placed = true) => {
         if (existPlaced && is_placed) {
@@ -55,7 +55,7 @@ export const confirmedConnectionRows = (
         }
         setPending();
         updateConnectionRequest(item.id, {
-          is_placed: is_placed,
+          status: is_placed ? 'placed' : '',
           placed_date: null,
         }).then(() => fetchConnections());
       };
@@ -88,7 +88,7 @@ export const confirmedConnectionRows = (
                           onClick={() => openModal("main", item)}
                         >{`${item.contact.first_name} ${item.contact.last_name}`}</Button>
                       </Box>
-                      {item.is_disqualified && (
+                      {item.status === 'disqualified' && (
                         <Tooltip
                           content={
                             <DisqualifyTooltip
@@ -211,14 +211,14 @@ export const confirmedConnectionRows = (
                   perform={`${CONNECTIONS}:${ACTIONS.EDIT}`}
                   yes={() => (
                     <div align="center">
-                      {item.is_placed ? (
+                      {item.status === 'placed' ? (
                         <ButtonGroup>
                           <Button onClick={onEdit}>Edit</Button>
                           <Button onClick={() => onPlacementUpdate(false)}>
                             Remove Placement
                           </Button>
                         </ButtonGroup>
-                      ) : item.is_disqualified ? (
+                      ) : item.status === 'disqualified' ? (
                         <ButtonGroup>
                           <Button onClick={onEdit}>Edit</Button>
                         </ButtonGroup>

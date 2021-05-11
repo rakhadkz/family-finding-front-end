@@ -21,8 +21,8 @@ export const PlaceModal = ({
   const onSubmitHandle = (data) => {
     setPending(true);
     console.log(data);
-    onSubmit(id, { ...data, is_placed: true })
-      .then(() => toast.success(`Contact is successfully disqualified!`))
+    onSubmit(id, { ...data, status: 'placed' })
+      .then(() => toast.success(`Contact is successfully placed!`))
       .finally(() => {
         setPending(false);
         setIsPlaceModalOpen(false);
