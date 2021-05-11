@@ -27,6 +27,7 @@ export const AddChildForm = ({
           first_name: child.first_name,
           last_name: child.last_name,
           birthday: new Date(child.birthday),
+          date_entered_foster_care: new Date(child.date_entered_foster_care)
         }
       : {},
   });
@@ -99,6 +100,14 @@ export const AddChildForm = ({
           error={errors.birthday}
           label="Birthday"
           placeholder="Select birthday of child"
+        />
+        <DatepickerInput
+          width="100%"
+          name="date_entered_foster_care"
+          control={control}
+          error={errors.date_entered_foster_care}
+          label="Date Entered Foster Care"
+          placeholder="Select the date a child has entered foster care"
         />
         <SelectInput
           width="100%"
