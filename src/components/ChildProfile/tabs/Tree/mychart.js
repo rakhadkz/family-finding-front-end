@@ -115,9 +115,9 @@ class Chart extends Component {
     OrgChart.templates.myTemplate.expandCollapseSize = 0;
 
     OrgChart.templates.myTemplate.field_0 =
-      '<text width="150" class="field_0" style="font-size: 14px;" fill="#172B4D" x="48" y="15" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_0" style="font-size: 16px;" fill="#172B4D" x="48" y="15" text-anchor="start">{val}</text>';
     OrgChart.templates.myTemplate.field_1 =
-      '<text width="150" class="field_1" style="font-size: 12px;" fill="#6B778C" x="48" y="33" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_1" style="font-size: 14px;" fill="#6B778C" x="48" y="33" text-anchor="start">{val}</text>';
 
     OrgChart.templates.myTemplate.nodeMenuButton =
       '<g style="cursor:pointer;" transform="matrix(1,0,0,1,170,13)" control-node-menu-id="{id}"><rect x="-4" y="-10" fill="#000000" fill-opacity="0" width="15" height="15"></rect><circle cx="0" cy="0" r="2" fill="#ffffff"></circle><circle cx="0" cy="6" r="2" fill="#ffffff"></circle><circle cx="0" cy="12" r="2" fill="#ffffff"></circle></g>';
@@ -133,9 +133,9 @@ class Chart extends Component {
     OrgChart.templates.yellow.node =
       '<rect class="yellow-node" x="0" y="0" height="60" width="220" fill="#8F62AD" stroke-width="0" stroke="#aeaeae" rx="30" ry="30"></rect>';
     OrgChart.templates.yellow.field_0 =
-      '<text width="150" class="field_0" style="font-size: 14px;" fill="white" x="68" y="15" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_0" style="font-size: 16px;" fill="white" x="68" y="15" text-anchor="start">{val}</text>';
     OrgChart.templates.yellow.field_1 =
-      '<text width="150" class="field_1" style="font-size: 12px;" fill="white" x="68" y="33" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_1" style="font-size: 14px;" fill="white" x="68" y="33" text-anchor="start">{val}</text>';
 
     OrgChart.templates.yellow.img_0 =
       '<clipPath id="ulaImg2">' +
@@ -151,9 +151,9 @@ class Chart extends Component {
       '<image preserveAspectRatio="xMidYMid slice" clip-path="url(#ulaImg2)" xlink:href="{val}" x="0" y="0" width="60" height="60">' +
       "</image>";
     OrgChart.templates.green.field_0 =
-      '<text width="150" class="field_0" style="font-size: 14px;" fill="#172B4D" x="68" y="15" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_0" style="font-size: 16px;" fill="#172B4D" x="68" y="15" text-anchor="start">{val}</text>';
     OrgChart.templates.green.field_1 =
-      '<text width="150" class="field_1" style="font-size: 12px;" fill="#6B778C" x="68" y="33" text-anchor="start">{val}</text>';
+      '<text width="150" class="field_1" style="font-size: 14px;" fill="#6B778C" x="68" y="33" text-anchor="start">{val}</text>';
 
     OrgChart.templates.green.field_2 = `{val}`;
 

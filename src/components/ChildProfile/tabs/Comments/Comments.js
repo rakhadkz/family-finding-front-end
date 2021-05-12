@@ -75,7 +75,7 @@ export const Comments = ({ data, childId, refresh, currentCommentId }) => {
         cursor:pointer;
         color:#0052CC;
         text-decoration:none;
-        font:14px Helvetica;
+        font:16px Helvetica;
         a:hover {text-decoration:underline;};
         ">
           ${comment.substring(ij[i][0], ij[i][1])}
@@ -129,12 +129,12 @@ export const Comments = ({ data, childId, refresh, currentCommentId }) => {
         <Spacing m={{ l: "7px" }}>
           <Box d="flex">
             <Title
-              size="14px"
+              size="16px"
               style={{ marginRight: "5px" }}
             >{`${data.user.first_name} ${data.user.last_name}`}</Title>
             <Text
               style={{ color: "#586069", lineHeight: "24px" }}
-              size="14px"
+              size="18px"
             >{`commented ${time()}`}</Text>
           </Box>
           {edit ? (
@@ -165,7 +165,7 @@ export const Comments = ({ data, childId, refresh, currentCommentId }) => {
                       <Avatar name={`${user.first_name} ${user.last_name}`} />
                       <Spacing m={{ l: "10px" }}>
                         <Title
-                          size="14px"
+                          size="16px"
                           style={{ marginRight: "5px" }}
                         >{`${user.first_name} ${user.last_name}`}</Title>
                         <Spacing m={{ t: "-22px" }}>
@@ -263,14 +263,14 @@ const ButtonContentWrapper = styled.div`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 16px;
 `;
 
 const Text = styled.div`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
   color: #172b4d;
 `;

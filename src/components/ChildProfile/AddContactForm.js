@@ -10,7 +10,7 @@ import { race_options, sex_options } from "../../helpers";
 import { getObjectByLabel } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
-//import styled from "styled-components";
+// import styled from "styled-components";
 
 const DynamicDataItem = ({ filed, isCurrent = false, onClick }) => {
   return (
@@ -78,9 +78,9 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
     contact?.access_to_transportation || false
   );
   const [isDisqualified, setIsDisqualified] = useState(
-    connection?.is_disqualified || false
+    connection?.status === 'disqualified' || false
   );
-  const [isPlaced, setIsPlaced] = useState(connection?.is_placed || false);
+  const [isPlaced, setIsPlaced] = useState(connection?.status === 'placed' || false);
   const relationship = watch("relationship"); // you can supply default value as second argument
 
   const onSubmitHandle = (data) => {
@@ -118,10 +118,15 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
     submitData.is_confirmed = isConfirmed;
     submitData.access_to_transportation = accessToTransportation;
     submitData.verified_employment = isVerifiedEmployment;
-    submitData.is_placed = isPlaced;
-    submitData.is_disqualified = isDisqualified;
+    if(isPlaced){
+      submitData.status = 'placed'
+    } else if(isDisqualified){
+      submitData.status = 'disqualified'
+    } else {
+      submitData.status = ''
+    }
 
-    console.log("inside: ", submitData);
+    // console.log("inside: ", submitData);
 
     onSubmit(submitData, emailsList, phonesList, addressesList, removeIds);
   };
@@ -226,7 +231,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
             <Box
               d="flex"
               justify="center"
-              style={{ marginTop: 7, marginLeft: 10 }}
+              style={{ marginTop: 7 }}
             >
               <div style={{ width: 200 }}>
                 <Label htmlFor={"address"}>Address</Label>
@@ -362,12 +367,11 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                 +
               </Button>
             </Box>
-            <div style={{ marginBottom: 5 }} />
+            
             <Box
               d="flex"
               justify="center"
-              style={{ marginTop: 7, marginLeft: 0 }}
-            >
+                          >
               <div style={{ width: 200 }}>
                 <Label htmlFor={"email"}>Email</Label>
                 <Textfield
@@ -452,40 +456,32 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
           )}
         </Spacing>
         <div
-          style={{
-            marginBottom: 10,
-            display: "flex",
-            justifyContent: "space-between",
-          }}
         >
           <Checkbox
             value="linked"
             label="Linked"
             isChecked={isConfirmed}
             onChange={() => setIsConfirmed((item) => !item)}
-            style={{ width: "auto" }}
+            style={{ width: "auto"}}
           />
           <Checkbox
             value="verified_employment"
             label="Verified Employment"
             isChecked={isVerifiedEmployment}
             onChange={() => setIsVerifiedEmployment((item) => !item)}
-            style={{ width: "auto" }}
+            style={{ width: "auto"}}
           />
           <Checkbox
             value="access_to_transportation"
             label="Has Access to Transportation"
             isChecked={accessToTransportation}
             onChange={() => setAccessToTransportation((item) => !item)}
-            style={{ width: "auto" }}
+            style={{ width: "auto"}}
           />
         </div>
         {connection && (
           <>
             <div
-              style={{
-                marginBottom: 10,
-              }}
             >
               {isDisqualified && (
                 <TextInput
@@ -543,6 +539,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
     </>
   );
 };
+
 
 // const buttonStyle = {
 //   borderRadius: 30,

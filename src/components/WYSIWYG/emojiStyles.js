@@ -43,7 +43,7 @@ export const StyledEmojiSelectWrapper = styled.div`
     height: 1.5em;
     box-sizing: border-box;
     line-height: 1.2em;
-    font-size: 1.5em;
+    font-size: 1.7em;
     color: #888;
     background: #fff;
     border: 1px #ddd;
@@ -83,7 +83,7 @@ export const StyledEmojiSelectWrapper = styled.div`
     height: 2.5em;
     line-height: 2.5em;
     font-weight: normal;
-    font-size: 1em;
+    font-size: 1.2em;
     color: #9e9e9e;
   }
   .${theme.emojiSelectPopoverGroups} {
@@ -104,7 +104,7 @@ export const StyledEmojiSelectWrapper = styled.div`
     margin: 1em 0;
     padding-left: 0.5em;
     font-weight: normal;
-    font-size: 1em;
+    font-size: 1.2em;
     color: #9e9e9e;
   }
   .${theme.emojiSelectPopoverGroupList} {
@@ -180,7 +180,7 @@ export const StyledEmojiSelectWrapper = styled.div`
     padding: 0;
     width: 100%;
     height: 100%;
-    font-size: 1.2em;
+    font-size: 1.4em;
     color: #bdbdbd;
     background: none;
     border: none;
@@ -271,7 +271,7 @@ export const GlobalStyleForEmojiSelect = createGlobalStyle`
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 368px;
-    font-size: 0.9em;
+    font-size: 1.1em;
   }
   .${theme.emojiSuggestionsEntryIcon} {
     width: 1em;

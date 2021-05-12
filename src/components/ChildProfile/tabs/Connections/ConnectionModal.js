@@ -195,7 +195,7 @@ const ConnectionModal = ({
             <Spacing m={{ t: "10px" }}>
               <Box d="flex" direction="column" align="flex-start">
                 <Title
-                  size="28px"
+                  size="30px"
                   style={{
                     fontWeight: "700",
                     marginBottom: 10,
@@ -204,7 +204,7 @@ const ConnectionModal = ({
                   {currentConnection?.contact?.first_name}{" "}
                   {currentConnection?.contact?.last_name}
                 </Title>
-                {currentConnection.is_disqualified ? (
+                {currentConnection.status === 'disqualified' ? (
                   <Badge appearance="important">{"DISQUALIFIED"}</Badge>
                 ) : null}
               </Box>
@@ -217,7 +217,7 @@ const ConnectionModal = ({
                   }
                 />
               </div>
-              {currentConnection.is_disqualified ? (
+              {currentConnection.status === 'disqualified' ? (
                 <Button
                   onClick={allowDisqualifiedConnection}
                   appearance="warning"
@@ -234,7 +234,7 @@ const ConnectionModal = ({
             </Spacing>
           </Box>
         </Box>
-        <Title size="16px">Connected Children</Title>
+        <Title size="18px">Connected Children</Title>
         <Box d="flex" mt="8px">
           <ButtonGroup>
             {children.map((child) => (
@@ -271,7 +271,7 @@ const Text = styled.div`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
   color: #172b4d;
 `;

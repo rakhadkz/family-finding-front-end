@@ -27,7 +27,7 @@ const UserNameText = styled.div`
   font-family: Helvetica;
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 16px;
   color: #6b778c;
   display: flex;
   align-items: center;

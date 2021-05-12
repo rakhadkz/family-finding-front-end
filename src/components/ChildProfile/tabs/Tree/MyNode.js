@@ -56,7 +56,7 @@ const Card = styled.div`
     font-family: Helvetica;
     font-style: normal;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 20px;
     color: #172b4d;
   }
@@ -64,7 +64,7 @@ const Card = styled.div`
     font-family: Helvetica;
     font-style: normal;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 16px;
     color: #6b778c;
   }
