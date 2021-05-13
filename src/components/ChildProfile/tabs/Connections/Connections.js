@@ -80,7 +80,7 @@ export const Connections = () => {
   const { id } = state.child;
   const { connections } = connectionState;
   const { constructed_tree } = familyTreeState;
-  const placedConnection = connections.find((c) => c.status === 'placed');
+  const placedConnection = connections.find((c) => c.status === "placed");
   const placedContact = placedConnection?.contact;
   const [currentTab, setCurrentTab] = useState(null);
   const { id: user_id } = getLocalStorageUser();
@@ -241,7 +241,12 @@ export const Connections = () => {
         (item) => item.value === data.relationship
       );
       console.log("PARENT", parent);
-      if (data.relationship === "Mother" || data.relationship === "Father") {
+      if (
+        data.relationship === "Mother" ||
+        data.relationship === "Father" ||
+        data.relationship === "Step Mother" ||
+        data.relationship === "Step Father"
+      ) {
         await createChildContact({
           child_tree_contact: {
             child_id: id,
@@ -292,12 +297,12 @@ export const Connections = () => {
   const allowDisqualifiedConnection = () => {
     updateConnectionRequest(currentConnection.id, {
       disqualify_reason: "",
-      status: '',
+      status: "",
     })
       .then(() => toast.success("Contact is successfully allowed!"))
       .finally(() => {
         currentConnection.disqualify_reason = "";
-        currentConnection.status = '';
+        currentConnection.status = "";
         fetchConnections();
       });
   };
@@ -500,10 +505,12 @@ export const Connections = () => {
                     status: data.status,
                     // is_disqualified: data.is_disqualified,
                     // is_placed: data.is_placed,
-                    disqualify_reason: data.status === 'disqualified'
-                      ? data.disqualify_reason
-                      : null,
-                    placed_date: data.status === 'placed' ? data.placed_date : null,
+                    disqualify_reason:
+                      data.status === "disqualified"
+                        ? data.disqualify_reason
+                        : null,
+                    placed_date:
+                      data.status === "placed" ? data.placed_date : null,
                   }).then(() => {
                     fetchConnections();
                     fetchFamilyTree();
