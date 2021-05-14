@@ -4,6 +4,7 @@ import EditIcon from "@atlaskit/icon/glyph/edit";
 import moment from "moment";
 import { ACTIONS } from "../accessControl/actions";
 import Can from "../accessControl/Can";
+import { getLocalStorageUser } from "../context/auth/authProvider";
 import { COMMUNICATION_TEMPLATES } from "../helpers";
 import { humanReadableDateFormat } from "./date";
 
@@ -13,8 +14,10 @@ const resourcesData = (
   setCurrentId,
   setIsOpenEdit,
   setCurrentResource
-) =>
-  data.map((item, index) => ({
+) => {
+  const user = getLocalStorageUser();
+
+  return data.map((item, index) => ({
     key: index,
     cells: [
       {
@@ -31,7 +34,7 @@ const resourcesData = (
       },
       {
         key: "actions",
-        content: (
+        content: (user.role === "super_admin" || item.organization_id) && (
           <div align="center">
             <Can
               perform={`${COMMUNICATION_TEMPLATES}:${ACTIONS.EDIT}`}
@@ -65,5 +68,6 @@ const resourcesData = (
       },
     ],
   }));
+};
 
 export { resourcesData };

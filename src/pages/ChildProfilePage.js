@@ -99,6 +99,12 @@ import { Preloader } from "./Preloader";
 
 export const ChildContext = React.createContext();
 
+export const siblingTypes = [
+  { value: "full", label: "Full" },
+  { value: "half-maternal", label: "Half-Maternal" },
+  { value: "half-paternal", label: "Half-Paternal" },
+];
+
 export function ChildProfilePage(props) {
   const id = props.match.params.id;
   const user = getLocalStorageUser();
@@ -116,6 +122,7 @@ export function ChildProfilePage(props) {
   const [assignedUsers, setAssignedUsers] = useState(null);
   const [children, setChildren] = useState([]);
   const [selectedChildren, setSelectedChildren] = useState(null);
+  const [defaultSiblingType, setDefaultSiblingType] = useState(siblingTypes[0]);
   const [validationState, setValidationState] = useState("default");
   const [buttonPending, setButtonPending] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -192,11 +199,12 @@ export function ChildProfilePage(props) {
 
   const fetchSiblings = () => fetchChildSiblings(id).then(setSiblings);
 
-  const createSiblings = (sibling_id) => {
+  const createSiblings = (sibling_id, sibling_type) => {
     const data = {
       siblingship: {
         child_id: id,
         sibling_id,
+        sibling_type,
       },
     };
 
@@ -323,7 +331,7 @@ export function ChildProfilePage(props) {
     for (let i = 0; i < selectedChildren?.length; i++) {
       const sibling_id = selectedChildren && selectedChildren[i]?.value;
       if (sibling_id) {
-        promises.push(createSiblings(sibling_id));
+        promises.push(createSiblings(sibling_id, defaultSiblingType?.value));
       }
     }
 
@@ -665,6 +673,22 @@ export function ChildProfilePage(props) {
                       }))}
                     placeholder="Select children"
                   />
+                  <Spacing m={{ t: "10px" }}>
+                    <Select
+                      className="multi-select"
+                      classNamePrefix="react-select"
+                      menuPortalTarget={document.body}
+                      value={defaultSiblingType}
+                      onChange={(e) => {
+                        setDefaultSiblingType(e);
+                      }}
+                      styles={{
+                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                      }}
+                      options={siblingTypes}
+                      placeholder="Select SiblingType"
+                    />
+                  </Spacing>
                 </>
               }
             />
@@ -765,7 +789,9 @@ export function ChildProfilePage(props) {
                               []
                             )
                             .map((item) => ({
-                              label: `${item?.is_current ? '(Current)':''} ${item?.fullName}  ${item?.value}`,
+                              label: `${item?.is_current ? "(Current)" : ""} ${
+                                item?.fullName
+                              }  ${item?.value}`,
                               value: item,
                             }))
                     }

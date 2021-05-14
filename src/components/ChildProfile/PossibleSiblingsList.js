@@ -12,7 +12,9 @@ export const PossibleSiblingsList = memo(({ siblings, createSiblings }) => {
           {siblings.map((siblings, index) => (
             <div key={index}>
               <SiblingsItem
-                onAdd={() => createSiblings(siblings?.sibling.id)}
+                onAdd={(siblingType) =>
+                  createSiblings(siblings?.sibling.id, siblingType)
+                }
                 sibling={siblings?.sibling}
               />
             </div>
