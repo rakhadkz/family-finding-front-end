@@ -5,6 +5,7 @@ import moment from "moment";
 import { ACTIONS } from "../accessControl/actions";
 import Can from "../accessControl/Can";
 import { TEMPLATE_TYPES } from "../components/CommunicationTemplate";
+import { getLocalStorageUser } from "../context/auth/authProvider";
 import { COMMUNICATION_TEMPLATES } from "../helpers";
 import { humanReadableDateFormat } from "./date";
 
@@ -14,8 +15,10 @@ const communicationTemplatesData = (
   setCurrentId,
   setIsOpenEdit,
   setCurrentTemplate
-) =>
-  data.map((item, index) => ({
+) => {
+  const user = getLocalStorageUser();
+
+  return data.map((item, index) => ({
     key: index,
     cells: [
       {
@@ -32,7 +35,7 @@ const communicationTemplatesData = (
       },
       {
         key: "actions",
-        content: (
+        content: (user.role === "super_admin" || item.organization_id) && (
           <div align="center">
             <Can
               perform={`${COMMUNICATION_TEMPLATES}:${ACTIONS.EDIT}`}
@@ -71,5 +74,6 @@ const communicationTemplatesData = (
       },
     ],
   }));
+};
 
 export { communicationTemplatesData };

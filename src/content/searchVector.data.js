@@ -4,14 +4,17 @@ import EditIcon from "@atlaskit/icon/glyph/edit";
 import Can from "../accessControl/Can";
 import { SEARCHVECTOR } from "../helpers";
 import { ACTIONS } from "../accessControl/actions";
+import { getLocalStorageUser } from "../context/auth/authProvider";
 
 const searchVectorTableData = (
   data,
   setIsOpen,
   setCurrentSearchVector,
   setIsAddModalOpen
-) =>
-  data.map((item, index) => ({
+) => {
+  const user = getLocalStorageUser();
+
+  return data.map((item, index) => ({
     key: index,
     id: item.id,
     cells: [
@@ -34,7 +37,7 @@ const searchVectorTableData = (
       },
       {
         key: "Actions",
-        content: (
+        content: (user.role === "super_admin" || item.organization_id) && (
           <div align="center">
             <Can
               perform={`${SEARCHVECTOR}:${ACTIONS.EDIT}`}
@@ -68,6 +71,7 @@ const searchVectorTableData = (
       },
     ],
   }));
+};
 
 const inContinuousSearchOptions = [
   {

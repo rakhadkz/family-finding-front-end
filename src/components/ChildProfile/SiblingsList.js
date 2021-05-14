@@ -5,6 +5,7 @@ import { SiblingsItem } from "./SiblingsItem";
 
 export const SiblingsList = memo(
   ({ siblings, childId, onRemoveSiblingship }) => {
+    console.log(siblings);
     return (
       <Spacing>
         <Title size="16px">Siblings</Title>
@@ -20,6 +21,7 @@ export const SiblingsList = memo(
                       ? siblings.child
                       : siblings.sibling
                   }
+                  siblingType={siblings?.sibling_type}
                 />
               </div>
             ))}
