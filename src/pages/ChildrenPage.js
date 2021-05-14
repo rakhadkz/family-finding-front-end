@@ -26,6 +26,14 @@ import {
   initialState,
   fetchChildrenRequest,
 } from "../reducers/child";
+import ChartistGraph from 'react-chartist';
+import styled from 'styled-components'
+import Chartist from 'chartist';
+import 'chartist-plugin-axistitle'
+import 'chartist-plugin-accessibility'
+import {
+  fetchChildrenRequest as fetchGauge
+} from '../api/reports'
 
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
@@ -40,12 +48,13 @@ export const ChildrenPage = (props) => {
   const [filterAssigned, setFilterAssigned] = useState(false);
   const [filterActive, setFilterActive] = useState(true);
   const head = childrenTableColumns(user?.role === "user", sort, setSort);
+  const [chartData, setChartData] = useState()
 
   useEffect(() => {
     history.push(updateQueryParams(currentPage, search, sort, getFilter()));
     dispatch(fetchChildrenRequest());
     const timer = setTimeout(
-      fetchChildrenFunc,
+      () => {fetchChildrenFunc();fetchChildrenGauge()},
       search?.length === 0 ? 0 : 1000
     );
     return () => clearTimeout(timer);
@@ -101,6 +110,20 @@ export const ChildrenPage = (props) => {
     return filter;
   };
 
+  const fetchChildrenGauge = async () => {
+    const filter = getFilter();
+    const data = await fetchGauge({
+      meta: true,
+      filter,
+    })
+    console.log(data)
+    setChartData({
+      series:  data?.children.map(i => i[1]) 
+    })
+  };
+
+  console.log(chartData, chartData?.series.reduce((acc, item) => acc+=item, 0)*2)
+
   const fetchChildrenFunc = () => {
     const filter = getFilter();
     fetchChildren({
@@ -153,6 +176,22 @@ export const ChildrenPage = (props) => {
     </Box>
   );
 
+  /*
+    <= 30 days = green
+    31 to 60 days = yellow
+    61 to 90 days = orange
+    91 to 120 days = red
+  */
+  var options = {
+    donut: true,
+    donutWidth: 40,
+    donutSolid: true,
+    startAngle: 270,
+    total: chartData?.series.reduce((acc, item) => acc+=item, 0)*2,
+    showLabel: true,
+    plugins: []
+  };
+
   return (
     <>
       <Title>Children</Title>
@@ -178,6 +217,12 @@ export const ChildrenPage = (props) => {
           />
         </Box>
       </Spacing>
+      <Spacing m={{ t: "20px", 
+       b: "-80px", 
+       l:'-100px'
+      }} style={{width:'400px'}}>
+        <StyledChart data={chartData} className={''} options={options} type={'Pie'} />
+      </Spacing>
       <Spacing m={{ t: "20px" }}>
         <Table
           totalPage={totalPage}
@@ -191,3 +236,7 @@ export const ChildrenPage = (props) => {
     </>
   );
 };
+
+ const StyledChart = styled(ChartistGraph)`
+
+ `
