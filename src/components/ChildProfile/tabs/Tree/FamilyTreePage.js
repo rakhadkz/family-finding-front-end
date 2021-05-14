@@ -48,7 +48,9 @@ export const FamilyTreePage = () => {
               console.log("PARENT", parent);
               if (
                 data.relationship === "Mother" ||
-                data.relationship === "Father"
+                data.relationship === "Father" ||
+                data.relationship === "Step Mother" ||
+                data.relationship === "Step Father"
               ) {
                 await createChildContact({
                   child_tree_contact: {

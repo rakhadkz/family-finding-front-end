@@ -1,4 +1,4 @@
-import OrgChart from "@balkangraph/orgchart.js";
+import OrgChart from "../../../../orgchart";
 import React, { Component } from "react";
 import { removeChildContactRequest } from "../../../../api/childContact";
 import {

@@ -49,6 +49,31 @@ export const communicationTemplatesTableColumns = [
   },
 ];
 
+
+export const resourcesTableColumns = [
+  {
+    key: "name",
+    content: "Name",
+    width: 25,
+  },
+  {
+    key: "link",
+    content: "Link",
+    width: 33,
+  },
+  {
+    key: "updated_at",
+    content: "Last Edited Date",
+    width: 15,
+  },
+  {
+    key: "actions",
+    content: <p align="center">Actions</p>,
+    width: 15,
+  },
+];
+
+
 export const usersTableColumns = (role = "user") => {
   const columns1 = [
     {

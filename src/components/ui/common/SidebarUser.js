@@ -10,8 +10,8 @@ export const SidebarUser = () => {
       <SidebarUserContainer>
         <Avatar name={`${user.first_name} ${user.last_name}`} />
         <UserNameText>
-          {user?.first_name[0].toUpperCase() + user?.first_name.substring(1)}{" "}
-          {user?.last_name[0].toUpperCase() + user?.last_name.substring(1)}
+          {user?.first_name && user?.first_name[0].toUpperCase() + user?.first_name.substring(1)}{" "}
+          {user?.last_name && user?.last_name[0].toUpperCase() + user?.last_name.substring(1)}
         </UserNameText>
       </SidebarUserContainer>
     )

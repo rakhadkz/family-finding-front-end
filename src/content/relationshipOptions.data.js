@@ -1,6 +1,8 @@
 export const relationshipOptions = [
   { label: "Mother", value: "Mother", parent: "Child" },
   { label: "Father", value: "Father", parent: "Child" },
+  { label: "Step Mother", value: "Step Mother", parent: "Child" },
+  { label: "Step Father", value: "Step Father", parent: "Child" },
   {
     label: "Maternal Grandfather",
     value: "Maternal Grandfather",
