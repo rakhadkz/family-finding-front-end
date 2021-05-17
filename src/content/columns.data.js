@@ -284,22 +284,22 @@ export const possibleConnectionColumns = [
   {
     key: "full_name",
     content: "Full Name",
-    width: 25,
+    width: 30,
   },
   {
     key: "relationship",
     content: "Relationship",
-    width: 15,
+    width: 20,
   },
   {
     key: "engagement",
     content: "Engagement",
-    width: 18,
+    width: 20,
   },
   {
     key: "actions",
     content: <p align="center">Actions</p>,
-    width: 15,
+    width: 20,
   },
 ];
 
@@ -307,27 +307,27 @@ export const confirmedConnectionColumns = [
   {
     key: "full_name",
     content: "Full Name",
-    width: 23,
+    width: 40,
   },
   {
     key: "relationship",
     content: "Relationship",
-    width: 10,
+    width: 20,
   },
   {
     key: "engagement",
     content: "Info & Engagement",
-    width: 13,
+    width: 20,
   },
   {
     key: "link_score",
     content: "Link Score",
-    width: 11,
+    width: 20,
   },
   {
     key: "actions",
     content: <p align="center">Actions</p>,
-    width: 25,
+    width: 20,
   },
 ];
 

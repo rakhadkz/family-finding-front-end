@@ -27,6 +27,14 @@ export const sex_options = [
   { value: "", label: "Unknown" },
 ];
 
+export const status_options = [
+  { value: "Placed", label: "Placed" },
+  { value: "Support Resource Only", label: "Support Resource Only" },
+  { value: "Interested in Placement", label: "Interested in Placement" },
+  { value: "Disqualified", label: "Disqualified" },
+  { value: "", label: "Unknown" },
+];
+
 export const race_options = [
   {
     value: "american_indian_or_alaska_native",

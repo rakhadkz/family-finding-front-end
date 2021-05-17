@@ -36,9 +36,9 @@ export const DatepickerInput = (props) => {
         ref={register}
         rules={register}
         name={name}
-        value={value || null}
+        value={value || new Date()}
         as={DatePicker}
-        defaultValue={null}
+        defaultValue={new Date()}
         width={width}
         elemAfterInput={elemAfterInput}
         placeholder={placeholder}
