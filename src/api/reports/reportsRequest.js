@@ -8,6 +8,14 @@ export const fetchChildrenRequest = ({filter}) => {
   });
 };
 
+export const fetchGaugeRequest = ({filter}) => {
+    return request({
+      endpoint: `admin/reports/gauge?filter=${filter ? filter : ''}`,
+      method: "GET",
+      meta: true,
+    });
+  };
+
 export const fetchPlacementsRequest = () => {
   return request({
     endpoint: "admin/reports/placements",

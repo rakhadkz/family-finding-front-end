@@ -32,8 +32,9 @@ import Chartist from 'chartist';
 import 'chartist-plugin-axistitle'
 import 'chartist-plugin-accessibility'
 import {
-  fetchChildrenRequest as fetchGauge
+  fetchGaugeRequest as fetchGauge
 } from '../api/reports'
+// import './chart.css'
 
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
@@ -118,8 +119,28 @@ export const ChildrenPage = (props) => {
     })
     console.log(data)
     setChartData({
-      series:  data?.children.map(i => i[1]) 
-    })
+      series : [{
+        value: data?.chart_data[0],
+        // className: "green"
+      },
+      {
+        value: data?.chart_data[1],
+        // className: "yellow"
+      },
+      {
+        value: data?.chart_data[2],
+        // className: "orange"
+      },
+      {
+        value: data?.chart_data[3],
+        // className: "red"
+      },
+      {
+        value: data?.chart_data[4],
+        // className: "black"
+      }
+    ]
+  })
   };
 
   console.log(chartData, chartData?.series.reduce((acc, item) => acc+=item, 0)*2)
@@ -187,7 +208,7 @@ export const ChildrenPage = (props) => {
     donutWidth: 40,
     donutSolid: true,
     startAngle: 270,
-    total: chartData?.series.reduce((acc, item) => acc+=item, 0)*2,
+    total: chartData?.series.reduce((acc, item) => acc+=item.value, 0)*2,
     showLabel: true,
     plugins: []
   };
