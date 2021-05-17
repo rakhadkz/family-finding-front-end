@@ -1,17 +1,29 @@
 .green {
-  stroke: green;
-}
-.red {
-  stroke:red;
+  stroke: #228B22	;
+  fill: #228B22	;
 }
 .yellow {
-  stroke:yellow;
+  stroke: #FFFF00	;
+  fill: #FFFF00	;
 }
-
+.red {
+  stroke: #FF0000	;
+  fill: #FF0000	;
+}
+.orange {
+  stroke: #FFA500	;
+  fill: #FFA500	;
+}
 .black {
-  stroke:black;
+  stroke: #040404	;
+  fill: #040404	;
+}
+.ct-label{
+  fill: #dfe1e6;
+  color: #dfe1e6;
+  font-size: .9rem;
 }
 
-.orange { 
-    stroke: orange;
-}
+/* .ct-square{
+  width: 400px
+} */
