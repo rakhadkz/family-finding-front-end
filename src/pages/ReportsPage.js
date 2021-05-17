@@ -259,4 +259,8 @@ const StyledChart = styled(ChartistGraph)`
   // stroke-dasharray: 20px;
   // stroke-linecap: round;
 }
+.ct-label{
+  fill: rgba(0,0,0,.4);
+  color: rgba(0,0,0,.4);
+}
 `

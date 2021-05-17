@@ -34,7 +34,7 @@ import 'chartist-plugin-accessibility'
 import {
   fetchGaugeRequest as fetchGauge
 } from '../api/reports'
-// import './chart.css'
+import './chart.css'
 
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
@@ -121,29 +121,27 @@ export const ChildrenPage = (props) => {
     setChartData({
       series : [{
         value: data?.chart_data[0],
-        // className: "green"
+        className: "green"
       },
       {
         value: data?.chart_data[1],
-        // className: "yellow"
+        className: "yellow"
       },
       {
         value: data?.chart_data[2],
-        // className: "orange"
+        className: "orange"
       },
       {
         value: data?.chart_data[3],
-        // className: "red"
+        className: "red"
       },
       {
         value: data?.chart_data[4],
-        // className: "black"
+        className: "black"
       }
     ]
   })
   };
-
-  console.log(chartData, chartData?.series.reduce((acc, item) => acc+=item, 0)*2)
 
   const fetchChildrenFunc = () => {
     const filter = getFilter();
@@ -205,13 +203,17 @@ export const ChildrenPage = (props) => {
   */
   var options = {
     donut: true,
-    donutWidth: 40,
+    donutWidth: 30,
     donutSolid: true,
     startAngle: 270,
     total: chartData?.series.reduce((acc, item) => acc+=item.value, 0)*2,
     showLabel: true,
-    plugins: []
+    plugins: [],
+    responsive: true,
+    maintainAspectRatio: false,
   };
+
+  console.log(chartData?.series.filter(i => i.value!==0))
 
   return (
     <>
@@ -238,12 +240,18 @@ export const ChildrenPage = (props) => {
           />
         </Box>
       </Spacing>
-      <Spacing m={{ t: "20px", 
-       b: "-80px", 
-       l:'-100px'
-      }} style={{width:'400px'}}>
-        <StyledChart data={chartData} className={''} options={options} type={'Pie'} />
+      <Box d="f">
+      <Spacing m={{ 
+        t: "20px", 
+        b: "-80px", 
+        l:'-100px'
+      }} >
+        <StyledChart data={{series: chartData?.series.filter(i => i.value!==0)}} 
+        className={''} options={options} type={'Pie'} />
       </Spacing>
+      <Digits chartData={chartData}/>
+      </Box>
+
       <Spacing m={{ t: "20px" }}>
         <Table
           totalPage={totalPage}
@@ -258,6 +266,53 @@ export const ChildrenPage = (props) => {
   );
 };
 
- const StyledChart = styled(ChartistGraph)`
+const Digits = ({chartData}) => {
+  console.log(chartData)
+  return (
+    <Box d="f" style={{ marginTop: '30px' }}>
+      { 
+        chartData?.series[0].value !== 0 && 
+        <Box style={{width: 130}}>
+          <Text>{chartData?.series[0].value}</Text>
+          <SmallText>Under 30 days</SmallText>
+        </Box>
+      } {
+        chartData?.series[1].value !== 0 &&
+        <Box style={{width: 130}}>
+          <Text>{chartData?.series[1].value}</Text>
+          <SmallText>31 to 60 days</SmallText>
+        </Box>
+      } {
+        chartData?.series[2].value !== 0 &&
+        <Box style={{width: 130}}>
+          <Text>{chartData?.series[2].value}</Text>
+          <SmallText>61 to 90 days</SmallText>
+        </Box>
+      }{
+        chartData?.series[3].value !== 0 &&
+        <Box style={{width: 130}}>
+          <Text>{chartData?.series[3].value}</Text>
+          <SmallText>91 to 120 days</SmallText>
+        </Box>
+      }{
+        chartData?.series[4].value !== 0 &&
+        <Box style={{width: 130}}>
+          <Text>{chartData?.series[4].value}</Text>
+          <SmallText>More than 120</SmallText>
+        </Box>
+      }
+    </Box>
+  )
+}
 
- `
+const Text = styled.p`
+  font-size: 32px;
+  text-align: center;
+`
+const SmallText = styled.p`
+  font-size: 16px;
+  text-align: center;
+  margin-top: -5px;
+`
+
+const StyledChart = styled(ChartistGraph)``
