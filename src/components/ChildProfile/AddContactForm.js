@@ -6,11 +6,12 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { relationshipOptions } from "../../content/relationshipOptions.data";
 import { states } from "../../content/states.data";
-import { race_options, sex_options } from "../../helpers";
+import { race_options, sex_options ,status_options } from "../../helpers";
 import { getObjectByLabel } from "../Children";
 import { Box, Form, Label, Spacing } from "../ui/atoms";
 import { DatepickerInput, SelectInput, TextInput } from "../ui/molecules";
 // import styled from "styled-components";
+import Select from "@atlaskit/select";
 
 const DynamicDataItem = ({ filed, isCurrent = false, onClick }) => {
   return (
@@ -48,7 +49,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
           sex: contact?.sex,
           race: contact?.race,
           city: contact?.city,
-          birthday: contact?.birthday ? new Date(contact?.birthday) : null,
+          birthday: contact?.birthday ? new Date(contact?.birthday) : undefined,
           zip: contact?.zip,
           disqualify_reason: connection?.disqualify_reason,
           placed_date: connection?.placed_date
@@ -82,6 +83,14 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
   );
   const [isPlaced, setIsPlaced] = useState(connection?.status === 'placed' || false);
   const relationship = watch("relationship"); // you can supply default value as second argument
+
+    const [status,setStatus] = useState('')
+
+    const [id, setId] = useState(-1)
+    const getId = () => {
+      setId(id-1)
+      return id
+    }
 
   const onSubmitHandle = (data) => {
     setPending(true);
@@ -123,17 +132,32 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
     } else if(isDisqualified){
       submitData.status = 'disqualified'
     } else {
-      submitData.status = ''
+      submitData.status = status.value
     }
 
-    // console.log("inside: ", submitData);
+    console.log("inside: ", submitData);
+    submitData.first_name = capitalizeFirstLetter(submitData.first_name)
+    submitData.last_name = capitalizeFirstLetter(submitData.last_name)
 
     onSubmit(submitData, emailsList, phonesList, addressesList, removeIds);
   };
 
+
+  const getDefaultStatus = (status) => {
+    return status_options.find( opt => opt.label.indexOf(capitalizeFirstLetter(status.slice(0,5))) > -1)
+  }
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  const checkKeyDown = (e) => {
+    if (e.code === 'Enter') e.preventDefault();
+  };
+  
   return (
     <>
-      <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate>
+      <Form w="100%" onSubmit={handleSubmit(onSubmitHandle)} noValidate onKeyDown={(e) => checkKeyDown(e)}>
         <Spacing
           m={{ b: "15px" }}
           style={{
@@ -172,7 +196,9 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
             placeholder="Relationship"
           />
           <DatepickerInput
+            defaultValue={new Date()}
             name={"birthday"}
+            value={new Date()}
             register={{ required: false }}
             control={control}
             error={errors.birthday}
@@ -219,6 +245,36 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
             label="State"
             placeholder="Choose State"
           />
+
+          <div style={{width:240, marginTop: 9}}>
+          <Label >Status</Label>
+          <Select
+            defaultValue={
+              connection?.status && getDefaultStatus(connection?.status)
+            }
+            menuPortalTarget={document.body}
+            onChange={(e) => {
+              if(e.label === 'Disqualified'){
+                setIsDisqualified(true)
+                setIsPlaced(false)
+              } else if( e.label === 'Placed') {
+                setIsPlaced(true)
+                setIsDisqualified(false)
+              } else {
+                setIsDisqualified(false)
+                setIsPlaced(false)
+              }
+              setStatus(e)
+            }}
+            styles={{
+              width: '240px',
+              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+            }}
+            options={status_options}
+            placeholder="Status"
+          />
+          </div>
+
           <TextInput
             name={"zip"}
             register={register({ required: false })}
@@ -227,13 +283,9 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
             label="Zip"
           />
 
-          <>
-            <Box
-              d="flex"
-              justify="center"
-              style={{ marginTop: 7 }}
-            >
-              <div style={{ width: 200 }}>
+          <div style={{display: 'flex', flexDirection: 'column', flexWrap: 'wrap'}}>
+            <Box d="flex" justify="center">
+              <div style={{ width: 240 }}>
                 <Label htmlFor={"address"}>Address</Label>
                 <Textfield
                   name="address"
@@ -259,13 +311,16 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                     <DynamicDataItem
                       filed={item.value}
                       isCurrent={item.is_current}
-                      onClick={(e) => {
+                      onClick={(e) => {                        
                         e.stopPropagation();
                         setRemoveIds([...removeIds, item.id]);
                       }}
                     />
                   ))}
-                {addressesList.map((address, index) => (
+                {addressesList.filter(
+                    (item) =>
+                      !removeIds.includes(item.id)
+                  ).map((address, index) => (
                   <DynamicDataItem
                     filed={address.currentAddress}
                     isCurrent={address.isCurrentAddress}
@@ -282,7 +337,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                   e.stopPropagation();
                   setAddressesList([
                     ...addressesList,
-                    { currentAddress, isCurrentAddress },
+                    { currentAddress, isCurrentAddress, id: getId() },
                   ]);
                   setCurrentAddress("");
                   setIsCurrentAddress(false);
@@ -300,7 +355,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
             </Box>
 
             <Box d="flex" justify="center">
-              <div style={{ width: 200 }}>
+              <div style={{ width: 240 }}>
                 <Label htmlFor={"phone"}>Phone number</Label>
                 <Textfield
                   name="phone"
@@ -332,7 +387,10 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                       }}
                     />
                   ))}
-                {phonesList.map((phone, index) => (
+                {phonesList.filter(
+                    (item) =>
+                      !removeIds.includes(item.id)
+                  ).map((phone, index) => (
                   <DynamicDataItem
                     filed={phone.currentPhone}
                     isCurrent={phone.isCurrentPhone}
@@ -351,7 +409,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                   e.stopPropagation();
                   setPhonesList([
                     ...phonesList,
-                    { currentPhone, isCurrentPhone },
+                    { currentPhone, isCurrentPhone, id: getId() },
                   ]);
                   setCurrentPhone("");
                   setIsCurrentPhone(false);
@@ -368,11 +426,8 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
               </Button>
             </Box>
             
-            <Box
-              d="flex"
-              justify="center"
-                          >
-              <div style={{ width: 200 }}>
+            <Box d="flex" justify="center" >
+              <div style={{ width: 240 }}>
                 <Label htmlFor={"email"}>Email</Label>
                 <Textfield
                   value={currentEmail}
@@ -403,7 +458,10 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                       }}
                     />
                   ))}
-                {emailsList.map((email, index) => (
+                {emailsList.filter(
+                    (item) =>
+                      !removeIds.includes(item.id)
+                  ).map((email, index) => (
                   <DynamicDataItem
                     filed={email.currentEmail}
                     isCurrent={email.isCurrentEmail}
@@ -424,7 +482,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                   e.stopPropagation();
                   setEmailsList([
                     ...emailsList,
-                    { currentEmail, isCurrentEmail },
+                    { currentEmail, isCurrentEmail, id: getId() },
                   ]);
                   setCurrentEmail("");
                   setIsCurrentEmail(false);
@@ -440,7 +498,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                 +
               </Button>
             </Box>
-          </>
+          </div>
 
           {relationship?.value === "Other" ? (
             <TextInput
@@ -493,13 +551,6 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                   label="Disqualify Reason"
                 />
               )}
-              <Checkbox
-                value="disqualified"
-                label="Disqualified"
-                isChecked={isDisqualified}
-                onChange={() => setIsDisqualified((item) => !item)}
-                style={{ width: "auto" }}
-              />
             </div>
             <div
               style={{
@@ -516,13 +567,6 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
                   placeholder="Select Date"
                 />
               )}{" "}
-              <Checkbox
-                value="placed"
-                label="Placed"
-                isChecked={isPlaced}
-                onChange={() => setIsPlaced((item) => !item)}
-                style={{ width: "auto" }}
-              />
             </div>
           </>
         )}
@@ -539,25 +583,3 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
     </>
   );
 };
-
-
-// const buttonStyle = {
-//   borderRadius: 30,
-//   padding: "3px 5px",
-//   marginTop: 10,
-// };
-
-// const CommunicationContainer = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   width: 240px;
-
-//   div:first-child {
-//     width: 210px;
-//   }
-//   .communication-address {
-//     width: 210px;
-//     margin-block: 8px;
-//   }
-// `;

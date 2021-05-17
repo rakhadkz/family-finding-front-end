@@ -546,6 +546,7 @@ export const Connections = () => {
                   .catch(() => toast.error("Error. Not updated"))
                   .finally(() => setIsAddModalOpen(false));
               } else {
+                console.log('suka')
                 await onAddContact(data, emails, phones, address)
                   .then((data) => {
                     console.log(data);
