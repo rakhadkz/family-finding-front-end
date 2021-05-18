@@ -283,6 +283,40 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
             label="Zip"
           />
 
+        {connection && (
+          <>
+            <div
+            >
+              {isDisqualified && (
+                <TextInput
+                  width={240}
+                  name="disqualify_reason"
+                  register={register({ required: isDisqualified })}
+                  control={control}
+                  error={errors.disqualify_reason}
+                  label="Disqualify Reason"
+                />
+              )}
+            </div>
+            <div
+              style={{
+                marginBottom: 10,
+              }}
+            >
+              {isPlaced && (
+                <DatepickerInput
+                  name="placed_date"
+                  register={{ required: isPlaced }}
+                  control={control}
+                  error={errors.placed_date}
+                  label="Placed Date"
+                  placeholder="Select Date"
+                />
+              )}{" "}
+            </div>
+          </>
+        )}
+
           <div style={{display: 'flex', flexDirection: 'column', flexWrap: 'wrap'}}>
             <Box d="flex" justify="center">
               <div style={{ width: 240 }}>
@@ -537,39 +571,7 @@ export const AddContactForm = ({ onSubmit, onCancel, connection }) => {
             style={{ width: "auto"}}
           />
         </div>
-        {connection && (
-          <>
-            <div
-            >
-              {isDisqualified && (
-                <TextInput
-                  width="100%"
-                  name="disqualify_reason"
-                  register={register({ required: isDisqualified })}
-                  control={control}
-                  error={errors.disqualify_reason}
-                  label="Disqualify Reason"
-                />
-              )}
-            </div>
-            <div
-              style={{
-                marginBottom: 10,
-              }}
-            >
-              {isPlaced && (
-                <DatepickerInput
-                  name="placed_date"
-                  register={{ required: isPlaced }}
-                  control={control}
-                  error={errors.placed_date}
-                  label="Placed Date"
-                  placeholder="Select Date"
-                />
-              )}{" "}
-            </div>
-          </>
-        )}
+        
 
         <Box d="flex" w="100%" justify="center" mb="40px" mt="20px">
           <ButtonGroup>
