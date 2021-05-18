@@ -207,7 +207,7 @@ export const ChildrenPage = (props) => {
     donutSolid: true,
     startAngle: 270,
     total: chartData?.series.reduce((acc, item) => acc+=item.value, 0)*2,
-    showLabel: true,
+    showLabel: false,
     plugins: [],
     responsive: true,
     maintainAspectRatio: false,
@@ -241,10 +241,10 @@ export const ChildrenPage = (props) => {
         </Box>
       </Spacing>
       <Box d="f">
-      <Spacing m={{ 
+      <Spacing m={{  
         t: "20px", 
-        b: "-80px", 
-        l:'-100px'
+        b: "-84px", 
+        l:'-65px'
       }} >
         <StyledChart data={{series: chartData?.series.filter(i => i.value!==0)}} 
         className={''} options={options} type={'Pie'} />
@@ -272,33 +272,68 @@ const Digits = ({chartData}) => {
     <Box d="f" style={{ marginTop: '30px' }}>
       { 
         chartData?.series[0].value !== 0 && 
-        <Box style={{width: 130}}>
+        <Box style={{
+          width: 130,
+          background: "forestgreen",
+          color: "white",
+          borderRadius: 5,
+          padding: 10,
+          marginRight: 5,
+        }}>
           <Text>{chartData?.series[0].value}</Text>
           <SmallText>Under 30 days</SmallText>
         </Box>
       } {
         chartData?.series[1].value !== 0 &&
-        <Box style={{width: 130}}>
+        <Box style={{
+          width: 130,
+          background: "#FFFF00",
+          color: "black",
+          borderRadius: 5,
+          padding: 10,
+          marginRight: 5,
+        }}>
           <Text>{chartData?.series[1].value}</Text>
           <SmallText>31 to 60 days</SmallText>
         </Box>
       } {
         chartData?.series[2].value !== 0 &&
-        <Box style={{width: 130}}>
+        <Box style={{
+          width: 130,
+          background: "#FF0000",
+          color: "white",
+          borderRadius: 5,
+          padding: 10,
+          marginRight: 5,
+        }}>
           <Text>{chartData?.series[2].value}</Text>
           <SmallText>61 to 90 days</SmallText>
         </Box>
       }{
         chartData?.series[3].value !== 0 &&
-        <Box style={{width: 130}}>
+        <Box style={{
+          width: 130,
+          background: "#FFA500",
+          color: "white",
+          borderRadius: 5,
+          padding: 10,
+          marginRight: 5,
+        }}>
           <Text>{chartData?.series[3].value}</Text>
           <SmallText>91 to 120 days</SmallText>
         </Box>
       }{
         chartData?.series[4].value !== 0 &&
-        <Box style={{width: 130}}>
+        <Box style={{
+          width: 130,
+          background: "#040404",
+          color: "white",
+          borderRadius: 5,
+          padding: 10,
+          marginRight: 5,
+        }}>
           <Text>{chartData?.series[4].value}</Text>
-          <SmallText>More than 120</SmallText>
+          <SmallText>Over 120 days</SmallText>
         </Box>
       }
     </Box>

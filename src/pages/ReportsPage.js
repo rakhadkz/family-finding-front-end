@@ -6,6 +6,7 @@ import {
   fetchLinkedConnectionsRequest,
   fetchPlacementsRequest
 } from '../api/reports'
+import { Table } from "../components/ui/common/Table";
 import styled from 'styled-components'
 import Chartist from 'chartist';
 import 'chartist-plugin-axistitle'
@@ -13,38 +14,47 @@ import 'chartist-plugin-accessibility'
 import ChartistAccessibility from 'react-chartist-plugin-accessibility'
 import 'chartist-plugin-tooltips-updated';
 
-export const ReportsPage = () => {
-  const [children, setChildren] = useState({labels:[],series:[[]]});
-  const [placements, setPlacements] = useState({labels:[],series:[[]]});
-  const [linkedConnections, setLinkedConnections] = useState({labels:[],series:[[]]});
+const last12months = () => {
+  let monthName = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+  let d = new Date();
+  d.setDate(1);
+  let res = []
+  for (let i=0; i<=11; i++) {
+      res.push(monthName[d.getMonth()])
+      d.setMonth(d.getMonth() - 1);
+  }
+  return res
+}
 
-  /*
-    labels: children.keys(),
-    series: [ children.values()]
-   */
+export const ReportsPage = () => {
+  const [children, setChildren] = useState({labels:[],series:[]});
+  const [placements, setPlacements] = useState({labels:[],series:[]});
+  const [linkedConnections, setLinkedConnections] = useState({labels:[],series:[]});
+
   const fetchChildren = useCallback( async () => {
     const data = await fetchChildrenRequest({filter: undefined})
     setChildren({
-      labels: data?.children.map(i => i[0]),
-      series: [  data?.children.map(i => i[1]) ]
+      labels: last12months(),
+      series: [ data?.children ]
     })
   }, [])
   const fetchPlacements = useCallback( async () => {
     const data = await fetchPlacementsRequest()
     console.log(data?.placements)
     setPlacements({
-      labels: data?.placements.map(i => i[0]),
-      series: [ data?.placements.map(i => i[1])]
+      labels: last12months(),
+      series: [ data?.placements ]
     })
   },[])
   const fetchLinkedConnections =  useCallback( async () => {
     const data = await fetchLinkedConnectionsRequest()
     console.log(data?.linkedConnections)
     setLinkedConnections({
-      labels: data?.linkedConnections.map(i => i[0]),
-      series: [  data?.linkedConnections.map(i => i[1]) ]
+      labels: last12months(),
+      series: [ data?.linkedConnections ]
     })
   }, [])
+  console.log(children, placements, linkedConnections)
 
   useEffect(()=>{
     fetchChildren();
@@ -54,34 +64,32 @@ export const ReportsPage = () => {
 
   var options = {
     // high: 10,
-    // low: -10,
-    // stackBars: true,
-    // axisX: {
-    //   labelInterpolationFnc: function(value, index) {
-    //     return index % 2 === 0 ? value : null;
-    //   }
-    // }
-    plugins: [
-      Chartist.plugins.ctAxisTitle({
-        axisX: {
-          axisTitle: "Children",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: 50
-          },
-          textAnchor: "middle"
-        },
-        axisY: {
-          axisTitle: "Number of Children",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: -1
-          },
-          flipTitle: false
+    axisY: {
+        labelInterpolationFnc: function(value, index) {
+          return value % 1 === 0 ? value : null
         }
-      }),
+      },
+    plugins: [
+      // Chartist.plugins.ctAxisTitle({
+      //   axisX: {
+      //     axisTitle: "Children",
+      //     axisClass: "ct-axis-title",
+      //     offset: {
+      //       x: 0,
+      //       y: 50
+      //     },
+      //     textAnchor: "middle"
+      //   },
+      //   axisY: {
+      //     axisTitle: "Number of Children",
+      //     axisClass: "ct-axis-title",
+      //     offset: {
+      //       x: 0,
+      //       y: -1
+      //     },
+      //     flipTitle: false
+      //   }
+      // }),
       Chartist.plugins.tooltip()
       // Chartist.plugins.tooltip({
       //   currency: '$',
@@ -100,27 +108,32 @@ export const ReportsPage = () => {
     //     return index % 2 === 0 ? value : null;
     //   }
     // }
+    axisY: {
+      labelInterpolationFnc: function(value, index) {
+        return value % 1 === 0 ? value : null
+      }
+    },
     plugins: [
-      Chartist.plugins.ctAxisTitle({
-        axisX: {
-          axisTitle: "Contacts",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: 50
-          },
-          textAnchor: "middle"
-        },
-        axisY: {
-          axisTitle: "Number of Placed Contacts",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: -1
-          },
-          flipTitle: false
-        }
-      }),
+      // Chartist.plugins.ctAxisTitle({
+      //   axisX: {
+      //     axisTitle: "Contacts",
+      //     axisClass: "ct-axis-title",
+      //     offset: {
+      //       x: 0,
+      //       y: 50
+      //     },
+      //     textAnchor: "middle"
+      //   },
+      //   axisY: {
+      //     axisTitle: "Number of Placed Contacts",
+      //     axisClass: "ct-axis-title",
+      //     offset: {
+      //       x: 0,
+      //       y: -1
+      //     },
+      //     flipTitle: false
+      //   }
+      // }),
       Chartist.plugins.tooltip({
         currency: '$',
         class: 'class1 class2',
@@ -138,26 +151,40 @@ export const ReportsPage = () => {
     //     return index % 2 === 0 ? value : null;
     //   }
     // }
+    axisY: {
+      labelInterpolationFnc: function(value, index) {
+        return value % 1 === 0 ? value : null
+      }
+    },
     plugins: [
       Chartist.plugins.ctAxisTitle({
-        axisX: {
-          axisTitle: "Contacts",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: 50
-          },
-          textAnchor: "middle"
-        },
-        axisY: {
-          axisTitle: "Number of Linked Connections",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: -1
-          },
-          flipTitle: false
-        }
+        // axisX: {
+        //   axisTitle: "Contacts",
+        //   axisClass: "ct-axis-title",
+        //   offset: {
+        //     x: 0,
+        //     y: 50
+        //   },
+        //   textAnchor: "middle"
+        // },
+  
+        // axisY: {
+          // labelInterpolationFnc: (value, index) =>
+          //  # check if the value is not a decimal
+          // value % 1 == 0 value :: null
+          // axisTitle: "Number of Linked Connections",
+          // axisClass: "ct-axis-title",
+          // offset: {
+          //   x: 0,
+          //   y: -1
+          // },
+          // flipTitle: false
+        // }
+        // axisY: {
+        //   labelInterpolationFnc: function(value, index) {
+        //     return value
+        //   }
+        // },
       }),
       Chartist.plugins.tooltip({
         currency: '$',
@@ -166,6 +193,11 @@ export const ReportsPage = () => {
       })
     ]
   };
+  const head  = last12months().map((m, i) => ({
+      key: m,
+      content: m,
+      width: 100/12,
+  }))
 
   var aspectRatio = 'ct-octave';
   return (
@@ -180,69 +212,51 @@ export const ReportsPage = () => {
       </Spacing>
       <Spacing m={{ t: "20px" }}>
         <div style={{marginBottom: '200px'}}>
-        <StyledChart className={aspectRatio} data={children} options={options} type={'Bar'} >
-          <ChartistAccessibility
-            caption={'Total number of Children in a system'}
-            summary={'A graphic that shows the total number of children in the system by months of the last year'}
-            seriesHeader={'New children registered'}
-            visuallyHiddenStyles={{
-              position: 'absolute',
-              top: '100%',
-              width: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-              fontSize: '14px',
-              paddingLeft: '10px',
-              paddingRight: '10px'
-            }}
-            valueTransform={function(value) {
-              return value + (value === 1 ? ' child' : ' children');
-            }}
-          />
-        </StyledChart>
+          <Title style={{marginBottom: 20}}>New Children Added to Linking Lives</Title>
+        <StyledChart className={aspectRatio} data={children} options={options} type={'Bar'} />
+        <Table
+          items={
+            children.series === []  ? 
+            children.series[0].map((i,index) => ({
+            key: index,
+            content: i,
+            width: 100/12,}))
+             : []
+          }
+          head={head}
+          pending={children.series === []}
+        />
         </div>
         <div style={{marginBottom: '200px'}}>
-
-        <StyledChart className={aspectRatio} data={placements} options={optionsPlacement} type={'Bar'} >
-        <ChartistAccessibility
-            caption={'Total number of Placed Contacts in a system'}
-            summary={'A graphic that shows the total number of placed contacts in the system by months of the last year'}
-            seriesHeader={'New children registered'}
-            visuallyHiddenStyles={{
-              position: 'absolute',
-              top: '100%',
-              width: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-              fontSize: '14px',
-              paddingLeft: '10px',
-              paddingRight: '10px'
-            }}
-            valueTransform={function(value) {
-              return value + (value === 1 ? ' contact' : ' contacts');
-            }}
-          />
-        </StyledChart>
+          <Title style={{marginBottom: 20}}>New Contacts Placed in Linking Lives</Title>
+        <StyledChart className={aspectRatio} data={placements} options={optionsPlacement} type={'Bar'} />
+        <Table
+          items={
+            placements.series === [] ? placements.series[0].map((i,index) => ({
+            key: index,
+            content: i,
+            width: 100/12,})) : []
+          }
+          head={head}
+          pending={placements.series === []}
+        />
         </div>
 
         <div style={{marginBottom: '200px'}}>
-          <StyledChart className={aspectRatio} data={linkedConnections} options={optionsLinkedConnections} type={'Bar'}>
-          <ChartistAccessibility
-            caption={'Total number of Linked Connections in a system'}
-            summary={'A graphic that shows the total number of linked contacts in the system by months of the last year'}
-            seriesHeader={'New contacts linked'}
-            visuallyHiddenStyles={{
-              position: 'absolute',
-              top: '100%',
-              width: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-              fontSize: '14px',
-              paddingLeft: '10px',
-              paddingRight: '10px'
-            }}
-            valueTransform={function(value) {
-              return value + (value === 1 ? ' contact' : ' contacts');
-            }}
-          />
-          </StyledChart>
+          <Title style={{marginBottom: 20}}>New Contacts Linked in Linking Lives</Title>
+          <StyledChart className={aspectRatio} data={linkedConnections} options={optionsLinkedConnections} type={'Bar'}/>
+          <Table
+          items={
+            linkedConnections.series === []  ? 
+            linkedConnections.series[0].map((i,index) => ({
+            key: index,
+            content: i,
+            width: 100/12,})) 
+            : []
+          }
+          pending={placements.series === []}
+          head={head}
+        />
         </div>
 
       </Spacing>
@@ -254,7 +268,7 @@ export const ReportsPage = () => {
  Bars are also strokes so you have maximum freedom in styling them. */
 const StyledChart = styled(ChartistGraph)`
 .ct-series-a .ct-bar {
-  stroke: red;
+  stroke: #9469B0;
   stroke-width: 30px;
   // stroke-dasharray: 20px;
   // stroke-linecap: round;
