@@ -321,8 +321,7 @@ export const ChildrenPage = (props) => {
 
 const Digits = ({chartData}) => {
   console.log(chartData)
-  return (
-    <Box d="f" style={{ marginTop: '30px' }}>
+  return chartData ? (<Box d="f" style={{ marginTop: '30px' }}>
       { 
         chartData?.series[0].value !== 0 && 
         <Box style={{
@@ -390,7 +389,7 @@ const Digits = ({chartData}) => {
         </Box>
       }
     </Box>
-  )
+  ) : null
 }
 
 const Text = styled.p`
