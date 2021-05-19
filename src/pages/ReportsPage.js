@@ -23,7 +23,7 @@ const last12months = () => {
       res.push(monthName[d.getMonth()])
       d.setMonth(d.getMonth() - 1);
   }
-  return res
+  return res.reverse()
 }
 
 export const ReportsPage = () => {
@@ -35,7 +35,7 @@ export const ReportsPage = () => {
     const data = await fetchChildrenRequest({filter: undefined})
     setChildren({
       labels: last12months(),
-      series: [ data?.children ]
+      series: [ data?.children.reverse() ]
     })
   }, [])
   const fetchPlacements = useCallback( async () => {
@@ -43,7 +43,7 @@ export const ReportsPage = () => {
     console.log(data?.placements)
     setPlacements({
       labels: last12months(),
-      series: [ data?.placements ]
+      series: [ data?.placements.reverse() ]
     })
   },[])
   const fetchLinkedConnections =  useCallback( async () => {
@@ -51,89 +51,39 @@ export const ReportsPage = () => {
     console.log(data?.linkedConnections)
     setLinkedConnections({
       labels: last12months(),
-      series: [ data?.linkedConnections ]
+      series: [ data?.linkedConnections.reverse() ]
     })
   }, [])
+
   console.log(children, placements, linkedConnections)
 
   useEffect(()=>{
     fetchChildren();
-    fetchPlacements();
+  }, [fetchChildren])
+  useEffect(()=>{
     fetchLinkedConnections();
-  }, [fetchChildren,fetchPlacements,fetchLinkedConnections])
+  }, [fetchLinkedConnections])
+  useEffect(()=>{
+    fetchPlacements();
+  }, [fetchPlacements])
 
   var options = {
-    // high: 10,
     axisY: {
         labelInterpolationFnc: function(value, index) {
           return value % 1 === 0 ? value : null
         }
       },
     plugins: [
-      // Chartist.plugins.ctAxisTitle({
-      //   axisX: {
-      //     axisTitle: "Children",
-      //     axisClass: "ct-axis-title",
-      //     offset: {
-      //       x: 0,
-      //       y: 50
-      //     },
-      //     textAnchor: "middle"
-      //   },
-      //   axisY: {
-      //     axisTitle: "Number of Children",
-      //     axisClass: "ct-axis-title",
-      //     offset: {
-      //       x: 0,
-      //       y: -1
-      //     },
-      //     flipTitle: false
-      //   }
-      // }),
-      Chartist.plugins.tooltip()
-      // Chartist.plugins.tooltip({
-      //   currency: '$',
-      //   class: 'class1 class2',
-      //   appendToBody: true
-      // })
     ]
   };
 
   var optionsPlacement = {
-    // high: 10,
-    // low: -10,
-    // stackBars: true,
-    // axisX: {
-    //   labelInterpolationFnc: function(value, index) {
-    //     return index % 2 === 0 ? value : null;
-    //   }
-    // }
     axisY: {
       labelInterpolationFnc: function(value, index) {
         return value % 1 === 0 ? value : null
       }
     },
     plugins: [
-      // Chartist.plugins.ctAxisTitle({
-      //   axisX: {
-      //     axisTitle: "Contacts",
-      //     axisClass: "ct-axis-title",
-      //     offset: {
-      //       x: 0,
-      //       y: 50
-      //     },
-      //     textAnchor: "middle"
-      //   },
-      //   axisY: {
-      //     axisTitle: "Number of Placed Contacts",
-      //     axisClass: "ct-axis-title",
-      //     offset: {
-      //       x: 0,
-      //       y: -1
-      //     },
-      //     flipTitle: false
-      //   }
-      // }),
       Chartist.plugins.tooltip({
         currency: '$',
         class: 'class1 class2',
@@ -143,49 +93,12 @@ export const ReportsPage = () => {
   };
 
   var optionsLinkedConnections = {
-    // high: 10,
-    // low: -10,
-    // stackBars: true,
-    // axisX: {
-    //   labelInterpolationFnc: function(value, index) {
-    //     return index % 2 === 0 ? value : null;
-    //   }
-    // }
     axisY: {
       labelInterpolationFnc: function(value, index) {
         return value % 1 === 0 ? value : null
       }
     },
     plugins: [
-      Chartist.plugins.ctAxisTitle({
-        // axisX: {
-        //   axisTitle: "Contacts",
-        //   axisClass: "ct-axis-title",
-        //   offset: {
-        //     x: 0,
-        //     y: 50
-        //   },
-        //   textAnchor: "middle"
-        // },
-  
-        // axisY: {
-          // labelInterpolationFnc: (value, index) =>
-          //  # check if the value is not a decimal
-          // value % 1 == 0 value :: null
-          // axisTitle: "Number of Linked Connections",
-          // axisClass: "ct-axis-title",
-          // offset: {
-          //   x: 0,
-          //   y: -1
-          // },
-          // flipTitle: false
-        // }
-        // axisY: {
-        //   labelInterpolationFnc: function(value, index) {
-        //     return value
-        //   }
-        // },
-      }),
       Chartist.plugins.tooltip({
         currency: '$',
         class: 'class1 class2',
@@ -193,72 +106,100 @@ export const ReportsPage = () => {
       })
     ]
   };
-  const head  = last12months().map((m, i) => ({
-      key: m,
-      content: m,
-      width: 100/12,
-  }))
+  /*
+    [
+      {
+        key: "month",
+        content: "Month",
+        width: 100/2,
+      },
+      {
+        key: "number",
+        content: "Number",
+        width: 100/12,
+      },
+    ]
+
+    key: "full_name",
+    content: "Full Name",
+    width: 30,
+
+  */
+
+  const head  = (table) => ([
+    {
+      key: "month",
+      content: <p style={{textAlign: 'center'}}>{"Month"}</p>,
+      width: 100/2,
+    },
+    {
+      key: "number",
+      content: <p style={{textAlign: 'center'}}>{table}</p>,
+      width: 100/2,
+    },
+  ])
+
+  const chartTableData = (data, history, assignUser, isUser = true) =>
+    data && data.map((item, index) => ({
+      key: index,
+      cells: [
+        {
+          key: "month",
+          content: <p style={{textAlign: 'center'}}>{last12months()[index]}</p>,
+        },
+        {
+          key: "number",
+          content: <p style={{textAlign: 'center'}}>{item}</p>,
+        }
+      ]
+    }))
+
+
+    console.log(chartTableData(children.series))
 
   var aspectRatio = 'ct-octave';
   return (
     <>
       <Title>Reports</Title>
       <Spacing m={{ t: "23px" }}>
-        
         <Box d="flex" justify="space-between">
-        
-
         </Box>
       </Spacing>
       <Spacing m={{ t: "20px" }}>
-        <div style={{marginBottom: '200px'}}>
+        <div style={{
+          // marginBottom: '200px'
+        }}>
           <Title style={{marginBottom: 20}}>New Children Added to Linking Lives</Title>
-        <StyledChart className={aspectRatio} data={children} options={options} type={'Bar'} />
-        <Table
-          items={
-            children.series === []  ? 
-            children.series[0].map((i,index) => ({
-            key: index,
-            content: i,
-            width: 100/12,}))
-             : []
-          }
-          head={head}
-          pending={children.series === []}
-        />
+          <StyledChart className={aspectRatio} data={children} options={options} type={'Bar'} />
+          <Table
+            items={ chartTableData(children.series[0]) }
+            head={head('Children')}
+            pending={children.series[0] === []}
+          />
         </div>
-        <div style={{marginBottom: '200px'}}>
-          <Title style={{marginBottom: 20}}>New Contacts Placed in Linking Lives</Title>
-        <StyledChart className={aspectRatio} data={placements} options={optionsPlacement} type={'Bar'} />
-        <Table
-          items={
-            placements.series === [] ? placements.series[0].map((i,index) => ({
-            key: index,
-            content: i,
-            width: 100/12,})) : []
-          }
-          head={head}
-          pending={placements.series === []}
-        />
+        <div style={{
+          // marginBottom: '200px'
+          }}>
+          <Title style={{marginBottom: 20}}>Children Placed</Title>
+          <StyledChart className={aspectRatio} data={placements} options={optionsPlacement} type={'Bar'} />
+          <Table
+            items={chartTableData(placements.series[0])}
+            head={head("Children")}
+            pending={placements.series[0] === []}
+          />
         </div>
 
-        <div style={{marginBottom: '200px'}}>
-          <Title style={{marginBottom: 20}}>New Contacts Linked in Linking Lives</Title>
+        <div style={{
+          // marginBottom: '200px'
+          }}>
+          <Title style={{marginLeft: 20}}>New Kinship Contacts Found</Title>
           <StyledChart className={aspectRatio} data={linkedConnections} options={optionsLinkedConnections} type={'Bar'}/>
           <Table
-          items={
-            linkedConnections.series === []  ? 
-            linkedConnections.series[0].map((i,index) => ({
-            key: index,
-            content: i,
-            width: 100/12,})) 
-            : []
-          }
-          pending={placements.series === []}
-          head={head}
-        />
+            items={chartTableData(linkedConnections.series[0])}
+            pending={placements.series[0] === []}
+            head={head('Contacts')}
+          />
         </div>
-
       </Spacing>
     </>
   );
@@ -277,4 +218,6 @@ const StyledChart = styled(ChartistGraph)`
   fill: rgba(0,0,0,.4);
   color: rgba(0,0,0,.4);
 }
+margin-bottom: 20px;
+margin-top: 50px;
 `
