@@ -8,9 +8,9 @@ export const fetchChildrenRequest = ({filter}) => {
   });
 };
 
-export const fetchGaugeRequest = ({filter}) => {
+export const fetchGaugeRequest = ({filter, goal}) => {
     return request({
-      endpoint: `admin/reports/gauge?filter=${filter ? filter : ''}`,
+      endpoint: `admin/reports/gauge?filter=${filter ? filter : ''}${goal ? '&goal='+goal : ''}`,
       method: "GET",
       meta: true,
     });

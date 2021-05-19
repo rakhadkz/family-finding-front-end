@@ -116,7 +116,7 @@ export const usersTableColumns = (role = "user") => {
   return columns1.concat(columns2);
 };
 
-export const childrenTableColumns = (isUser = true, sort, setSort = null) => [
+export const childrenTableColumns = (isUser = true, sort, setSort = null, PermanencySelect) => [
   {
     key: "full_name",
     content: "Full Name",
@@ -124,7 +124,7 @@ export const childrenTableColumns = (isUser = true, sort, setSort = null) => [
   },
   {
     key: "permanency_goal",
-    content: "Permanency Goal",
+    content: <PermanencySelect />,
     width: 25,
   },
   {

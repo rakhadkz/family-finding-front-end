@@ -17,10 +17,10 @@ import {
   fetchOrganizationsFailure,
 } from "../reducers/organization";
 
-export const updateQueryParams = (currentPage, search, sort, filter) => {
+export const updateQueryParams = (currentPage, search, sort, filter, goal) => {
   return `?page=${currentPage}${search ? `&search=${search}` : ``}${
     sort ? `&sort=${sort}` : ""
-  }${filter !== "" ? `&filter=${filter}` : ""}`;
+  }${filter !== "" ? `&filter=${filter}` : ""}${goal !== "" ? `&goal=${goal}` : ""}`;
 };
 
 const AllOrganizations = ({ history, search, setSearch }) => {
