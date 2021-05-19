@@ -35,6 +35,31 @@ import {
   fetchGaugeRequest as fetchGauge
 } from '../api/reports'
 import './chart.css'
+import Select from "@atlaskit/select";
+
+const permanency_goal_options = [
+  {value: 'all', label: 'All'},
+  {
+    value: "return_to_parent",
+    label: "Return to Parent(s) (Reunification)",
+  },
+  {
+    value: "adoption",
+    label: "Adoption",
+  },
+  {
+    value: "permanent_legal_custody",
+    label: "Permanent Legal Custody (PLC)",
+  },
+  {
+    value: "permanent_placement",
+    label: "Permanent Placement with a Fit and Willing Relative",
+  },
+  {
+    value: "appla",
+    label: "Another Planned Permanent Living Arrangement (APPLA)",
+  },
+];
 
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
@@ -48,11 +73,32 @@ export const ChildrenPage = (props) => {
   const [sort, setSort] = useState("");
   const [filterAssigned, setFilterAssigned] = useState(false);
   const [filterActive, setFilterActive] = useState(true);
-  const head = childrenTableColumns(user?.role === "user", sort, setSort);
+  const [filterPermanencyGoal, setFilterPermanencyGoal] = useState({value: 'all', label: 'All'});
+  const PermanencySelect = () => (
+    <Select
+      // defaultValue={
+      //   connection?.status && getDefaultStatus(connection?.status)
+      // }
+      menuPortalTarget={document.body}
+      onChange={(e) => {
+        setFilterPermanencyGoal(e)
+      }}
+      styles={{
+        width: '240px',
+        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+      }}
+      options={permanency_goal_options}
+      placeholder="Permanency Goal"
+    />
+  )
+
+  console.log(filterPermanencyGoal)
+
+  const head = childrenTableColumns(user?.role === "user", sort, setSort, PermanencySelect);
   const [chartData, setChartData] = useState()
 
   useEffect(() => {
-    history.push(updateQueryParams(currentPage, search, sort, getFilter()));
+    history.push(updateQueryParams(currentPage, search, sort, getFilter(), getGoal()));
     dispatch(fetchChildrenRequest());
     const timer = setTimeout(
       () => {fetchChildrenFunc();fetchChildrenGauge()},
@@ -60,7 +106,7 @@ export const ChildrenPage = (props) => {
     );
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, search, sort, filterAssigned, filterActive]);
+  }, [currentPage, search, sort, filterAssigned, filterActive, filterPermanencyGoal]);
 
   useEffect(() => {
     search.length > 0 && setCurrentPage(1);
@@ -113,9 +159,11 @@ export const ChildrenPage = (props) => {
 
   const fetchChildrenGauge = async () => {
     const filter = getFilter();
+    const goal = getGoal()
     const data = await fetchGauge({
       meta: true,
       filter,
+      goal
     })
     console.log(data)
     setChartData({
@@ -143,8 +191,12 @@ export const ChildrenPage = (props) => {
   })
   };
 
+  const getGoal = () => 
+    filterPermanencyGoal.value !== 'all' ? filterPermanencyGoal.value : ''
+
   const fetchChildrenFunc = () => {
     const filter = getFilter();
+    const goal = getGoal()
     fetchChildren({
       view: "table",
       page: currentPage,
@@ -152,6 +204,7 @@ export const ChildrenPage = (props) => {
       search,
       sort,
       filter,
+      goal
     })
       .then((response) => {
         if (response) {

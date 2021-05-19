@@ -8,12 +8,13 @@ export const fetchChildrenRequest = (params) => {
     meta = false,
     sort = "",
     filter,
+    goal 
   } = params;
   return request({
     endpoint:
       "children" +
       (params.id ? `/${params.id}` : ``) +
-      `?view=${view}&page=${page}&search=${search}&sort=${sort}&filter=${filter}`,
+      `?view=${view}&page=${page}&search=${search}&sort=${sort}&filter=${filter}${goal ? '&goal='+goal : ''}`,
     method: "GET",
     meta: meta,
   });
