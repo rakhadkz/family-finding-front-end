@@ -1,3 +1,5 @@
+import {PermanencySelect} from '../components/Children/PermanencySelect'
+
 export const organizationsTableColumns = [
   {
     key: "name",
@@ -116,7 +118,7 @@ export const usersTableColumns = (role = "user") => {
   return columns1.concat(columns2);
 };
 
-export const childrenTableColumns = (isUser = true, sort, setSort = null, PermanencySelect) => [
+export const childrenTableColumns = (isUser = true, sort, setSort = null, setPermanencyGoal) => [
   {
     key: "full_name",
     content: "Full Name",
@@ -124,7 +126,7 @@ export const childrenTableColumns = (isUser = true, sort, setSort = null, Perman
   },
   {
     key: "permanency_goal",
-    content: <PermanencySelect />,
+    content: <PermanencySelect setFilterPermanencyGoal={setPermanencyGoal} />,
     width: 25,
   },
   {

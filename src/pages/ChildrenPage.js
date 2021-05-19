@@ -26,40 +26,11 @@ import {
   initialState,
   fetchChildrenRequest,
 } from "../reducers/child";
-import ChartistGraph from 'react-chartist';
-import styled from 'styled-components'
-import Chartist from 'chartist';
-import 'chartist-plugin-axistitle'
-import 'chartist-plugin-accessibility'
 import {
   fetchGaugeRequest as fetchGauge
 } from '../api/reports'
+import { GaugeChart } from '../components/Children/GaugeChart'
 import './chart.css'
-import Select from "@atlaskit/select";
-
-const permanency_goal_options = [
-  {value: 'all', label: 'All'},
-  {
-    value: "return_to_parent",
-    label: "Return to Parent(s) (Reunification)",
-  },
-  {
-    value: "adoption",
-    label: "Adoption",
-  },
-  {
-    value: "permanent_legal_custody",
-    label: "Permanent Legal Custody (PLC)",
-  },
-  {
-    value: "permanent_placement",
-    label: "Permanent Placement with a Fit and Willing Relative",
-  },
-  {
-    value: "appla",
-    label: "Another Planned Permanent Living Arrangement (APPLA)",
-  },
-];
 
 export const ChildrenPage = (props) => {
   const query = new URLSearchParams(props.location.search);
@@ -74,27 +45,7 @@ export const ChildrenPage = (props) => {
   const [filterAssigned, setFilterAssigned] = useState(false);
   const [filterActive, setFilterActive] = useState(true);
   const [filterPermanencyGoal, setFilterPermanencyGoal] = useState({value: 'all', label: 'All'});
-  const PermanencySelect = () => (
-    <Select
-      // defaultValue={
-      //   connection?.status && getDefaultStatus(connection?.status)
-      // }
-      menuPortalTarget={document.body}
-      onChange={(e) => {
-        setFilterPermanencyGoal(e)
-      }}
-      styles={{
-        width: '240px',
-        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-      }}
-      options={permanency_goal_options}
-      placeholder="Permanency Goal"
-    />
-  )
-
-  console.log(filterPermanencyGoal)
-
-  const head = childrenTableColumns(user?.role === "user", sort, setSort, PermanencySelect);
+  const head = childrenTableColumns(user?.role === "user", sort, setSort, setFilterPermanencyGoal);
   const [chartData, setChartData] = useState()
 
   useEffect(() => {
@@ -150,12 +101,12 @@ export const ChildrenPage = (props) => {
     }
   };
 
-  const getFilter = () => {
-    let filter = "";
-    if (filterActive) filter += "active";
-    if (filterAssigned) filter += filter === "" ? "assigned" : ",assigned";
-    return filter;
-  };
+  const getGoal = () => filterPermanencyGoal.value !== 'all' ? filterPermanencyGoal.value : ''
+
+  const getFilter = () => 
+    filterActive 
+      ? ( filterAssigned ? 'active,assigned' : 'active') 
+      : ( filterAssigned ? 'assigned' : '' )
 
   const fetchChildrenGauge = async () => {
     const filter = getFilter();
@@ -165,7 +116,7 @@ export const ChildrenPage = (props) => {
       filter,
       goal
     })
-    console.log(data)
+
     setChartData({
       series : [{
         value: data?.chart_data[0],
@@ -190,9 +141,6 @@ export const ChildrenPage = (props) => {
     ]
   })
   };
-
-  const getGoal = () => 
-    filterPermanencyGoal.value !== 'all' ? filterPermanencyGoal.value : ''
 
   const fetchChildrenFunc = () => {
     const filter = getFilter();
@@ -248,26 +196,6 @@ export const ChildrenPage = (props) => {
     </Box>
   );
 
-  /*
-    <= 30 days = green
-    31 to 60 days = yellow
-    61 to 90 days = orange
-    91 to 120 days = red
-  */
-  var options = {
-    donut: true,
-    donutWidth: 30,
-    donutSolid: true,
-    startAngle: 270,
-    total: chartData?.series.reduce((acc, item) => acc+=item.value, 0)*2,
-    showLabel: false,
-    plugins: [],
-    responsive: true,
-    maintainAspectRatio: false,
-  };
-
-  console.log(chartData?.series.filter(i => i.value!==0))
-
   return (
     <>
       <Title>Children</Title>
@@ -293,17 +221,8 @@ export const ChildrenPage = (props) => {
           />
         </Box>
       </Spacing>
-      <Box d="f">
-      <Spacing m={{  
-        t: "20px", 
-        b: "-84px", 
-        l:'-65px'
-      }} >
-        <StyledChart data={{series: chartData?.series.filter(i => i.value!==0)}} 
-        className={''} options={options} type={'Pie'} />
-      </Spacing>
-      <Digits chartData={chartData}/>
-      </Box>
+
+      <GaugeChart chartData={chartData}/>
 
       <Spacing m={{ t: "20px" }}>
         <Table
@@ -318,88 +237,3 @@ export const ChildrenPage = (props) => {
     </>
   );
 };
-
-const Digits = ({chartData}) => {
-  console.log(chartData)
-  return chartData ? (<Box d="f" style={{ marginTop: '30px' }}>
-      { 
-        chartData?.series[0].value !== 0 && 
-        <Box style={{
-          width: 130,
-          background: "forestgreen",
-          color: "white",
-          borderRadius: 5,
-          padding: 10,
-          marginRight: 5,
-        }}>
-          <Text>{chartData?.series[0].value}</Text>
-          <SmallText>Under 30 days</SmallText>
-        </Box>
-      } {
-        chartData?.series[1].value !== 0 &&
-        <Box style={{
-          width: 130,
-          background: "#FFFF00",
-          color: "black",
-          borderRadius: 5,
-          padding: 10,
-          marginRight: 5,
-        }}>
-          <Text>{chartData?.series[1].value}</Text>
-          <SmallText>31 to 60 days</SmallText>
-        </Box>
-      } {
-        chartData?.series[2].value !== 0 &&
-        <Box style={{
-          width: 130,
-          background: "#FF0000",
-          color: "white",
-          borderRadius: 5,
-          padding: 10,
-          marginRight: 5,
-        }}>
-          <Text>{chartData?.series[2].value}</Text>
-          <SmallText>61 to 90 days</SmallText>
-        </Box>
-      }{
-        chartData?.series[3].value !== 0 &&
-        <Box style={{
-          width: 130,
-          background: "#FFA500",
-          color: "white",
-          borderRadius: 5,
-          padding: 10,
-          marginRight: 5,
-        }}>
-          <Text>{chartData?.series[3].value}</Text>
-          <SmallText>91 to 120 days</SmallText>
-        </Box>
-      }{
-        chartData?.series[4].value !== 0 &&
-        <Box style={{
-          width: 130,
-          background: "#040404",
-          color: "white",
-          borderRadius: 5,
-          padding: 10,
-          marginRight: 5,
-        }}>
-          <Text>{chartData?.series[4].value}</Text>
-          <SmallText>Over 120 days</SmallText>
-        </Box>
-      }
-    </Box>
-  ) : null
-}
-
-const Text = styled.p`
-  font-size: 32px;
-  text-align: center;
-`
-const SmallText = styled.p`
-  font-size: 16px;
-  text-align: center;
-  margin-top: -5px;
-`
-
-const StyledChart = styled(ChartistGraph)``
